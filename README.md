@@ -1,5 +1,3 @@
-install node, then
-
 ```shell
 npm install d3
 npm i next
