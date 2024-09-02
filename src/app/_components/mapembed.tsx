@@ -12,7 +12,7 @@ export function Map() {
 
   return (
     <section className={`${styles.embedContainer} flex-col items-center md:justify-between mb-16 md:mb-12`}>
-      <iframe className="w-full border-0 block" width={windowWidth} height={windowHeight * 0.92} margin-height="0" margin-width="0" title="Test_Karlie" src="//tudelft.maps.arcgis.com/apps/Embed/index.html?webmap=e788f61aa7aa49dca367c8db8d934271&extent=34.6218,32.9125,36.4579,33.9451&zoom=true&previewImage=false&scale=true&disable_scroll=true&theme=light"
+      <iframe className={`w-full border-0 block ${styles.mapIframe}`} width={windowWidth} height={windowHeight} margin-height="0" margin-width="0" title="Test_Karlie" src="//tudelft.maps.arcgis.com/apps/Embed/index.html?webmap=e788f61aa7aa49dca367c8db8d934271&extent=34.6218,32.9125,36.4579,33.9451&zoom=true&previewImage=false&scale=true&disable_scroll=true&theme=light"
         loading="lazy"></iframe>
     </ section >
   );

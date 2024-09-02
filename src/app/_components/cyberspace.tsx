@@ -1,10 +1,10 @@
 "use client"
- import { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import "../globals.css";
 import styles from './mapembed.module.css';
 import { colorPalette } from "./color-palette";
-  
+
 export function Cyberspace() {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const URL_TWITTERDATA = './data/aapl.csv';
@@ -23,8 +23,8 @@ export function Cyberspace() {
         fetchData().then((data) => {
             // Set up chart dimensions
             const margin = { top: 20, right: 30, bottom: 20, left: 40 };
-            const width = 800 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
+            const width = 1100 - margin.left - margin.right;
+            const height = 900 - margin.top - margin.bottom;
 
             // Create scales
             const x = d3
@@ -43,13 +43,13 @@ export function Cyberspace() {
                 g
                     .attr("transform", `translate(0,${height - margin.bottom})`)
                     .call(d3.axisBottom(x)
-                        .ticks(width / 40)
+                        .ticks(width / 80)
                         .tickSizeOuter(0))
                     .call((g: any) => {
                         g.selectAll("text")
                             .attr("fill", `${colorPalette().BRIGHT}`)
                             .style("font-family", "'Courier New', Courier, monospace")
-                            .style("font-size", "7px");
+                            .style("font-size", "14px");
                         g.selectAll("line")
                             .style("stroke-width", "0.5px");
                         g.select(".domain")
@@ -65,9 +65,9 @@ export function Cyberspace() {
                     .call((g: any) => g.select(".domain").remove())
                     .call((g: any) => {
                         g.selectAll("text")
-                        .attr("fill", `${colorPalette().BRIGHT}`)
-                        .style("font-family", "'Courier New', Courier, monospace")
-                        .style("font-size", "7px");
+                            .attr("fill", `${colorPalette().BRIGHT}`)
+                            .style("font-family", "'Courier New', Courier, monospace")
+                            .style("font-size", "14px");
                         g.selectAll("line")
                             .style("stroke-width", "0.5px");
                         g.select(".domain")
@@ -77,7 +77,7 @@ export function Cyberspace() {
             // Add grid lines
             const xGrid = (g: any) =>
                 g
-                    .attr("stroke",`${colorPalette().BRIGHT}`)
+                    .attr("stroke", `${colorPalette().BRIGHT}`)
                     .attr("stroke-opacity", 0.1)
                     .call((g: any) =>
                         g
@@ -94,7 +94,7 @@ export function Cyberspace() {
 
             const yGrid = (g: any) =>
                 g
-                    .attr("stroke",`${colorPalette().BRIGHT}`)
+                    .attr("stroke", `${colorPalette().BRIGHT}`)
                     .attr("stroke-opacity", 0.1)
                     .call((g: any) =>
                         g
@@ -149,11 +149,13 @@ export function Cyberspace() {
     }, []);
 
     return (
-        <section className="mb-20 mt-40 md:justify-between">
-            <h1 className={`text-7xl tracking-wide ${styles.bright}`}>CYBERSPACE</h1>
+        <section className="mb-80 mt-32 md:justify-between">
+            <div className={` tracking-wide ${styles.bright} text-2xl`}>TWITTER TREND</div>
             {/* <div className={` ${styles.bright} w-7/12 text-md mb-5`}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.  */}
             {/* </div> */}
-            <div className={`${styles.chartMinWidth}`}>  < svg ref={svgRef} /></div>
+            <div className={`${styles.chartMinWidth} overflow-x-auto`}>
+                < svg ref={svgRef} />
+            </div>
         </section>
     );
 };

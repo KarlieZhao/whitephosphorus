@@ -36,19 +36,19 @@ const Header = () => {
     <div className={`z-10 sticky top-0 h-64 overflow-hidden bg-gradient-to-b from-black to-transparent text-white`}>
       <table className={`text-center ${styles.table1}`}>
         <tr>
-          <div className=" leading-none text-xl tracking-tight flex items-center">
+          <div className=" leading-none text-2xl tracking-tight flex items-center">
             <td className={`hover:bg-white hover:text-black transition cursor-pointer w-1/2 align-top" items-center colSpan={3} ${styles.withBorder}`} onClick={mainClicked}>
-              <div className="mt-3 leading-none">
-                WhitePhosphorus.info
+              <div className="mt-3  leading-none">
+                WHITEPHOSPHORUS.INFO
               </div>
             </td>
             <td className={`hover:bg-white hover:text-black transition cursor-pointer w-1/4 align-top" colSpan={3} ${styles.withBorder}`} onClick={cloudClicked}>
               <div className="mt-3 leading-none">
-                Clouds</div>
+                CLOUDS</div>
             </td>
             <td className={`hover:bg-white hover:text-black transition cursor-pointer w-1/4 align-top" colSpan={3} ${styles.withBorder}`} onClick={aboutClicked}>
               <div className="mt-3 leading-none">
-                About  </div>
+                ABOUT  </div>
             </td>
           </div>
         </tr>

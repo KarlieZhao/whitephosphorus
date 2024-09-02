@@ -74,8 +74,6 @@ export default function RootLayout({
       <body className={inconsolata.className}>  <Header />
         <ThemeSwitcher />
         <div className="min-h-screen">{children}</div>
-        <Footer />
-
       </body>
     </html>
   );

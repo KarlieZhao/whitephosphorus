@@ -2,28 +2,21 @@ import Container from "@/app/_components/container";
 import { Map } from "@/app/_components/mapembed";
 import { getAllPosts } from "@/lib/api";
 import { Cyberspace } from "./_components/cyberspace";
+import { AttacksPerArea } from "./_components/attacks-per-area";
+import { AttacksPerMonth } from "./_components/attacks-per-month";
+import { AttacksPerDay } from "./_components/attacksperday";
+import { Footer } from "./_components/footer";
 
 export default function Index() {
-  const allPosts = getAllPosts();
-
-  const heroPost = allPosts[0];
-
-  const morePosts = allPosts.slice(1);
-
   return (
     <main>
       <Map />
       <Container>
+        <AttacksPerArea />
+        <AttacksPerMonth />
+        <AttacksPerDay />
         <Cyberspace />
-        {/* <HeroPost
-          title={heroPost.title}
-          coverImage={heroPost.coverImage}
-          date={heroPost.date}
-          author={heroPost.author}
-          slug={heroPost.slug}
-          excerpt={heroPost.excerpt}
-        /> }
-        { {morePosts.length > 0 && <MoreStories posts={morePosts} />} */}
+        <Footer />
       </Container>
     </main>
   );
