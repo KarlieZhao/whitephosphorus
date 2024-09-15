@@ -76,8 +76,7 @@ export function AttacksPerArea() {
             if (yDomain === undefined) yDomain = Array.from(new Set(Y));
 
             // Omit any data not present in the y-domain.
-            const I = d3.range(X.length).filter(i => yDomain.includes(Y[i]));
-
+            const I = d3.range(X.length).filter((i: number) => yDomain.includes(Y[i]));
             // Construct scales and axes.
             const xScale = d3.scaleLinear(xDomain, xRange);
             const yScale = d3.scaleBand(yDomain, yRange).padding(yPadding);
@@ -116,7 +115,7 @@ export function AttacksPerArea() {
                     .attr("y", -4)
                     .attr("fill", "currentColor")
                     .attr("text-anchor", "end")
-                    .text(xLabel))
+                    .text(xLabel ?? null))
                 .call(g => {
                     g.selectAll("text")
                         .attr("fill", `${colorPalette().BRIGHT}`)
@@ -139,18 +138,19 @@ export function AttacksPerArea() {
                 .style("font-size", "14px");
 
             svg.append("g")
-                .selectAll("rect")
-                .data(I)
+                .selectAll<SVGRectElement, number>("rect")
+                .data<number>(I)
                 .join("rect")
                 .attr("x", xScale(0))
-                .attr("y", i => yScale(Y[i]) ?? 0)
-                .attr("width", i => xScale(X[i]) - xScale(0))
+                .attr("y", (d: number) => yScale(Y[d]) ?? 0)
+                .attr("width", (d: number) => xScale(X[d]) - xScale(0))
                 .attr("height", yScale.bandwidth())
-                .attr("fill", i => colorScale(X[i]));
+                .attr("fill", (d: number) => colorScale(X[d]));
+
         }
 
         async function fetchData(): Promise<DataPoint[]> {
-            const data = await d3.csv<DataPoint>(ATTACK_DATA, (d) => ({
+            const data = await d3.csv(ATTACK_DATA, (d: DataPoint): DataPoint => ({
                 Area: d.Area,
                 Attacks: +d.Attacks
             }));
@@ -168,7 +168,7 @@ export function AttacksPerArea() {
                 BarChart(svg, data, {
                     x: d => d.Attacks,
                     y: d => d.Area,
-                    yDomain: d3.groupSort(data, ([d]) => -d.Attacks, d => d.Area),
+                    yDomain: d3.groupSort(data, ([d]: [DataPoint]) => -d.Attacks, (d: DataPoint) => d.Area),
                     xFormat: "",
                     xLabel: "→ Number of Attacks",
                     width,

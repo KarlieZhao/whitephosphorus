@@ -1,26 +1,33 @@
-"use client"
+"use client";
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import "../globals.css";
 import styles from './mapembed.module.css';
 import { colorPalette } from "./color-palette";
 
+type DataPoint = {
+    date: Date | null;
+    value: number;
+};
+
 export function Cyberspace() {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const URL_TWITTERDATA = './data/aapl.csv';
 
     useEffect(() => {
-        async function fetchData() {
-            const data = await d3.csv(URL_TWITTERDATA, d => {
+        async function fetchData(): Promise<DataPoint[]> {
+            const data = await d3.csv(URL_TWITTERDATA, (d: d3.DSVRowString<string>) => {
                 return {
-                    date: d3.timeParse("%Y-%m-%d")(d.Date),
+                    date: d3.timeParse("%Y-%m-%d")(d.Date) || null,
                     value: +d.Close
-                };
+                } as DataPoint;
             });
             return data;
         }
 
         fetchData().then((data) => {
+            if (!data || !svgRef.current) return;
+
             // Set up chart dimensions
             const margin = { top: 20, right: 30, bottom: 20, left: 40 };
             const width = 1100 - margin.left - margin.right;
@@ -29,23 +36,23 @@ export function Cyberspace() {
             // Create scales
             const x = d3
                 .scaleTime()
-                .domain(d3.extent(data, (d) => d.date) as [Date, Date])
+                .domain(d3.extent(data, (d: DataPoint) => d.date) as [Date, Date])
                 .range([margin.left, width - margin.right]);
 
             const y = d3
                 .scaleLinear()
-                .domain([0, d3.max(data, (d) => d.value)] as [number, number])
+                .domain([0, d3.max(data, (d: DataPoint) => d.value)] as [number, number])
                 .nice()
                 .range([height - margin.bottom, margin.top]);
 
             // Create axes
-            const xAxis = (g: any) =>
+            const xAxis = (g: d3.Selection<SVGGElement, unknown, null, undefined>) =>
                 g
                     .attr("transform", `translate(0,${height - margin.bottom})`)
                     .call(d3.axisBottom(x)
                         .ticks(width / 80)
                         .tickSizeOuter(0))
-                    .call((g: any) => {
+                    .call((g) => {
                         g.selectAll("text")
                             .attr("fill", `${colorPalette().BRIGHT}`)
                             .style("font-family", "'Courier New', Courier, monospace")
@@ -56,70 +63,67 @@ export function Cyberspace() {
                             .style("stroke-width", "0.5px");
                     });
 
-            const yAxis = (g: any) =>
+            const yAxis = (g: d3.Selection<SVGGElement, unknown, null, undefined>) =>
                 g
                     .attr("transform", `translate(${margin.left},0)`)
                     .call(d3.axisLeft(y)
-                        .ticks(14)
-                    )
-                    .call((g: any) => g.select(".domain").remove())
-                    .call((g: any) => {
+                        .ticks(14))
+                    .call((g) => g.select(".domain").remove())
+                    .call((g) => {
                         g.selectAll("text")
                             .attr("fill", `${colorPalette().BRIGHT}`)
                             .style("font-family", "'Courier New', Courier, monospace")
                             .style("font-size", "14px");
                         g.selectAll("line")
-                            .style("stroke-width", "0.5px");
-                        g.select(".domain")
                             .style("stroke-width", "0.5px");
                     });
 
             // Add grid lines
-            const xGrid = (g: any) =>
+            const xGrid = (g: d3.Selection<SVGGElement, unknown, null, undefined>) =>
                 g
                     .attr("stroke", `${colorPalette().BRIGHT}`)
                     .attr("stroke-opacity", 0.1)
-                    .call((g: any) =>
+                    .call((g) =>
                         g
                             .append("g")
                             .selectAll("line")
                             .data(x.ticks(20))
                             .join("line")
-                            .attr("x1", (d: any) => 0.5 + x(d))
-                            .attr("x2", (d: any) => 0.5 + x(d))
+                            .attr("x1", (d) => 0.5 + (x(d) ?? 0))
+                            .attr("x2", (d) => 0.5 + (x(d) ?? 0))
                             .attr("y1", margin.top)
                             .attr("y2", height - margin.bottom)
                             .attr("stroke-dasharray", "4")
                     );
 
-            const yGrid = (g: any) =>
+            const yGrid = (g: d3.Selection<SVGGElement, unknown, null, undefined>) =>
                 g
                     .attr("stroke", `${colorPalette().BRIGHT}`)
                     .attr("stroke-opacity", 0.1)
-                    .call((g: any) =>
+                    .call((g) =>
                         g
                             .append("g")
                             .selectAll("line")
                             .data(y.ticks())
                             .join("line")
-                            .attr("y1", (d: any) => 0.5 + y(d))
-                            .attr("y2", (d: any) => 0.5 + y(d))
+                            .attr("y1", (d) => 0.5 + y(d))
+                            .attr("y2", (d) => 0.5 + y(d))
                             .attr("x1", margin.left)
                             .attr("x2", width - margin.right)
                             .attr("stroke-dasharray", "4")
                     );
 
             // Line generator
-            const line = d3
-                .line()
-                .defined((d: any) => !isNaN(d.value))
-                .x((d: any) => x(d.date))
-                .y((d: any) => y(d.value));
-
+            const line = d3.line()
+                .defined((d: DataPoint) => d.date !== null && !isNaN(d.value))
+                .x((d: DataPoint) => x(d.date as Date))
+                .y((d: DataPoint) => y(d.value));
+                
             // Create the SVG element
             const svg = d3
                 .select(svgRef.current)
-                .attr("viewBox", [0, 0, width, height].join(" "));
+                .attr("viewBox", [0, 0, width, height].join(" "))
+                .append("g");
 
             svg.append("g").call(xGrid);
             svg.append("g").call(yGrid);
@@ -136,7 +140,7 @@ export function Cyberspace() {
                 .attr("d", line);
 
             // Animate the line drawing
-            const totalLength = path.node()?.getTotalLength();
+            const totalLength = path.node()?.getTotalLength() || 0;
 
             path
                 .attr("stroke-dasharray", `${totalLength},${totalLength}`)
@@ -150,12 +154,10 @@ export function Cyberspace() {
 
     return (
         <section className="mb-80 mt-32 md:justify-between">
-            <div className={` tracking-wide ${styles.bright} text-2xl`}>TWITTER TREND</div>
-            {/* <div className={` ${styles.bright} w-7/12 text-md mb-5`}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.  */}
-            {/* </div> */}
+            <div className={`tracking-wide ${styles.bright} text-2xl`}>TWITTER TREND</div>
             <div className={`${styles.chartMinWidth} overflow-x-auto`}>
-                < svg ref={svgRef} />
+                <svg ref={svgRef} />
             </div>
         </section>
     );
-};
+}
