@@ -1,58 +1,82 @@
 "use client"
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import { ScaleQuantile, scaleQuantile } from 'd3-scale';
 import "../globals.css";
 import styles from './mapembed.module.css';
 import { colorPalette } from "./color-palette";
+
+interface DataPoint {
+    Area: string;
+    Attacks: number;
+}
 
 export function AttacksPerArea() {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const ATTACK_DATA = './data/attacksperarea.csv';
 
     useEffect(() => {
-        function BarChart(svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>, data: any, {
-            x = (d: any) => d.Attacks,
-            y = (d: any) => d.Area,
-            marginTop = 20,
-            marginRight = 20,
-            marginBottom = 30,
-            marginLeft = 100,
-            width = 640,
-            height = 400,
-            xDomain,
-            xRange = [marginLeft, width - marginRight],
-            yDomain,
-            yRange = [marginTop, height - marginBottom],
-            xFormat,
-            yPadding = 0.3,
-            xLabel,
-            color = `${colorPalette().HIGHLIGHT}`
-        } = {}) {
+        function BarChart(
+            svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+            data: DataPoint[],
+            {
+                x = (d: DataPoint) => d.Attacks,
+                y = (d: DataPoint) => d.Area,
+                marginTop = 20,
+                marginRight = 20,
+                marginBottom = 30,
+                marginLeft = 100,
+                width = 640,
+                height = 400,
+                xDomain,
+                xRange = [marginLeft, width - marginRight] as [number, number],
+                yDomain,
+                yRange = [marginTop, height - marginBottom] as [number, number],
+                xFormat,
+                yPadding = 0.3,
+                xLabel,
+                color = `${colorPalette().HIGHLIGHT}`
+            }: {
+                x?: (d: DataPoint) => number;
+                y?: (d: DataPoint) => string;
+                marginTop?: number;
+                marginRight?: number;
+                marginBottom?: number;
+                marginLeft?: number;
+                width?: number;
+                height?: number;
+                xDomain?: [number, number];
+                xRange?: [number, number];
+                yDomain?: string[];
+                yRange?: [number, number];
+                xFormat?: string;
+                yPadding?: number;
+                xLabel?: string;
+                color?: string;
+            } = {}
+        ) {
             // Compute values.
-            const X = d3.map(data, x);
-            const Y = d3.map(data, y);
+            const X = data.map(x);
+            const Y = data.map(y);
 
-            // custom color scale
+            // Custom color scale
             const customColors = [
                 colorPalette().SECONDARY,
-                "#ECA281", // Light Salmon
-                "#F69169", // Coral
-                "#FF6347", // Orange Red
-                colorPalette().HIGHLIGHT  // Red
+                "#ECA281",
+                "#F69169",
+                "#FF6347",
+                colorPalette().HIGHLIGHT
             ];
-            const colorScale = d3.scaleQuantile<string>()
-                .domain([0, d3.max(X)])
+            const colorScale: ScaleQuantile<string, never> = scaleQuantile<string>()
+                .domain([0, d3.max(X) ?? 0])
                 .range(customColors);
-            // const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
-            //     .domain([0, d3.max(X)]);
 
             // Compute default domains, and unique the y-domain.
-            if (xDomain === undefined) xDomain = [0, d3.max(X)];
-            if (yDomain === undefined) yDomain = Y;
-            yDomain = new d3.InternSet(yDomain);
+            if (xDomain === undefined) xDomain = [0, d3.max(X) ?? 0];
+            if (yDomain === undefined) yDomain = Array.from(new Set(Y));
 
             // Omit any data not present in the y-domain.
-            const I = d3.range(X.length).filter(i => yDomain.has(Y[i]));
+            const I = d3.range(X.length).filter(i => yDomain.includes(Y[i]));
 
             // Construct scales and axes.
             const xScale = d3.scaleLinear(xDomain, xRange);
@@ -68,64 +92,42 @@ export function AttacksPerArea() {
                 .attr("viewBox", [0, 0, width, height])
                 .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
-            //x-grid
+            // x-grid
             svg.append("g")
                 .attr("class", "grid")
                 .attr("transform", `translate(0,${height - marginBottom})`)
-                .call(d3.axisBottom(xScale)
-                    .tickSize(-(height - yPadding - marginTop - marginBottom))
-                    .tickFormat("" as any))
+                .call(
+                    d3.axisBottom(xScale)
+                        .tickSize(-(height - yPadding - marginTop - marginBottom))
+                        .tickFormat(() => '')
+                )
                 .call(g => g.select(".domain").remove())
                 .call(g => g.selectAll(".tick line")
                     .attr("stroke", `${colorPalette().SILVER}`)
                     .attr("stroke-opacity", 0.3)
                     .attr("stroke-dasharray", "4"));
 
-            //x-axis
+            // x-axis
             svg.append("g")
                 .attr("transform", `translate(0,${height - marginBottom})`)
                 .call(xAxis)
-                // .call(g => g.select(".domain").remove())
                 .call(g => g.append("text")
                     .attr("x", width - marginRight)
                     .attr("y", -4)
+                    .attr("fill", "currentColor")
                     .attr("text-anchor", "end")
                     .text(xLabel))
-                .call((g: any) => {
+                .call(g => {
                     g.selectAll("text")
                         .attr("fill", `${colorPalette().BRIGHT}`)
                         .style("font-family", "'Inconsolata',monospace")
                         .style("font-size", "14px");
                 });
 
-            //y-grid
-            // svg.append("g")
-            //     .attr("class", "grid y-grid")
-            //     .attr("transform", `translate(${marginLeft},0)`)
-            //     .call(d3.axisLeft(yScale)
-            //         .tickSize(-(width - marginLeft - marginRight))
-            //         .tickFormat("" as any)
-            //     )
-            //     .call(g => g.select(".domain").remove())
-            //     .call(g => g.selectAll(".tick line")
-            //         .attr("stroke", `${colorPalette().BRIGHT}`)
-            //         .attr("stroke-opacity", 0.3)
-            //         .attr("stroke-dasharray", "4"));
-
-            //y-axis
+            // y-axis
             const yAxisG = svg.append("g")
                 .attr("transform", `translate(${marginLeft},0)`)
-                .call(yAxis)
-            // .call(g => g.select(".domain").remove());
-
-            // Add background rectangles
-            // yAxisG.selectAll(".tick")
-            //     .insert("rect", "text") // Insert rect before text
-            //     .attr("x", -marginLeft)
-            //     .attr("y", -yScale.bandwidth() / 2)
-            //     .attr("width", marginLeft - 10)
-            //     .attr("height", yScale.bandwidth())
-            //     .attr("fill", (d, i) => d3.color(colorScale(X[i])).darker(1).copy({opacity: 0.5}));
+                .call(yAxis);
 
             // Style the text
             yAxisG.selectAll(".tick text")
@@ -137,24 +139,21 @@ export function AttacksPerArea() {
                 .style("font-size", "14px");
 
             svg.append("g")
-                // .attr("fill", color)
                 .selectAll("rect")
                 .data(I)
                 .join("rect")
                 .attr("x", xScale(0))
-                .attr("y", i => yScale(Y[i]))
+                .attr("y", i => yScale(Y[i]) ?? 0)
                 .attr("width", i => xScale(X[i]) - xScale(0))
                 .attr("height", yScale.bandwidth())
-                .attr("fill", i => colorScale(X[i]));;
+                .attr("fill", i => colorScale(X[i]));
         }
 
-        async function fetchData() {
-            const data = await d3.csv(ATTACK_DATA, (d: any) => {
-                return {
-                    Area: d.Area,
-                    Attacks: +d.Attacks
-                };
-            });
+        async function fetchData(): Promise<DataPoint[]> {
+            const data = await d3.csv<DataPoint>(ATTACK_DATA, (d) => ({
+                Area: d.Area,
+                Attacks: +d.Attacks
+            }));
             return data;
         }
 
