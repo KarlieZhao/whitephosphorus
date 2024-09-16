@@ -3,7 +3,7 @@ import { EXAMPLE_PATH } from "@/lib/constants";
 
 export function Footer() {
   return (
-    <div className="">
+    <div className="bg-gradient-to-b bg-black">
       {/* bg-gradient-to-b from-transparent to-black */}
       {/* <Container> */}
         <div className="py-28 flex flex-col lg:flex-row items-center">

@@ -153,7 +153,7 @@ export function Cyberspace() {
     }, []);
 
     return (
-        <section className="mb-80 mt-32 md:justify-between">
+        <section className="mb-80 mt-32 md:justify-between bg-black">
             <div className={`tracking-wide ${styles.bright} text-2xl`}>TWITTER TREND</div>
             <div className={`${styles.chartMinWidth} overflow-x-auto`}>
                 <svg ref={svgRef} />

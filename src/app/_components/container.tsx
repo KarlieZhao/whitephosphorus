@@ -6,7 +6,7 @@ type Props = {
 
 const Container = ({ children }: Props) => {
   return <div className={`${styles.backdrop}`}> 
-    <div className={`container mx-auto ${styles.mainContent}`}>{children}</div>;
+    <div className={`container ${styles.mainContent}`}>{children}</div>;
   </div>
 };
 
