@@ -12,31 +12,44 @@ import Header from "@/app/_components/header";
 import './globals.css'
 
 export default function Index() {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const cyberspaceSectionRef = useRef<HTMLDivElement>(null);
-  const [mapHeight, setMapHeight] = useState("100vh");
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null; // or a loading placeholder
+  }
 
   return (
     <>
       <Header />
-      <main>
-        <div className="map-container" ref={mapContainerRef}>
+      <main className="relative min-h-screen">
+        <div className="fixed inset-0 z-0 h-screen overflow-hidden">
           <Map />
         </div>
-        <div className="content-container">
-          <div className="overlay-container">
-            <Container>
-              <AttacksPerArea />
-              <AttacksPerMonth />
-              <AttacksPerDay />
-            </Container>
-          </div>
-          <div className="non-overlay-content" ref={cyberspaceSectionRef}>
-            <Cyberspace />
-            <Footer />
-          </div>
+        <Container>
+          <AttacksPerArea />
+          <AttacksPerMonth />
+          <AttacksPerDay />
+        </Container>
+        <div className="relative w-1/2 z-10 mt-80 overflow-scroll scrollbar-hide w-full">
+          <Cyberspace />
+          <Cyberspace />
         </div>
       </main>
+      <Footer />
+
+      <style jsx global>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </>
   );
 }

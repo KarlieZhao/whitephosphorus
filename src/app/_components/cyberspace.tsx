@@ -30,8 +30,8 @@ export function Cyberspace() {
 
             // Set up chart dimensions
             const margin = { top: 20, right: 30, bottom: 20, left: 40 };
-            const width = 1100 - margin.left - margin.right;
-            const height = 900 - margin.top - margin.bottom;
+            const width = 1000 - margin.left - margin.right;
+            const height = 600 - margin.top - margin.bottom;
 
             // Create scales
             const x = d3
@@ -56,7 +56,7 @@ export function Cyberspace() {
                         g.selectAll("text")
                             .attr("fill", `${colorPalette().BRIGHT}`)
                             .style("font-family", "'Courier New', Courier, monospace")
-                            .style("font-size", "14px");
+                            .style("font-size", "10px");
                         g.selectAll("line")
                             .style("stroke-width", "0.5px");
                         g.select(".domain")
@@ -73,7 +73,7 @@ export function Cyberspace() {
                         g.selectAll("text")
                             .attr("fill", `${colorPalette().BRIGHT}`)
                             .style("font-family", "'Courier New', Courier, monospace")
-                            .style("font-size", "14px");
+                            .style("font-size", "10px");
                         g.selectAll("line")
                             .style("stroke-width", "0.5px");
                     });
@@ -118,7 +118,7 @@ export function Cyberspace() {
                 .defined((d: DataPoint) => d.date !== null && !isNaN(d.value))
                 .x((d: DataPoint) => x(d.date as Date))
                 .y((d: DataPoint) => y(d.value));
-                
+
             // Create the SVG element
             const svg = d3
                 .select(svgRef.current)
@@ -152,12 +152,18 @@ export function Cyberspace() {
         });
     }, []);
 
-    return (
-        <section className="mt-32 md:justify-between bg-black">
-            <div className={`tracking-wide ${styles.bright} text-2xl`}>TWITTER TREND</div>
-            <div className={`${styles.chartMinWidth} overflow-x-auto`}>
-                <svg ref={svgRef} />
-            </div>
+    return (<div className={`w-4/5 px-5 mb-52 mt-10 flex flex-col items-center justify-center ${styles.cyberspaceSection}`}>
+        <section className="w-full">
+            <h1 className={`mt-2 mb-4 px-6 tracking-wide ${styles.bright} text-6xl`}>TWITTER TREND</h1>
+            <div className="w-full">
+                <div className={`${styles.chartMinWidth} overflow-hidden`}>
+                    <svg ref={svgRef} />
+               
+               <div className="px-6 mt-10">
+
+Morbi a purus sed turpis blandit consequat. Nam dignissim luctus felis, eget semper mi interdum sit amet. Vestibulum maximus aliquet risus sed accumsan. Donec auctor ante nisi, ac efficitur eros mollis sit amet. Suspendisse potenti. Morbi quis aliquet leo. Nulla quis blandit sem.  </div> </div>
+                </div>
         </section>
+    </div>
     );
 }

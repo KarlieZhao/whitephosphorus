@@ -9,18 +9,31 @@ html {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;/* Firefox */
+    -ms-overflow-style: none;/* Internet Explorer 10+ */
+}
+
+footer{
+    background-color: #00000099;
+}
+
+iframe {
+    z-index: -100;
 }
 
 h1,
 h2 {
     font-weight: 700;
 }
+
 main {
     position: relative;
-    margin-top: 50px; /* Adjust based on your header height */
-  }
-  
-  header {
+    margin-top: 50px;
+    /* Adjust based on your header height */
+}
+
+header {
     position: fixed;
     top: 0;
     left: 0;
@@ -28,42 +41,10 @@ main {
     height: 50px;
     background-color: #000;
     z-index: 1000;
-  }
-  
-  .map-container {
-    position: fixed;
-    top: 50px; /* Adjust based on your header height */
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 50px);
-    z-index: 1;
-  }
-  
-  .content-container {
-    position: relative;
-    z-index: 2;
-  }
-  
-  .overlay-container {
-    position: relative;
-    margin-top: -20vh; 
-    padding-top: 50px; 
-    min-height: 100vh;
-    pointer-events: none; 
-  }
-  
-  .overlay-container > * {
-    pointer-events: auto; /* Re-enable pointer events for overlay content */
-  }
-  
-  .non-overlay-content {
-    position: relative;
-    background: white;
-    z-index: 3;
-    margin-top: -15vh;
-  }
+}
 
 :root {
+    overscroll-behavior: none;
     --syntax_normal: #1b1e23;
     --syntax_comment: #a9b0bc;
     --syntax_number: #20a5ba;

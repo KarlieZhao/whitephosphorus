@@ -5,8 +5,10 @@ type Props = {
 };
 
 const Container = ({ children }: Props) => {
-  return <div className={`${styles.backdrop}`}> 
-    <div className={`container ${styles.mainContent}`}>{children}</div>;
+  return <div className={`${styles.containerSection} relative w-1/2 z-10 overflow-scroll scrollbar-hide `}> 
+  <div className={`${styles.backdrop}`}>
+    <div className={`container ${styles.mainContent}`}>{children}</div>
+    </div>
   </div>
 };
 

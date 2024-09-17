@@ -177,7 +177,7 @@ export function AttacksPerDay() {
     }, [dimensions]);
 
     return (
-        <section className={`mb-20 mt-40 md:justify-between`}>
+        <section className={`mb-40 mt-40 md:justify-between`}>
             <div className={`text-2xl tracking-wide ${styles.bright}`}>Attacks per Week</div>
             <br /><br />
             <div className={` ${styles.chartMinWidth}`}>
