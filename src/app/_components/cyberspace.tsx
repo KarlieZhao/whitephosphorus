@@ -31,7 +31,7 @@ export function Cyberspace() {
             // Set up chart dimensions
             const margin = { top: 20, right: 30, bottom: 20, left: 40 };
             const width = 1000 - margin.left - margin.right;
-            const height = 600 - margin.top - margin.bottom;
+            const height = 400 - margin.top - margin.bottom;
 
             // Create scales
             const x = d3
@@ -152,10 +152,10 @@ export function Cyberspace() {
         });
     }, []);
 
-    return (<div className={`w-4/5 px-5 mb-52 mt-10 flex flex-col items-center justify-center ${styles.cyberspaceSection}`}>
-        <section className="w-full">
-            <h1 className={`mt-2 mb-4 px-6 tracking-wide ${styles.bright} text-6xl`}>TWITTER TREND</h1>
-            <div className="w-full">
+    return (<div className={`w-11/12 mt-20 px-5 mb-52 mt-10 flex flex-col items-center justify-center ${styles.cyberspaceSection}`}>
+        <section className="w-11/12">
+            <h1 className={`mt-10 mb-4 px-6 tracking-wide ${styles.bright} text-6xl`}>TWITTER TREND</h1>
+            <div className="w-11/12 flex flex-col items-center justify-center">
                 <div className={`${styles.chartMinWidth} overflow-hidden`}>
                     <svg ref={svgRef} />
                

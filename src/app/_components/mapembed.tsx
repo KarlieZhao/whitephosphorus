@@ -6,10 +6,10 @@ import { useWindowHeight } from "@/lib/resize"; // Adjust the import path as nec
 
 export function Map() {
   const windowWidth = useWindowWidth();
-  const windowHeight = useWindowHeight();
+  const frameHeight = useWindowHeight()*1.05;
 
   return (
-    <section className="h-full w-full">
+    <section className="w-full" style={{ height: `${frameHeight}px` }}>
       <iframe 
         className="w-full h-full border-0" 
         title="Test_Karlie" 

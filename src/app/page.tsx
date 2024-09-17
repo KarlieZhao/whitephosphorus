@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useRef, useState, useCallback } from "react";
+import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
 import Container from "@/app/_components/container";
 import { Map } from "@/app/_components/mapembed";
 import { getAllPosts } from "@/lib/api";
@@ -17,22 +18,24 @@ export default function Index() {
   const scrollPosition = useScrollPosition();
   const windowHeight = useWindowHeight();
   const [overlayHeight, setOverlayHeight] = useState(0);
-  const [mapHeight, setMapHeight] = useState(0);
+  const [mainHeight, setMainHeight] = useState(0);
+  const [documentHeight, setDocumentHeight] = useState(0);
   const overlayRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<HTMLDivElement | null>(null);
+  const mainRef = useRef<HTMLDivElement | null>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const [scrollPercentage, setScrollPercentage] = useState(0);
 
-
-  const updateOverlayHeight = useCallback(() => {
+  const updateHeights = useCallback(() => {
     if (overlayRef.current instanceof HTMLElement) {
       const element = overlayRef.current;
       const rect = element.getBoundingClientRect();
-      const computedStyle = window.getComputedStyle(element);
-      const marginTop = parseInt(computedStyle.marginTop, 10);
-      const marginBottom = parseInt(computedStyle.marginBottom, 10);
-      setOverlayHeight(rect.height + marginTop + marginBottom);
+      setOverlayHeight(rect.height);
     }
+    if (mainRef.current instanceof HTMLElement) {
+      const mainElement = mainRef.current;
+      const rect = mainElement.getBoundingClientRect();
+      setMainHeight(rect.height);
+    }
+    setDocumentHeight(document.documentElement.scrollHeight);
   }, []);
 
   useEffect(() => {
@@ -40,53 +43,39 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
-    if (!isMounted) return;
-    updateOverlayHeight();
-    const observer = new MutationObserver(updateOverlayHeight);
+    updateHeights();
+    const observer = new MutationObserver(updateHeights);
     if (overlayRef.current) {
       observer.observe(overlayRef.current, { childList: true, subtree: true });
     }
-    window.addEventListener('resize', updateOverlayHeight);
+    window.addEventListener('resize', updateHeights);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener('resize', updateOverlayHeight);
+      window.removeEventListener('resize', updateHeights);
     };
-  }, [isMounted, updateOverlayHeight]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const maxScroll = overlayHeight;
-      const percentage = Math.min((Math.max(0, (scrollPosition - overlayHeight)) / maxScroll) * 150, 100);
-      setScrollPercentage(percentage);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [overlayHeight]);
-
-  const isMapFixed = scrollPosition <= overlayHeight;
+  }, [isMounted, updateHeights]);
 
   if (!isMounted) {
     return null; // or a loading placeholder
   }
+  const transY = - 100 * ((documentHeight - overlayHeight) / windowHeight-0.8);
+  console.log(transY);
 
   return (
-    <>
+    <ParallaxProvider>
       <div className="bg-black">
         <Header />
-        <main className="bg-black relative min-h-screen">
-          <div
-            className={`fixed inset-0 z-0 h-screen overflow-hidden`}
-            style={{
-              transform: `translateY(-${scrollPercentage}%)`,
-              transition: 'transform 0.1s linear'  // ease-out? 
-            }}>
-            <div className="h-screen">
-              <Map />
-            </div>
-          </div>
+        <main ref={mainRef} className="bg-black relative min-h-screen">
+          <Parallax
+            translateY={[0, transY]}
+            startScroll={overlayHeight}
+            endScroll={documentHeight - windowHeight}
+            className="fixed inset-0 z-0 h-screen overflow-hidden"
+            disabled={scrollPosition < overlayHeight}
+          >
+            <Map />
+          </Parallax>
           <div ref={overlayRef}>
             <Container>
               <AttacksPerArea />
@@ -94,11 +83,10 @@ export default function Index() {
               <AttacksPerDay />
             </Container>
           </div>
-          <div className="w-1/2  mt-20 z-10 overflow-scroll scrollbar-hide w-full">
+          <div className="w-1/2 relative -mt-10 z-10 overflow-scroll scrollbar-hide w-full">
+            <Cyberspace />
             <Cyberspace />
           </div>
-          {/* <div style={{ height: '200vh' }} /> */}
-          {/* Space to allow scrolling */}
         </main>
         <Footer />
       </div>
@@ -112,6 +100,6 @@ export default function Index() {
         }
       `}</style>
 
-    </>
+    </ParallaxProvider>
   );
 }

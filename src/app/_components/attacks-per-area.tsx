@@ -181,7 +181,7 @@ export function AttacksPerArea() {
     }, []);
 
     return (
-        <section className="mb-20 mt-40 md:justify-between">
+        <section className="mb-20 mt-10 md:justify-between">
             <div className={`text-2xl tracking-wide ${styles.bright}`}>Attacks per Area</div>
             <div className={`${styles.chartMinWidth}`}>
                 <svg ref={svgRef} />
