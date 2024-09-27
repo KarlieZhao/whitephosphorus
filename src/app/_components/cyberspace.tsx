@@ -54,7 +54,7 @@ export function Cyberspace() {
                         .tickSizeOuter(0))
                     .call((g) => {
                         g.selectAll("text")
-                            .attr("fill", `${colorPalette().BRIGHT}`)
+                            .attr("fill", `${colorPalette().DARK1}`)
                             .style("font-family", "'Courier New', Courier, monospace")
                             .style("font-size", "10px");
                         g.selectAll("line")
@@ -71,7 +71,7 @@ export function Cyberspace() {
                     .call((g) => g.select(".domain").remove())
                     .call((g) => {
                         g.selectAll("text")
-                            .attr("fill", `${colorPalette().BRIGHT}`)
+                            .attr("fill", `${colorPalette().DARK1}`)
                             .style("font-family", "'Courier New', Courier, monospace")
                             .style("font-size", "10px");
                         g.selectAll("line")
@@ -81,7 +81,7 @@ export function Cyberspace() {
             // Add grid lines
             const xGrid = (g: d3.Selection<SVGGElement, unknown, null, undefined>) =>
                 g
-                    .attr("stroke", `${colorPalette().BRIGHT}`)
+                    .attr("stroke", `${colorPalette().DARK1}`)
                     .attr("stroke-opacity", 0.1)
                     .call((g) =>
                         g
@@ -98,7 +98,7 @@ export function Cyberspace() {
 
             const yGrid = (g: d3.Selection<SVGGElement, unknown, null, undefined>) =>
                 g
-                    .attr("stroke", `${colorPalette().BRIGHT}`)
+                    .attr("stroke", `${colorPalette().DARK1}`)
                     .attr("stroke-opacity", 0.1)
                     .call((g) =>
                         g
@@ -152,18 +152,27 @@ export function Cyberspace() {
         });
     }, []);
 
-    return (<div className={`w-11/12 mt-20 px-5 mb-52 mt-10 flex flex-col items-center justify-center ${styles.cyberspaceSection}`}>
-        <section className="w-11/12">
-            <h1 className={`mt-10 mb-4 px-6 tracking-wide ${styles.bright} text-6xl`}>TWITTER TREND</h1>
-            <div className="w-11/12 flex flex-col items-center justify-center">
-                <div className={`${styles.chartMinWidth} overflow-hidden`}>
-                    <svg ref={svgRef} />
-               
-               <div className="px-6 mt-10">
-
-Morbi a purus sed turpis blandit consequat. Nam dignissim luctus felis, eget semper mi interdum sit amet. Vestibulum maximus aliquet risus sed accumsan. Donec auctor ante nisi, ac efficitur eros mollis sit amet. Suspendisse potenti. Morbi quis aliquet leo. Nulla quis blandit sem.  </div> </div>
+    return (
+        <div className="content w-full mt-24 ">
+            <div className="handle">
+            <div className="control-box close-box"><a className="control-box-inner"></a></div>
+            <div className="control-box zoom-box"><div className="control-box-inner"><div className="zoom-box-inner"></div></div></div>
+            <div className="control-box windowshade-box"><div className="control-box-inner"><div className="windowshade-box-inner"></div></div></div>
+            <h1 className="title text-2xl">Footage Details</h1>
+            </div>
+            <div className="inner">
+                <div className={`px-5 flex flex-col items-center justify-center ${styles.cyberspaceSection}`}>
+                    <section>
+                        {/* <h1 className={`mb-4 px-6 tracking-wide ${styles.bright} text-6xl`}>TWITTER TREND</h1> */}
+                        <div className="flex flex-col items-center justify-center">
+                            <div className={`${styles.chartMinWidth}`}>
+                                <svg ref={svgRef} />
+                                <div className="px-6 mt-10 text-xl">
+                                    Morbi a purus sed turpis blandit consequat. Nam dignissim luctus felis, eget semper mi interdum sit amet. Vestibulum maximus aliquet risus sed accumsan. Donec auctor ante nisi, ac efficitur eros mollis sit amet. Suspendisse potenti. Morbi quis aliquet leo. Nulla quis blandit sem.  </div> </div>
+                        </div>
+                    </section>
                 </div>
-        </section>
-    </div>
+            </div>
+        </div>
     );
 }

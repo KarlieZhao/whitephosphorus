@@ -1,26 +1,315 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap');
 
-body,
-html {
-    background-color: #000;
-    font-family: Inconsolata;
+/* apply a natural box layout model to all elements */
+
+*,
+*:before,
+*:after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'pala';
+    src: url('../fonts/pala.ttf') format('truetype');
+    /* Safari, Android, iOS */
+}
+
+@font-face {
+    font-family: 'palab';
+    src: url('../fonts/palab.ttf') format('truetype');
+    /* Safari, Android, iOS */
+}
+
+@font-face {
+    font-family: "Handjet", sans-serif;
+    /* Safari, Android, iOS */
+}
+
+b {
+    font-family: "palab";
+}
+
+header {
+    font-family: "Handjet";
+    font-size: 1.8rem;
+}
+
+header .text-2xl{
+    font-family: "Handjet";
+    font-size: 1.8rem;
+}
+.text-2xl {
+    font-family: "palab";
+}
+
+:root {
+    --button-box-shadow:
+        inset -1px -1px 0px 0px #777,
+        inset -2px -2px 0px 0px #aaa,
+        inset 1px 1px 0px 0px #ddd,
+        inset 2px 2px 0px 0px #fff;
+    --button-hover-bezel:
+        0 0 0 1px #aaa,
+        0 0 0 2px #ddd,
+        0 0 0 3px #000;
+}
+
+html,
+body {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    background-image: url("../patterns/988.png");
+    background-repeat: repeat;
+    margin: 0;
+    font-family: 'pala', 'Handjet', 'Times New Roman', 'Georgia', serif;
+    /* font-family: "Handjet", sans-serif; */
+    vertical-align: middle;
+    font-optical-sizing: auto;
     font-weight: 400;
+    font-style: normal;
+    font-size: 1.0rem;
+    color: black;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
     scroll-behavior: smooth;
-    scrollbar-width: none;/* Firefox */
-    -ms-overflow-style: none;/* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
 }
 
-footer{
+button {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+a {
+    color: #000;
+}
+
+:focus {
+    outline: none;
+}
+
+::-moz-focus-inner {
+    border: 0;
+}
+
+/* Window layout */
+.content {
+    position: relative;
+    z-index: 1000;
+    font-weight: normal;
+    display: block;
+    width: fit-content;
+    margin-left: 4vw;
+    margin-right: auto;
+    align-items: center;
+    justify-items: center;
+    border: 1px solid #111;
+    background: #cccccc99;
+    box-shadow:
+        1px 2px #111,
+        inset 1px 1px 0px 0px #fff,
+        inset -1px -1px 0px 0px #999;
+}
+
+
+.inner {
+    margin: 2px 4px 4px 4px;
+    border: 1px solid #111;
+    background-color: #ddd;
+    box-shadow:
+        -1px -1px 0px 0px #999,
+        1px 1px 0px 0px #fff,
+        inset 1px 1px 0px 0px #fff,
+        inset -1px -1px 0px 0px #999;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+    font-weight: inherit;
+    padding: 5px 0;
+    background-size: 3px 2px;
+    margin: 0 0 0 0;
+}
+
+.icon {
+    text-align: center;
+    margin: 1em 0;
+}
+
+ul {
+    list-style-type: none;
+    margin: 2px 0 1.5em 0;
+    padding: 0 0 0 2em;
+    font-size: 12px;
+}
+
+.footer {
+    width: 400px;
+    text-align: center;
+    margin: 2em auto 0;
+    font-size: 12px;
+}
+
+.control-box {
+    position: absolute;
+    top: 3px;
+    padding: 1px;
+    background-color: #222;
+    box-shadow:
+        inset -1px -1px 0px 0px #fff,
+        inset 1px 1px 0px 0px #888;
+}
+
+.close-box.control-box {
+    left: 4px;
+}
+
+.control-box-inner {
+    display: block;
+    height: 2.5vmin;
+    width: 2.5vmin;
+    background-image:
+        linear-gradient(to bottom right, #999, #aaa, #bbb, #ccc, #ddd, #eee, #fff);
+    border: 1px solid #222;
+    box-shadow:
+        inset 1px 1px 0px 0px #ccc,
+        inset -1px -1px 0px 0px #888;
+    text-indent: -99999em;
+}
+
+.control-box-inner:active {
+    box-shadow: none;
+}
+
+.zoom-box.control-box {
+    right: 4vmin;
+}
+
+.zoom-box-inner {
+    height: 1.5vmin;
+    width: 1.6vmin;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+}
+
+.windowshade-box.control-box {
+    right: 4px;
+}
+
+.windowshade-box-inner {
+    margin-top: 3px;
+    height: 0.7vmin;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.command_button {
+    background-color: #262626;
+    color: #dedede;
+    display: inline-block;
+    /* margin-bottom: 7px; */
+    /* margin-left: 14px; */
+    border-radius: 3px;
+    border: 1px solid #000;
+    box-shadow: var(--button-box-shadow);
+}
+
+.command_button_unclickable {
+    height: 47px;
+    background-color: #C22F27;
+    color: #dedede;
+    /* display: inline-block; */
+    /* margin-bottom: 7px; */
+    /* margin-left: 14px; */
+    border-radius: 3px;
+    border: 1px solid #000;
+    box-shadow: var(--button-box-shadow);
+}
+
+.command_button:hover {
+    background-color: #4d4d4d;
+    box-shadow:
+        var(--button-box-shadow),
+        var(--button-hover-bezel);
+}
+
+.command_button:active {
+    color: #dedede;
+    /* transition: 0.3s ease; */
+    background-color: #898989;
+    box-shadow:
+        var(--button-hover-bezel),
+        inset -1px -1px 0px 0px #888,
+        inset -2px -2px 0px 0px #777,
+        inset 1px 1px 0px 0px #444,
+        inset 2px 2px 0px 0px #555;
+}
+
+.tabIsActive {
+    color: #dedede;
+    transition: 0.3s ease;
+    background-color: #747474;
+    box-shadow:
+        var(--button-hover-bezel),
+        inset -1px -1px 0px 0px #888,
+        inset -2px -2px 0px 0px #777,
+        inset 1px 1px 0px 0px #444,
+        inset 2px 2px 0px 0px #555;
+}
+
+
+.tabIsActive:hover {
+    cursor: default;
+    color: #dedede;
+    transition: 0.3s ease;
+    background-color: #747474;
+    box-shadow:
+        var(--button-hover-bezel),
+        inset -1px -1px 0px 0px #888,
+        inset -2px -2px 0px 0px #777,
+        inset 1px 1px 0px 0px #444,
+        inset 2px 2px 0px 0px #555;
+}
+
+/* Hide only visually, but have it available for screenreaders & for SEO purposes. See h5bp.com/v */
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+footer {
     background-color: #00000099;
 }
 
 iframe {
-    z-index: -100;
+    z-index: -200;
 }
 
 h1,
@@ -31,7 +320,6 @@ h2 {
 main {
     position: relative;
     margin-top: 50px;
-    /* Adjust based on your header height */
 }
 
 header {
