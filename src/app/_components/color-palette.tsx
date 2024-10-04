@@ -3,7 +3,7 @@ export function colorPalette() {
     const BRIGHT = "#FFFFFF";
     const BRIGHT2 = "#D8BD8A"
 
-    const HIGHLIGHT = "#C22F27";
+    const HIGHLIGHT = "#FFECE9";
     const SECONDARY = "#d8c5b2";
 
     const DARK1 = "#853c3899";

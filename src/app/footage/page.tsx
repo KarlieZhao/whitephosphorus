@@ -1,29 +1,31 @@
 "use client"
 import Draggable from 'react-draggable';
-import { Cyberspace } from "@/app/_components/cyberspace";
+import FootageDisplay from "@/app/_components/footageDisplay";
 import { Footer } from "@/app/_components/footer";
 import Header from "@/app/_components/header";
-import { VisualizeFootage } from "@/app/_components/visualizeFootage";
+import HeatmapD3 from "@/app/_components/heatmapD3";
 import '@/app/globals.css'
 
 export default function Index() {
+
     return (
-        <div className='h-full'>
+        <div className='h-full overflow-hidden'>
             <Header />
             <main className="flex-grow relative">
+                <div className='inner-backdrop'></div>
                 <div className="flex z-10  scrollbar-hide w-full">
-                    <div  className=' w-3/5'>
+                    <div className='footage-1'>
                         <Draggable handle=".handle">
-                            <div className="draggable-container">
-                                <VisualizeFootage />
+                            <div className="draggable-container" id="heatmap">
+                                <HeatmapD3 />
                             </div>
                         </Draggable>
                     </div>
 
-                    <div className='w-1/3'>
+                    <div className='footage-2'>
                         <Draggable handle=".handle">
                             <div className="draggable-container">
-                                <Cyberspace />
+                                <FootageDisplay />
                             </div>
                         </Draggable>
                     </div>

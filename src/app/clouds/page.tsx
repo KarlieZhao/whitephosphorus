@@ -1,8 +1,7 @@
 "use client"
 import Draggable from 'react-draggable';
-import { Cyberspace } from "@/app/_components/cyberspace";
+import FootageDisplay from "@/app/_components/footageDisplay";
 import Header from "@/app/_components/header";
-import { VisualizeFootage } from "@/app/_components/visualizeFootage";
 import '@/app/globals.css'
 
 export default function Index() {
@@ -15,7 +14,7 @@ export default function Index() {
                     <div className='w-1/3'>
                         <Draggable handle=".handle">
                             <div className="draggable-container">
-                                <Cyberspace />
+                                <FootageDisplay />
                             </div>
                         </Draggable>
                     </div>

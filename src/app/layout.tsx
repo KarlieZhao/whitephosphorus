@@ -2,7 +2,6 @@ import { Inconsolata } from 'next/font/google'
 import { Handjet } from 'next/font/google'
 import { CMS_NAME, HOME_OG_IMAGE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
-import { ThemeSwitcher } from "./_components/theme-switcher";
 
 import "./globals.css";
 
@@ -72,7 +71,6 @@ export default function RootLayout({
         <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       </head>
       <body>
-        <ThemeSwitcher />
         <div className="min-h-screen">{children}</div>
       </body>
     </html>
