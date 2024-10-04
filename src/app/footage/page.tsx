@@ -1,9 +1,11 @@
 "use client"
 import Draggable from 'react-draggable';
 import FootageDisplay from "@/app/_components/footageDisplay";
-import { Footer } from "@/app/_components/footer";
 import Header from "@/app/_components/header";
-import HeatmapD3 from "@/app/_components/heatmapD3";
+import dynamic from 'next/dynamic'
+const HeatmapD3 = dynamic(() => import("@/app/_components/heatmapD3"), { 
+    ssr: false 
+  });
 import '@/app/globals.css'
 
 export default function Index() {
@@ -21,7 +23,6 @@ export default function Index() {
                             </div>
                         </Draggable>
                     </div>
-
                     <div className='footage-2'>
                         <Draggable handle=".handle">
                             <div className="draggable-container">
@@ -31,7 +32,6 @@ export default function Index() {
                     </div>
                 </div>
             </main>
-            {/* <Footer /> */}
         </div>
     );
 }

@@ -5,18 +5,11 @@ export function useWindowWidth() {
     const [windowWidth, setWindowWidth] = useState(0);
 
     useEffect(() => {
-        // Function to update the state with the window width
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
         };
-
-        // Set initial width
         handleResize();
-
-        // Add event listener to update the width on resize
         window.addEventListener("resize", handleResize);
-
-        // Clean up event listener on component unmount
         return () => {
             window.removeEventListener("resize", handleResize);
         };
@@ -27,25 +20,16 @@ export function useWindowWidth() {
 
 
 export function useWindowHeight() {
-    const [windowHeight, setWindowHeight] = useState(0);
+    const [height, setHeight] = useState(0);
 
     useEffect(() => {
-        // Function to update the state with the window width
-        const handleResize = () => {
-            setWindowHeight(window.innerHeight);
-        };
-
-        // Set initial width
-        handleResize();
-
-        // Add event listener to update the width on resize
-        window.addEventListener("resize", handleResize);
-
-        // Clean up event listener on component unmount
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
+        function updateHeight() {
+            setHeight(window.innerHeight);
+        }
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+        return () => window.removeEventListener('resize', updateHeight);
     }, []);
 
-    return windowHeight;
+    return height;
 }

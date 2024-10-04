@@ -5,12 +5,13 @@ import "../globals.css";
 import styles from './mapembed.module.css';
 import { colorPalette } from "./color-palette";
 
+//ON HOLD: TWITTER DATA VISUALIZATION
 type DataPoint = {
     date: Date | null;
     value: number;
 };
 
-export default function() {
+function generateTwitterGraph() {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const URL_TWITTERDATA = './data/aapl.csv';
 
@@ -151,7 +152,10 @@ export default function() {
                 .attr("stroke-dashoffset", 0);
         });
     }, []);
+    return svgRef;
+}
 
+export default function () {
     return (
         <div className="content w-full mt-32 cyberspace">
             <div className="handle">

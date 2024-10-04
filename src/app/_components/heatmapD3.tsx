@@ -1,4 +1,5 @@
-import HeatMap from "react-heatmap-grid";
+"use client"
+import HeatMapGrid from "react-heatmap-grid";
 import { useWindowHeight } from "@/lib/resize"; // Adjust the import path as necessary
 
 const xLabels = new Array(48).fill(0).map((_, i) => `${i}`);
@@ -49,7 +50,7 @@ const data = new Array(yLabels.length)
     .map(() =>
         new Array(xLabels.length).fill(0).map(() => Math.floor(Math.random() * 100))
     );
-
+    
 export default function () {
     const frameHeight = useWindowHeight() * 0.7;
 
@@ -64,7 +65,7 @@ export default function () {
             <div className="overflow-hidden inner">
                 <div className={` px-2 pt-10 flex flex-col items-center justify-center`}>
                     <section style={{ width: `60vw`, height: `${frameHeight}px` }}>
-                        <HeatMap
+                        <HeatMapGrid
                             xLabels={xLabels}
                             yLabels={yLabels}
                             xLabelsLocation={"bottom"}
