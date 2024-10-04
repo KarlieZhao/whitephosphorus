@@ -1,11 +1,9 @@
 "use client";
 import { useState } from "react";
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './mapembed.module.css';
 import '../globals.css';
-import { colorPalette } from "./color-palette";
 
 const Header = () => {
   const router = useRouter();
