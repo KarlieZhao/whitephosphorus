@@ -6,9 +6,9 @@ npm run dev
 ```
 
 ## TODO
-- catalog of clouds and rocks (variations)
+- catalog of clouds and rocks layout (variations)
+- css loader animation
 - fix scroll speed inconsistency
 - plot of attack numbers/footages
-- aesthetics: old manual inspired
 - update ARCGIS map (external) 
 - about page template (blog.md?)
