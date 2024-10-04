@@ -1,26 +1,424 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap');
 
-body,
-html {
+/* apply a natural box layout model to all elements */
+
+*,
+*:before,
+*:after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* @font-face {
+    font-family: 'pala';
+    src: url('../fonts/pala.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'palab';
+    src: url('../fonts/palab.ttf') format('truetype');
+} */
+
+@font-face {
+    font-family: "Handjet", sans-serif;
+}
+
+.typewriter {
+    z-index: 10000;
+}
+
+.typewrite {
+    width: 50vw;
+    line-height: 3.5rem;
+    display: block;
+    /* border-right: 0.08em solid #fff */
+}
+
+header {
+    font-family: "Handjet";
+    font-size: 1.8rem;
+}
+
+.text-2xl {
+    font-family: "Handjet";
+    font-size: 1.8rem;
+}
+
+:root {
+    --button-box-shadow:
+        inset -1px -1px 0px 0px #777,
+        inset -2px -2px 0px 0px #aaa,
+        inset 1px 1px 0px 0px #ddd,
+        inset 2px 2px 0px 0px #fff;
+    --button-hover-bezel:
+        0 0 0 1px #aaa,
+        0 0 0 2px #ddd,
+        0 0 0 3px #000;
+}
+
+.header-backdrop {
     background-color: #000;
-    font-family: Inconsolata;
+    /* background-image: url("../patterns/988.png"); */
+    /* background-repeat: repeat; */
+}
+
+.redbar {
+    background-color: #B33C30;
+}
+
+/* .red-box {
+    display: block;
+    position: fixed;
+    z-index: 0;
+    width: 99vw;
+    background-color: #B33C30;
+    height: calc(95.8vh - 4px);
+    margin-left: 0.5vw;
+    border: 8px solid #B33C30; */
+/* border-bottom: 20px solid #B33C30; */
+/* border-radius: 0.5rem; */
+/* box-shadow: inset 0 4px 4px 0 #B33C30,
+        inset -4px 0 4px 0 #B33C30,
+        inset 0 -4px 4px 0 #B33C30,
+        inset 4px 0 4px 0 #B33C30; */
+/* } */
+
+.inner-backdrop {
+    z-index: 0;
+    position: fixed;
+    width: 99.8vw;
+    height: 95vh;
+    margin-top: 0.8rem;
+    margin-left: 0.15vw;
+    background-image: url("../patterns/1.svg");
+    background-size: 4px 4px;
+    background-repeat: repeat;
+    /* border: 8px solid #B33C30; */
+    /* border-bottom: 0; */
+    /* border-radius: 0.5rem;
+    box-shadow: inset 0 4px 4px 0 #B33C30,
+        inset -4px 0 4px 0 #B33C30,
+        inset 0 -4px 4px 0 #B33C30,
+        inset 4px 0 4px 0 #B33C30; */
+}
+
+html,
+body {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    /* background-image: url("../patterns/988.png");
+    background-repeat: repeat; */
+    background-color: #000;
+    margin: 0;
+    font-family: 'Handjet', 'Times New Roman', 'Georgia', serif;
+    /* font-family: "Handjet", sans-serif; */
+    vertical-align: middle;
+    font-optical-sizing: auto;
     font-weight: 400;
+    font-style: normal;
+    font-size: 1.0rem;
+    color: black;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
     scroll-behavior: smooth;
-    scrollbar-width: none;/* Firefox */
-    -ms-overflow-style: none;/* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
 }
 
-footer{
+button {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+a {
+    color: #000;
+}
+
+:focus {
+    outline: none;
+}
+
+::-moz-focus-inner {
+    border: 0;
+}
+
+.container {
+    width: 98vw;
+    margin: auto;
+}
+
+.footage-1 {
+    width: 62%;
+}
+
+.footage-2 {
+    width: 35%;
+    margin-left: 1.2rem;
+}
+
+/* Window layout */
+.content {
+    position: relative;
+    z-index: 800;
+    font-weight: normal;
+    display: block;
+    /* width: fit-content; */
+    height: 80vh;
+    margin-left: 1vw;
+    align-items: center;
+    justify-items: center;
+    border: 1px solid #111;
+    background: #cccccc99;
+    box-shadow:
+        1px 2px #111,
+        inset 1px 1px 0px 0px #fff,
+        inset -1px -1px 0px 0px #999;
+}
+
+
+.inner {
+    margin: 2px 4px 4px 4px;
+    border: 1px solid #111;
+    background-color: #ddd;
+    box-shadow:
+        -1px -1px 0px 0px #999,
+        1px 1px 0px 0px #fff,
+        inset 1px 1px 0px 0px #fff,
+        inset -1px -1px 0px 0px #999;
+}
+
+.cyberspace .inner {
+    height: 75vh;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+    font-weight: inherit;
+    padding: 5px 0;
+    background-size: 3px 2px;
+    margin: 0 0 0 0;
+    color: #262626;
+    /* font-size: ; */
+}
+
+.icon {
+    text-align: center;
+    margin: 1em 0;
+}
+
+ul {
+    list-style-type: none;
+    margin: 2px 0 1.5em 0;
+    padding: 0 0 0 2em;
+    font-size: 12px;
+}
+
+.footer {
+    width: 400px;
+    text-align: center;
+    margin: 2em auto 0;
+    font-size: 12px;
+}
+
+.control-box {
+    position: absolute;
+    top: 3px;
+    padding: 1px;
+    background-color: #222;
+    box-shadow:
+        inset -1px -1px 0px 0px #fff,
+        inset 1px 1px 0px 0px #888;
+}
+
+.close-box.control-box {
+    left: 4px;
+}
+
+.control-box-inner {
+    display: block;
+    height: 28px;
+    width: 28px;
+    background-image:
+        linear-gradient(to bottom right, #999, #aaa, #bbb, #ccc, #ddd, #eee, #fff);
+    border: 1px solid #222;
+    box-shadow:
+        inset 1px 1px 0px 0px #ccc,
+        inset -1px -1px 0px 0px #888;
+    text-indent: -99999em;
+}
+
+.control-box-inner:active {
+    box-shadow: none;
+}
+
+.zoom-box.control-box {
+    right: 4vmin;
+}
+
+.zoom-box-inner {
+    height: 1.5vmin;
+    width: 1.6vmin;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+}
+
+.windowshade-box.control-box {
+    right: 4px;
+}
+
+.windowshade-box-inner {
+    margin-top: 3px;
+    height: 0.7vmin;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.command_button {
+    width: 15vw;
+    transition: all 0.3s ease;
+    background-image: url('./assets/tab.svg');
+    background-repeat: no-repeat;
+    background-position: right top;
+    color: #dedede;
+    display: inline-block;
+    /* margin-bottom: 7px; */
+    /* margin-left: 14px; */
+    /* border-radius: 3px; */
+    /* border: 1px solid #000; */
+    /* box-shadow: var(--button-box-shadow); */
+}
+
+.tab1 {
+    margin-left: -1vw;
+    z-index: 13;
+}
+
+.tab2 {
+    z-index: 12;
+    margin-left: 11.5vw;
+}
+
+.tab3 {
+    z-index: 11;
+    margin-left: 24vw;
+}
+
+.tab4 {
+    z-index: 10;
+    margin-left: 36.5vw;
+}
+
+.command_button div {
+    margin-left: -1.5vw;
+}
+
+.command_button_unclickable {
+    height: 50px;
+    width: 51.5vw;
+    background-image: url('./assets/toxicityTab.svg');
+    background-repeat: no-repeat;
+    background-position: left top;
+    color: #dedede;
+
+    /* background-color: #C22F27; */
+    /* display: inline-block; */
+    /* margin-bottom: 7px; */
+    /* margin-left: 14px; */
+    /* border-radius: 3px;
+    border: 1px solid #000;
+    box-shadow: var(--button-box-shadow); */
+}
+
+.command_button:hover {
+
+    transition: 0.2s ease;
+    transform: translateY(-6px);
+    /* background-color: #4d4d4d; */
+    /* box-shadow:
+        var(--button-box-shadow),
+        var(--button-hover-bezel); */
+}
+
+.command_button:active {
+    /* background-image: url('./assets/tabActive.svg'); */
+    color: #dedede;
+    /* transform: 'scale(1.05)'; */
+    /* transition: 0.3s ease; */
+    /* background-color: #898989;
+    box-shadow:
+        var(--button-hover-bezel),
+        inset -1px -1px 0px 0px #888,
+        inset -2px -2px 0px 0px #777,
+        inset 1px 1px 0px 0px #444,
+        inset 2px 2px 0px 0px #555; */
+}
+
+.tabIsActive {
+    z-index: 40;
+    background-image: url('./assets/tabActive.svg');
+    transition: 0.2s ease;
+    transform: translateY(-6px);
+    /* color: #dedede;
+    background-color: #747474;
+    box-shadow:
+        var(--button-hover-bezel),
+        inset -1px -1px 0px 0px #888,
+        inset -2px -2px 0px 0px #777,
+        inset 1px 1px 0px 0px #444,
+        inset 2px 2px 0px 0px #555; */
+}
+
+
+.tabIsActive:hover {
+    /* cursor: default;
+    color: #dedede;
+    transition: 0.3s ease;
+    background-color: #747474;
+    box-shadow:
+        var(--button-hover-bezel),
+        inset -1px -1px 0px 0px #888,
+        inset -2px -2px 0px 0px #777,
+        inset 1px 1px 0px 0px #444,
+        inset 2px 2px 0px 0px #555; */
+}
+
+/* Hide only visually, but have it available for screenreaders & for SEO purposes. See h5bp.com/v */
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+footer {
     background-color: #00000099;
 }
 
 iframe {
-    z-index: -100;
+    z-index: -200;
 }
 
 h1,
@@ -28,10 +426,33 @@ h2 {
     font-weight: 700;
 }
 
+h2 {
+    font-size: 3.75rem;
+    line-height: 1;
+}
+
+.toxicity-counter {
+    width: 70%; 
+    /* 70%; */
+    justify-items: center;
+    display: block;
+}
+
+.headerData {
+    font-size: 2.75rem;
+    line-height: 1;
+    font-weight: normal;
+    color: #EAE1DF;
+}
+
+h3 {
+    font-size: 2rem;
+    /* line-height: 1; */
+}
+
 main {
     position: relative;
     margin-top: 50px;
-    /* Adjust based on your header height */
 }
 
 header {
@@ -41,7 +462,6 @@ header {
     right: 0;
     height: 50px;
     background-color: #000;
-    z-index: 1000;
 }
 
 :root {

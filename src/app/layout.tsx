@@ -1,15 +1,18 @@
-import Footer from "@/app/_components/footer";
-import Header from "@/app/_components/header";
 import { Inconsolata } from 'next/font/google'
+import { Handjet } from 'next/font/google'
 import { CMS_NAME, HOME_OG_IMAGE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import cn from "classnames";
-import { ThemeSwitcher } from "./_components/theme-switcher";
 
 import "./globals.css";
 
 const inconsolata = Inconsolata({
+  weight: ['400', '600', '700'],
+  style: ['normal'],
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+const hantjet = Handjet({
   weight: ['400', '600', '700'],
   style: ['normal'],
   subsets: ['latin'],
@@ -32,6 +35,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline+Text:wght@100..900&family=Handjet:wght@100..900&display=swap" rel="stylesheet" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
@@ -63,17 +69,8 @@ export default function RootLayout({
         />
         <meta name="theme-color" content="#000" />
         <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
-        <style>{`
-        body{
-           background-color:#202123;
-           color:white;
-        }
-     ` }
-        </style>
       </head>
-      <body className={inconsolata.className}>  
-        {/* <Header /> */}
-        <ThemeSwitcher />
+      <body>
         <div className="min-h-screen">{children}</div>
       </body>
     </html>
