@@ -28,7 +28,11 @@ export default function Index() {
             onFinish={onFinish} // on finish, trigger the onFinish function
           />
         </div>
-        <div className={"relative z-0" + " " + (TypeWriterFinished ? "fadeIn": "hidden")}>
+        
+        <div className={"relative z-0" + 
+          " " + // padding
+          (TypeWriterFinished ? "fadeIn": "hidden")  // fade in if typewriter is finished if not, hide
+          }> 
             <Map/>
         </div>
       </main>
