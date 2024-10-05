@@ -5,9 +5,10 @@ interface TypewriterProps {
     textLines: string[];
     period: number;
     speed: number; // Typing speed
+    onFinish: () => void;
 }
 
-const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed }) => {
+const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFinish}) => {
     const [text, setText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
     const [typingSpeed, setTypingSpeed] = useState(Math.random() * speed + 30);
@@ -49,6 +50,7 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed }) => 
                     delta = 500; // Pause before starting the next word
                 } else {
                     setIsFinished(true); // End typing once all words are done
+                    onFinish(); // will run this function when typing is finished
                 }
             }
             setTypingSpeed(delta);
@@ -60,7 +62,7 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed }) => 
         }, typingSpeed);
 
         return () => clearTimeout(typingTimeout);
-    }, [text, isDeleting, lineNum, typingSpeed, textLines, period, speed, isFinished, hasMounted]);
+    }, [text, isDeleting, lineNum, typingSpeed, textLines, period, speed, isFinished, hasMounted, onFinish]);
 
     if (!hasMounted) {
         return null; // Prevent rendering on the server side

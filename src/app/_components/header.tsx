@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import '@/app/globals.css';
 
-const Header = () => {
+
+const Header = ({TypeWriterFinished}: {TypeWriterFinished: boolean}) => {
   const router = useRouter();
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
@@ -15,7 +16,11 @@ const Header = () => {
     air: 95.3,
     water: 88.9,
   });
-
+  useEffect(() => {
+    if (TypeWriterFinished) {
+      console.log("done")
+    }
+  }, [TypeWriterFinished]);
   return (
     <header className={`mt-2 fixed top-0 left-0 right-0 z-10`}>
       <div className="relative w-full h-full header-backdrop">
@@ -62,38 +67,41 @@ const Header = () => {
                   </h3>
                 </td>
               </tr>
-              <tr className="toxicity-counter text-xl align-center relative top-16 pl-2" >
-               <td className={`text-xl w-1/4 h-14 pr-5`}>
-                 TOXICITY <br/>COUNTER
-                </td>
-                <td className={`w-1/4 h-14 valign pr-4`}>
-                  <span className="number headerData" >
-                    {data.water}
-                  </span>
-                  <span className="unit text-xl">
-                    {" L"}
-                  </span>
-                  <div className="bg-blend-difference text-xl">WATER</div>
-                </td>
-                <td className={`w-1/4 h-14 valign pr-4`}>
-                  <span className="number headerData" >
-                    {data.land}
-                  </span>
-                  <span className="unit text-xl">
-                    {" KM²"}
-                  </span>
-                  <div className="text-xl">LAND</div>
-                </td>
-                <td className={`w-1/4 h-14 valign` }>
-                  <span className="number headerData" >
-                    {data.air}
-                  </span>
-                  <span className="unit text-xl" >
-                    {" KM³"}
-                  </span>
-                  <div className="text-xl">AIR</div>
-                </td> 
-              </tr>
+              {
+                TypeWriterFinished ?
+                <tr className={"toxicity-counter text-xl align-center relative top-16 pl-2 fadeSlideIn"} >
+                <td className={`text-xl w-1/4 h-14 pr-5`}>
+                  TOXICITY <br/>COUNTER
+                 </td>
+                 <td className={`w-1/4 h-14 valign pr-4`}>
+                   <span className="number headerData" >
+                     {data.water}
+                   </span>
+                   <span className="unit text-xl">
+                     {" L"}
+                   </span>
+                   <div className="bg-blend-difference text-xl">WATER</div>
+                 </td>
+                 <td className={`w-1/4 h-14 valign pr-4`}>
+                   <span className="number headerData" >
+                     {data.land}
+                   </span>
+                   <span className="unit text-xl">
+                     {" KM²"}
+                   </span>
+                   <div className="text-xl">LAND</div>
+                 </td>
+                 <td className={`w-1/4 h-14 valign` }>
+                   <span className="number headerData" >
+                     {data.air}
+                   </span>
+                   <span className="unit text-xl" >
+                     {" KM³"}
+                   </span>
+                   <div className="text-xl">AIR</div>
+                 </td> 
+               </tr> : null
+              }
               {/* <tr className="text-2xl relative top-14" >
                 <td className={`w-1/3`}>WATER</td>
                 <td className={`w-1/3`}>LAND</td>
@@ -101,7 +109,8 @@ const Header = () => {
               </tr> */}
             </tbody>
           </table>
-        </div></div>
+        </div>
+        </div>
     </header >
   );
 };

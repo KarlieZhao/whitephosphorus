@@ -590,3 +590,33 @@ header {
     word-break: break-all;
     white-space: pre-wrap
 }
+
+/* Animation to let header data table (toxicity counter, etc) slide in + fade*/
+
+@keyframes fadeSlideIn {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.fadeSlideIn {
+    animation: fadeSlideIn 0.5s ease-in-out;
+}
+/* Animation for the map to fade in */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    animation: fadeIn 0.5s ease-in-out;
+}
