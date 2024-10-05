@@ -13,16 +13,6 @@
     box-sizing: border-box;
 }
 
-/* @font-face {
-    font-family: 'pala';
-    src: url('../fonts/pala.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'palab';
-    src: url('../fonts/palab.ttf') format('truetype');
-} */
-
 @font-face {
     font-family: "Handjet", sans-serif;
 }
@@ -62,7 +52,7 @@ header {
 
 .header-backdrop {
     background-color: #000;
-    /* background-image: url("../patterns/988.png"); */
+    /* background-image: url("/patterns/988.png"); */
     /* background-repeat: repeat; */
 }
 
@@ -94,7 +84,7 @@ header {
     height: 95vh;
     margin-top: 0.8rem;
     margin-left: 0.15vw;
-    background-image: url("../patterns/1.svg");
+    background-image: url("/assets/img/bg/1.svg");
     background-size: 4px 4px;
     background-repeat: repeat;
     /* border: 8px solid #B33C30; */
@@ -115,7 +105,6 @@ body {
     background-color: #000;
     margin: 0;
     font-family: 'Handjet', 'Times New Roman', 'Georgia', serif;
-    /* font-family: "Handjet", sans-serif; */
     vertical-align: middle;
     font-optical-sizing: auto;
     font-weight: 400;
@@ -285,7 +274,7 @@ ul {
 .command_button {
     width: 15vw;
     transition: all 0.3s ease;
-    background-image: url('./assets/tab.svg');
+    background-image: url('/assets/img/tab.svg');
     background-repeat: no-repeat;
     background-position: right top;
     color: #dedede;
@@ -324,7 +313,7 @@ ul {
 .command_button_unclickable {
     height: 50px;
     width: 51.5vw;
-    background-image: url('./assets/toxicityTab.svg');
+    background-image: url('/assets/img/toxicityTab.svg');
     background-repeat: no-repeat;
     background-position: left top;
     color: #dedede;
@@ -364,7 +353,7 @@ ul {
 
 .tabIsActive {
     z-index: 40;
-    background-image: url('./assets/tabActive.svg');
+    background-image: url('/assets/img/tabActive.svg');
     transition: 0.2s ease;
     transform: translateY(-6px);
     /* color: #dedede;

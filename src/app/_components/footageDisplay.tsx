@@ -2,7 +2,6 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import "../globals.css";
-import styles from './mapembed.module.css';
 import { colorPalette } from "./color-palette";
 
 //ON HOLD: TWITTER DATA VISUALIZATION
