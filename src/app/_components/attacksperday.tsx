@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { scaleQuantile } from 'd3-scale';
 import "../globals.css";
-import styles from './mapembed.module.css';
 import { colorPalette } from "./color-palette";
 
 // Define the data type
@@ -178,9 +177,9 @@ export function AttacksPerDay() {
 
     return (
         <section className={`mb-80 mt-40 md:justify-between`}>
-            <div className={`text-2xl tracking-wide ${styles.bright}`}>Attacks per Week</div>
+            <div className={`text-2xl tracking-wide bright`}>Attacks per Week</div>
             <br /><br />
-            <div className={` ${styles.chartMinWidth}`}>
+            <div className={`chartMinWidth`}>
                 <svg ref={svgRef} />
             </div>
         </section>

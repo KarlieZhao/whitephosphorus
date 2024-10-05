@@ -77,6 +77,40 @@ header {
         inset 4px 0 4px 0 #B33C30; */
 /* } */
 
+.foot {
+    bottom: 0;
+    background-color: #000000;
+    border-top: solid 1px #eee;
+    /* -webkit-overflow-scrolling: touch; */
+  }
+
+
+.withBorder2 {
+    /* height:48px; */
+    border: 1px solid white;
+  }
+  
+  .table2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    z-index: 100;
+    /* min-width: 500px; */
+  }
+  
+  .table1 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    /* min-width: 500px; */
+  }
+  
+  .valign {
+    vertical-align: bottom;
+  }  
+
 .inner-backdrop {
     z-index: 0;
     position: fixed;

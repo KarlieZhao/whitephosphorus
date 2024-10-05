@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { ScaleQuantile, scaleQuantile } from 'd3-scale';
 import "../globals.css";
-import styles from './mapembed.module.css';
 import { colorPalette } from "./color-palette";
 
 interface DataPoint {
@@ -182,8 +181,8 @@ export function AttacksPerArea() {
 
     return (
         <section className="mb-20 mt-10 md:justify-between">
-            <div className={`text-2xl tracking-wide ${styles.bright}`}>Attacks per Area</div>
-            <div className={`${styles.chartMinWidth}`}>
+            <div className={`text-2xl tracking-wide`}>Attacks per Area</div>
+            <div className={`chartMinWidth`}>
                 <svg ref={svgRef} />
             </div>
         </section>
