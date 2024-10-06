@@ -18,8 +18,6 @@ declare module 'react-heatmap-grid' {
         title?: (value: number, unit: string) => string;
     }
 
-    // Declare the HeatMap component
     const HeatMap: React.FC<HeatMapProps>;
-
     export default HeatMap;
 }

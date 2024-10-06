@@ -1,8 +1,6 @@
 "use client";
-
 import { CMS_NAME } from "@/lib/constants";
-import { useWindowWidth } from "@/lib/resize"; // Adjust the import path as necessary
-import { useWindowHeight } from "@/lib/resize"; // Adjust the import path as necessary
+import { useWindowHeight } from "@/lib/resize"; 
 
 export function Map() {
   // const windowWidth = useWindowWidth();

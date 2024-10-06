@@ -1,17 +1,17 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface TypewriterProps {
     textLines: string[];
     period: number;
-    speed: number; // Typing speed
+    speed: number;
     onFinish: () => void;
 }
 
-const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFinish}) => {
+const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFinish }) => {
     const [text, setText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
-    const [typingSpeed, setTypingSpeed] = useState(Math.random() * speed + 30);
+    const [typingSpeed, setTypingSpeed] = useState(Math.random() * speed + 10);
     const [lineNum, setLineNum] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
@@ -25,21 +25,10 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
 
         const handleTyping = () => {
             const fullTxt = textLines[lineNum];
-
-            if (isDeleting) {
-                setText(fullTxt.substring(0, text.length - 1));
-            } else {
-                setText(fullTxt.substring(0, text.length + 1));
-            }
-
+            setText(fullTxt.substring(0, isDeleting ? (text.length - 1) : (text.length + 1)));
             let delta = typingSpeed;
+            if (isDeleting) delta = speed / 2; // Faster deleting speed
 
-            if (isDeleting) {
-                delta = speed / 2; // Faster deleting speed
-            }
-
-            // if finish typing all the lines, and
-            //    isDeleting => false
             if (!isDeleting && lineNum === textLines.length - 1 && text === fullTxt) {
                 delta = period; // Pause before deleting
                 setIsDeleting(true);
@@ -56,7 +45,6 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
             setTypingSpeed(delta);
         };
 
-
         const typingTimeout = setTimeout(() => {
             handleTyping();
         }, typingSpeed);
@@ -65,7 +53,7 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
     }, [text, isDeleting, lineNum, typingSpeed, textLines, period, speed, isFinished, hasMounted, onFinish]);
 
     if (!hasMounted) {
-        return null; // Prevent rendering on the server side
+        return null;
     }
 
     return (

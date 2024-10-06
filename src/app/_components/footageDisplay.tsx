@@ -167,7 +167,6 @@ export default function () {
                 <img src="../assets/img/testimg.jpeg" />
                 <div className={`h-52 overflow-scroll mt-2 mb-5`}>
                     <section>
-                        {/* <div className={`${styles.chartMinWidth}`}> */}
                         {/* <svg ref={svgRef} /> */}
                         <div className=" px-6 text-xl">
                             Morbi a purus sed turpis blandit consequat.<br />

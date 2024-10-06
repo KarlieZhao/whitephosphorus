@@ -78,8 +78,6 @@ header {
 /* } */
 
 .foot {
-    bottom: 0;
-    background-color: #000000;
     border-top: solid 1px #eee;
     /* -webkit-overflow-scrolling: touch; */
   }
@@ -193,8 +191,6 @@ a {
     z-index: 800;
     font-weight: normal;
     display: block;
-    /* width: fit-content; */
-    height: 80vh;
     margin-left: 1vw;
     align-items: center;
     justify-items: center;
