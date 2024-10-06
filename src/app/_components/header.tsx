@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import '@/app/globals.css';
 
 
-const Header = ({TypeWriterFinished}: {TypeWriterFinished: boolean}) => {
+const Header = ({ TypeWriterFinished }: { TypeWriterFinished: boolean }) => {
   const router = useRouter();
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
@@ -69,38 +69,38 @@ const Header = ({TypeWriterFinished}: {TypeWriterFinished: boolean}) => {
               </tr>
               {
                 TypeWriterFinished ?
-                <tr className={"toxicity-counter text-xl align-center relative top-16 pl-2 fadeSlideIn"} >
-                <td className={`text-xl w-1/4 h-14 pr-5`}>
-                  TOXICITY <br/>COUNTER
-                 </td>
-                 <td className={`w-1/4 h-14 valign pr-4`}>
-                   <span className="number headerData" >
-                     {data.water}
-                   </span>
-                   <span className="unit text-xl">
-                     {" L"}
-                   </span>
-                   <div className="bg-blend-difference text-xl">WATER</div>
-                 </td>
-                 <td className={`w-1/4 h-14 valign pr-4`}>
-                   <span className="number headerData" >
-                     {data.land}
-                   </span>
-                   <span className="unit text-xl">
-                     {" KM²"}
-                   </span>
-                   <div className="text-xl">LAND</div>
-                 </td>
-                 <td className={`w-1/4 h-14 valign` }>
-                   <span className="number headerData" >
-                     {data.air}
-                   </span>
-                   <span className="unit text-xl" >
-                     {" KM³"}
-                   </span>
-                   <div className="text-xl">AIR</div>
-                 </td> 
-               </tr> : null
+                  <tr className={"toxicity-counter text-xl align-center relative top-16 pl-2 fadeSlideIn"} >
+                    <td className={`text-xl w-1/4 h-14 pr-5`}>
+                      TOXICITY <br />COUNTER
+                    </td>
+                    <td className={`w-1/4 h-14 valign pr-4`}>
+                      <span className="number headerData" >
+                        {data.water}
+                      </span>
+                      <span className="unit text-xl">
+                        {" L"}
+                      </span>
+                      <div className="bg-blend-difference text-xl">WATER</div>
+                    </td>
+                    <td className={`w-1/4 h-14 valign pr-4`}>
+                      <span className="number headerData" >
+                        {data.land}
+                      </span>
+                      <span className="unit text-xl">
+                        {" KM²"}
+                      </span>
+                      <div className="text-xl">LAND</div>
+                    </td>
+                    <td className={`w-1/4 h-14 valign`}>
+                      <span className="number headerData" >
+                        {data.air}
+                      </span>
+                      <span className="unit text-xl" >
+                        {" KM³"}
+                      </span>
+                      <div className="text-xl">AIR</div>
+                    </td>
+                  </tr> : null
               }
               {/* <tr className="text-2xl relative top-14" >
                 <td className={`w-1/3`}>WATER</td>
@@ -110,7 +110,7 @@ const Header = ({TypeWriterFinished}: {TypeWriterFinished: boolean}) => {
             </tbody>
           </table>
         </div>
-        </div>
+      </div>
     </header >
   );
 };

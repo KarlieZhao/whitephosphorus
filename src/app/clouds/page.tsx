@@ -7,7 +7,7 @@ import '@/app/globals.css'
 export default function Index() {
     return (
         <div className='h-full'>
-            <Header />
+            <Header TypeWriterFinished={true} />
             <main className="flex-grow relative">
                 <div className="flex z-10  scrollbar-hide w-full">
                     

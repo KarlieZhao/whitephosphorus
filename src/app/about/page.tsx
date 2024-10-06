@@ -6,7 +6,7 @@ import '@/app/globals.css'
 export default function Index() {
     return (
         <div>
-            <Header />
+            <Header TypeWriterFinished={true} />
             <main className="h-full flex-grow relative">
             </main>
            <Footer />

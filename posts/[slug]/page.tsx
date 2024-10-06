@@ -18,7 +18,7 @@ export default async function Post({ params }: Params) {
   return (
     <main>
       <Container>
-        <Header />
+        <Header TypeWriterFinished={true} />
         <article className="mb-32">
         </article>
       </Container>
