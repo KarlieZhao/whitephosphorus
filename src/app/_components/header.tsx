@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import '@/app/globals.css';
 
 
-const Header = ({ TypeWriterFinished }: { TypeWriterFinished: boolean }) => {
+const Header = ({ TypeWriterFinished =true}: { TypeWriterFinished?: boolean }) => {
   const router = useRouter();
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
@@ -22,7 +22,7 @@ const Header = ({ TypeWriterFinished }: { TypeWriterFinished: boolean }) => {
     }
   }, [TypeWriterFinished]);
   return (
-    <header className={`mt-2 fixed top-0 left-0 right-0 z-10`}>
+    <header className={`bg-black pt-2 pb-14 fixed top-0 left-0 right-0 z-10`}>
       <div className="relative w-full h-full header-backdrop">
         <div className="absolute top-12 h-32 left-0 right-0 bottom-0 bg-gradient-to-b from-red-900 to-transparent pointer-events-none"></div>
         <div className="absolute z-50 top-12 h-3 w-full redbar"></div>

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface TypewriterProps {
     textLines: string[];
@@ -11,7 +11,7 @@ interface TypewriterProps {
 const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFinish }) => {
     const [text, setText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
-    const [typingSpeed, setTypingSpeed] = useState(Math.random() * speed + 10);
+    const [typingSpeed, setTypingSpeed] = useState(40);
     const [lineNum, setLineNum] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
@@ -20,14 +20,17 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
         setHasMounted(true);
     }, []);
 
+    const getRandomSpeed = () => {
+        return Math.random() * speed + 10;
+    };
+
     useEffect(() => {
         if (!hasMounted || isFinished) return;
 
         const handleTyping = () => {
             const fullTxt = textLines[lineNum];
             setText(fullTxt.substring(0, isDeleting ? (text.length - 1) : (text.length + 1)));
-            let delta = typingSpeed;
-            if (isDeleting) delta = speed / 2; // Faster deleting speed
+            let delta = isDeleting ? speed / 3 : getRandomSpeed(); // Faster deleting speed
 
             if (!isDeleting && lineNum === textLines.length - 1 && text === fullTxt) {
                 delta = period; // Pause before deleting

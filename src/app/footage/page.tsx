@@ -1,5 +1,5 @@
 "use client"
-import Draggable from 'react-draggable';
+import { DraggableWindow } from "../_components/window";
 import FootageDisplay from "@/app/_components/footageDisplay";
 import Header from "@/app/_components/header";
 import dynamic from 'next/dynamic'
@@ -12,23 +12,21 @@ export default function Index() {
 
     return (
         <div className='h-full overflow-hidden'>
-            <Header TypeWriterFinished={true} />
+            <Header />
             <main className="flex-grow relative">
                 <div className='inner-backdrop'></div>
-                <div className="flex z-10  scrollbar-hide w-full">
+                <div className="flex z-10 pt-32 pb-32 scrollbar-hide w-full">
                     <div className='footage-1'>
-                        <Draggable handle=".handle">
-                            <div className="draggable-container" id="heatmap">
+                        <DraggableWindow title="Footage Catalog" customeClassNameInner="overflow-scroll">
+                            <div id="heatmap">
                                 <HeatmapD3 />
                             </div>
-                        </Draggable>
+                        </DraggableWindow>
                     </div>
                     <div className='footage-2'>
-                        <Draggable handle=".handle">
-                            <div className="draggable-container">
-                                <FootageDisplay />
-                            </div>
-                        </Draggable>
+                        <DraggableWindow title="Footage Details">     
+                            <FootageDisplay />
+                        </DraggableWindow>
                     </div>
                 </div>
             </main>
