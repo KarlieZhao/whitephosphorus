@@ -15,14 +15,18 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
     const [lineNum, setLineNum] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
+    const getRandomSpeed = useCallback(() => Math.random() * speed + 10, [speed]);
 
     useEffect(() => {
         setHasMounted(true);
-    }, []);
-
-    const getRandomSpeed = () => {
-        return Math.random() * speed + 10;
-    };
+        if (sessionStorage.getItem('visited') === "true") {
+            setIsFinished(true);
+            onFinish();
+        } else if (isFinished) {
+            sessionStorage.setItem('visited', "true");
+        }
+        return () => { };
+    }, [isFinished, onFinish]);
 
     useEffect(() => {
         if (!hasMounted || isFinished) return;
@@ -35,7 +39,7 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
             if (!isDeleting && lineNum === textLines.length - 1 && text === fullTxt) {
                 delta = period; // Pause before deleting
                 setIsDeleting(true);
-            } else if (isDeleting && text === '') { //else, if not yet finish typing all the lines
+            } else if (isDeleting && text === '') { // if not yet finish typing all the lines
                 if (lineNum + 1 < textLines.length) {
                     setIsDeleting(false);
                     setLineNum(lineNum + 1);
