@@ -155,29 +155,20 @@ function generateTwitterGraph() {
 }
 
 export default function () {
-    return (
-        <div className="content w-full mt-32 cyberspace">
-            <div className="handle">
-                <div className="control-box close-box"><a className="control-box-inner"></a></div>
-                <div className="control-box zoom-box"><div className="control-box-inner"><div className="zoom-box-inner"></div></div></div>
-                <div className="control-box windowshade-box"><div className="control-box-inner"><div className="windowshade-box-inner"></div></div></div>
-                <h1 className="title text-2xl">Details</h1>
-            </div>
-            <div className="inner ">
-                <img src="../assets/img/testimg.jpeg" />
-                <div className={`h-52 overflow-scroll mt-2 mb-5`}>
-                    <section>
-                        {/* <svg ref={svgRef} /> */}
-                        <div className=" px-6 text-xl">
-                            Morbi a purus sed turpis blandit consequat.<br />
-                            Nam dignissim luctus felis, eget semper mi interdum sit amet.<br /> Vestibulum maximus aliquet risus sed accumsan. <br />
-                            Donec auctor ante nisi, <br />ac efficitur eros mollis sit amet.
-                            <br />Suspendisse potenti. <br />
-                        </div>
-                        {/* </div> */}
-                    </section>
+    return (<div>
+        <img src="../assets/img/testimg.jpeg" />
+        <div className={`h-52 overflow-scroll mt-2 mb-5`}>
+            <section>
+                {/* <svg ref={svgRef} /> */}
+                <div className=" px-6 text-xl">
+                    Morbi a purus sed turpis blandit consequat.<br />
+                    Nam dignissim luctus felis, eget semper mi interdum sit amet.<br /> Vestibulum maximus aliquet risus sed accumsan. <br />
+                    Donec auctor ante nisi, <br />ac efficitur eros mollis sit amet.
+                    <br />Suspendisse potenti. <br />
                 </div>
-            </div>
+                {/* </div> */}
+            </section>
         </div>
+    </div>
     );
 }

@@ -1,22 +1,20 @@
 "use client"
-import Draggable from 'react-draggable';
-import FootageDisplay from "@/app/_components/footageDisplay";
+import { DraggableWindow } from "../_components/window";
 import Header from "@/app/_components/header";
 import '@/app/globals.css'
+import CloudCatalog from '../_components/cloudCatalog';
 
 export default function Index() {
     return (
         <div className='h-full'>
-            <Header TypeWriterFinished={true} />
+            <Header />
             <main className="flex-grow relative">
-                <div className="flex z-10  scrollbar-hide w-full">
-                    
-                    <div className='w-1/3'>
-                        <Draggable handle=".handle">
-                            <div className="draggable-container">
-                                <FootageDisplay />
-                            </div>
-                        </Draggable>
+                <div className='inner-backdrop '></div>
+                <div className="flex justify-center z-10  scrollbar-hid pt-32 w-full">
+                    <div className='w-2/3'>
+                        <DraggableWindow title="Catalog of Clouds" customeClassNameWindow="cloudCatalog">
+                            <CloudCatalog />
+                        </DraggableWindow>
                     </div>
                 </div>
             </main>

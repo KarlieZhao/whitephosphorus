@@ -17,10 +17,21 @@
     font-family: "Handjet", sans-serif;
 }
 
+
+@font-face {
+    font-family: "Anonymous Pro", sans-serif;
+    src: url("/public/assets/fonts/AnonymousPro-Regular.ttf");
+}
+
 .typewriter {
     z-index: 10000;
 }
 
+.about-page p{
+    font-family: "Anonymous Pro";
+    font-size: large;
+    line-height: normal;
+}
 .typewrite {
     width: 50vw;
     line-height: 3.5rem;
@@ -77,37 +88,40 @@ header {
         inset 4px 0 4px 0 #B33C30; */
 /* } */
 
+p{
+    margin-bottom: 1rem;
+}
 .foot {
     border-top: solid 1px #eee;
     /* -webkit-overflow-scrolling: touch; */
-  }
+}
 
 
 .withBorder2 {
     /* height:48px; */
     border: 1px solid white;
-  }
-  
-  .table2 {
+}
+
+.table2 {
     position: absolute;
     top: 0;
     left: 0;
     width: 50%;
     z-index: 100;
     /* min-width: 500px; */
-  }
-  
-  .table1 {
+}
+
+.table1 {
     position: absolute;
     top: 0;
     right: 0;
     width: 50%;
     /* min-width: 500px; */
-  }
-  
-  .valign {
+}
+
+.valign {
     vertical-align: bottom;
-  }  
+}
 
 .inner-backdrop {
     z-index: 0;
@@ -214,8 +228,8 @@ a {
         inset -1px -1px 0px 0px #999;
 }
 
-.cyberspace .inner {
-    height: 75vh;
+.cloudCatalog .inner {
+    background-color: #000;
 }
 
 .title {
@@ -226,7 +240,6 @@ a {
     background-size: 3px 2px;
     margin: 0 0 0 0;
     color: #262626;
-    /* font-size: ; */
 }
 
 .icon {
@@ -432,10 +445,6 @@ ul {
     clear: both;
 }
 
-footer {
-    background-color: #00000099;
-}
-
 iframe {
     z-index: -200;
 }
@@ -443,7 +452,16 @@ iframe {
 h1,
 h2 {
     font-weight: 700;
+    margin-bottom: 1rem;
 }
+
+.no-select {
+    user-select: none;
+  }
+  
+  .selectable {
+    user-select: text;
+  }
 
 h2 {
     font-size: 3.75rem;
@@ -451,7 +469,7 @@ h2 {
 }
 
 .toxicity-counter {
-    width: 70%; 
+    width: 70%;
     /* 70%; */
     justify-items: center;
     display: block;
@@ -594,6 +612,7 @@ header {
         transform: translateY(-100%);
         opacity: 0;
     }
+
     100% {
         transform: translateY(0);
         opacity: 1;
@@ -603,11 +622,13 @@ header {
 .fadeSlideIn {
     animation: fadeSlideIn 0.5s ease-in-out;
 }
+
 /* Animation for the map to fade in */
 @keyframes fadeIn {
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
