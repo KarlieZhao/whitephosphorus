@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
-import { useWindowHeight } from "@/lib/resize"; 
+import { useWindowHeight } from "@/lib/resize";
 
 type dataT = {
   x: number;
@@ -153,7 +153,7 @@ const HeatMapAnimation = () => {
       .attr("y", (d: dataT) => yScale(d.y)!)
       .attr("width", xScale.bandwidth())
       .attr("height", yScale.bandwidth())
-      .style("fill", "#ffffff")
+      .style("fill", "#ffffff00")
       .style("stroke", "#ccc");
 
     // Tooltip for displaying values
@@ -171,8 +171,12 @@ const HeatMapAnimation = () => {
     cells
       .on("mouseover", (event: MouseEvent, d: dataT) => {
         tooltip
-          .style("opacity", 1)
-          .html(`Value: ${d.value}%`)
+          .style("opacity", 0.85)
+          .html(`<table>
+            <tr><td>Time: ${d.x}</td></tr>
+            <tr><td>Location: ${yLabels[d.y]} </td></tr>
+            <tr><td>Footage: ${d.value}</td></tr>
+            </table>`)
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 20 + "px");
       })
@@ -180,10 +184,14 @@ const HeatMapAnimation = () => {
         tooltip.style("opacity", 0);
       })
       .on("click", (event: MouseEvent, d: dataT) => {
-        // Handle click event if needed
-        // Example: alert(`Clicked cell at (${d.x}, ${d.y}) with value ${d.value}%`);
+        // displayFootageInsights(url_from_footage_index);
       });
 
+
+    function displayFootageInsights(url: string) {
+
+    }
+    
     // Animation: fill in each column horizontally
     let currentColumn = 0;
 

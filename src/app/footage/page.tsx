@@ -3,7 +3,7 @@ import { DraggableWindow } from "../_components/window";
 import FootageDisplay from "@/app/_components/footageDisplay";
 import Header from "@/app/_components/header";
 import '@/app/globals.css'
-import HeatMapAnimation from "../_components/newHeatMapD3";
+import HeatMapAnimation from "../_components/heatMap";
 
 export default function Index() {
 
@@ -16,12 +16,12 @@ export default function Index() {
                     <div className='footage-1'>
                         <DraggableWindow title="Footage Catalog" customeClassNameInner="overflow-scroll">
                             <div id="heatmap">
-                                < HeatMapAnimation/>
+                                < HeatMapAnimation />
                             </div>
                         </DraggableWindow>
                     </div>
                     <div className='footage-2'>
-                        <DraggableWindow title="Footage Details">     
+                        <DraggableWindow title="Footage Insights">
                             <FootageDisplay />
                         </DraggableWindow>
                     </div>
