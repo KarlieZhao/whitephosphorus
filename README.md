@@ -2,7 +2,6 @@
 ```shell
 npm i next
 npm install d3
-npm install --save react-grid-heatmap
 npm run dev
 ```
 
