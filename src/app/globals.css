@@ -24,18 +24,20 @@
 }
 
 .typewriter {
-    z-index: 10000;
+    z-index: 1000;
 }
 
-.about-page p{
+.about-page p {
     font-family: "Anonymous Pro";
     font-size: large;
     line-height: normal;
 }
+
 .typewrite {
     width: 50vw;
     line-height: 3.5rem;
     display: block;
+    color: #dedede;
     /* border-right: 0.08em solid #fff */
 }
 
@@ -88,9 +90,10 @@ header {
         inset 4px 0 4px 0 #B33C30; */
 /* } */
 
-p{
+p {
     margin-bottom: 1rem;
 }
+
 .foot {
     border-top: solid 1px #eee;
     /* -webkit-overflow-scrolling: touch; */
@@ -457,11 +460,11 @@ h2 {
 
 .no-select {
     user-select: none;
-  }
-  
-  .selectable {
+}
+
+.selectable {
     user-select: text;
-  }
+}
 
 h2 {
     font-size: 3.75rem;
@@ -635,5 +638,5 @@ header {
 }
 
 .fadeIn {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.7s ease-in-out;
 }
