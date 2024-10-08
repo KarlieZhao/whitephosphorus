@@ -22,7 +22,7 @@ const Header = ({ TypeWriterFinished =true}: { TypeWriterFinished?: boolean }) =
     }
   }, [TypeWriterFinished]);
   return (
-    <header className={`bg-black pt-2 pb-14 fixed top-0 left-0 right-0 z-10`}>
+    <header className={`bg-black pt-2 pb-14 fixed top-0 left-0 right-0 z-50`}>
       <div className="relative w-full h-full header-backdrop">
         <div className="absolute top-12 h-32 left-0 right-0 bottom-0 bg-gradient-to-b from-red-900 to-transparent pointer-events-none"></div>
         <div className="absolute z-50 top-12 h-3 w-full redbar"></div>
@@ -61,7 +61,7 @@ const Header = ({ TypeWriterFinished =true}: { TypeWriterFinished?: boolean }) =
             <tbody>
               <tr className={`text-center relative align-center `}>
                 <td colSpan={3} className="h-full fixed left-0 command_button_unclickable">
-                  <h3 className="mb-2 mt-1 w-full tracking-widest text-left pl-5">
+                  <h3 className="mb-2 mt-1 w-full tracking-widest text-left pl-5 z-50">
                     {/* TOXICITY COUNTER */}
                     WhitePhosophrus.info
                   </h3>

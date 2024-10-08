@@ -12,7 +12,7 @@ export default function Index() {
                 <div className='inner-backdrop '></div>
                 <div className="flex justify-center z-10  scrollbar-hid pt-32 w-full">
                     <div className='w-2/3'>
-                        <DraggableWindow title="Catalog of Clouds" customeClassNameWindow="cloudCatalog">
+                        <DraggableWindow title="The Clouds Atlas" customeClassNameWindow="cloudCatalog">
                             <CloudCatalog />
                         </DraggableWindow>
                     </div>

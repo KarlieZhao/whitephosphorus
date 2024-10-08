@@ -31,7 +31,7 @@ export default function Index() {
         
         <div className={"relative z-0" + 
           " " + // padding
-          (TypeWriterFinished ? "fadeIn": "hidden")  // fade in if typewriter is finished if not, hide
+          (TypeWriterFinished ? "fadeIn": "opacity-0")  // fade in if typewriter is finished if not, hide
           }> 
             <Map/>
         </div>
