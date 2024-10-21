@@ -17,19 +17,32 @@
     font-family: "Handjet", sans-serif;
 }
 
+@font-face {
+    font-family: "PPSupplySans-Regular";
+    src: url("/assets/fonts/PPSupplySans-Regular.otf");
+}
+
+@font-face {
+    font-family: "PPSupplySans-Ultralight";
+    src: url("/assets/fonts/PPSupplySans-Ultralight.otf");
+}
 
 @font-face {
     font-family: "Anonymous Pro", sans-serif;
-    src: url("/public/assets/fonts/AnonymousPro-Regular.ttf");
+    src: url("/assets/fonts/AnonymousPro-Regular.ttf");
 }
 
 .typewriter {
     z-index: 1000;
 }
 
+.handjet {
+    font-family: "Handjet";
+}
+
 .about-page p {
-    font-family: "Anonymous Pro";
-    font-size: large;
+    font-family: "PPSupplySans-Regular";
+    /* font-size: large; */
     line-height: normal;
 }
 
@@ -42,13 +55,18 @@
 }
 
 header {
-    font-family: "Handjet";
-    font-size: 1.8rem;
+    font-family: "PPSupplySans-Regular";
+    font-size: 1.2rem;
 }
 
 .text-2xl {
-    font-family: "Handjet";
-    font-size: 1.8rem;
+    font-family: "PPSupplySans-Regular";
+    font-size: 1.35rem;
+}
+
+.text-xl {
+    font-family: "PPSupplySans-Regular";
+    font-size: 1.05rem;
 }
 
 :root {
@@ -133,27 +151,27 @@ p {
     height: 95vh;
     margin-top: 0.8rem;
     margin-left: 0.15vw;
-    background-image: url("/assets/img/bg/1.svg");
-    background-size: 4px 4px;
-    background-repeat: repeat;
-    /* border: 8px solid #B33C30; */
-    /* border-bottom: 0; */
-    /* border-radius: 0.5rem;
-    box-shadow: inset 0 4px 4px 0 #B33C30,
-        inset -4px 0 4px 0 #B33C30,
-        inset 0 -4px 4px 0 #B33C30,
-        inset 4px 0 4px 0 #B33C30; */
+
+    /* background-color: #000000;
+    opacity: 0.4;
+    background-image: linear-gradient(#8c6754 2px, transparent 2px), linear-gradient(90deg, #8c6754 2px, transparent 2px), linear-gradient(#8c6754 1px, transparent 1px), linear-gradient(90deg, #8c6754 1px, #000000 1px);
+    background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px; */
+
+    background-color: #000000;
+    opacity: 0.8;
+    background-image: linear-gradient(#3a3a3a 1.2000000000000002px, transparent 1.2000000000000002px), linear-gradient(90deg, #3a3a3a 1.2000000000000002px, transparent 1.2000000000000002px), linear-gradient(#3a3a3a 0.6000000000000001px, transparent 0.6000000000000001px), linear-gradient(90deg, #3a3a3a 0.6000000000000001px, #000000 0.6000000000000001px);
+    background-size: 30px 30px, 30px 30px, 6px 6px, 6px 6px;
+    background-position: -1.2000000000000002px -1.2000000000000002px, -1.2000000000000002px -1.2000000000000002px, -0.6000000000000001px -0.6000000000000001px, -0.6000000000000001px -0.6000000000000001px;
 }
 
 html,
 body {
     -moz-user-select: none;
     -webkit-user-select: none;
-    /* background-image: url("../patterns/988.png");
-    background-repeat: repeat; */
-    background-color: #000;
     margin: 0;
-    font-family: 'Handjet', 'Times New Roman', 'Georgia', serif;
+    background-color: #000;
+    font-family: 'PPSupplySans-Regular', 'Times New Roman', 'Georgia', serif;
     vertical-align: middle;
     font-optical-sizing: auto;
     font-weight: 400;
@@ -241,8 +259,9 @@ a {
     font-weight: inherit;
     padding: 5px 0;
     background-size: 3px 2px;
-    margin: 0 0 0 0;
-    color: #262626;
+    margin-bottom: 0;
+    margin-top: 3px;
+    color: #000;
 }
 
 .icon {
@@ -254,14 +273,13 @@ ul {
     list-style-type: none;
     margin: 2px 0 1.5em 0;
     padding: 0 0 0 2em;
-    font-size: 12px;
+    font-size: inherit;
 }
 
 .footer {
     width: 400px;
     text-align: center;
     margin: 2em auto 0;
-    font-size: 12px;
 }
 
 .control-box {
@@ -454,8 +472,13 @@ iframe {
 
 h1,
 h2 {
+    font-size: 1.7rem;
     font-weight: 700;
     margin-bottom: 1rem;
+}
+
+h3 {
+    font-size: 1.5rem;
 }
 
 .no-select {
@@ -467,27 +490,22 @@ h2 {
 }
 
 h2 {
-    font-size: 3.75rem;
+    font-size: 2.75rem;
     line-height: 1;
 }
 
 .toxicity-counter {
     width: 70%;
-    /* 70%; */
+    font-weight: 400;
     justify-items: center;
     display: block;
 }
 
 .headerData {
-    font-size: 2.75rem;
+    font-size: 1.8rem;
     line-height: 1;
     font-weight: normal;
     color: #EAE1DF;
-}
-
-h3 {
-    font-size: 2rem;
-    /* line-height: 1; */
 }
 
 main {
