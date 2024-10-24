@@ -12,7 +12,7 @@ const hantjet = Handjet({
 
 export const metadata: Metadata = {
   title: `WhitePhosphorus.info`,
-  description: `A statically generated website using Next.js and ${CMS_NAME}.`,
+  description: ``,
   openGraph: {
     images: [HOME_OG_IMAGE_URL],
   },
@@ -32,19 +32,19 @@ export default function RootLayout({
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href="/favicon/apple-touch-icon.png"
+          href="/favicon/wptransp.png"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href="/favicon/favicon-32x32.png"
+          href="/favicon/wptransp.png"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href="/favicon/favicon-16x16.png"
+          href="/favicon/wptransp.png"
         />
         <link rel="manifest" href="/favicon/site.webmanifest" />
         <link

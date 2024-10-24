@@ -12,9 +12,6 @@ export default function Index() {
                 <div className='inner-backdrop '></div>
                 <div className="flex justify-center z-10  scrollbar-hid pt-16 w-full">
                     <div className='w-full mr-10'>
-                        <ContentWindow title="The Clouds Atlas" customeClassNameWindow="cloudCatalog">
-                            <CloudCatalog />
-                        </ContentWindow>
                     </div>
                 </div>
             </main>
