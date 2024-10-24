@@ -6,7 +6,6 @@ import './globals.css'
 import { useState } from "react";
 
 export default function Index() {
-
   const textToType = [
     "is a catalog and data visualization of \nIsrael's white phosphorus attacks in southern Lebanon. "
   ];
@@ -20,8 +19,8 @@ export default function Index() {
   return (
     <div>
       <Header TypeWriterFinished={TypeWriterFinished} />
-      <main className="flex-grow relative">
-        <div className="text-5xl z-50 mt-6 fixed text-white ml-8">
+      <main className="relative">
+        <div className="w-full text-5xl z-50 mt-6 fixed text-white ml-8">
           <Typewriter textLines={textToType} period={2000}
             speed={100} //lower value = faster typing
             onFinish={onFinish} // on finish, trigger the onFinish function

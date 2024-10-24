@@ -32,10 +32,6 @@
     src: url("/assets/fonts/AnonymousPro-Regular.ttf");
 }
 
-.typewriter {
-    z-index: 1000;
-}
-
 .handjet {
     font-family: "Handjet";
 }
@@ -48,7 +44,7 @@
 }
 
 .typewrite {
-    width: 50vw;
+    width: 70vw;
     line-height: 3.5rem;
     display: block;
     color: #dedede;
@@ -449,7 +445,21 @@ ul {
 }
 
 iframe {
-    z-index: -200;
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+    position: fixed;
+
+    /* For Firefox */
+    scrollbar-gutter: stable;
+
+    /* For Chrome/Safari */
+    -webkit-overscroll-behavior: none;
+
+    /* For MS Edge */
+    -ms-scroll-chaining: none;
+    -webkit-overflow-scrolling: touch;
+    /* For smooth scrolling on iOS */
 }
 
 h1,
