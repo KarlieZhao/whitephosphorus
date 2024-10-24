@@ -146,12 +146,12 @@ p {
 
 .inner-backdrop {
     z-index: 0;
+    overflow: hidden;
     position: fixed;
     width: 99.8vw;
     height: 95vh;
-    margin-top: 0.8rem;
-    margin-left: 0.15vw;
-
+    bottom: 0;
+    top: auto;
     /* background-color: #000000;
     opacity: 0.4;
     background-image: linear-gradient(#8c6754 2px, transparent 2px), linear-gradient(90deg, #8c6754 2px, transparent 2px), linear-gradient(#8c6754 1px, transparent 1px), linear-gradient(90deg, #8c6754 1px, #000000 1px);
@@ -212,12 +212,27 @@ a {
 }
 
 .footage-1 {
-    width: 62%;
+    width: auto;
+    height: 95vh;
+    z-index: 0;
+    background-color: #00000044;
+    backdrop-filter: blur(2px);
+    mask: linear-gradient(to right,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 90%,
+            rgba(0, 0, 0, 0) 100%);
 }
 
 .footage-2 {
-    width: 35%;
-    margin-left: 1.2rem;
+    /* width: 65vw; */
+    margin-left: -3vw;
+    margin-right: 40px;
+    width: calc(75vw - 50px);
+    transition: all 0.2s ease-in-out;
+}
+
+.activeCells {
+    cursor: pointer;
 }
 
 /* Window layout */
@@ -241,12 +256,13 @@ a {
 .inner {
     margin: 2px 4px 4px 4px;
     border: 1px solid #111;
-    background-color: #ddd;
+    background-color: #141414;
     box-shadow:
         -1px -1px 0px 0px #999,
         1px 1px 0px 0px #fff,
         inset 1px 1px 0px 0px #fff,
         inset -1px -1px 0px 0px #999;
+    height: 75vh;
 }
 
 .cloudCatalog .inner {
@@ -381,38 +397,16 @@ ul {
     background-repeat: no-repeat;
     background-position: left top;
     color: #dedede;
-
-    /* background-color: #C22F27; */
-    /* display: inline-block; */
-    /* margin-bottom: 7px; */
-    /* margin-left: 14px; */
-    /* border-radius: 3px;
-    border: 1px solid #000;
-    box-shadow: var(--button-box-shadow); */
 }
 
 .command_button:hover {
-
     transition: 0.2s ease;
     transform: translateY(-6px);
     /* background-color: #4d4d4d; */
-    /* box-shadow:
-        var(--button-box-shadow),
-        var(--button-hover-bezel); */
 }
 
 .command_button:active {
-    /* background-image: url('./assets/tabActive.svg'); */
     color: #dedede;
-    /* transform: 'scale(1.05)'; */
-    /* transition: 0.3s ease; */
-    /* background-color: #898989;
-    box-shadow:
-        var(--button-hover-bezel),
-        inset -1px -1px 0px 0px #888,
-        inset -2px -2px 0px 0px #777,
-        inset 1px 1px 0px 0px #444,
-        inset 2px 2px 0px 0px #555; */
 }
 
 .tabIsActive {
@@ -420,28 +414,6 @@ ul {
     background-image: url('/assets/img/tabActive.svg');
     transition: 0.2s ease;
     transform: translateY(-6px);
-    /* color: #dedede;
-    background-color: #747474;
-    box-shadow:
-        var(--button-hover-bezel),
-        inset -1px -1px 0px 0px #888,
-        inset -2px -2px 0px 0px #777,
-        inset 1px 1px 0px 0px #444,
-        inset 2px 2px 0px 0px #555; */
-}
-
-
-.tabIsActive:hover {
-    /* cursor: default;
-    color: #dedede;
-    transition: 0.3s ease;
-    background-color: #747474;
-    box-shadow:
-        var(--button-hover-bezel),
-        inset -1px -1px 0px 0px #888,
-        inset -2px -2px 0px 0px #777,
-        inset 1px 1px 0px 0px #444,
-        inset 2px 2px 0px 0px #555; */
 }
 
 /* Hide only visually, but have it available for screenreaders & for SEO purposes. See h5bp.com/v */
@@ -657,4 +629,8 @@ header {
 
 .fadeIn {
     animation: fadeIn 0.7s ease-in-out;
+}
+
+.draggable-container {
+    transition: all 1s ease-in-out;
 }
