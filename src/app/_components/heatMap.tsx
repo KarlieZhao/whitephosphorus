@@ -1,87 +1,121 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import * as d3 from "d3";
 import { useWindowHeight } from "@/lib/resize";
+import { useWindowWidth } from "@/lib/resize";
+import * as XLSX from 'xlsx';
 
-type dataT = {
-  x: number;
-  y: number;
-  value: number;
+type IncidentData = {
+  date: string;
+  area: string;
+  count: number;
 };
+
+//entry data for D3
+type CellData = { x: number; y: number; value: number };
 
 const HeatMapAnimation = () => {
   const svgRef = useRef(null);
-  const frameHeight = useWindowHeight() * 0.7;
-  const xTotal = 43;
-
-  const xLabels = new Array(xTotal).fill(0).map((_, i) => `${i}`);
-
-  // Display only even xLabels
-  const xLabelsVisibility = xLabels.map((_, i) => i % 2 === 0);
-
-  // Define yLabels as per your list
-  const yLabels = [
-    "El Merri",
-    "Talet Irmis",
-    "Dhaira",
-    "Ramiye",
-    "El Boustane",
-    "Aita Ech Chaab",
-    "Marouahine",
-    "Meiss El Jabal",
-    "Yaroun",
-    "South Lebanon",
-    "Markaba",
-    "Mhaibib",
-    "Blida",
-    "Al Khiam",
-    "Marjayoun",
-    "Borj El Mlouk",
-    "Kfar Kila",
-    "Kfar Chouba",
-    "Naqoura",
-    "Alma Echaab",
-    "El Hamames",
-    "Aadaisse",
-    "Houla",
-    "Rmaysh",
-    "Aitaroun",
-    "Talloussa",
-    "Chebaa",
-    "Maroun Er Ras",
-    "Deir Mimass",
-    "Halta",
-    "Abbassiye",
-    "Rachaiya El Foukhar",
-    "Yohmor",
-    "Deir Sirian",
-    "Taybeh",
-  ];
-
-  // Generate random data for the heat map
-  const data = yLabels.map(() =>
-    xLabels.map(() => Math.floor(Math.random() * 100))
-  );
+  const [frameWidth, setFrameWidth] = useState(550);
+  const frameHeight = useWindowHeight() * 1.1;
+  const [data, setData] = React.useState<IncidentData[]>([]);
 
   useEffect(() => {
-    // Clear any existing content inside the SVG
-    d3.select(svgRef.current).selectAll("*").remove();
+    const fetchData = async () => {
+      try {
+        //process Excel sheet
+        const response = await fetch('/data/incidents.xlsx');
+        const arrayBuffer = await response.arrayBuffer();
 
-    // Set dimensions and margins
-    const margin = { top: 20, right: 20, bottom: 50, left: 150 };
-    const availableWidth = 1000 - margin.left - margin.right; // edit the width of the heatmap
-    const availableHeight = frameHeight - margin.top - margin.bottom;
+        const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rawData = XLSX.utils.sheet_to_json(worksheet);
 
-    const numRows = yLabels.length;
-    const numCols = xLabels.length;
+        const mappedData = rawData
+          .map((row: any) => {
+            const dateValue = XLSX.SSF.parse_date_code(row['Date']);
+            const jsDate = new Date(dateValue.y, dateValue.m - 1, dateValue.d);
+            const cellDate = jsDate.toISOString().split('T')[0];
 
-    // Calculate cell size to make cells square
-    const cellSize = Math.min(
-      availableWidth / numCols,
-      availableHeight / numRows
+            return {
+              date: cellDate,
+              area: row['Area'] || "",
+              count: Number(row['number']) || 0
+            }
+          })
+          .filter(row => row.area && row.date);
+
+        setData(mappedData);
+      } catch (error) {
+        console.error('loading excel: ' + error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const processData = () => {
+    const uniqueDates = Array.from(new Set(data.map(d => d.date))).filter(Boolean);
+    const uniqueAreas = Array.from(new Set(data.map(d => d.area))).filter(Boolean);
+
+    // 2D array
+    // dates === rows 
+    // areas === columns
+    const processedData = uniqueDates.map(date => {
+      return uniqueAreas.map(area => {
+        const incident = data.find(d => d.date === date && d.area === area);
+        return incident?.count || 0;
+      });
+    });
+
+    return {
+      xLabels: uniqueAreas,
+      yLabels: uniqueDates,
+      yLabelsVisibility: uniqueDates.map((_, i) => i % 2 === 0),
+      processedData
+    };
+  }
+
+  useEffect(() => {
+    const { xLabels, yLabels, yLabelsVisibility, processedData } = processData();
+
+    //format yLabels (dates) for label
+    const yLabelsFormatted = yLabels.map(d => {
+      const [year, month, day] = d.split('-');
+      return `${month}-${day}`; // Format as "MM-DD"
+    });
+
+    //total incidents for each area
+    const areaTotals = xLabels.map((area, index) => ({
+      area,
+      total: d3.sum(processedData.map(row => row[index]))
+    }));
+
+    xLabels.sort((a, b) => {
+      const totalA = areaTotals.find(t => t.area === a)?.total || 0;
+      const totalB = areaTotals.find(t => t.area === b)?.total || 0;
+      return totalB - totalA;
+    });
+
+    const xLabelIndices = xLabels.map(area => areaTotals.findIndex(t => t.area === area));
+
+    const sortedProcessedData = processedData.map(row =>
+      xLabelIndices.map(index => row[index])
     );
 
-    // Calculate the plot width and height based on cell size
+    //============ rendering SVG ==============
+    //clean up SVG
+    d3.select(svgRef.current).selectAll("*").remove();
+
+    //set svg dimensions and margins
+    const margin = { top: 100, right: 50, bottom: 40, left: 55 };
+    const availableHeight = frameHeight - margin.top - margin.bottom;
+
+    const numRows = yLabels.length; //dates
+    const numCols = xLabels.length; //areas
+
+    //calculate cell size to make cells square
+    const cellSize = availableHeight / numRows;
+    setFrameWidth(numCols * cellSize * 1.2 + 90);
     const plotWidth = cellSize * numCols;
     const plotHeight = cellSize * numRows;
 
@@ -90,13 +124,13 @@ const HeatMapAnimation = () => {
     const svgHeight = plotHeight + margin.top + margin.bottom;
 
     // Flatten data for D3
-    const flatData: dataT[] = [];
+    const flatData = [];
     for (let i = 0; i < numRows; i++) {
       for (let j = 0; j < numCols; j++) {
         flatData.push({
-          x: j,
-          y: i,
-          value: data[i][j],
+          x: j, // Area index
+          y: i, // Date index
+          value: sortedProcessedData[i][j],
         });
       }
     }
@@ -106,7 +140,6 @@ const HeatMapAnimation = () => {
       .select(svgRef.current)
       .attr("width", svgWidth)
       .attr("height", svgHeight);
-
     const g = svg
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -124,37 +157,46 @@ const HeatMapAnimation = () => {
       .range([0, plotHeight])
       .padding(0.05);
 
-    // Add X-axis labels
+    //x-axis labels (Areas)
     g.append("g")
-      .attr("transform", `translate(0, ${plotHeight})`)
+      .attr("transform", `translate(0, 0)`)
       .call(
         d3
-          .axisBottom(xScale)
-          .tickFormat((d: dataT, i: number) => (xLabelsVisibility[i] ? xLabels[i] : ""))
+          .axisTop(xScale)
+          .tickFormat((i: number) => (xLabels[i]))
       )
       .selectAll("text")
-      .style("text-anchor", "middle")
-      .style("font-size", "10px");
+      .style("text-anchor", "start")
+      .style("font-size", "10px")
+      .style("fill", "#ccc")
+      .attr("transform", "rotate(-60)")
+      .attr("dx", "0.5em")
+      .attr("dy", "-0.2em");
 
-    // Add Y-axis labels
+    //y-axis labels (Dates)
     g.append("g")
-      .call(d3.axisLeft(yScale).tickFormat((d: dataT, i: number) => yLabels[i]))
+      .call(
+        d3.axisLeft(yScale)
+          .tickFormat((_: any, i: number) => yLabelsVisibility[i] ? yLabelsFormatted[i] : "")
+      )
       .selectAll("text")
       .style("text-anchor", "end")
-      .style("font-size", "10px");
+      .style("font-size", "10px")
+      .style("fill", "#ccc")
+      ;
 
-    // Bind data and create rectangles
+    // Bind data
     const cells = g
       .selectAll("rect")
       .data(flatData)
       .enter()
       .append("rect")
-      .attr("x", (d: dataT) => xScale(d.x)!)
-      .attr("y", (d: dataT) => yScale(d.y)!)
+      .attr("x", (d: CellData) => xScale(d.x)!)
+      .attr("y", (d: CellData) => yScale(d.y)!)
       .attr("width", xScale.bandwidth())
       .attr("height", yScale.bandwidth())
       .style("fill", "#ffffff00")
-      .style("stroke", "#ccc");
+      .style("stroke", "#333");
 
     // Tooltip for displaying values
     const tooltip = d3
@@ -168,60 +210,63 @@ const HeatMapAnimation = () => {
       .style("pointer-events", "none")
       .style("opacity", 0);
 
-    cells
-      .on("mouseover", (event: MouseEvent, d: dataT) => {
+    cells.filter((d: CellData) => d.value > 0)
+      .attr("class", "activeCells")
+      .on("mouseover", (event: MouseEvent, d: CellData) => {
         tooltip
-          .style("opacity", 0.85)
+          .style("opacity", 0.9)
           .html(`<table>
-            <tr><td>Time: ${d.x}</td></tr>
-            <tr><td>Location: ${yLabels[d.y]} </td></tr>
-            <tr><td>Footage: ${d.value}</td></tr>
+            <tr><td>${yLabels[d.y]}</td></tr>
+            <tr><td>${xLabels[d.x]}</td></tr>
+            <tr><td>${d.value} Incidents</td></tr>
             </table>`)
           .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY - 20 + "px");
+          .style("top", event.pageY - 30 + "px");
       })
       .on("mouseout", () => {
         tooltip.style("opacity", 0);
       })
-      .on("click", (event: MouseEvent, d: dataT) => {
-        // displayFootageInsights(url_from_footage_index);
+      .on("click", (event: MouseEvent, d: CellData) => {
       });
 
 
-    function displayFootageInsights(url: string) {
-
-    }
-    
-    // Animation: fill in each column horizontally
-    let currentColumn = 0;
-
-    function animateColumn() {
-      if (currentColumn >= numCols) return;
+    // Animation: fill in each row vertically
+    const maxValue = d3.max(sortedProcessedData.flat());
+    let currentRow = 0;
+    function animateRow() {
+      if (currentRow >= numRows) return;
 
       cells
-        .filter((d: dataT) => d.x === currentColumn)
+        .filter((d: CellData) => d.y === currentRow)
         .transition()
-        .duration(500)
-        .style("fill", (d: dataT) => {
-          const opacity = 1 - (100 - d.value) / 100;
+        .duration(300)
+        .attr("x", (d: CellData) => xScale(d.x) ?? 0)
+        .attr("y", (d: CellData) => yScale(d.y) ?? 0)
+        .style("fill", (d: CellData) => {
+          let opacity = 1 - ((maxValue) - d.value) / (maxValue);
+          opacity = opacity === 0 ? 0 : opacity + 0.1;
           return `rgba(244, 86, 66, ${opacity})`;
         });
 
-      currentColumn++;
-      setTimeout(animateColumn, 100); // Delay before animating the next column
+      currentRow++;
+      setTimeout(animateRow, 100);
     }
 
-    animateColumn();
+
+    function displayFootageInsights(url: string) {
+    }
+
+    animateRow();
 
     // Cleanup tooltip on unmount
     return () => {
       tooltip.remove();
     };
-  }, [frameHeight]);
+  }, [frameHeight, data]);
 
   return (
-    <div className="px-2 pt-10 flex flex-col items-center justify-center">
-      <section style={{ width: `60vw`, height: `${frameHeight}px` }}>
+    <div className="px-2 pt-2">
+      <section style={{ width: `${frameWidth}px`, height: `${frameHeight - 30}px` }}>
         <svg ref={svgRef}></svg>
       </section>
     </div>

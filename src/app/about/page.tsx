@@ -1,6 +1,6 @@
 "use client"
 import Header from "@/app/_components/header";
-import { DraggableWindow } from "../_components/window";
+import ContentWindow from "../_components/window";
 import '@/app/globals.css'
 
 export default function Index() {
@@ -10,17 +10,17 @@ export default function Index() {
             <main className="about-page min-h-screen flex flex-grow relative overflow-scroll">
                 <div className='inner-backdrop'></div>
                 <div className='w-1/5 ml-10 mt-36 mb-20'>
-                    <DraggableWindow title="Team" >
+                    <ContentWindow title="Team" >
                         <p className="px-4 mt-4">
                             This doctoral project is dedicated to exposing the use of white phosphorus in South Lebanon as a tool of environmental manipulation. Through spatial analysis and geolocation, we document how this toxic substance transforms landscapes into long-term hazards, challenging official narratives.
                         </p>
                         <p className="px-4 mt-4">
                             Team info here </p>
                         <p className="mt-96 px-4"></p>
-                    </DraggableWindow>
+                    </ContentWindow>
                 </div>
                 <div className='w-2/3 mt-36 ml-10 mb-20'>
-                    <DraggableWindow title="About WhitePhosphorus.info" >
+                    <ContentWindow title="About WhitePhosphorus.info" >
                         <div className="mt-6 flex justify-center flex">
                             <div className="mx-4">
                                 <h2>Clouds Atlas</h2>
@@ -42,7 +42,7 @@ export default function Index() {
                                     In this section, we analyze the impact zones of white phosphorus detonations by applying dimensions to visual images. Using landmarks as reference points, we estimate the height of the detonation and the area affected. This approach allows me to accurately measure and visualize the extent of the damage, providing clear evidence that white phosphorus is being used in residential areas, contrary to claims that it’s only deployed in open spaces.
                                 </p></div>
                         </div>
-                    </DraggableWindow>
+                    </ContentWindow>
                 </div>
             </main>
             {/* <Footer /> */}
