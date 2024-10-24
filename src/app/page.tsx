@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function Index() {
 
   const textToType = [
-    "is a catalog and data visualization of evidences of \nIsrael's white phosphorus attacks on southern Lebanon. "
+    "is a catalog and data visualization of \nIsrael's white phosphorus attacks in southern Lebanon. "
   ];
 
   const [TypeWriterFinished, setTypeWriterFinished] = useState(false);

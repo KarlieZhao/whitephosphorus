@@ -16,11 +16,7 @@ const Header = ({ TypeWriterFinished = true }: { TypeWriterFinished?: boolean })
     air: 95.3,
     water: 88.9,
   });
-  useEffect(() => {
-    if (TypeWriterFinished) {
-      console.log("done")
-    }
-  }, [TypeWriterFinished]);
+
   return (
     <header className={`bg-black pt-2 pb-14 fixed top-0 left-0 right-0 z-50`}>
       <div className="relative w-full h-full header-backdrop">

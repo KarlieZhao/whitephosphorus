@@ -41,9 +41,10 @@
 }
 
 .about-page p {
-    font-family: "PPSupplySans-Regular";
-    /* font-size: large; */
-    line-height: normal;
+    font-family: "PPSupplySans-Ultralight";
+    /* font-family: "Anonymous Pro"; */
+    font-size: 1.2rem;
+    line-height: 1.6rem;
 }
 
 .typewrite {
@@ -263,10 +264,19 @@ a {
         inset 1px 1px 0px 0px #fff,
         inset -1px -1px 0px 0px #999;
     height: 75vh;
+    color: #dedede;
 }
 
 .cloudCatalog .inner {
     background-color: #000;
+}
+
+.cloud-page .inner {
+    height: 80vh;
+}
+
+.about-page .inner {
+    height: 80vh;
 }
 
 .title {
@@ -632,5 +642,5 @@ header {
 }
 
 .draggable-container {
-    transition: all 1s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
