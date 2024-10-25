@@ -10,14 +10,14 @@ interface contentWindowProps {
 
 export default function ({ children, title = "", customeClassNameWindow, customeClassNameInner }: contentWindowProps) {
     return (
-        <div className={`draggable-containe h-full`}>
+        <div className={`draggable-container`}>
             <div className={`content w-full ${customeClassNameWindow}`}>
                 <div className="handle no-select">
                     <h4 className="title block">{title}</h4>
                 </div>
-                <div className={`inner h-full flex-1 overflow-auto selectable ${customeClassNameInner}`}>
-                    <div className={`mt-2`}>
-                        <section>
+                <div className={`inner flex - 1 overflow - auto selectable ${customeClassNameInner} `}>
+                    <div className={`mt - 2`}>
+                        <section >
                             {children}
                         </section>
                     </div>

@@ -212,22 +212,40 @@ a {
 
 .footage-1 {
     width: auto;
-    height: 95vh;
+    display: block;
+    height: 50vh;
     z-index: 0;
     background-color: #00000044;
     backdrop-filter: blur(2px);
-    mask: linear-gradient(to right,
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    mask: linear-gradient(to top,
             rgba(0, 0, 0, 1) 0%,
             rgba(0, 0, 0, 1) 90%,
             rgba(0, 0, 0, 0) 100%);
 }
 
 .footage-2 {
-    /* width: 65vw; */
-    margin-left: -3vw;
-    margin-right: 40px;
-    width: calc(75vw - 50px);
-    transition-duration: 2s;
+    position: fixed;
+    top: 16vh;
+    height: 38vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.hideScrollBar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.footage-2::-webkit-scrollbar {
+    display: none;
+}
+
+.footage-2 .inner {
+    height: 31vh;
 }
 
 .activeCells {
@@ -261,7 +279,7 @@ a {
         1px 1px 0px 0px #fff,
         inset 1px 1px 0px 0px #fff,
         inset -1px -1px 0px 0px #999;
-    height: 75vh;
+    /* height: 75vh; */
     color: #dedede;
 }
 

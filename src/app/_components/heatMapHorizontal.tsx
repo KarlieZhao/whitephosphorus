@@ -16,8 +16,8 @@ type CellData = { x: number; y: number; value: number };
 
 const HeatMapAnimation = () => {
   const svgRef = useRef(null);
-  const [frameWidth, setFrameWidth] = useState(5000);
-  const frameHeight = useWindowHeight() * 13;
+  const [frameWidth, setFrameWidth] = useState(5200);
+  const frameHeight = useWindowHeight() * 1.4;
   const [data, setData] = React.useState<IncidentData[]>([]);
 
   useEffect(() => {
@@ -43,8 +43,6 @@ const HeatMapAnimation = () => {
               count: Number(row['number']) || 0
             }
           })
-        // .filter(row => row.area && row.date);
-
         setData(mappedData);
       } catch (error) {
         console.error('loading excel: ' + error);
@@ -58,48 +56,52 @@ const HeatMapAnimation = () => {
     const uniqueAreas = Array.from(new Set(data.map(d => d.area))).filter(Boolean);
 
     // 2D array
-    // dates === rows 
-    // areas === columns
-    const processedData = uniqueDates.map(date => {
-      return uniqueAreas.map(area => {
+    const processedData = uniqueAreas.map(area => {
+      return uniqueDates.map(date => {
         const incident = data.find(d => d.date === date && d.area === area);
         return incident?.count || 0;
       });
     });
 
     return {
-      xLabels: uniqueAreas,
-      yLabels: uniqueDates,
-      yLabelsVisibility: uniqueDates.map((_, i) => i % 1 === 0),
+      xLabels: uniqueDates,
+      yLabels: uniqueAreas,
+      xLabelsVisibility: uniqueDates.map((_, i) => i % 1 === 0),
       processedData
     };
   }
 
   useEffect(() => {
-    const { xLabels, yLabels, yLabelsVisibility, processedData } = processData();
+    const { xLabels, yLabels, xLabelsVisibility, processedData } = processData();
 
-    //format yLabels (dates) for label
-    const yLabelsFormatted = yLabels.map(d => {
+    //format xLabels (dates) for label
+    const xLabelsFormatted = xLabels.map((d, index) => {
       const [year, month, day] = d.split('-');
-      return `${month}-${day}`; // Format as "MM-DD"
+      const prevLabel = index > 0 ? xLabels[index - 1].split('-')[1] : null;
+      if (!prevLabel || month !== prevLabel) {
+        const monthName = new Date(`2023-${month}-28`).toLocaleString('en-US', { month: 'short' });
+        return monthName + ", " + year;
+      }
+      return '';
     });
+
 
     //total incidents for each area
-    const areaTotals = xLabels.map((area, index) => ({
+    const areaTotals = yLabels.map((area, index) => ({
       area,
-      total: d3.sum(processedData.map(row => row[index]))
+      total: d3.sum(processedData[index])
     }));
 
-    xLabels.sort((a, b) => {
+    yLabels.sort((a, b) => {
       const totalA = areaTotals.find(t => t.area === a)?.total || 0;
       const totalB = areaTotals.find(t => t.area === b)?.total || 0;
-      return totalB - totalA;
+      return totalA - totalB;
     });
 
-    const xLabelIndices = xLabels.map(area => areaTotals.findIndex(t => t.area === area));
+    const yLabelIndices = yLabels.map(area => areaTotals.findIndex(t => t.area === area));
 
-    const sortedProcessedData = processedData.map(row =>
-      xLabelIndices.map(index => row[index])
+    const sortedProcessedData = yLabelIndices.map(index =>
+      processedData[index]
     );
 
     //============ rendering SVG ==============
@@ -107,15 +109,14 @@ const HeatMapAnimation = () => {
     d3.select(svgRef.current).selectAll("*").remove();
 
     //set svg dimensions and margins
-    const margin = { top: 100, right: 50, bottom: 40, left: 55 };
-    const availableHeight = frameHeight - margin.top - margin.bottom;
+    const margin = { top: 40, right: 50, bottom: 60, left: 90 };
+    const availableWidth = frameWidth - margin.left - margin.right;
 
-    const numRows = yLabels.length; //dates
-    const numCols = xLabels.length; //areas
+    const numRows = yLabels.length; //areas
+    const numCols = xLabels.length; //dates
 
     //calculate cell size to make cells square
-    const cellSize = availableHeight / numRows;
-    // setFrameWidth(numCols * cellSize * 1.6 + 100);
+    const cellSize = availableWidth / numCols;
     const plotWidth = cellSize * numCols;
     const plotHeight = cellSize * numRows;
 
@@ -128,8 +129,8 @@ const HeatMapAnimation = () => {
     for (let i = 0; i < numRows; i++) {
       for (let j = 0; j < numCols; j++) {
         flatData.push({
-          x: j, // Area index
-          y: i, // Date index
+          x: j, // Date index
+          y: i, // Area index
           value: sortedProcessedData[i][j],
         });
       }
@@ -157,31 +158,31 @@ const HeatMapAnimation = () => {
       .range([0, plotHeight])
       .padding(0.05);
 
-    //x-axis labels (Areas)
+    //x-axis labels (Dates)
     g.append("g")
-      .attr("transform", `translate(0, 0)`)
+      .attr("transform", `translate(-10, ${plotHeight + 10})`)
       .call(
         d3
-          .axisTop(xScale)
-          .tickFormat((i: number) => (xLabels[i]))
+          .axisBottom(xScale)
+          .tickFormat((i: number) => (xLabelsFormatted[i]))
       )
       .selectAll("text")
       .style("text-anchor", "start")
       .style("font-size", "12px")
       .style("fill", "#ccc")
-      .attr("transform", "rotate(-60)")
+      // .attr("transform", "rotate(-60)")
       .attr("dx", "0.5em")
       .attr("dy", "-0.2em");
 
-    //y-axis labels (Dates)
+    //y-axis labels (Areas)
     g.append("g")
       .call(
         d3.axisLeft(yScale)
-          .tickFormat((_: any, i: number) => yLabelsVisibility[i] ? yLabelsFormatted[i] : "")
+          .tickFormat((_: any, i: number) => yLabels[i])
       )
       .selectAll("text")
       .style("text-anchor", "end")
-      .style("font-size", "10px")
+      .style("font-size", "12px")
       .style("fill", "#ccc")
       ;
 
@@ -229,15 +230,14 @@ const HeatMapAnimation = () => {
       .on("click", (event: MouseEvent, d: CellData) => {
       });
 
-
-    // Animation: fill in each row vertically
+    // Animation: fill in each column vertically
     const maxValue = d3.max(sortedProcessedData.flat());
-    let currentRow = 0;
-    function animateRow() {
-      if (currentRow >= numRows) return;
+    let currentCol = 0;
+    function animateCol() {
+      if (currentCol >= numCols) return;
 
       cells
-        .filter((d: CellData) => d.y === currentRow)
+        .filter((d: CellData) => d.x === currentCol)
         .transition()
         .duration(300)
         .attr("x", (d: CellData) => xScale(d.x) ?? 0)
@@ -248,18 +248,15 @@ const HeatMapAnimation = () => {
           return `rgba(255, ${85 + 10 * opacity}, 66, ${opacity})`;
         });
 
-      currentRow++;
-      setTimeout(animateRow, 50);
+      currentCol++;
+      setTimeout(animateCol, 50);
     }
 
     function scale(number: number, inMin: number, inMax: number, outMin: number, outMax: number) {
       return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 
-    function displayFootageInsights(url: string) {
-    }
-
-    animateRow();
+    animateCol();
 
     // Cleanup tooltip on unmount
     return () => {
