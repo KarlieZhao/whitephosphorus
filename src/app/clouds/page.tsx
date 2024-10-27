@@ -1,20 +1,19 @@
 "use client"
-import { DraggableWindow } from "../_components/window";
+import ContentWindow from "../_components/window";
 import Header from "@/app/_components/header";
 import '@/app/globals.css'
 import CloudCatalog from '../_components/cloudCatalog';
+import CloudLayout from "../_components/cloudsLayout";
 
 export default function Index() {
     return (
-        <div className='h-full'>
-            <Header />
-            <main className="flex-grow relative">
+        <div className='cloud-page h-full w-full fixed'>
+            <Header TypeWriterFinished={false} />
+            <main className="flex relative w-full">
                 <div className='inner-backdrop '></div>
-                <div className="flex justify-center z-10  scrollbar-hid pt-32 w-full">
-                    <div className='w-2/3'>
-                        <DraggableWindow title="The Clouds Atlas" customeClassNameWindow="cloudCatalog">
-                            <CloudCatalog />
-                        </DraggableWindow>
+                <div className="flex justify-center z-10  scrollbar-hid pt-16 w-full">
+                    <div className='w-full mr-10'>
+                        <CloudLayout/>
                     </div>
                 </div>
             </main>

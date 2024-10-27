@@ -14,10 +14,10 @@ export function Map() {
     <section className="z-10" style={{ width: `100vw`, height: `${frameHeight}px` }}>
       <iframe
         height={`${frameHeight}px`}
-        title="Test_Karlie"
+        title=""
         src="https://experience.arcgis.com/experience/98fc06b11b154cf1aa623c6de7b29405/"
         loading="lazy"
-        className="bg-black overflow-hidden z-10 fixed mt-7 w-full border-0"
+        className="bg-black overflow-hidden z-10 fixed mt-4 w-full border-0"
       ></iframe>
     </section>
   );

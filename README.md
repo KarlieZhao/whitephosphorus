@@ -1,7 +1,6 @@
 ## Develop
 ```shell
-npm i next
-npm install d3
+npm install
 npm run dev
 ```
 
