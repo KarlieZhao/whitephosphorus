@@ -28,6 +28,18 @@ export default function Index() {
             <main className="flex-grow relative h-auto overflow-hidden">
                 <div className="inner-backdrop"></div>
 
+                <div
+                    className={`footage-timeline transform transition-all duration-1000 ease-out overflow-hidden h-[50vh]
+                        ${isTimelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0'}`}
+                >
+                    <div className="overflow-x-auto overflow-y-hidden hideScrollBar h-full">
+                        <div id="heatmap" className="min-w-max">
+                            <HeatMapAnimation />
+                        </div>
+                    </div>
+                </div>
+
+
                 <div className="footage-display overflow-x-scroll overflow-y-hidden h-full hideScrollBar whitespace-nowrap">
                     <div className="flex gap-4 h-full flex-nowrap w-full">
                         {contentWindows.map((window) => (
@@ -42,17 +54,6 @@ export default function Index() {
                                 </ContentWindow>
                             </div>
                         ))}
-                    </div>
-                </div>
-
-                <div
-                    className={`footage-timeline transform transition-all duration-1000 ease-out overflow-hidden h-[50vh]
-                        ${isTimelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0'}`}
-                >
-                    <div className="overflow-x-auto overflow-y-hidden hideScrollBar h-full">
-                        <div id="heatmap" className="min-w-max">
-                            <HeatMapAnimation />
-                        </div>
                     </div>
                 </div>
             </main>

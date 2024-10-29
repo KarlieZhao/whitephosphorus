@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import * as d3 from "d3";
+import { textwrap } from "d3-textwrap";
 import { useWindowHeight } from "@/lib/resize";
 import { useWindowWidth } from "@/lib/resize";
 import * as XLSX from 'xlsx';
@@ -16,9 +17,11 @@ type CellData = { x: number; y: number; value: number };
 
 const HeatMapAnimation = () => {
   const svgRef = useRef(null);
-  const [frameWidth, setFrameWidth] = useState(5200);
-  const frameHeight = useWindowHeight() * 1.4;
+  const [frameWidth, setFrameWidth] = useState(6700);
+  const frameHeight = useWindowHeight() * 1.7;
   const [data, setData] = React.useState<IncidentData[]>([]);
+  const majorEventDates = ["2023-10-08", "2023-11-24", "2023-12-31", "2024-01-02", "2024-09-17", "2024-09-20", "2024-09-27", "2024-10-01"];
+  const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli assassinaion in Dahieh", "Hezbollah pager explosions", "IDF Airstrikes campaign commences on Lebanon", "The assassination of Hassan Nasrallah", " Israel invades South Lebanon"];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,7 +112,7 @@ const HeatMapAnimation = () => {
     d3.select(svgRef.current).selectAll("*").remove();
 
     //set svg dimensions and margins
-    const margin = { top: 40, right: 50, bottom: 60, left: 90 };
+    const margin = { top: 60, right: 140, bottom: 60, left: 90 };
     const availableWidth = frameWidth - margin.left - margin.right;
 
     const numRows = yLabels.length; //areas
@@ -117,7 +120,7 @@ const HeatMapAnimation = () => {
 
     //calculate cell size to make cells square
     const cellSize = availableWidth / numCols;
-    const plotWidth = cellSize * numCols;
+    const plotWidth = cellSize / 1.5 * numCols;
     const plotHeight = cellSize * numRows;
 
     // Update actual SVG width and height
@@ -183,8 +186,7 @@ const HeatMapAnimation = () => {
       .selectAll("text")
       .style("text-anchor", "end")
       .style("font-size", "12px")
-      .style("fill", "#ccc")
-      ;
+      .style("fill", "#ccc");
 
     // Bind data
     const cells = g
@@ -212,7 +214,7 @@ const HeatMapAnimation = () => {
       .style("opacity", 0);
 
     cells.filter((d: CellData) => d.value > 0)
-      .attr("class", "activeCells")
+      .attr("class", "mousePointer")
       .on("mouseover", (event: MouseEvent, d: CellData) => {
         tooltip
           .style("opacity", 0.9)
@@ -230,12 +232,51 @@ const HeatMapAnimation = () => {
       .on("click", (event: MouseEvent, d: CellData) => {
       });
 
+    //adding major event lines
+
+    const majorEventIndices = majorEventDates.map(date => xLabels.indexOf(date));
+
+    // // A: mouse hover display
+    // majorEventIndices.forEach((value, index) => {
+    //   // Add text annotation
+    //   let ypos = -10;
+    //   if (index === 3 || index === 5 || index === 7) {
+    //     ypos = -25;
+    //   }
+    //   let textAnchorPos = index === 0 ? "start" : "middle";
+    //   const annotation = g.append("text")
+    //     .attr("x", xScale(value)!)
+    //     .attr("y", ypos)
+    //     .attr("text-anchor", textAnchorPos)
+    //     .style("font-size", "14px")
+    //     .style("fill", "#ccc")
+    //     .style("opacity", 0)
+    //     .text(majorEventNames[index]);
+
+    //   g.append("line")
+    //     .attr("x1", xScale(value)!)
+    //     .attr("x2", xScale(value)!)
+    //     .attr("class", "mousePointer")
+    //     .attr("y1", 0)
+    //     .attr("y2", plotHeight)
+    //     .attr("stroke", "#FF000088")
+    //     .attr("stroke-width", 2)
+    //     .on("mouseover", (event: MouseEvent) => {
+    //       // show top annotation
+    //       annotation.transition().duration(20).style("opacity", 1);
+
+    //     })
+    //     .on("mouseout", () => {
+    //       // hide top annotation (fade out 3s)
+    //       annotation.transition().duration(5000).style("opacity", 0);
+    //     });
+    // })
+
     // Animation: fill in each column vertically
     const maxValue = d3.max(sortedProcessedData.flat());
     let currentCol = 0;
-    function animateCol() {
+    const animateCol = () => {
       if (currentCol >= numCols) return;
-
       cells
         .filter((d: CellData) => d.x === currentCol)
         .transition()
@@ -246,14 +287,48 @@ const HeatMapAnimation = () => {
           let opacity = 1 - ((maxValue) - d.value) / (maxValue);
           opacity = opacity === 0 ? 0 : scale(opacity, 0, 1, 0.3, 1.0);
           return `rgba(255, ${85 + 10 * opacity}, 66, ${opacity})`;
-        });
+        })
+
+      // B: adjusting alignment
+      // display annotations for the current column if it matches an event
+      const eventIndex = majorEventIndices.indexOf(currentCol);
+      if (eventIndex !== -1) {
+        const value = majorEventIndices[eventIndex];
+        let ypos = -10;
+        if (eventIndex === 2) ypos = -25;
+        else if (eventIndex == 4) ypos = -50;
+        else if (eventIndex === 5) ypos = -35
+        else if (eventIndex === 6) ypos = -20
+        else if (eventIndex === 7) ypos = -5;
+
+        // Add the line
+        const lines = g.append("line")
+          .attr("x1", xScale(value)!)
+          .attr("x2", xScale(value)!)
+          .attr("y1", ypos + 10)
+          .attr("y2", plotHeight)
+          .attr("stroke", "#FF0000")
+          .attr("stroke-width", 1.5)
+          .style("opacity", 0) // Initially hidden
+          .transition()
+          .duration(200)
+          .style("opacity", 1); // Fade in with the cell animation
+
+        const annotation = g.append("text")
+          .attr("x", xScale(value)!)
+          .attr("y", ypos)
+          .attr("text-anchor", "start")
+          .style("font-size", "12px")
+          .style("fill", "#ccc")
+          .style("opacity", 0) // Initially hidden
+          .text(majorEventNames[eventIndex])
+          .transition()
+          .duration(200)
+          .style("opacity", 1); // Fade in with the cell animation
+      }
 
       currentCol++;
-      setTimeout(animateCol, 50);
-    }
-
-    function scale(number: number, inMin: number, inMax: number, outMin: number, outMax: number) {
-      return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+      setTimeout(animateCol, 40);
     }
 
     animateCol();
@@ -266,11 +341,16 @@ const HeatMapAnimation = () => {
 
   return (
     <div className="px-2 pt-2">
-      <section style={{ width: `${frameWidth}px`, height: `${frameHeight - 30}px` }}>
+      <section style={{ width: `${frameWidth / 2}px`, height: `${frameHeight - 30}px` }}>
         <svg ref={svgRef}></svg>
       </section>
     </div>
   );
 };
+
+
+function scale(number: number, inMin: number, inMax: number, outMin: number, outMax: number) {
+  return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+}
 
 export default HeatMapAnimation;

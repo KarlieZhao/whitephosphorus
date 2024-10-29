@@ -11,6 +11,7 @@
     "@observablehq/runtime": "^5.9.9",
     "classnames": "^2.5.1",
     "d3": "^7.9.0",
+    "d3-textwrap": "^3.0.0",
     "date-fns": "^3.6.0",
     "gray-matter": "^4.0.3",
     "next": "^14.2.13",
