@@ -32,7 +32,7 @@ export default function Index() {
                     <div className={`footage-2 pt-28 transform transition-all duration-1000 ease-in-out
               ${isWindowVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                         <ContentWindow title="Footage Insights">
-                            <FootageDisplay />
+                            <FootageDisplay srcLink={"placeholder"} />
                         </ContentWindow>
                     </div>
                 </div>
