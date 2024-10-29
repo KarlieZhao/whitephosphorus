@@ -2,7 +2,6 @@
 import ContentWindow from "../_components/window";
 import Header from "@/app/_components/header";
 import '@/app/globals.css'
-import CloudCatalog from '../_components/cloudCatalog';
 import CloudLayout from "../_components/cloudsLayout";
 
 export default function Index() {

@@ -210,7 +210,7 @@ a {
     margin: auto;
 }
 
-.footage-1 {
+.footage-timeline {
     width: auto;
     display: block;
     height: 50vh;
@@ -227,24 +227,25 @@ a {
             rgba(0, 0, 0, 0) 100%);
 }
 
-.footage-2 {
+.footage-display {
     position: fixed;
     top: 16vh;
     height: 38vh;
-    overflow-x: auto;
+    overflow-x: scroll;
     overflow-y: hidden;
+    width: 200rem;
 }
 
 .hideScrollBar {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    /* scrollbar-width: none;
+    -ms-overflow-style: none; */
 }
 
-.footage-2::-webkit-scrollbar {
+.footage-display::-webkit-scrollbar {
     display: none;
 }
 
-.footage-2 .inner {
+.footage-display .inner {
     height: 31vh;
 }
 
