@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: `WhitePhosphorus.info`,
   description: ``,
   openGraph: {
-    images: [HOME_OG_IMAGE_URL],
+    images: [],
   },
 };
 

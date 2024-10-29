@@ -674,3 +674,18 @@ header {
 .draggable-container {
     transition: all 0.3s ease-in-out;
 }
+
+.footage-2 .inner {
+    overflow: hidden;
+    padding: 0;
+}
+
+.video-footage-wrapper {
+    width: 30rem;
+    overflow: hidden;
+    max-width: 600px;
+    max-height: 450px;
+    padding: 0;
+    margin-left: 1px;
+    margin-right: -15px;
+}

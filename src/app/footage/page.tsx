@@ -11,10 +11,10 @@ export default function Index() {
     const [isWindowVisible, setIsWindowVisible] = useState(false);
 
     const contentWindows = [
-        { id: 1, title: "Footage 1" },
-        { id: 2, title: "Footage 2" },
-        { id: 3, title: "Footage 3" },
-        { id: 4, title: "Footage 4" },
+        { id: 1, title: "Al Khiam | 06/02/2024 | Footage 1", link: "/assets/img/testimg.jpeg" },
+        { id: 2, title: "Al Khiam | 06/02/2024 | Footage 2", link: "/assets/img/testimg2.webp" },
+        { id: 3, title: "Al Khiam | 06/02/2024 | Footage 3", link: "/assets/img/testimg3.jpg" },
+        { id: 4, title: "Al Khiam | 06/02/2024 | Footage 4", link: "/assets/img/testimg4.jpg" },
     ];
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export default function Index() {
                   snap-start`}
                             >
                                 <ContentWindow title={window.title} customeClassNameInner="videoHeight">
-                                    <FootageDisplay />
+                                    <FootageDisplay srcLink={window.link} />
                                 </ContentWindow>
                             </div>
                         ))}

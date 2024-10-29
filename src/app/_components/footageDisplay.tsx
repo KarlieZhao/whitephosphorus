@@ -9,20 +9,16 @@ type DataPoint = {
     date: Date | null;
     value: number;
 };
-
-export default function () {
-    return (<div>
-        {/* <img src="../assets/img/testimg.jpeg" /> */}
-        <div className={` overflow-scroll mt-2 mb-5`}>
-            <section>
-                <div className="text-white px-6 text-xl">
-                    Morbi a purus sed turpis blandit consequat.<br />
-                    Nam dignissim luctus felis, eget semper mi interdum sit amet.<br /> Vestibulum maximus aliquet risus sed accumsan. <br />
-                    Donec auctor ante nisi, <br />ac efficitur eros mollis sit amet.
-                    <br />Suspendisse potenti. <br />
-                </div>
-            </section>
+export default function ({ srcLink }: { srcLink: string }) {
+    return (
+        <div>
+            <div className="text-white text-xl video-footage-wrapper">
+                <img
+                    src={srcLink}
+                    className="video-footage object-cover"
+                    alt=""
+                />
+            </div>
         </div>
-    </div>
     );
 }
