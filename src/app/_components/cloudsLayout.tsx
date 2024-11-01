@@ -59,7 +59,6 @@ const cloudData: CloudRow[] = [
   }
 ];
 
-
 const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -101,10 +100,9 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
     });
   };
 
-
   return (
     <div ref={containerRef} className="bg-zinc-800 p-4">
-      <div className="relative w-full pt-[100%]">
+      <div className="relative w-full pt-[100%]  max-h-[300px]">
         <div className="absolute inset-0 rounded-lg overflow-hidden">
           {/*poster image */}
           <img
@@ -143,12 +141,12 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
 export default function CloudLayout() {
   return (
     <div className="w-full h-full min-h-screen bg-transparent text-white p-4">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         {cloudData.map((row, rowIndex) => (
-          <div key={rowIndex} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div key={rowIndex} className="grid grid-cols-1 md:grid-cols-[300px,0.5fr,1fr] gap-2 max-h-[300px]">
             <VideoPlayer src={row.video} name={row.name} />
             {/* Text Column */}
-            <div className="bg-zinc-800 p-4 flex items-center justify-center">
+            <div className="bg-zinc-800 p-4 flex items-center justify-center max-h-[300px]">
               <div className="prose prose-invert text-center">
                 <h3 className="text-white mb-4">{row.name}</h3>
                 {row.text}
@@ -156,7 +154,7 @@ export default function CloudLayout() {
             </div>
 
             {/* Image Grid Column */}
-            <div className="bg-zinc-800 p-4 flex items-center justify-center">
+            <div className="bg-zinc-800 p-4 flex items-center justify-center  max-h-[300px]">
               <div className="w-full h-full aspect-video flex items-center justify-center">
                 <div className={`grid grid-cols-4 grid-rows-2 gap-2 w-full h-full p-2`}>
                   {row.images.slice(0, 8).map((image, index) => (
