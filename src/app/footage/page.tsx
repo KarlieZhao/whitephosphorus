@@ -5,16 +5,25 @@ import FootageDisplay from "@/app/_components/footageDisplay";
 import Header from "@/app/_components/header";
 import '@/app/globals.css'
 import HeatMapAnimation from "../_components/heatMapHorizontal";
+import { processExcelData } from "@/app/_components/dataParser"
+
+type CellClickData = {
+    count: number;
+    date: string;
+    area: string;
+    link: Array<string>;
+};
 
 export default function Index() {
     const [isTimelineVisible, setIsTimelineVisible] = useState(false);
     const [isWindowVisible, setIsWindowVisible] = useState(false);
+    const [clickedCellData, setClickedCellData] = useState<CellClickData | null>(null);
+    //fetch data
+    const incidentData = processExcelData();
 
-    const contentWindows = [
-        { id: 1, title: "Al Khiam | 06/02/2024 | Footage 1", link: "/assets/img/testimg.jpeg" },
-        { id: 2, title: "Al Khiam | 06/02/2024 | Footage 2", link: "/assets/img/testimg2.webp" },
-        { id: 3, title: "Al Khiam | 06/02/2024 | Footage 3", link: "/assets/img/testimg3.jpg" }
-    ];
+    const handleCellClick = (data: CellClickData) => {
+        setClickedCellData(data); //store clicked cell data
+    };
 
     useEffect(() => {
         setIsTimelineVisible(true);
@@ -22,6 +31,7 @@ export default function Index() {
             setIsWindowVisible(true);
         }, 1000);
     }, []);
+
     return (
         <div className="overflow-hidden relative h-screen">
             <Header />
@@ -34,28 +44,25 @@ export default function Index() {
                 >
                     <div className="overflow-x-auto overflow-y-hidden hideScrollBar h-full">
                         <div id="heatmap" className="min-w-max">
-                            <HeatMapAnimation />
+                            <HeatMapAnimation data={incidentData} onCellClick={handleCellClick} />
                         </div>
                     </div>
                 </div>
 
-
-                <div className="footage-display overflow-x-scroll overflow-y-hidden h-full hideScrollBar whitespace-nowrap">
-                    <div className="flex gap-4 h-full flex-nowrap w-full">
-                        {contentWindows.map((window) => (
-                            <div
-                                key={window.id}
-                                className={`flex-none transform transition-all duration-1000 ease-in-out
-                                    ${isWindowVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
-                                    snap-start`}
-                            >
-                                <ContentWindow title={window.title} customeClassNameInner="videoHeight">
-                                    <FootageDisplay srcLink={window.link} />
-                                </ContentWindow>
-                            </div>
-                        ))}
+                {clickedCellData && (
+                    <div className="footage-display overflow-x-scroll overflow-y-hidden h-full hideScrollBar whitespace-nowrap">
+                        <div className="flex gap-4 h-full flex-nowrap w-full">
+                            {Array.from({ length: clickedCellData.link.length }).map((_, index) => (
+                                <div key={index} className="flex-none snap-start">
+                                    <ContentWindow title={`Footage ${index + 1}`}>
+                                        {/* ${clickedCellData.area} | ${clickedCellData.date} |  */}
+                                        <FootageDisplay srcLink={`${process.env.NEXT_PUBLIC_CDN_URL}/WPdata/${clickedCellData.link[index]}`} />
+                                    </ContentWindow>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
             </main>
         </div>
     );

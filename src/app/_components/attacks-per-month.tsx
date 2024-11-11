@@ -4,7 +4,6 @@ import * as d3 from "d3";
 import { scaleQuantile } from 'd3-scale';
 import "../globals.css";
 import styles from './mapembed.module.css';
-import { colorPalette } from "./color-palette";
 
 // Define the data type
 type DataItem = {
@@ -77,10 +76,8 @@ export function AttacksPerMonth() {
 
             // custom color scale
             const customColors = [
-                colorPalette().SECONDARY,
                 "#ECA281", // Light Salmon
                 "#FF6347", // Orange Red
-                colorPalette().HIGHLIGHT  // Red
             ];
 
             const colorScale = scaleQuantile<string>()
@@ -119,14 +116,14 @@ export function AttacksPerMonth() {
                     .text(yLabel))
                 .call((g: any) => {
                     g.selectAll("text")
-                        .attr("fill", `${colorPalette().SILVER}`)
+                        // .attr("fill", `${colorPalette().SILVER}`)
                         .style("font-family", "'Inconsolata',monospace")
                         .style("font-size", "1rem");
                 });
 
             // Bars
             svg.append("g")
-                .attr("fill", colorPalette().HIGHLIGHT)
+                // .attr("fill", colorPalette().HIGHLIGHT)
                 .selectAll("rect")
                 .data(data)
                 .join("rect")
@@ -142,7 +139,7 @@ export function AttacksPerMonth() {
                 .call(xAxis)
                 .call((g: any) => {
                     g.selectAll("text")
-                        .attr("fill", `${colorPalette().SILVER}`)
+                        // .attr("fill", `${colorPalette().SILVER}`)
                         .style("font-family", "'Inconsolata',monospace")
                         .style("font-size", "1rem")
                         .attr("transform", "rotate(-60)") // Rotate text

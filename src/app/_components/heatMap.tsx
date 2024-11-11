@@ -2,8 +2,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import * as d3 from "d3";
 import { useWindowHeight } from "@/lib/resize";
-import { useWindowWidth } from "@/lib/resize";
-import * as XLSX from 'xlsx';
 
 type IncidentData = {
   date: string;
@@ -11,47 +9,17 @@ type IncidentData = {
   count: number;
 };
 
+type HeatMapProps = {
+  data: IncidentData[];
+};
+
 //entry data for D3
 type CellData = { x: number; y: number; value: number };
 
-const HeatMapAnimation = () => {
+const HeatMapAnimation: React.FC<HeatMapProps> = ({ data }) => {
   const svgRef = useRef(null);
   const [frameWidth, setFrameWidth] = useState(5000);
   const frameHeight = useWindowHeight() * 13;
-  const [data, setData] = React.useState<IncidentData[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        //process Excel sheet
-        const response = await fetch('/data/incidents.xlsx');
-        const arrayBuffer = await response.arrayBuffer();
-
-        const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rawData = XLSX.utils.sheet_to_json(worksheet);
-
-        const mappedData = rawData
-          .map((row: any) => {
-            const dateValue = XLSX.SSF.parse_date_code(row['Date']);
-            const jsDate = new Date(dateValue.y, dateValue.m - 1, dateValue.d);
-            const cellDate = jsDate.toISOString().split('T')[0];
-
-            return {
-              date: cellDate,
-              area: row['Area'] || "",
-              count: Number(row['number']) || 0
-            }
-          })
-        // .filter(row => row.area && row.date);
-
-        setData(mappedData);
-      } catch (error) {
-        console.error('loading excel: ' + error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const processData = () => {
     const uniqueDates = Array.from(new Set(data.map(d => d.date))).filter(Boolean);
@@ -254,9 +222,6 @@ const HeatMapAnimation = () => {
 
     function scale(number: number, inMin: number, inMax: number, outMin: number, outMax: number) {
       return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-    }
-
-    function displayFootageInsights(url: string) {
     }
 
     animateRow();

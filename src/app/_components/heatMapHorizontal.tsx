@@ -1,58 +1,36 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import * as d3 from "d3";
-import { textwrap } from "d3-textwrap";
 import { useWindowHeight } from "@/lib/resize";
-import { useWindowWidth } from "@/lib/resize";
-import * as XLSX from 'xlsx';
 
 type IncidentData = {
   date: string;
   area: string;
   count: number;
+  link: Array<string>;
 };
+
+type HeatMapProps = {
+  data: IncidentData[];
+  onCellClick: (data: {
+    date: string;
+    area: string;
+    count: number;
+    link: Array<string>
+  }) => void;
+};
+
 
 //entry data for D3
 type CellData = { x: number; y: number; value: number };
 
-const HeatMapAnimation = () => {
+
+const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
   const svgRef = useRef(null);
   const [frameWidth, setFrameWidth] = useState(6700);
   const frameHeight = useWindowHeight() * 1.7;
-  const [data, setData] = React.useState<IncidentData[]>([]);
   const majorEventDates = ["2023-10-08", "2023-11-24", "2023-12-31", "2024-01-02", "2024-09-17", "2024-09-20", "2024-09-27", "2024-10-01"];
   const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli assassinaion in Dahieh", "Hezbollah pager explosions", "IDF Airstrikes campaign commences on Lebanon", "The assassination of Hassan Nasrallah", " Israel invades South Lebanon"];
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        //process Excel sheet
-        const response = await fetch('/data/incidents.xlsx');
-        const arrayBuffer = await response.arrayBuffer();
-
-        const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rawData = XLSX.utils.sheet_to_json(worksheet);
-
-        const mappedData = rawData
-          .map((row: any) => {
-            const dateValue = XLSX.SSF.parse_date_code(row['Date']);
-            const jsDate = new Date(dateValue.y, dateValue.m - 1, dateValue.d);
-            const cellDate = jsDate.toISOString().split('T')[0];
-
-            return {
-              date: cellDate,
-              area: row['Area'] || "",
-              count: Number(row['number']) || 0
-            }
-          })
-        setData(mappedData);
-      } catch (error) {
-        console.error('loading excel: ' + error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const processData = () => {
     const uniqueDates = Array.from(new Set(data.map(d => d.date))).filter(Boolean);
@@ -199,7 +177,7 @@ const HeatMapAnimation = () => {
       .attr("width", xScale.bandwidth())
       .attr("height", yScale.bandwidth())
       .style("fill", "#ffffff00")
-      .style("stroke", "#333");
+      .style("stroke", "#333")
 
     // Tooltip for displaying values
     const tooltip = d3
@@ -230,6 +208,17 @@ const HeatMapAnimation = () => {
         tooltip.style("opacity", 0);
       })
       .on("click", (event: MouseEvent, d: CellData) => {
+        const matchedEntry = data.find(
+          (entry) => entry.date === xLabels[d.x] && entry.area === yLabels[d.y]
+        );
+
+        const clickedData = {
+          count: d.value,
+          date: yLabels[d.y],
+          area: xLabels[d.x],
+          link: matchedEntry?.link || []
+        };
+        onCellClick(clickedData);
       });
 
     //adding major event lines

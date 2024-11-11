@@ -238,8 +238,8 @@ a {
 }
 
 .hideScrollBar {
-    /* scrollbar-width: none;
-    -ms-overflow-style: none; */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .footage-display::-webkit-scrollbar {
@@ -257,12 +257,10 @@ a {
 /* Window layout */
 .content {
     position: relative;
-    z-index: 800;
+    width: 100%;
+    z-index: 100;
     font-weight: normal;
     display: block;
-    margin-left: 1vw;
-    align-items: center;
-    justify-items: center;
     border: 1px solid #111;
     background: #cccccc99;
     box-shadow:
@@ -272,10 +270,11 @@ a {
 }
 
 .footage-display .content {
-    width: 20rem;
+    width: fit-content;
 }
 
 .footage-display .inner {
+    width: fit-content;
     height: 12rem;
 }
 
@@ -305,11 +304,10 @@ a {
 }
 
 .title {
-    width: 100%;
+    font-size: 0.8rem;
     text-align: center;
     font-weight: inherit;
-    padding: 5px 0;
-    background-size: 3px 2px;
+    padding: 1px 0;
     margin-bottom: 0;
     margin-top: 3px;
     color: #000;
@@ -681,20 +679,12 @@ header {
 }
 
 .draggable-container {
+    width: 100%;
+    margin-left: 1vw;
     transition: all 0.3s ease-in-out;
 }
 
 .footage-2 .inner {
     overflow: hidden;
     padding: 0;
-}
-
-.video-footage-wrapper {
-    width: 30rem;
-    overflow: hidden;
-    max-width: 600px;
-    max-height: 450px;
-    padding: 0;
-    margin-left: 1px;
-    margin-right: -15px;
 }

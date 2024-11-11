@@ -1,30 +1,48 @@
-// dataProcessor.ts
+import { useEffect, useState } from "react";
 import * as XLSX from 'xlsx';
 
-export const processExcelData = (file: File): Promise<Array<{ date: string; area: string; count: number }>> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+type IncidentData = {
+    date: string;
+    area: string;
+    count: number;
+    link: Array<string>;
+};
 
-        reader.onload = (e) => {
+export const processExcelData = () => {
+    const [data, setData] = useState<IncidentData[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
             try {
-                const data = new Uint8Array(e.target?.result as ArrayBuffer);
-                const workbook = XLSX.read(data, { type: 'array' });
+                const response = await fetch('/data/incidents.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+
+                const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
                 const worksheet = workbook.Sheets[workbook.SheetNames[0]];
                 const rawData = XLSX.utils.sheet_to_json(worksheet);
 
-                // Transform the data into the required format
-                const transformedData = rawData.map((row: any) => ({
-                    date: row['Date of Incident'],
-                    area: row['Area'],
-                    count: Number(row['# of WP Shells Fired per Footage']) || 0
-                })).filter(row => row.area && row.date); // Filter out empty rows
+                const mappedData = rawData.map((row: any) => {
+                    const dateValue = XLSX.SSF.parse_date_code(row['Date']);
+                    const jsDate = new Date(dateValue.y, dateValue.m - 1, dateValue.d);
+                    const cellDate = jsDate.toISOString().split('T')[0];
 
-                resolve(transformedData);
+                    return {
+                        date: cellDate,
+                        area: row['Area'] || "",
+                        count: Number(row['Number']) || 0,
+                        link: Object.keys(row)
+                            .filter(key => key.startsWith("Link"))
+                            .map(key => row[key])
+                            .filter(link => link)
+                    };
+                });
+                setData(mappedData);
             } catch (error) {
-                reject(error);
+                console.error('Error loading Excel data:', error);
             }
         };
+        fetchData();
+    }, []);
 
-        reader.readAsArrayBuffer(file);
-    });
+    return data;
 };

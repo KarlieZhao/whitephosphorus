@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { ScaleQuantile, scaleQuantile } from 'd3-scale';
 import "../globals.css";
-import { colorPalette } from "./color-palette";
 
 interface DataPoint {
     Area: string;
@@ -33,8 +32,7 @@ export function AttacksPerArea() {
                 yRange = [marginTop, height - marginBottom] as [number, number],
                 xFormat,
                 yPadding = 0.3,
-                xLabel,
-                color = `${colorPalette().HIGHLIGHT}`
+                xLabel
             }: {
                 x?: (d: DataPoint) => number;
                 y?: (d: DataPoint) => string;
@@ -60,11 +58,9 @@ export function AttacksPerArea() {
 
             // Custom color scale
             const customColors = [
-                colorPalette().SECONDARY,
                 "#ECA281",
                 "#F69169",
-                "#FF6347",
-                colorPalette().HIGHLIGHT
+                "#FF6347"
             ];
             const colorScale: ScaleQuantile<string, never> = scaleQuantile<string>()
                 .domain([0, d3.max(X) ?? 0])
@@ -101,7 +97,7 @@ export function AttacksPerArea() {
                 )
                 .call(g => g.select(".domain").remove())
                 .call(g => g.selectAll(".tick line")
-                    .attr("stroke", `${colorPalette().SILVER}`)
+                    // .attr("stroke", `${colorPalette().SILVER}`)
                     .attr("stroke-opacity", 0.3)
                     .attr("stroke-dasharray", "4"));
 
@@ -117,7 +113,7 @@ export function AttacksPerArea() {
                     .text(xLabel ?? null))
                 .call(g => {
                     g.selectAll("text")
-                        .attr("fill", `${colorPalette().BRIGHT}`)
+                        // .attr("fill", `${colorPalette().BRIGHT}`)
                         .style("font-family", "'Inconsolata',monospace")
                         .style("font-size", "14px");
                 });
@@ -132,7 +128,7 @@ export function AttacksPerArea() {
                 .attr("x", -10)
                 .attr("dy", "0.32em")
                 .attr("text-anchor", "end")
-                .attr("fill", `${colorPalette().SILVER}`)
+                // .attr("fill", `${colorPalette().SILVER}`)
                 .style("font-family", "'Inconsolata',monospace")
                 .style("font-size", "14px");
 
@@ -172,7 +168,7 @@ export function AttacksPerArea() {
                     xLabel: "→ Number of Attacks",
                     width,
                     height,
-                    color: `${colorPalette().HIGHLIGHT}`,
+                    // color: `${colorPalette().HIGHLIGHT}`,
                     marginLeft: 100
                 });
             }
