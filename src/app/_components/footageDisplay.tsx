@@ -35,6 +35,7 @@ export default function FootageDisplay({ srcLink }: FootageDisplayProps) {
                     style={{ height: `11.9rem`, maxWidth: '22rem' }}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
+                //add enlarge function
                 >
                     {isVideo ? (
                         <video
