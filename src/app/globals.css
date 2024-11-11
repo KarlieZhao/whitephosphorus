@@ -301,6 +301,7 @@ a {
 
 .about-page .inner {
     height: 80vh;
+    overflow: scroll;
 }
 
 .title {

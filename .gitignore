@@ -4,3 +4,4 @@ node_modules/
 .*.env
 /legacy
 **/.DS_Store
+.env.local

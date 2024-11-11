@@ -19,7 +19,6 @@ export default function Index() {
         <div>
             {/* hide toxicity counter on this page */}
             <Header TypeWriterFinished={false} />
-
             <main className="about-page min-h-screen flex fixed overflow-hidden">
                 <div className='inner-backdrop'></div>
 
@@ -35,7 +34,8 @@ export default function Index() {
                      ${isMethodVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                     <ContentWindow title="Methodology" customeClassNameWindow="flex flex-col h-full" >
                         <div className="mx-10 mt-20">
-                            <h2>Methodology</h2>  <p>WhitePhosophrus.info is dedicated to exposing the use of white phosphorus in South Lebanon as a tool of environmental manipulation. Through spatial analysis and geolocation, we document how this toxic substance transforms landscapes into long-term hazards, challenging official narratives.
+                            <h2>Methodology</h2>
+                            <p>WhitePhosophrus.info is dedicated to exposing the use of white phosphorus in South Lebanon as a tool of environmental manipulation. Through spatial analysis and geolocation, we document how this toxic substance transforms landscapes into long-term hazards, challenging official narratives.
                             </p> </div>
                         <div className="mx-10 mt-20 w-2/3">
                             <h2>Clouds Atlas</h2>
