@@ -51,10 +51,15 @@ export default function Index() {
 
                 {clickedCellData && (
                     <div className="footage-display overflow-x-scroll overflow-y-hidden h-full hideScrollBar whitespace-nowrap">
-                        <div className="flex gap-4 h-full flex-nowrap w-full">
+                        <div id={`metadata-bar`}>
+                            <div className={`content`}>
+                                <h4 className="title">{`${clickedCellData.area} | ${clickedCellData.date} `}</h4>
+                            </div>
+                        </div>
+                        <div className="flex gap-1 h-full flex-nowrap w-full">
                             {Array.from({ length: clickedCellData.link.length }).map((_, index) => (
                                 <div key={index} className="flex-none snap-start">
-                                    <ContentWindow title={`Footage ${index + 1}`}>
+                                    <ContentWindow title={``}>
                                         {/* ${clickedCellData.area} | ${clickedCellData.date} |  */}
                                         <FootageDisplay srcLink={`${process.env.NEXT_PUBLIC_CDN_URL}/WPdata/${clickedCellData.link[index]}`} />
                                     </ContentWindow>

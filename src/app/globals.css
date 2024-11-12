@@ -128,7 +128,7 @@ p {
     top: 0;
     left: 0;
     width: 50%;
-    z-index: 100;
+    z-index: 10;
     /* min-width: 500px; */
 }
 
@@ -234,7 +234,9 @@ a {
     height: max-content;
     overflow-x: scroll;
     overflow-y: hidden;
-    width: 200rem
+    width: 100vw;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .hideScrollBar {
@@ -258,7 +260,7 @@ a {
 .content {
     position: relative;
     width: 100%;
-    z-index: 100;
+    z-index: 40;
     font-weight: normal;
     display: block;
     border: 1px solid #111;
@@ -308,7 +310,7 @@ a {
     font-size: 0.8rem;
     text-align: center;
     font-weight: inherit;
-    padding: 1px 0;
+    padding: 3px 10px;
     margin-bottom: 0;
     margin-top: 3px;
     color: #000;
@@ -685,7 +687,49 @@ header {
     transition: all 0.3s ease-in-out;
 }
 
+#metadata-bar {
+    position: fixed;
+    bottom: 24vh;
+    margin-bottom: 6px;
+    width: max-content;
+    transition: all 0.3s ease-in-out;
+}
+
+#metadata-bar .content {
+    border: 0;
+    background: #cccccc33;
+    box-shadow: 0px 0px #111;
+}
+
+#metadata-bar .title {
+    padding: 2px 15px;
+    color: #fff;
+
+}
+
 .footage-2 .inner {
     overflow: hidden;
     padding: 0;
+}
+
+.overlay {
+    position: fixed;
+    top: 15vh;
+    left: 0;
+    width: 100vw;
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: zoom-out;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+.overlay-visible {
+    opacity: 1;
+    visibility: visible;
 }

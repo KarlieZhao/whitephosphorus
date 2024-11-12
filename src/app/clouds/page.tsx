@@ -11,7 +11,7 @@ export default function Index() {
             <main className="flex relative w-full">
                 <div className='inner-backdrop '></div>
                 <div className="flex justify-center z-10  scrollbar-hid pt-16 w-full">
-                    <div className='w-full mr-10'>
+                    <div className='w-full ml-3 mr-3'>
                         <CloudLayout />
                     </div>
                 </div>
