@@ -20,15 +20,13 @@ type HeatMapProps = {
   }) => void;
 };
 
-
 //entry data for D3
 type CellData = { x: number; y: number; value: number };
 
-
 const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
   const svgRef = useRef(null);
-  const [frameWidth, setFrameWidth] = useState(6700);
-  const frameHeight = useWindowHeight() * 1.7;
+  const frameWidth = 7000;
+  const frameHeight = useWindowHeight() * 0.7;
   const majorEventDates = ["2023-10-08", "2023-11-24", "2023-12-31", "2024-01-02", "2024-09-17", "2024-09-20", "2024-09-27", "2024-10-01"];
   const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli assassinaion in Dahieh", "Hezbollah pager explosions", "IDF Airstrikes campaign commences on Lebanon", "The assassination of Hassan Nasrallah", " Israel invades South Lebanon"];
 
@@ -90,14 +88,15 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
     d3.select(svgRef.current).selectAll("*").remove();
 
     //set svg dimensions and margins
-    const margin = { top: 60, right: 140, bottom: 60, left: 90 };
+    const margin = { top: 60, right: 120, bottom: 50, left: 90 };
     const availableWidth = frameWidth - margin.left - margin.right;
+    const availableHeight = frameHeight - margin.top - margin.bottom;
 
     const numRows = yLabels.length; //areas
     const numCols = xLabels.length; //dates
 
     //calculate cell size to make cells square
-    const cellSize = availableWidth / numCols;
+    const cellSize = Math.min(availableWidth / numCols, (availableHeight - 60) / numRows);
     const plotWidth = cellSize / 1.5 * numCols;
     const plotHeight = cellSize * numRows;
 
@@ -151,20 +150,25 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
       .style("text-anchor", "start")
       .style("font-size", "12px")
       .style("fill", "#ccc")
-      // .attr("transform", "rotate(-60)")
       .attr("dx", "0.5em")
       .attr("dy", "-0.2em");
 
     //y-axis labels (Areas)
+    // ========== Y-Axis Group for Labels ==========
     g.append("g")
       .call(
         d3.axisLeft(yScale)
           .tickFormat((_: any, i: number) => yLabels[i])
       )
+
+      .attr("class", "y-axis-labels")  // add class here
       .selectAll("text")
       .style("text-anchor", "end")
       .style("font-size", "12px")
       .style("fill", "#ccc");
+
+    //remove label lines
+    g.selectAll(".tick line").style("display", "none");
 
     // Bind data
     const cells = g
@@ -330,7 +334,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
 
   return (
     <div className="px-2 pt-2">
-      <section style={{ width: `${frameWidth / 2}px`, height: `${frameHeight - 30}px` }}>
+      <section style={{ width: `100vw`, height: `${frameHeight - 30}px` }}>
         <svg ref={svgRef}></svg>
       </section>
     </div>

@@ -152,14 +152,8 @@ p {
     height: 95vh;
     bottom: 0;
     top: auto;
-    /* background-color: #000000;
-    opacity: 0.4;
-    background-image: linear-gradient(#8c6754 2px, transparent 2px), linear-gradient(90deg, #8c6754 2px, transparent 2px), linear-gradient(#8c6754 1px, transparent 1px), linear-gradient(90deg, #8c6754 1px, #000000 1px);
-    background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
-    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px; */
-
     background-color: #000000;
-    opacity: 0.8;
+    opacity: 0.5;
     background-image: linear-gradient(#3a3a3a 1.2000000000000002px, transparent 1.2000000000000002px), linear-gradient(90deg, #3a3a3a 1.2000000000000002px, transparent 1.2000000000000002px), linear-gradient(#3a3a3a 0.6000000000000001px, transparent 0.6000000000000001px), linear-gradient(90deg, #3a3a3a 0.6000000000000001px, #000000 0.6000000000000001px);
     background-size: 30px 30px, 30px 30px, 6px 6px, 6px 6px;
     background-position: -1.2000000000000002px -1.2000000000000002px, -1.2000000000000002px -1.2000000000000002px, -0.6000000000000001px -0.6000000000000001px, -0.6000000000000001px -0.6000000000000001px;
@@ -211,32 +205,45 @@ a {
     margin: auto;
 }
 
+
+#heatmap {
+    margin-top: 4rem;
+}
+
 .footage-timeline {
     width: auto;
     display: block;
     height: 70vh;
+    min-height: 400px;
     z-index: 0;
-    background-color: #00000044;
+    background-color: #000000cc;
+    overflow: hidden;
     /* backdrop-filter: blur(2px); */
-    position: fixed;
-    top: 7rem;
-    left: 0.5rem;
-    right: 0;
-    mask: linear-gradient(to bottom,
+    position: relative;
+    margin-top: 0;
+    margin-left: 0.5rem;
+    transition: all 0.5s ease-out;
+    overflow: hidden;
+    /* mask: linear-gradient(to bottom,
             rgba(0, 0, 0, 1) 0%,
-            rgba(0, 0, 0, 1) 90%,
-            rgba(0, 0, 0, 0) 100%);
+            rgba(0, 0, 0, 1) 95%,
+            rgba(0, 0, 0, 0) 100%); */
 }
 
 .footage-display {
-    position: fixed;
-    bottom: 1rem;
-    height: max-content;
+    position: relative;
+    height: auto;
+    min-height: 150px;
     overflow-x: scroll;
     overflow-y: hidden;
     width: 100vw;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    white-space: nowrap;
+}
+
+.footage-display .draggable-container {
+    margin-top: 2vh;
 }
 
 .hideScrollBar {
@@ -246,10 +253,6 @@ a {
 
 .footage-display::-webkit-scrollbar {
     display: none;
-}
-
-.footage-display .inner {
-    height: 31vh;
 }
 
 .mousePointer {
@@ -277,7 +280,8 @@ a {
 
 .footage-display .inner {
     width: fit-content;
-    height: 12rem;
+    height: 19vh;
+    min-height: 100px;
 }
 
 .inner {
@@ -289,7 +293,6 @@ a {
         1px 1px 0px 0px #fff,
         inset 1px 1px 0px 0px #fff,
         inset -1px -1px 0px 0px #999;
-    /* height: 75vh; */
     color: #dedede;
 }
 
@@ -688,16 +691,16 @@ header {
 }
 
 #metadata-bar {
-    position: fixed;
-    bottom: 24vh;
-    margin-bottom: 6px;
+    position: absolute;
+    z-index: 10000;
+    top: 0;
     width: max-content;
     transition: all 0.3s ease-in-out;
 }
 
 #metadata-bar .content {
-    border: 0;
-    background: #cccccc33;
+    border: 1px solid #555;
+    background: #000000bb;
     box-shadow: 0px 0px #111;
 }
 
@@ -714,22 +717,42 @@ header {
 
 .overlay {
     position: fixed;
-    top: 15vh;
+    top: 3rem;
     left: 0;
     width: 100vw;
-    height: 60vh;
+    height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
     cursor: zoom-out;
     opacity: 0;
     background-color: rgba(0, 0, 0, 0.8);
     visibility: hidden;
     transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    mask: linear-gradient(to bottom,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 95%,
+            rgba(0, 0, 0, 0) 100%);
 }
 
 .overlay-visible {
     opacity: 1;
     visibility: visible;
+}
+
+.heatmap-container {
+    display: flex;
+    overflow: hidden;
+}
+
+.y-axis-group {
+    color: #fff;
+    position: sticky;
+    left: 0;
+    top: 0;
+}
+
+.footage-page {
+    overflow: hidden;
+    position: fixed;
 }

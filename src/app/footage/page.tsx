@@ -33,24 +33,20 @@ export default function Index() {
     }, []);
 
     return (
-        <div className="overflow-hidden relative h-screen">
+        <div className="footage-page">
             <Header />
             <main className="flex-grow relative h-auto overflow-hidden">
-                <div className="inner-backdrop"></div>
+                {/* <div className="inner-backdrop"></div> */}
 
-                <div
-                    className={`footage-timeline transform transition-all duration-1000 ease-out overflow-hidden h-[50vh]
-                        ${isTimelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0'}`}
+                <div className={`footage-timeline  ${isTimelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0'}`}
                 >
-                    <div className="overflow-x-auto overflow-y-hidden hideScrollBar h-full">
-                        <div id="heatmap" className="min-w-max">
-                            <HeatMapAnimation data={incidentData} onCellClick={handleCellClick} />
-                        </div>
+                    <div id="heatmap" className="min-w-max overflow-x-auto overflow-y-hidden hideScrollBar">
+                        <HeatMapAnimation data={incidentData} onCellClick={handleCellClick} />
                     </div>
                 </div>
 
                 {clickedCellData && (
-                    <div className="footage-display overflow-x-scroll overflow-y-hidden h-full hideScrollBar whitespace-nowrap">
+                    <div className="footage-display">
                         <div id={`metadata-bar`}>
                             <div className={`content`}>
                                 <h4 className="title">{`${clickedCellData.area} | ${clickedCellData.date} `}</h4>
@@ -68,7 +64,8 @@ export default function Index() {
                         </div>
                     </div>
                 )}
-            </main>
-        </div>
+
+            </main >
+        </div >
     );
 } 

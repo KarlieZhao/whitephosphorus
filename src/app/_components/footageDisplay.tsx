@@ -15,14 +15,12 @@ export default function FootageDisplay({ srcLink }: FootageDisplayProps) {
         <div>
             <div className="text-white text-xl overflow-hidden p-0">
                 <div
-                    style={{ height: '11.9rem', maxWidth: '26rem', cursor: 'pointer' }}
-                    onMouseEnter={() => { if (isImage) setIsEnlarged(true); setIsHovered(true) }}
+                    style={{ height: '19vh', minHeight: '140px', maxWidth: '26rem', cursor: 'pointer' }}
+                    onMouseEnter={() => { setIsEnlarged(true); setIsHovered(true) }}
                     onMouseLeave={() => {
-                        if (isImage) setIsEnlarged(false);
+                        setIsEnlarged(false);
                         setIsHovered(false)
                     }}
-                // onClick={() => {
-                // }} // Click to enlarge
                 >
                     {isVideo ? (
                         <video
@@ -66,7 +64,8 @@ export default function FootageDisplay({ srcLink }: FootageDisplayProps) {
                     src={srcLink}
                     alt="image"
                     style={{
-                        maxHeight: '60vh',
+                        maxHeight: '57vh',
+                        marginTop: '10vh',
                         width: '100%',
                         height: '100%',
                         objectFit: 'contain',
@@ -75,10 +74,13 @@ export default function FootageDisplay({ srcLink }: FootageDisplayProps) {
                 {isVideo && (
                     <video
                         muted
-
+                        autoPlay
                         src={srcLink}
                         style={{
-                            maxHeight: '60vh',
+                            maxHeight: '57vh',
+                            marginTop: '10vh',
+                            width: '100%',
+                            height: '100%',
                             objectFit: 'contain',
                         }}
                     />)}
