@@ -392,17 +392,14 @@ ul {
 
 .command_button {
     width: 15vw;
+    height: 45px;
     transition: all 0.3s ease;
-    background-image: url('/assets/img/tab.svg');
+    background-image: url('/assets/img/tab.png');
+    background-size: 15vw 50px;
     background-repeat: no-repeat;
     background-position: right top;
     color: #dedede;
     display: inline-block;
-    /* margin-bottom: 7px; */
-    /* margin-left: 14px; */
-    /* border-radius: 3px; */
-    /* border: 1px solid #000; */
-    /* box-shadow: var(--button-box-shadow); */
 }
 
 .tab1 {
@@ -431,10 +428,10 @@ ul {
 
 .command_button_unclickable {
     height: 50px;
-    width: 51.5vw;
+    width: 40vw;
     background-image: url('/assets/img/toxicityTab.svg');
     background-repeat: no-repeat;
-    background-position: left top;
+    background-position: right top;
     color: #dedede;
 }
 
@@ -446,11 +443,12 @@ ul {
 
 .command_button:active {
     color: #dedede;
+    height: 55px;
 }
 
 .tabIsActive {
     z-index: 40;
-    background-image: url('/assets/img/tabActive.svg');
+    background-image: url('/assets/img/tabActive.png');
     transition: 0.2s ease;
     transform: translateY(-6px);
 }
@@ -755,4 +753,8 @@ header {
 .footage-page {
     overflow: hidden;
     position: fixed;
+}
+
+.command_button .label {
+    margin-top: 0.5rem;
 }

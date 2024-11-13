@@ -29,7 +29,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
       className={`fixed command_button ${tabClass} w-1/4 cursor-pointer ${isActive(path) ? "tabIsActive" : ""}`}
       onClick={() => router.push(path)}
     >
-      <div className="mt-3 mb-3 leading-none">{label}</div>
+      <div className="label">{label}</div>
     </td>
   );
 
@@ -42,8 +42,8 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
         <div className="relative">
           {/* Navigation Tabs */}
           <table className="table1">
-            <tbody>
-              <tr className="text-center leading-none tracking-tight mt-8 flex items-center">
+            <tbody className="h-14">
+              <tr className="text-center mt-8 flex items-center">
                 {renderTab("MAP", "/", "tab1")}
                 {renderTab("FOOTAGE", "/footage", "tab2")}
                 {renderTab("CLOUDS", "/clouds", "tab3")}
