@@ -56,6 +56,12 @@ const cloudData: CloudRow[] = [
     video: "/video/uav.mp4",
     text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
     images: Array(4).fill('/api/placeholder/200/200')
+  },
+  {
+    name: "Smoke Bomb M150",
+    video: "/video/SmokeBombM150.mp4",
+    text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
+    images: Array(4).fill('/api/placeholder/200/200')
   }
 ];
 
@@ -101,7 +107,7 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
   };
 
   return (
-    <div ref={containerRef} className="bg-zinc-800 p-4">
+    <div ref={containerRef} className="dark-bg p-4">
       <div className="relative w-full pt-[100%]  max-h-[300px]">
         <div className="absolute inset-0 rounded-lg overflow-hidden">
           {/*poster image */}
@@ -139,14 +145,30 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
 };
 
 export default function CloudLayout() {
+  const [visibleRows, setVisibleRows] = useState<boolean[]>(Array(cloudData.length).fill(false));
+
+  useEffect(() => {
+    cloudData.forEach((_, index) => {
+      setTimeout(() => {
+        setVisibleRows((prev) => {
+          const newVisibleRows = [...prev];
+          newVisibleRows[index] = true;
+          return newVisibleRows;
+        });
+      }, index * 50); // 100ms delay for each row
+    });
+  }, []);
+
   return (
     <div className="w-full h-full min-h-screen bg-transparent text-white p-4">
       <div className="flex flex-col gap-2">
         {cloudData.map((row, rowIndex) => (
-          <div key={rowIndex} className="grid grid-cols-1 md:grid-cols-[300px,0.5fr,1fr] gap-2 max-h-[300px]">
+          <div key={rowIndex}
+            className={`grid grid-cols-1 md:grid-cols-[300px,0.5fr,1fr] gap-2 max-h-[300px]  transition-all duration-700 ease-in-out transform 
+            ${visibleRows[rowIndex] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <VideoPlayer src={row.video} name={row.name} />
             {/* Text Column */}
-            <div className="bg-zinc-800 p-4 flex items-center justify-center max-h-[300px]">
+            <div className="dark-bg p-4 flex items-center justify-center max-h-[300px]">
               <div className="prose prose-invert text-center">
                 <h3 className="text-white mb-4">{row.name}</h3>
                 {row.text}
@@ -154,7 +176,7 @@ export default function CloudLayout() {
             </div>
 
             {/* Image Grid Column */}
-            <div className="bg-zinc-800 p-4 flex items-center justify-center  max-h-[300px]">
+            <div className="dark-bg p-4 flex items-center justify-center  max-h-[300px]">
               <div className="w-full h-full aspect-video flex items-center justify-center">
                 <div className={`grid grid-cols-4 grid-rows-2 gap-2 w-full h-full p-2`}>
                   {row.images.slice(0, 8).map((image, index) => (

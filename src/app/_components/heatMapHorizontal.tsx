@@ -2,6 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import * as d3 from "d3";
 import { useWindowHeight } from "@/lib/resize";
+import { useWindowWidth } from "@/lib/resize";
 
 type IncidentData = {
   date: string;
@@ -18,17 +19,21 @@ type HeatMapProps = {
     count: number;
     link: Array<string>
   }) => void;
+  onTranslateXChange: (translateX: number) => void;
 };
 
 //entry data for D3
 type CellData = { x: number; y: number; value: number };
 
-const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
-  const svgRef = useRef(null);
+const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTranslateXChange }) => {
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const frameWidth = 7000;
   const frameHeight = useWindowHeight() * 0.7;
+  const windowWidth = useWindowWidth();
   const majorEventDates = ["2023-10-08", "2023-11-24", "2023-12-31", "2024-01-02", "2024-09-17", "2024-09-20", "2024-09-27", "2024-10-01"];
   const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli assassinaion in Dahieh", "Hezbollah pager explosions", "IDF Airstrikes campaign commences on Lebanon", "The assassination of Hassan Nasrallah", " Israel invades South Lebanon"];
+  const translateXRef = useRef<number>(0); // Accumulated translateX
 
   const processData = () => {
     const uniqueDates = Array.from(new Set(data.map(d => d.date))).filter(Boolean);
@@ -64,7 +69,6 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
       return '';
     });
 
-
     //total incidents for each area
     const areaTotals = yLabels.map((area, index) => ({
       area,
@@ -82,6 +86,16 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
     const sortedProcessedData = yLabelIndices.map(index =>
       processedData[index]
     );
+
+    const targetIndex = yLabels.indexOf("To be geolocated in South Lebanon")
+    if (targetIndex > -1) {
+      yLabels.splice(targetIndex, 1);
+      const targetData = sortedProcessedData.splice(targetIndex, 1)[0];
+
+      yLabels.push("Unidentified");
+      sortedProcessedData.push(targetData);
+    }
+
 
     //============ rendering SVG ==============
     //clean up SVG
@@ -153,7 +167,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
       .attr("dx", "0.5em")
       .attr("dy", "-0.2em");
 
-    //y-axis labels (Areas)
+    // y-axis labels (Areas)
     // ========== Y-Axis Group for Labels ==========
     g.append("g")
       .call(
@@ -201,8 +215,8 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
         tooltip
           .style("opacity", 0.9)
           .html(`<table>
-            <tr><td>${yLabels[d.y]}</td></tr>
-            <tr><td>${xLabels[d.x]}</td></tr>
+             <tr><td>${xLabels[d.x]}</td></tr>
+            <tr><td>${yLabels[d.y] + (yLabels[d.y] === "Unidentified" ? " Areas" : "")}</td></tr>
             <tr><td>${d.value} Incidents</td></tr>
             </table>`)
           .style("left", event.pageX + 10 + "px")
@@ -321,26 +335,56 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick }) => {
       }
 
       currentCol++;
-      setTimeout(animateCol, 40);
+      setTimeout(animateCol, 20);
     }
 
     animateCol();
 
+    const handleWheel = (event: WheelEvent) => {
+      const svg = svgRef.current;
+      if (!container || !svg) return;
+
+      const scrollDelta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+
+      translateXRef.current = Math.min(0,
+        Math.max(translateXRef.current - scrollDelta,
+          (windowWidth - frameWidth) / 1.75));
+
+      svg.style.transform = `translateX(${translateXRef.current}px)`;
+      onTranslateXChange(translateXRef.current); // callback => chart continue label visibility
+    };
+
+    const container = containerRef.current;
+    if (container) container.addEventListener("wheel", handleWheel);
+
     // Cleanup tooltip on unmount
     return () => {
       tooltip.remove();
+      if (container) container.removeEventListener("wheel", handleWheel);
+
     };
-  }, [frameHeight, data]);
+  }, [frameHeight, windowWidth, data]);
 
   return (
-    <div className="px-2 pt-2">
-      <section style={{ width: `100vw`, height: `${frameHeight - 30}px` }}>
-        <svg ref={svgRef}></svg>
-      </section>
+    <div
+      className="px-2 pt-2 scroll-behavior-none"
+      ref={containerRef}
+      style={{
+        width: "100vw",
+        height: `${frameHeight}px`,
+        overflowY: "scroll",
+        overflowX: "hidden"
+      }}
+    >
+      <div className="relative" style={{ height: frameWidth - frameHeight - windowWidth }}>
+        <svg style={{
+          position: "sticky",
+          top: 0,
+        }} ref={svgRef} width={frameWidth} height={frameHeight}></svg>
+      </div>
     </div>
   );
 };
-
 
 function scale(number: number, inMin: number, inMax: number, outMin: number, outMax: number) {
   return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;

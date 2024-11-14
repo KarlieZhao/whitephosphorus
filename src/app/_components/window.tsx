@@ -17,7 +17,6 @@ export default function ({ children, title = "", customeClassNameWindow = "", cu
                     <section >
                         {children}
                     </section>
-
                 </div>
             </div>
         </div>

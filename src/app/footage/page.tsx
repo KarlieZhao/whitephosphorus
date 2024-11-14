@@ -18,6 +18,8 @@ export default function Index() {
     const [isTimelineVisible, setIsTimelineVisible] = useState(false);
     const [isWindowVisible, setIsWindowVisible] = useState(false);
     const [clickedCellData, setClickedCellData] = useState<CellClickData | null>(null);
+    const [isContinueTagVisible, setIsContinueTagVisible] = useState(false);
+
     //fetch data
     const incidentData = processExcelData();
 
@@ -25,11 +27,18 @@ export default function Index() {
         setClickedCellData(data); //store clicked cell data
     };
 
+    const handleTranslateX = (translateX: number) => {
+        if (translateX < -200) setIsContinueTagVisible(false);
+    };
+
     useEffect(() => {
         setIsTimelineVisible(true);
         setTimeout(() => {
             setIsWindowVisible(true);
         }, 1000);
+        setTimeout(() => {
+            setIsContinueTagVisible(true);
+        }, 4000);
     }, []);
 
     return (
@@ -38,10 +47,27 @@ export default function Index() {
             <main className="flex-grow relative h-auto overflow-hidden">
                 {/* <div className="inner-backdrop"></div> */}
 
-                <div className={`footage-timeline  ${isTimelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0'}`}
+                <div className={`footage-timeline  ${isTimelineVisible ? 'opacity-100' : 'opacity-0'}`}
                 >
                     <div id="heatmap" className="min-w-max overflow-x-auto overflow-y-hidden hideScrollBar">
-                        <HeatMapAnimation data={incidentData} onCellClick={handleCellClick} />
+                        <HeatMapAnimation
+                            data={incidentData}
+                            onCellClick={handleCellClick}
+                            onTranslateXChange={handleTranslateX}
+                        />
+                    </div>
+                    <div className={`chart-continue-label ${isContinueTagVisible ? 'opacity-100' : 'opacity-0'}`}>
+                        chart continues
+                        <svg
+                            className="arrow-svg"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                        >
+                            <path fill="red" d="M10 6l6 6-6 6V6z" />
+                        </svg>
+
                     </div>
                 </div>
 
