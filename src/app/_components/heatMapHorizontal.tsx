@@ -92,7 +92,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
       yLabels.splice(targetIndex, 1);
       const targetData = sortedProcessedData.splice(targetIndex, 1)[0];
 
-      yLabels.push("Unidentified");
+      yLabels.push("To be geolocated in South Lebanon");
       sortedProcessedData.push(targetData);
     }
 
@@ -216,7 +216,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
           .style("opacity", 0.9)
           .html(`<table>
              <tr><td>${xLabels[d.x]}</td></tr>
-            <tr><td>${yLabels[d.y] + (yLabels[d.y] === "Unidentified" ? " Areas" : "")}</td></tr>
+            <tr><td>${yLabels[d.y] === "To be geolocated in South Lebanon" ? "To be geolocated" : yLabels[d.y]}</td></tr>
             <tr><td>${d.value} Incidents</td></tr>
             </table>`)
           .style("left", event.pageX + 10 + "px")
