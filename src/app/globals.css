@@ -28,21 +28,12 @@
 }
 
 @font-face {
-  font-family: "Anonymous Pro", sans-serif;
-  src: url("/assets/fonts/AnonymousPro-Regular.ttf");
-}
-
-.handjet {
-  font-family: "Handjet";
+  font-family: "TempTest";
+  src: url("/assets/fonts/Inconsolata-VariableFont_wdth,wght.ttf");
 }
 
 .about-page p {
-  font-family: "PPSupplySans-Ultralight";
-  /* font-family: "Anonymous Pro"; */
-  font-size: 1.3rem;
-  letter-spacing: 0.3px;
-  word-spacing: 1px;
-  line-height: 1.75rem;
+  font-family: "TempTest";
 }
 
 .typewrite {
@@ -60,12 +51,10 @@ header {
 }
 
 .text-2xl {
-  font-family: "PPSupplySans-Regular";
   font-size: 1.35rem;
 }
 
 .text-xl {
-  font-family: "PPSupplySans-Regular";
   font-size: 1.05rem;
 }
 
@@ -83,7 +72,7 @@ header {
 }
 
 .redbar {
-  background-color: #b33c30;
+  background-color: #c42100;
 }
 
 /* .red-box {
@@ -147,7 +136,7 @@ p {
   bottom: 0;
   top: auto;
   background-color: #000000;
-  opacity: 0.5;
+  opacity: 0.3;
   background-image: linear-gradient(
       #3a3a3a 1.2000000000000002px,
       transparent 1.2000000000000002px
@@ -175,11 +164,12 @@ p {
 
 html,
 body {
-  -moz-user-select: none;
-  -webkit-user-select: none;
+  /* -moz-user-select: none; */
+  /* -webkit-user-select: none; */
   margin: 0;
   background-color: #000;
-  font-family: "PPSupplySans-Regular", "Times New Roman", "Georgia", serif;
+  font-family: "TempTest", "PPSupplySans-Regular", "Times New Roman", "Georgia",
+    serif;
   vertical-align: middle;
   font-optical-sizing: auto;
   font-weight: 400;
@@ -298,7 +288,7 @@ a {
 .inner {
   margin: 2px 4px 4px 4px;
   border: 1px solid #111;
-  background-color: #141414;
+  background-color: #000;
   box-shadow: -1px -1px 0px 0px #999, 1px 1px 0px 0px #fff,
     inset 1px 1px 0px 0px #fff, inset -1px -1px 0px 0px #999;
   color: #dedede;
@@ -310,11 +300,6 @@ a {
 
 .cloud-page .inner {
   height: 80vh;
-}
-
-.about-page .inner {
-  height: 80vh;
-  overflow: scroll;
 }
 
 .title {
@@ -407,9 +392,9 @@ ul {
   height: 45px;
   transition: all 0.3s ease;
   background-image: url("/assets/img/tab.png");
-  background-size: 15vw 50px;
+  background-size: 13.5vw 50px;
   background-repeat: no-repeat;
-  background-position: right top;
+  background-position: left top;
   color: #dedede;
   display: inline-block;
 }
@@ -435,13 +420,14 @@ ul {
 }
 
 .command_button div {
-  margin-left: -1.5vw;
+  margin-right: 3vw;
 }
 
 .command_button_unclickable {
   height: 50px;
   width: 40vw;
-  background-image: url("/assets/img/toxicityTab.svg");
+  background-image: url("/assets/img/toxicityTab2.png");
+  background-size: 40vw 53px;
   background-repeat: no-repeat;
   background-position: right top;
   color: #dedede;
@@ -460,7 +446,7 @@ ul {
 
 .tabIsActive {
   z-index: 40;
-  background-image: url("/assets/img/tabActive.png");
+  background-image: url("/assets/img/tabActive2.png");
   transition: 0.2s ease;
   transform: translateY(-6px);
 }
@@ -544,12 +530,20 @@ h2 {
   font-size: 2.75rem;
   line-height: 1;
 }
-
+.header-bold {
+  font-family: "PPSupplySans-Regular";
+}
 .toxicity-counter {
-  width: 70%;
+  top: 66px;
   font-weight: 400;
-  justify-items: center;
+  /* justify-items: center; */
   display: block;
+  font-family: "PPSupplySans-Ultralight";
+  /* font-family: "TempTest";
+
+  font-size: 1rem;
+  word-spacing: -5px;
+  line-height: 1.2; */
 }
 
 .headerData {
@@ -804,4 +798,36 @@ header {
   padding: 5px 5px;
   white-space: nowrap;
   transition: all 0.3s ease-in-out;
+}
+
+/* for salab */
+/* .team-info {
+  color: #aaa;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.methodology {
+  width: 70%;
+  font-size: 1.15rem;
+  letter-spacing: 0px;
+  line-height: 1.6;
+}
+.methodology p + p {
+  text-indent: 1.5em;
+} */
+
+.team-info {
+  color: #aaa;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  word-spacing: 2px;
+}
+.methodology {
+  width: 70%;
+  font-size: 1.1rem;
+  word-spacing: -2px;
+  line-height: 1.25;
+}
+.methodology p + p {
+  text-indent: 1.5em;
 }

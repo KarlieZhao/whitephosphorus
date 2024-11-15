@@ -16,6 +16,18 @@ const cloudData: CloudRow[] = [
     images: Array(8).fill('/api/placeholder/200/200')
   },
   {
+    name: "Smoke Bomb M150",
+    video: "/video/SmokeBombM150.mp4",
+    text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
+    images: Array(4).fill('/api/placeholder/200/200')
+  },
+  {
+    name: "Flare",
+    video: "/video/flare.mp4",
+    text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
+    images: Array(4).fill('/api/placeholder/200/200')
+  },
+  {
     name: "Artillery",
     video: "/video/artillery.mp4",
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam et pretium dui. Phasellus aliquet, leo vitae venenatis lobortis, neque nulla suscipit nunc.",
@@ -26,12 +38,6 @@ const cloudData: CloudRow[] = [
     video: "/video/contrails.mp4",
     text: "Integer non scelerisque magna. Donec eu accumsan dui, vitae condimentum sem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac.",
     images: Array(2).fill('/api/placeholder/200/200')
-  },
-  {
-    name: "Flare",
-    video: "/video/flare.mp4",
-    text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
-    images: Array(4).fill('/api/placeholder/200/200')
   },
   {
     name: "Iron Dome",
@@ -54,12 +60,6 @@ const cloudData: CloudRow[] = [
   {
     name: "Unmanned Aerial Vehicle",
     video: "/video/uav.mp4",
-    text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
-    images: Array(4).fill('/api/placeholder/200/200')
-  },
-  {
-    name: "Smoke Bomb M150",
-    video: "/video/SmokeBombM150.mp4",
     text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
     images: Array(4).fill('/api/placeholder/200/200')
   }
@@ -168,8 +168,8 @@ export default function CloudLayout() {
             ${visibleRows[rowIndex] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <VideoPlayer src={row.video} name={row.name} />
             {/* Text Column */}
-            <div className="dark-bg p-4 flex items-center justify-center max-h-[300px]">
-              <div className="prose prose-invert text-center">
+            <div className="dark-bg p-6 flex items-center justify-center max-h-[300px]">
+              <div className="text-left">
                 <h3 className="text-white mb-4">{row.name}</h3>
                 {row.text}
               </div>

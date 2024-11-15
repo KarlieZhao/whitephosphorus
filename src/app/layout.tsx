@@ -1,14 +1,6 @@
-import { Handjet } from 'next/font/google'
 import { CMS_NAME, HOME_OG_IMAGE_URL } from "@/lib/constants";
 import type { Metadata } from "next"
 import "./globals.css";
-
-const hantjet = Handjet({
-  weight: ['400', '600', '700'],
-  style: ['normal'],
-  subsets: ['latin'],
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: `WhitePhosphorus.info`,
@@ -28,7 +20,6 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"

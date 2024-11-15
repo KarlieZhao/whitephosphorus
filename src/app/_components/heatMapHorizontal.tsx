@@ -31,8 +31,8 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
   const frameWidth = 7000;
   const frameHeight = useWindowHeight() * 0.7;
   const windowWidth = useWindowWidth();
-  const majorEventDates = ["2023-10-08", "2023-11-24", "2023-12-31", "2024-01-02", "2024-09-17", "2024-09-20", "2024-09-27", "2024-10-01"];
-  const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli assassinaion in Dahieh", "Hezbollah pager explosions", "IDF Airstrikes campaign commences on Lebanon", "The assassination of Hassan Nasrallah", " Israel invades South Lebanon"];
+  const majorEventDates = ["2023-10-08", "2023-11-24", "2023-12-31", "2024-01-02", "2024-10-01"];
+  const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli assassinaion in Dahieh", " Israel invades South Lebanon"];
   const translateXRef = useRef<number>(0); // Accumulated translateX
 
   const processData = () => {
@@ -113,7 +113,6 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
     const cellSize = Math.min(availableWidth / numCols, (availableHeight - 60) / numRows);
     const plotWidth = cellSize / 1.5 * numCols;
     const plotHeight = cellSize * numRows;
-
     // Update actual SVG width and height
     const svgWidth = plotWidth + margin.left + margin.right;
     const svgHeight = plotHeight + margin.top + margin.bottom;
@@ -240,7 +239,6 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
       });
 
     //adding major event lines
-
     const majorEventIndices = majorEventDates.map(date => xLabels.indexOf(date));
 
     // // A: mouse hover display
@@ -296,17 +294,12 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
           return `rgba(255, ${85 + 10 * opacity}, 66, ${opacity})`;
         })
 
-      // B: adjusting alignment
       // display annotations for the current column if it matches an event
       const eventIndex = majorEventIndices.indexOf(currentCol);
       if (eventIndex !== -1) {
         const value = majorEventIndices[eventIndex];
         let ypos = -10;
         if (eventIndex === 2) ypos = -25;
-        else if (eventIndex == 4) ypos = -50;
-        else if (eventIndex === 5) ypos = -35
-        else if (eventIndex === 6) ypos = -20
-        else if (eventIndex === 7) ypos = -5;
 
         // Add the line
         const lines = g.append("line")
@@ -345,10 +338,9 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
       if (!container || !svg) return;
 
       const scrollDelta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
-
       translateXRef.current = Math.min(0,
         Math.max(translateXRef.current - scrollDelta,
-          (windowWidth - frameWidth) / 1.75));
+          (windowWidth - plotWidth - 210)));
 
       svg.style.transform = `translateX(${translateXRef.current}px)`;
       onTranslateXChange(translateXRef.current); // callback => chart continue label visibility

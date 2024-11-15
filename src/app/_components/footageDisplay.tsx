@@ -75,6 +75,7 @@ export default function FootageDisplay({ srcLink }: FootageDisplayProps) {
                     <video
                         muted
                         autoPlay
+                        loop
                         src={srcLink}
                         style={{
                             maxHeight: '57vh',
