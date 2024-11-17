@@ -57,7 +57,7 @@ export default function Index() {
                         />
                     </div>
                     <div className={`chart-continue-label ${isContinueTagVisible ? 'opacity-100' : 'opacity-0'}`}>
-                        chart continues
+                        scroll for more
                         <svg
                             className="arrow-svg"
                             xmlns="http://www.w3.org/2000/svg"

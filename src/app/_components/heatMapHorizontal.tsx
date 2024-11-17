@@ -140,13 +140,13 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
 
     // Create scales
     const xScale = d3
-      .scaleBand()
+      .scaleBand<number>()
       .domain(d3.range(numCols))
       .range([0, plotWidth])
       .padding(0.05);
 
     const yScale = d3
-      .scaleBand()
+      .scaleBand<number>()
       .domain(d3.range(numRows))
       .range([0, plotHeight])
       .padding(0.05);
@@ -278,7 +278,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
     // })
 
     // Animation: fill in each column vertically
-    const maxValue = d3.max(sortedProcessedData.flat());
+    const maxValue = d3.max(sortedProcessedData.flat()) ?? 0;
     let currentCol = 0;
     const animateCol = () => {
       if (currentCol >= numCols) return;
