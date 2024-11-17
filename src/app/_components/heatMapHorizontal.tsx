@@ -40,11 +40,9 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
     const uniqueAreas = Array.from(new Set(data.map(d => d.area))).filter(Boolean);
 
     // 2D array
+    const incidentMap = new Map(data.map(d => [`${d.date}-${d.area}`, d.count]));
     const processedData = uniqueAreas.map(area => {
-      return uniqueDates.map(date => {
-        const incident = data.find(d => d.date === date && d.area === area);
-        return incident?.count || 0;
-      });
+      return uniqueDates.map(date => incidentMap.get(`${date}-${area}`) || 0);
     });
 
     return {
@@ -344,7 +342,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
 
       svg.style.transform = `translateX(${translateXRef.current}px)`;
       onTranslateXChange(translateXRef.current); // callback => chart continue label visibility
-    };
+    }
 
     const container = containerRef.current;
     if (container) container.addEventListener("wheel", handleWheel);

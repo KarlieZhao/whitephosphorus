@@ -1,28 +1,37 @@
 import React, { useState, CSSProperties } from 'react';
 import Collapsible from './collapsible';
 const NavBar: React.FC = () => {
-    const [activeOption, setActiveOption] = useState<string | null>(null);
+    const [activeOption, setActiveOption] = useState<string | null>('Data Collection');
 
     const handleNavClick = (option: string) => {
-        setActiveOption((prevOption) => (prevOption === option ? null : option));
+        setActiveOption(option);
     };
 
     return (
         <div>
             <nav className='methodNavBar'>
-                <button onClick={() => handleNavClick('DataCollection')}>→ DATA COLLECTION</button>
-                <button onClick={() => handleNavClick('Verification')}>→ VERIFICATION</button>
-                <button onClick={() => handleNavClick('Geolocation')}>→ GEOLOCATION & CHRONOLOCATION</button>
-                <button onClick={() => handleNavClick('DataAnalysis')}>→ DATA ANALYSIS</button>
+                {['Data Collection', 'Verification', 'Geolocation', 'Data Analysis'].map((option) => (
+                    <button
+                        key={option}
+                        onClick={() => handleNavClick(option)}
+                        style={{
+                            color: activeOption === option ? '#fff' : '#eee',
+                            borderBottom: activeOption === option ? '1px solid #fff' : '1px solid transparent',
+                            transition: 'all 0.3s ease',
+                        }}
+                    >
+                        {`→ ${option === 'Geolocation' ? 'Geolocation and Chronolocation'.toUpperCase() : option.toUpperCase()}`}
+                    </button>
+                ))}
             </nav>
             <div className='method-content'>
                 <div
                     style={{
                         ...dropdownStyles,
-                        opacity: activeOption === 'DataCollection' ? 1 : 0,
-                        visibility: activeOption === 'DataCollection' ? 'visible' : 'hidden',
+                        opacity: activeOption === 'Data Collection' ? 1 : 0,
+                        visibility: activeOption === 'Data Collection' ? 'visible' : 'hidden',
                     }}
-                >    {activeOption === 'DataCollection' &&
+                >    {activeOption === 'Data Collection' &&
                     <p>Our data collection strategy employs web scraping to gather reports from multiple online platforms, including X (Twitter), Facebook, Telegram channels, Instagram, and news articles. Additionally, we receive direct footage and reports from eyewitnesses on the ground, which provide real-time and first-hand accounts of the incidents. This combination of digital scraping and on-the-ground reporting ensures a comprehensive and diverse dataset.
                     </p>
                     }</div>
@@ -48,10 +57,10 @@ const NavBar: React.FC = () => {
                 <div
                     style={{
                         ...dropdownStyles,
-                        opacity: activeOption === 'DataAnalysis' ? 1 : 0,
-                        visibility: activeOption === 'DataAnalysis' ? 'visible' : 'hidden',
+                        opacity: activeOption === 'Data Analysis' ? 1 : 0,
+                        visibility: activeOption === 'Data Analysis' ? 'visible' : 'hidden',
                     }}
-                >     {activeOption === 'DataAnalysis' &&
+                >     {activeOption === 'Data Analysis' &&
                     <p>We apply statistical methods to assess the frequency, timing, and geographical distribution of white phosphorus usage. This involves identifying hotspots of activity and temporal patterns that may indicate strategic shifts or escalations in conflict. This analysis helps in understanding the broader implications of white phosphorus deployment, informing our strategies for advocacy and intervention.</p>
                     }
                 </div>

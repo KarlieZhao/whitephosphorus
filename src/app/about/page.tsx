@@ -8,53 +8,20 @@ import NavBar from "../_components/select-display-bar";
 import '@/app/globals.css';
 
 export default function Index() {
-    const [isVisible, setIsVisible] = useState(false);
-    const [isMethodVisible, setIsMethodVisible] = useState(false);
-
-    useEffect(() => {
-        setIsVisible(true);
-        setTimeout(() => setIsMethodVisible(true), 200);
-    }, []);
-
     return (
         <div>
             <Header TypeWriterFinished={false} />
-            <main className="about-page min-h-screen flex mt-48">
+            <main className="about-page min-h-screen flex">
                 <div className="inner-backdrop"></div>
-                <div
-                    className={`fixed w-1/5 ml-12 mb-10 transform transition-all duration-1000 ease-in-out 
-                    ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                >
-                    <p className="team-info">
-                        <span className="text-white">Ahmad Baydoun</span> is an architect and OSINT researcher whose work delves into the transformation of environments into tools of power. He is currently pursuing his PhD at the Technical University of Delft, with his dissertation titled “Weaponized Environments.” His research exposes the strategic manipulation of natural landscapes in modern warfare. He has worked on the AirPressure.info project, which archives and visualizes Israeli violations over Lebanese airspace. Baydoun's work has been recognized and cited by Amnesty International, L'Orient Le Jour, PBS, Al Jazeera, Arab News, and the American University of Beirut.
-                        <br /><br />email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
-                        <br />website: <a href="https://ahmadbeydoun.com" target="_blank">ahmadbeydoun.com</a>
-                    </p>
-                    <p className="team-info"><br />
-
-                        Team<br />
-                        <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a><br />
-                        Khodor Joujou<br />
-                        <br />
-                        Collaborators:<br />
-                        Special thanks to <span className="text-white">Green Southerners</span> for their assistance in data collection and geolocation processes, which have been invaluable to the accuracy and integrity of our project.<br />
-                        <br />
-                        Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
-
-                    </p>
-                </div>
-                <div
-                    className={`project-info mr-20 display-block mb-10 transform transition-all duration-1000 ease-in-out 
-                    ${isMethodVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                >
-                    <div className="mx-10">
-                        <h2>WhitePhosphorus.info</h2>
+                <div className={`project-info`}>
+                    <div>
+                        {/* <h2>WhitePhosphorus.info</h2> */}
                         <p>
                             Over the past year, we have verified and geolocated 191 incidents of white phosphorus deployment by Israel in South Lebanon. Our website now hosts an interactive cartographic display that organizes this data chronologically and spatially, providing insights into the patterns of deployment. This project aims to serve as a comprehensive, real-time database tracking the deployment of white phosphorus munitions in South Lebanon.</p>
                         <p>  Our mission is to expose the systematic use of white phosphorus—an incendiary weapon whose use in populated areas is restricted under international law due to its severe and often fatal consequences. By collecting, verifying, and mapping instances of white phosphorus use, we seek to increase transparency and accountability in warfare. Furthermore, we aim to inform residents whose lands have been exposed to white phosphorus, preparing for the post-war recovery by collaborating with local municipalities to mark affected territory and work with specialized teams to detoxify these areas. Our efforts are dedicated to ensuring that communities can safely rehabilitate and reclaim their environment once hostilities have ceased.
                         </p>
                     </div>
-                    <div className="mx-10 mt-20">
+                    <div className="mt-20">
                         <Collapsible label="What is white phosphorus?">
                             White phosphorus is a highly reactive chemical used in military operations, primarily for creating smoke screens and as an incendiary weapon. It ignites easily, producing a thick white smoke that can conceal troop movements. However, its use carries significant consequences, especially when deployed in populated areas. Contact with white phosphorus can cause severe burns, and its effects are often severe and potentially fatal. International law restricts its use due to these harmful impacts on human health and safety.</Collapsible>
                         <Collapsible label="How does the toxicity counter work?">
@@ -70,10 +37,35 @@ export default function Index() {
                         <Collapsible label="Selected Facts and figures">
                             Maiss Al Jabal has been the most severely hit town in south Lebanon, taking in about a quarter of all attacks. February is the least month and July is the most month over that year.
                         </Collapsible>
+                        <Collapsible label="Studies on the consequences of White Phosphorus">
+                            <ul>
+                                <li>HRW report</li>
+                                <li>HRW report #2</li>
+                                <li>AUB report</li>
+                                <li>Amnesty report</li>
+                                <li>Forensic architecture report</li></ul></Collapsible>
                     </div>
-                    <div className="methodology mx-10 mt-20">
+                    <div className="methodology mt-32">
                         <h2>Methodology</h2>
                         <NavBar />
+                    </div>
+
+                    <div className={`team-info`}>
+                        <div>
+                            <span className="text-white">Ahmad Baydoun</span> is an architect and OSINT researcher whose work delves into the transformation of environments into tools of power. He is currently pursuing his PhD at the Technical University of Delft, with his dissertation titled “Weaponized Environments.” His research exposes the strategic manipulation of natural landscapes in modern warfare. He has worked on the AirPressure.info project, which archives and visualizes Israeli violations over Lebanese airspace. Baydoun's work has been recognized and cited by Amnesty International, L'Orient Le Jour, PBS, Al Jazeera, Arab News, and the American University of Beirut.
+                            <br /><br />email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
+                            <br />website: <a href="https://ahmadbeydoun.com" target="_blank">ahmadbeydoun.com</a>
+                        </div>
+                        <div>
+                            Team<br />
+                            <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a><br />
+                            Khodor Joujou<br />
+                            <br />
+                            Collaborators:<br />
+                            Special thanks to <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> for their assistance in data collection and geolocation processes, which have been invaluable to the accuracy and integrity of our project.<br />
+                            <br />
+                            Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
+                        </div>
                     </div>
                 </div>
             </main >
