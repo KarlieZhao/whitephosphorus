@@ -58,7 +58,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
               <tbody className="h-14">
                 <tr className="text-center mt-8 flex items-center">
                   {renderTab("MAP", "/", "tab1")}
-                  {renderTab("FOOTAGE", "/footage", "tab2")}
+                  {renderTab("TIMELINE", "/footage", "tab2")}
                   {renderTab("CLOUDS", "/clouds", "tab3")}
                   {renderTab("ABOUT", "/about", "tab4")}
                 </tr>
