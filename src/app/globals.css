@@ -984,7 +984,6 @@ ul li {
   border: 1px solid #c42100;
   box-shadow: 0px 4px 6px #c4210077;
   border-radius: 3px;
-  padding: 10px 0;
   transform: all 0.3 ease-in-out;
 }
 
@@ -1060,6 +1059,7 @@ ul li {
 
   .team-info {
     display: block;
+    font-size: 1rem;
   }
 
   .contribution {
