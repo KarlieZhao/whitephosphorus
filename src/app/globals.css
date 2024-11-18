@@ -1065,4 +1065,7 @@ ul li {
   .contribution {
     margin-top: 4rem;
   }
+  .text-sm {
+    font-size: 1rem;
+  }
 }
