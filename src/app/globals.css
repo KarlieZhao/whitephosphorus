@@ -1026,9 +1026,14 @@ ul li {
   .project-info {
     margin-top: 5vh;
     width: 90%;
-    line-height: 1.3;
-    font-size: 1.15rem;
+    line-height: 1.5;
+    font-size: 1rem;
   }
+
+  .collapsible-content {
+    font-size: 1rem;
+  }
+
   .Q-n-A {
     margin-top: 3rem;
   }
