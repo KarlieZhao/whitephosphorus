@@ -65,7 +65,9 @@ export default function Index() {
                             Special thanks to <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> for their assistance in data collection and geolocation processes, which have been invaluable to the accuracy and integrity of our project.<br />
                             <br />
                             Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
-                        </div>
+                            <br />
+                            Special thanks to:
+                            Marc Schoonderbeek, Aleksandar Stancic, Chris Oseik, Wim Zwijnenburg, Seyran Khadimi, Abbas Baalbaki, Hisham Younes, Ali Sleiman, Usama Farhat, Karlie Zhao, Ramzi Kais, Maria Molijn, William Christou. </div>
                     </div>
                 </div>
             </main >
