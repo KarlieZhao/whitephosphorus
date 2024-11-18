@@ -36,7 +36,7 @@ export default function Index() {
           />
         </div>
 
-        {isMobile ? (<div className="fixed top-20 m-5 text-white text-sm">
+        {isMobile ? (<div className="fixed bottom-20 m-3 text-white text-sm">
           Please visit with a desktop device to interact with the map.<br /><br /><br />
           On a mobile device, you can view the white phosphorus attacks timeline, the cloud catalog, and read more about this project by navigating through the menu.
         </div>) : (
