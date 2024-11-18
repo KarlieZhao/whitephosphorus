@@ -15,7 +15,7 @@ const NavBar: React.FC = () => {
                         key={option}
                         onClick={() => handleNavClick(option)}
                         style={{
-                            color: activeOption === option ? '#fff' : '#eee',
+                            color: activeOption === option ? '#fff' : '#aaa',
                             borderBottom: activeOption === option ? '1px solid #fff' : '1px solid transparent',
                             transition: 'all 0.3s ease',
                         }}

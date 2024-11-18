@@ -11,7 +11,7 @@ export default function Index() {
     return (
         <div>
             <Header TypeWriterFinished={false} />
-            <main className="about-page min-h-screen flex">
+            <main className="min-h-screen flex">
                 <div className="inner-backdrop"></div>
                 <div className={`project-info`}>
                     <div>
@@ -21,7 +21,7 @@ export default function Index() {
                         <p>  Our mission is to expose the systematic use of white phosphorus—an incendiary weapon whose use in populated areas is restricted under international law due to its severe and often fatal consequences. By collecting, verifying, and mapping instances of white phosphorus use, we seek to increase transparency and accountability in warfare. Furthermore, we aim to inform residents whose lands have been exposed to white phosphorus, preparing for the post-war recovery by collaborating with local municipalities to mark affected territory and work with specialized teams to detoxify these areas. Our efforts are dedicated to ensuring that communities can safely rehabilitate and reclaim their environment once hostilities have ceased.
                         </p>
                     </div>
-                    <div className="mt-20">
+                    <div className="Q-n-A">
                         <Collapsible label="What is white phosphorus?">
                             White phosphorus is a highly reactive chemical used in military operations, primarily for creating smoke screens and as an incendiary weapon. It ignites easily, producing a thick white smoke that can conceal troop movements. However, its use carries significant consequences, especially when deployed in populated areas. Contact with white phosphorus can cause severe burns, and its effects are often severe and potentially fatal. International law restricts its use due to these harmful impacts on human health and safety.</Collapsible>
                         <Collapsible label="How does the toxicity counter work?">
@@ -56,7 +56,7 @@ export default function Index() {
                             <br /><br />email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
                             <br />website: <a href="https://ahmadbeydoun.com" target="_blank">ahmadbeydoun.com</a>
                         </div>
-                        <div>
+                        <div className="contribution">
                             Team<br />
                             <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a><br />
                             Khodor Joujou<br />
