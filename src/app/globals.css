@@ -1,21 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap");
-
-/* apply a natural box layout model to all elements */
-
-*,
-*:before,
-*:after {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-@font-face {
-  font-family: "Handjet", sans-serif;
-}
 
 @font-face {
   font-family: "PPSupplySans-Regular";
@@ -32,6 +17,62 @@
   src: url("/assets/fonts/Inconsolata-VariableFont_wdth,wght.ttf");
 }
 
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+:root {
+  overscroll-behavior: none;
+  --syntax_normal: #1b1e23;
+  --syntax_comment: #a9b0bc;
+  --syntax_number: #20a5ba;
+  --syntax_keyword: #c30771;
+  --syntax_atom: #10a778;
+  --syntax_string: #008ec4;
+  --syntax_error: #ffbedc;
+  --syntax_unknown_variable: #838383;
+  --syntax_known_variable: #005f87;
+  --syntax_matchbracket: #20bbfc;
+  --syntax_key: #6636b4;
+  --mono_fonts: 82%/1.5 Menlo, Consolas, monospace;
+  --button-box-shadow: inset -1px -1px 0px 0px #777,
+    inset -2px -2px 0px 0px #aaa, inset 1px 1px 0px 0px #ddd,
+    inset 2px 2px 0px 0px #fff;
+  --button-hover-bezel: 0 0 0 1px #aaa, 0 0 0 2px #ddd, 0 0 0 3px #000;
+}
+
+html,
+body {
+  /* -moz-user-select: none; */
+  /* -webkit-user-select: none; */
+  margin: 0;
+  background-color: #000;
+  font-family: "Inconsolata", "PPSupplySans-Regular", "Times New Roman",
+    "Georgia", serif;
+  vertical-align: middle;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1rem;
+  color: black;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+}
+
+main {
+  position: relative;
+  margin-top: 50px;
+}
 .typewrite {
   width: 70vw;
   line-height: 3.5rem;
@@ -44,6 +85,12 @@
 header {
   font-family: "PPSupplySans-Regular";
   font-size: 1.2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background-color: #000;
 }
 
 .text-2xl {
@@ -52,13 +99,6 @@ header {
 
 .text-xl {
   font-size: 1.05rem;
-}
-
-:root {
-  --button-box-shadow: inset -1px -1px 0px 0px #777,
-    inset -2px -2px 0px 0px #aaa, inset 1px 1px 0px 0px #ddd,
-    inset 2px 2px 0px 0px #fff;
-  --button-hover-bezel: 0 0 0 1px #aaa, 0 0 0 2px #ddd, 0 0 0 3px #000;
 }
 
 .header-backdrop {
@@ -71,30 +111,8 @@ header {
   background-color: #c42100;
 }
 
-/* .red-box {
-    display: block;
-    position: fixed;
-    z-index: 0;
-    width: 99vw;
-    background-color: #B33C30;
-    height: calc(95.8vh - 4px);
-    margin-left: 0.5vw;
-    border: 8px solid #B33C30; */
-/* border-bottom: 20px solid #B33C30; */
-/* border-radius: 0.5rem; */
-/* box-shadow: inset 0 4px 4px 0 #B33C30,
-        inset -4px 0 4px 0 #B33C30,
-        inset 0 -4px 4px 0 #B33C30,
-        inset 4px 0 4px 0 #B33C30; */
-/* } */
-
 p {
   margin-bottom: 1rem;
-}
-
-.foot {
-  border-top: solid 1px #eee;
-  /* -webkit-overflow-scrolling: touch; */
 }
 
 .withBorder2 {
@@ -156,30 +174,6 @@ p {
     -1.2000000000000002px -1.2000000000000002px,
     -0.6000000000000001px -0.6000000000000001px,
     -0.6000000000000001px -0.6000000000000001px;
-}
-
-html,
-body {
-  /* -moz-user-select: none; */
-  /* -webkit-user-select: none; */
-  margin: 0;
-  background-color: #000;
-  font-family: "Inconsolata", "PPSupplySans-Regular", "Times New Roman",
-    "Georgia", serif;
-  vertical-align: middle;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 1rem;
-  color: black;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  /* Firefox */
-  -ms-overflow-style: none;
-  /* Internet Explorer 10+ */
 }
 
 button {
@@ -526,9 +520,7 @@ h2 {
   font-size: 2.75rem;
   line-height: 1;
 }
-.header-bold {
-  font-family: "PPSupplySans-Regular";
-}
+
 .toxicity-counter {
   top: 66px;
   font-weight: 400;
@@ -546,36 +538,6 @@ h2 {
   line-height: 1;
   font-weight: normal;
   color: #eae1df;
-}
-
-main {
-  position: relative;
-  margin-top: 50px;
-}
-
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50px;
-  background-color: #000;
-}
-
-:root {
-  overscroll-behavior: none;
-  --syntax_normal: #1b1e23;
-  --syntax_comment: #a9b0bc;
-  --syntax_number: #20a5ba;
-  --syntax_keyword: #c30771;
-  --syntax_atom: #10a778;
-  --syntax_string: #008ec4;
-  --syntax_error: #ffbedc;
-  --syntax_unknown_variable: #838383;
-  --syntax_known_variable: #005f87;
-  --syntax_matchbracket: #20bbfc;
-  --syntax_key: #6636b4;
-  --mono_fonts: 82%/1.5 Menlo, Consolas, monospace;
 }
 
 .observablehq--collapsed,
@@ -781,20 +743,27 @@ header {
   background-color: #000000dd;
 }
 
+.click-label,
 .chart-continue-label {
   position: fixed;
-  right: 5px;
-  top: 9rem;
   color: #eee;
   background-color: #000;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
   padding: 5px 5px;
-  white-space: nowrap;
   transition: all 0.3s ease-in-out;
+  font-size: 1rem;
 }
 
+.chart-continue-label {
+  right: 5px;
+  top: 9rem;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.click-label {
+  left: 2rem;
+  bottom: 1rem;
+}
 /* for salab */
 /* .team-info {
   color: #aaa;
@@ -966,4 +935,85 @@ ul li {
 
 .about-page {
   margin-top: 16vh;
+}
+
+.hamburger-menu {
+  color: #fff;
+}
+
+.hamburger-menu {
+  position: absolute;
+  right: 20px;
+  top: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.hamburger-menu .bar {
+  height: 4px;
+  width: 100%;
+  background-color: #c42100;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.hamburger-menu.open .bar:nth-child(1) {
+  transform: translateY(10px) rotate(45deg);
+}
+
+.hamburger-menu.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.open .bar:nth-child(3) {
+  transform: translateY(-10px) rotate(-45deg);
+}
+
+.menu-bar {
+  position: fixed;
+  width: 29vw;
+  top: 49px;
+  right: 0;
+  background-color: #000;
+  text-align: center;
+  color: #fff;
+  border: 1px solid #c42100;
+  box-shadow: 0px 4px 6px #c4210077;
+  border-radius: 3px;
+  padding: 10px 0;
+  transform: all 0.3 ease-in-out;
+}
+
+.menu-bar li {
+  list-style-type: none;
+  padding: 0;
+  cursor: pointer;
+  margin: 15px 5px;
+}
+
+/* mobile env */
+@media (max-width: 768px) {
+  header {
+    background-color: #000;
+    z-index: 500;
+    border-bottom: 2px solid #c42100;
+  }
+  header ul {
+    padding: 10px;
+    margin: 0;
+  }
+
+  .command_button_unclickable {
+    width: 71vw;
+    background-image: url("/assets/img/toxicityTab2.png");
+    background-size: 71vw 43px;
+    background-position: left bottom;
+  }
 }

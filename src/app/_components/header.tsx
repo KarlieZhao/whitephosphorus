@@ -18,6 +18,8 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
   const [data, setData] = useState<ToxicityData>({
     land: 87.2,
     air: 95.3,
@@ -29,7 +31,6 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
   })
 
   const isActive = (path: string) => pathname === path;
-
   const renderTab = (label: string, path: string, tabClass: string) => (
     <td
       className={`fixed command_button ${tabClass} w-1/4 cursor-pointer ${isActive(path) ? "tabIsActive" : ""}`}
@@ -38,15 +39,46 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
       <div className="label">{label}</div>
     </td>
   );
-  if (isMobile === null) {
-    return null;
-  }
+
+  const toggleMenu = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  if (isMobile === null) return null;
+
   return (
     isMobile ? (
       //mobile env
-      <div>
+      <header className="fixed top-0 t-50">
+        <button
+          className={`hamburger-menu ${isOpen ? "open" : ""}`}
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+        >
+          <div className="bar"></div>
+          <div className="bar"></div>
+          <div className="bar"></div>
+        </button>
 
-      </div>) : (
+        {isOpen && (
+          <div className="menu-bar">
+            <ul>
+              <li onClick={() => router.push("/")}>MAP</li>
+              <li onClick={() => router.push("/footage")}>TIMELINE</li>
+              <li onClick={() => router.push("/clouds")}>CLOUDS</li>
+              <li onClick={() => router.push("/about")}>ABOUT</li>
+            </ul>
+          </div>
+        )}
+
+        <div className="fixed left-0 command_button_unclickable">
+          <h3 className="mt-4 w-1/2 pl-4 text-xl">
+            WhitePhosophrus.info
+          </h3>
+        </div>
+      </header>
+    ) : (
+      //browser env
       <header className="bg-black pt-2 pb-14 fixed top-0 left-0 right-0 z-50">
         <div className="relative w-full h-full header-backdrop">
           <div className="absolute top-12 h-20 left-0 right-0 bottom-0 bg-gradient-to-b from-red-900 to-transparent pointer-events-none" />
@@ -77,7 +109,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
                 </tr>
                 {TypeWriterFinished && (
                   <tr className="toxicity-counter relative pl-4 fadeSlideIn">
-                    <td className="w-1/4 h-10 pr-5  text-center header-bold">
+                    <td className="w-1/4 h-10 pr-5 text-center">
                       TOXICITY <br /> COUNTER
                     </td>
                     {["incidents", "land", "air"].map((type, index) => (

@@ -15,15 +15,16 @@ type CellClickData = {
 };
 
 export default function Index() {
-    const [isTimelineVisible, setIsTimelineVisible] = useState(false);
-    const [isWindowVisible, setIsWindowVisible] = useState(false);
+    const [isTimelineVisible, setIsTimelineVisible] = useState(true);
     const [clickedCellData, setClickedCellData] = useState<CellClickData | null>(null);
     const [isContinueTagVisible, setIsContinueTagVisible] = useState(false);
+    const [isFootageTagVisible, setIsFootageTagVisible] = useState(false);
 
     //fetch data
     const incidentData = processExcelData();
 
     const handleCellClick = (data: CellClickData) => {
+        setIsFootageTagVisible(false);
         setClickedCellData(data); //store clicked cell data
     };
 
@@ -32,13 +33,12 @@ export default function Index() {
     };
 
     useEffect(() => {
-        setIsTimelineVisible(true);
-        setTimeout(() => {
-            setIsWindowVisible(true);
-        }, 1000);
         setTimeout(() => {
             setIsContinueTagVisible(true);
         }, 4000);
+        setTimeout(() => {
+            setIsFootageTagVisible(true);
+        }, 6000);
     }, []);
 
     return (
@@ -67,8 +67,9 @@ export default function Index() {
                         >
                             <path fill="red" d="M10 6l6 6-6 6V6z" />
                         </svg>
-
                     </div>
+
+                    <div className={`click-label ${isFootageTagVisible ? 'opacity-100' : 'opacity-0'}`}>Click on each data point to view footages.</div>
                 </div>
 
                 {clickedCellData && (
