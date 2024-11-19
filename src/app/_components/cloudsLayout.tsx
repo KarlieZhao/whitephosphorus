@@ -1,69 +1,85 @@
 import React from 'react';
 import { useRef, useEffect, useState } from 'react';
 
+interface DataInputRow {
+  name: string;
+  name_ar: string;
+  text: string;
+  images: string[];
+}
 interface CloudRow {
   name: string;
+  name_ar: string;
   video: string;
   text: string;
   images: string[];
 }
 
-const cloudData: CloudRow[] = [
+const inputData: DataInputRow[] = [
   {
     name: "White Phosphorus",
-    video: "/video/wp.mp4",
+    name_ar: "",
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam et pretium dui. Phasellus aliquet, leo vitae venenatis lobortis, neque nulla suscipit nunc.",
     images: Array(8).fill('/api/placeholder/200/200')
   },
   {
     name: "Smoke Bomb M150",
-    video: "/video/SmokeBombM150.mp4",
+    name_ar: "",
     text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
     images: Array(4).fill('/api/placeholder/200/200')
   },
   {
     name: "Flare",
-    video: "/video/flare.mp4",
+    name_ar: "",
     text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
     images: Array(4).fill('/api/placeholder/200/200')
   },
   {
-    name: "Artillery",
-    video: "/video/artillery.mp4",
+    name: "Artillery Shelling",
+    name_ar: "",
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam et pretium dui. Phasellus aliquet, leo vitae venenatis lobortis, neque nulla suscipit nunc.",
     images: Array(4).fill('/api/placeholder/200/200')
   },
   {
     name: "Contrails",
-    video: "/video/contrails.mp4",
+    name_ar: "",
     text: "Integer non scelerisque magna. Donec eu accumsan dui, vitae condimentum sem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac.",
     images: Array(2).fill('/api/placeholder/200/200')
   },
   {
-    name: "Iron Dome",
-    video: "/video/iron_dome.mp4",
+    name: "Trails of Iron Dome Interceptors",
+    name_ar: "",
     text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
     images: Array(4).fill('/api/placeholder/200/200')
   },
   {
-    name: "Rashe (?)",
-    video: "/video/rashe.mp4",
+    name: "Rocket Launches",
+    name_ar: "",
     text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
     images: Array(4).fill('/api/placeholder/200/200')
   },
   {
-    name: "Unmanned Aerial Vehicle - Down",
-    video: "/video/uav_down.mp4",
+    name: "Unmanned Aerial Vehicle Downing",
+    name_ar: "",
     text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
     images: Array(4).fill('/api/placeholder/200/200')
   },
   {
-    name: "Unmanned Aerial Vehicle",
-    video: "/video/uav.mp4",
+    name: "Unmanned Aerial Vehicle Strike",
+    name_ar: "",
     text: "Suspendisse et gravida augue. Sed eleifend posuere ex id interdum. Proin feugiat interdum sem, eget tincidunt justo pellentesque quis.",
     images: Array(4).fill('/api/placeholder/200/200')
   }
 ];
+
+const generateMP4Link = (inputArray: DataInputRow[]): CloudRow[] => {
+  return inputArray.map((item) => ({
+    ...item,
+    video: `${process.env.NEXT_PUBLIC_CDN_URL}/cloud_videos/${item.name
+      .replace(/ /g, "")}.mp4`, // Generate video path
+  }));
+};
+const cloudData = generateMP4Link(inputData);
 
 const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -112,7 +128,7 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
         <div className="absolute inset-0 rounded-lg overflow-hidden">
           {/*poster image */}
           <img
-            src={src.slice(0, -3) + "jpg"}
+            src={`/cloud_thumb/${name.replace(/ /g, "")}.jpg`}
             alt={`${name} placeholder`}
             className="absolute inset-0 w-full h-full object-cover"
             style={{
