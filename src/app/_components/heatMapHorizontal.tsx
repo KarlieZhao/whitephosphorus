@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from "react";
 import * as d3 from "d3";
 import { useWindowHeight } from "@/lib/resize";
 import { useWindowWidth } from "@/lib/resize";
+import { isMobileDevice } from "./mobile-detector";
 
 type IncidentData = {
   date: string;
@@ -27,6 +28,7 @@ type CellData = { x: number; y: number; value: number };
 
 const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTranslateXChange }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const yAxisRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const frameWidth = 7000;
   const frameHeight = useWindowHeight() * 0.7;
@@ -89,18 +91,16 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
     if (targetIndex > -1) {
       yLabels.splice(targetIndex, 1);
       const targetData = sortedProcessedData.splice(targetIndex, 1)[0];
-
       yLabels.push("To be geolocated in South Lebanon");
       sortedProcessedData.push(targetData);
     }
-
 
     //============ rendering SVG ==============
     //clean up SVG
     d3.select(svgRef.current).selectAll("*").remove();
 
     //set svg dimensions and margins
-    const margin = { top: 60, right: 120, bottom: 50, left: 90 };
+    const margin = { top: 60, right: 120, bottom: 50, left: 100 };
     const availableWidth = frameWidth - margin.left - margin.right;
     const availableHeight = frameHeight - margin.top - margin.bottom;
 
@@ -164,19 +164,33 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
       .attr("dx", "0.5em")
       .attr("dy", "-0.2em");
 
-    // y-axis labels (Areas)
-    // ========== Y-Axis Group for Labels ==========
-    g.append("g")
+    // ========== Y-Axis Labels (Areas) ==========
+    const yAxisSvg = d3
+      .select(yAxisRef.current)
+      .attr("width", margin.left)
+      .attr("height", plotHeight + margin.top + margin.bottom);
+
+    yAxisSvg.selectAll("*").remove();
+
+    const yAxisG = yAxisSvg
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    yAxisG
       .call(
         d3.axisLeft(yScale)
-          .tickFormat((_: any, i: number) => yLabels[i])
+          .tickFormat((_: any, i: number) => {
+            if (yLabels[i] === "To be geolocated in South Lebanon") {
+              return "To be geolocated";
+            }
+            return yLabels[i];
+          })
       )
-
-      .attr("class", "y-axis-labels")  // add class here
       .selectAll("text")
       .style("text-anchor", "end")
       .style("font-size", "12px")
       .style("fill", "#ccc");
+
 
     //remove label lines
     g.selectAll(".tick line").style("display", "none");
@@ -239,7 +253,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
     //adding major event lines
     const majorEventIndices = majorEventDates.map(date => xLabels.indexOf(date));
 
-    // // A: mouse hover display
+    // mouse hover display
     // majorEventIndices.forEach((value, index) => {
     //   // Add text annotation
     //   let ypos = -10;
@@ -331,6 +345,8 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
 
     animateCol();
 
+    const container = containerRef.current;
+
     const handleWheel = (event: WheelEvent) => {
       const svg = svgRef.current;
       if (!container || !svg) return;
@@ -344,7 +360,56 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
       onTranslateXChange(translateXRef.current); // callback => chart continue label visibility
     }
 
-    const container = containerRef.current;
+    //for mobile
+    const handleTouch = () => {
+      let startX = 0; // Tracks the starting touch X position
+      let currentTranslateX = translateXRef.current;
+
+      if (!container || !svg) {
+        return () => { };
+      }
+      const handleTouchStart = (event: TouchEvent) => {
+        startX = event.touches[0].clientX; // Record the initial touch point
+      };
+
+      const handleTouchMove = (event: TouchEvent) => {
+        const svg = svgRef.current;
+        if (!container || !svg) return;
+
+        const touchX = event.touches[0].clientX; // Current touch point
+        const deltaX = touchX - startX; // Change in X from starting touch point
+
+        translateXRef.current = Math.min(
+          0,
+          Math.max(
+            currentTranslateX + deltaX, // Adjust translation based on touch movement
+            windowWidth - plotWidth - 210 // Ensure it doesn't scroll beyond bounds
+          )
+        );
+
+        svg.style.transform = `translateX(${translateXRef.current}px)`;
+        onTranslateXChange(translateXRef.current); // Callback to update label visibility
+      };
+
+      const handleTouchEnd = () => {
+        currentTranslateX = translateXRef.current;
+      };
+
+      container.addEventListener('touchstart', handleTouchStart, { passive: true });
+      container.addEventListener('touchmove', handleTouchMove, { passive: true });
+      container.addEventListener('touchend', handleTouchEnd);
+
+      return () => {
+        container.removeEventListener('touchstart', handleTouchStart);
+        container.removeEventListener('touchmove', handleTouchMove);
+        container.removeEventListener('touchend', handleTouchEnd);
+      };
+
+    };
+
+    if (isMobileDevice()) {
+      handleTouch();
+    }
     if (container) container.addEventListener("wheel", handleWheel);
 
     // Cleanup tooltip on unmount
@@ -355,9 +420,10 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
     };
   }, [frameHeight, windowWidth, data]);
 
+
   return (
     <div
-      className="px-2 pt-2 scroll-behavior-none"
+      className=" pt-2 scroll-behavior-none"
       ref={containerRef}
       style={{
         width: "100vw",
@@ -366,6 +432,9 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
         overflowX: "hidden"
       }}
     >
+      <div className="fixed" style={{ zIndex: 100, backgroundColor: "#000", paddingLeft: "9px" }}>
+        <svg ref={yAxisRef} style={{ left: 0 }} />
+      </div>
       <div className="relative" style={{ height: frameWidth - frameHeight - windowWidth }}>
         <svg style={{
           position: "sticky",
@@ -381,3 +450,4 @@ function scale(number: number, inMin: number, inMax: number, outMin: number, out
 }
 
 export default HeatMapAnimation;
+
