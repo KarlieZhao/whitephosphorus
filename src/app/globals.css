@@ -47,8 +47,6 @@
 
 html,
 body {
-  /* -moz-user-select: none; */
-  /* -webkit-user-select: none; */
   margin: 0;
   background-color: #000;
   font-family: "Inconsolata", "PPSupplySans-Regular", "Times New Roman",
@@ -67,6 +65,8 @@ body {
   /* Firefox */
   -ms-overflow-style: none;
   /* Internet Explorer 10+ */
+
+  overscroll-behavior: contain;
 }
 
 main {
@@ -455,9 +455,9 @@ ul {
 }
 
 iframe {
-  overscroll-behavior: none;
-  overscroll-behavior-y: none;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  /* -webkit-overflow-scrolling: ; */
   position: fixed;
 
   /* For Firefox */
@@ -468,7 +468,6 @@ iframe {
 
   /* For MS Edge */
   -ms-scroll-chaining: none;
-  -webkit-overflow-scrolling: touch;
   /* For smooth scrolling on iOS */
 }
 

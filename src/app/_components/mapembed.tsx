@@ -4,14 +4,14 @@ import { useWindowHeight } from "@/lib/resize";
 
 export function Map() {
   // const windowWidth = useWindowWidth();
-  const frameHeight = useWindowHeight() * 0.97;
+  const frameHeight = useWindowHeight() * 0.98;
 
   function preventZoom(e: React.WheelEvent<HTMLIFrameElement>) {
     e.stopPropagation();
   }
 
   return (
-    <section className="z-10" style={{ width: `100vw`, height: `${frameHeight}px` }}>
+    <section className="z-10 fixed overflow-hidden overscroll-contain" style={{ width: `100vw`, height: `95%` }}>
       <iframe
         height={`${frameHeight}px`}
         title=""
