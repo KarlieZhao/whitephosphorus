@@ -774,16 +774,17 @@ h2 {
 } */
 
 .team-info {
-  display: flex;
+  display: block;
+  position: relative;
   flex-direction: row;
-  gap: 50px;
   color: #aaa;
   font-size: 1.1rem;
   word-spacing: -1px;
   line-height: 1.5;
-  margin-top: 3rem;
-  margin-bottom: 5rem;
+  margin: 6rem 3rem;
+  /* margin-top: 25vh; */
   z-index: 10;
+  width: 25vw;
 }
 
 .team-info>div {
@@ -800,12 +801,12 @@ h2 {
 }
 
 .project-info {
-  margin-top: 16vh;
+  margin-top: 13vh;
   z-index: 10;
-  width: 70vw;
+  width: 68vw;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 3rem;
+  margin-right: 3rem;
   color: #eee;
   max-width: 1100px;
   font-size: 1.2rem;
@@ -901,7 +902,7 @@ ul li {
 }
 
 .methodology {
-  height: 40rem;
+  height: 27rem;
 }
 
 .methodNavBar {
