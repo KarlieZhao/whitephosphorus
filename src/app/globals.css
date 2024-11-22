@@ -514,21 +514,24 @@ h2 {
 
 .toxicity-counter {
   top: 66px;
+  width: 35vw;
+  min-width: 450px;
   font-weight: 400;
-  /* justify-items: center; */
-  display: block;
+  justify-items: center;
   font-family: "PPSupplySans-Ultralight";
-  /* font-family: "Inconsolata";
-  font-size: 1rem;
-  word-spacing: -5px;
-  line-height: 1.2; */
+  color: #ccc;
+}
+
+.last-update {
+  color: #ffc4b8;
 }
 
 .headerData {
   font-size: 1.8rem;
   line-height: 1;
   font-weight: normal;
-  color: #eae1df;
+  color: #eee;
+  font-family: "PPSupplySans-Regular";
 }
 
 .observablehq--collapsed,
@@ -1003,6 +1006,11 @@ ul li {
   color: #eee;
 }
 
+@media (max-width:1400px) {
+  .plumes-description p {
+    display: none;
+  }
+}
 
 /* mobile env */
 @media (max-width: 768px) {

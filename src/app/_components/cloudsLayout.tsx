@@ -220,19 +220,19 @@ export default function CloudLayout() {
       <div className="flex flex-col gap-2">
         {cloudData.map((row, rowIndex) => (
           <div key={rowIndex}
-            className={`grid grid-cols-1 md:grid-cols-[300px,0.5fr,1fr] gap-2 max-h-[330px]  transition-all duration-700 ease-in-out transform 
+            className={`grid grid-cols-1 md:grid-cols-[300px,0.5fr,1fr] gap-2 max-h-[330px] transition-all duration-700 ease-in-out transform 
             ${visibleRows[rowIndex] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <VideoPlayer src={row.video} name={row.name} />
             {/* Text Column */}
-            <div className="dark-bg p-6 flex items-center justify-center max-h-[330px]">
+            <div className="dark-bg p-4 flex justify-center max-h-[330px] overflow-hidden">
               <div className="text-left plumes-description">
                 <h3 className="mb-4">{row.name}</h3>
-                {row.text}
+                <p> {row.text}</p>
               </div>
             </div>
             {/* Image Grid Column */}
             < div className="dark-bg p-4 flex items-center max-h-[330px]" >
-              <div className={"grid grid-cols-5 grid-rows-2 gap-2 w-full h-full"}>
+              <div className={"grid grid-cols-5 grid-rows-2 gap-2 w-full h-full overflow-hidden"}>
                 {row.images.map((link, index) => (
                   <div key={index} className="w-full h-full relative">
                     <img src={link}

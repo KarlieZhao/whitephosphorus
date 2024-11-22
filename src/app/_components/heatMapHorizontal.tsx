@@ -100,7 +100,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
     d3.select(svgRef.current).selectAll("*").remove();
 
     //set svg dimensions and margins
-    const margin = { top: 60, right: 120, bottom: 50, left: 100 };
+    const margin = { top: 60, right: 150, bottom: 50, left: 100 };
     const availableWidth = frameWidth - margin.left - margin.right;
     const availableHeight = frameHeight - margin.top - margin.bottom;
 
@@ -134,7 +134,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
       .attr("height", svgHeight);
     const g = svg
       .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+      .attr("transform", `translate(${margin.left + 10},${margin.top})`);
 
     // Create scales
     const xScale = d3
@@ -423,7 +423,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
 
   return (
     <div
-      className=" pt-2 scroll-behavior-none"
+      className=" pt-2 scroll-behavior-none hideScrollBar"
       ref={containerRef}
       style={{
         width: "100vw",

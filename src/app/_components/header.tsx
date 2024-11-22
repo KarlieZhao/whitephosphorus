@@ -21,8 +21,8 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [data, setData] = useState<ToxicityData>({
-    land: 87.2,
-    air: 95.3,
+    land: 5.27,
+    air: 527.16,
     incidents: 191,
   });
 
@@ -108,20 +108,21 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
                   </td>
                 </tr>
                 {TypeWriterFinished && (
-                  <tr className="toxicity-counter relative pl-4 fadeSlideIn">
-                    <td className="w-1/4 h-10 pr-5 text-center">
-                      TOXICITY <br /> COUNTER
-                    </td>
+                  <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn">
+                    <div className="flex-initial basis-1/3 flex flex-col justify-center items-center">
+                      <div>  TOXICITY  COUNTER</div>
+                      <div className="text-sm last-update">Last update: Nov/20/2024</div>
+                    </div>
                     {["incidents", "land", "air"].map((type, index) => (
-                      <td key={index} className="w-1/4 h-10 valign pr-4">
+                      <div key={index} className="flex flex-col basis-1/4 justify-center items-center">
                         <span className="number headerData">{data[type as keyof ToxicityData]}</span>
                         <span className="unit text-xl">
-                          {type === "air" ? "KM³" : type === "land" ? " KM²" : ""}
+                          {type === "air" ? " million m³" : type === "land" ? " million m²" : "REPORTED"}
                         </span>
-                        <div className="text-xl">{type.toUpperCase()}</div>
-                      </td>
+                        <div className="text-xl">of {type.toUpperCase()}</div>
+                      </div>
                     ))}
-                  </tr>
+                  </div>
                 )}
               </tbody>
             </table>
