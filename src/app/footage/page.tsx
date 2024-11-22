@@ -84,7 +84,7 @@ export default function Index() {
                                 <div key={index} className="flex-none snap-start">
                                     <ContentWindow title={``}>
                                         {/* ${clickedCellData.area} | ${clickedCellData.date} |  */}
-                                        <FootageDisplay srcLink={`${process.env.NEXT_PUBLIC_CDN_URL}/WPdata/${clickedCellData.link[index]}`} />
+                                        <FootageDisplay srcLink={`${process.env.NEXT_PUBLIC_CDN_URL}/WPdata/${clickedCellData.link[index]}`} enlarge={true} />
                                     </ContentWindow>
                                 </div>
                             ))}

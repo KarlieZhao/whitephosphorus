@@ -3,9 +3,10 @@ import "../globals.css";
 
 type FootageDisplayProps = {
     srcLink: string;
+    enlarge: boolean;
 };
 
-export default function FootageDisplay({ srcLink }: FootageDisplayProps) {
+export default function FootageDisplay({ srcLink, enlarge }: FootageDisplayProps) {
     const isVideo = /\.(mp4|mov|webm|ogg)$/i.test(srcLink);
     const isImage = /\.(jpg|webp|jpeg|png|gif|bmp|svg)$/i.test(srcLink);
     const [isHovered, setIsHovered] = useState(false);
@@ -16,10 +17,12 @@ export default function FootageDisplay({ srcLink }: FootageDisplayProps) {
             <div className="text-white text-xl overflow-hidden p-0">
                 <div
                     style={{ height: '19vh', minHeight: '140px', maxWidth: '26rem', cursor: 'pointer' }}
-                    onMouseEnter={() => { setIsEnlarged(true); setIsHovered(true) }}
+                    onMouseEnter={() => { if (enlarge) { setIsEnlarged(true); setIsHovered(true) } }}
                     onMouseLeave={() => {
-                        setIsEnlarged(false);
-                        setIsHovered(false)
+                        if (enlarge) {
+                            setIsEnlarged(false);
+                            setIsHovered(false);
+                        }
                     }}
                 >
                     {isVideo ? (

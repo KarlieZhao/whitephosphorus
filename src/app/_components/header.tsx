@@ -65,7 +65,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
             <ul>
               <li onClick={() => router.push("/")}>MAP</li>
               <li onClick={() => router.push("/footage")}>TIMELINE</li>
-              <li onClick={() => router.push("/clouds")}>CLOUDS</li>
+              <li onClick={() => router.push("/clouds")}>PLUMES</li>
               <li onClick={() => router.push("/about")}>ABOUT</li>
             </ul>
           </div>
@@ -91,7 +91,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
                 <tr className="text-center mt-8 flex items-center">
                   {renderTab("MAP", "/", "tab1")}
                   {renderTab("TIMELINE", "/footage", "tab2")}
-                  {renderTab("CLOUDS", "/clouds", "tab3")}
+                  {renderTab("PLUMES", "/clouds", "tab3")}
                   {renderTab("ABOUT", "/about", "tab4")}
                 </tr>
               </tbody>
