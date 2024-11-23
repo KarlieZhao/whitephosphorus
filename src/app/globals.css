@@ -513,7 +513,7 @@ h2 {
 
 .toxicity-counter {
   top: 66px;
-  width: 35vw;
+  width: 47rem;
   min-width: 450px;
   font-weight: 400;
   justify-items: center;
@@ -523,6 +523,7 @@ h2 {
 
 .last-update {
   color: #ffc4b8;
+  font-size: 0.8rem;
 }
 
 .headerData {
@@ -639,7 +640,7 @@ h2 {
   animation: fadeSlideIn 0.5s ease-in-out;
 }
 
-/* Animation for the map to fade in */
+/* fade in out animation */
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -650,8 +651,22 @@ h2 {
   }
 }
 
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 .fadeIn {
   animation: fadeIn 0.7s ease-in-out;
+}
+
+.fadeOut {
+  animation: fadeOut 0.7s ease-in-out;
 }
 
 .draggable-container {
