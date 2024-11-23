@@ -43,7 +43,7 @@ export default function Index() {
                                 <li>Amnesty report</li>
                                 <li>Forensic architecture report</li></ul></Collapsible>
                     </div>
-                    <div className="methodology mt-32">
+                    <div className={`${isMobileDevice() ? "hidden" : ""} methodology mt-32`}>
                         <h2>Methodology</h2>
                         <NavBar />
                     </div>
