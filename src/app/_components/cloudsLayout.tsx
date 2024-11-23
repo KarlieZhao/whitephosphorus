@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRef, useEffect, useState } from 'react';
-import FootageDisplay from './footageDisplay';
 import $ from 'jquery';
+import { isMobileDevice } from './mobile-detector';
 
 interface DataInputRow {
   name: string;
@@ -222,16 +222,18 @@ export default function CloudLayout() {
           <div key={rowIndex}
             className={`grid grid-cols-1 md:grid-cols-[300px,0.5fr,1fr] gap-2 max-h-[330px] transition-all duration-700 ease-in-out transform 
             ${visibleRows[rowIndex] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+
             <VideoPlayer src={row.video} name={row.name} />
+
             {/* Text Column */}
-            <div className="dark-bg p-4 flex justify-center max-h-[330px] overflow-hidden">
+            <div className={`${isMobileDevice() ? "absolute" : ""} dark-bg p-4 flex justify-center max-h-[330px] overflow-hidden`}>
               <div className="text-left plumes-description">
                 <h3 className="mb-4">{row.name}</h3>
                 <p> {row.text}</p>
               </div>
             </div>
             {/* Image Grid Column */}
-            < div className="dark-bg p-4 flex items-center max-h-[330px]" >
+            < div className={`${isMobileDevice() ? "hidden" : ""} dark-bg p-4 flex items-center max-h-[330px]`} >
               <div className={"grid grid-cols-5 grid-rows-2 gap-2 w-full h-full overflow-hidden"}>
                 {row.images.map((link, index) => (
                   <div key={index} className="w-full h-full relative">

@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Header from "@/app/_components/header";
-import Mailto from "react-mailto-link";
-import Icon from 'react-native-ionicons'
+import { isMobileDevice } from "../_components/mobile-detector";
 import Collapsible from '@/app/_components/collapsible'
 import NavBar from "../_components/select-display-bar";
 import '@/app/globals.css';
@@ -11,30 +10,10 @@ export default function Index() {
     return (
         <div>
             <Header TypeWriterFinished={false} />
-            <main className="min-h-screen flex">
+            <main className={`min-h-screen ${isMobileDevice() ? "block mt-20" : "flex"}`}>
                 <div className="inner-backdrop"></div>
-                <div className={`team-info`}>
-                    <div>
-                        <span className="text-white">Ahmad Baydoun</span> is an architect and OSINT researcher whose work delves into the transformation of environments into tools of power. He is currently pursuing his PhD at the Technical University of Delft, with his dissertation titled “Weaponized Environments.” His research exposes the strategic manipulation of natural landscapes in modern warfare. He has worked on the AirPressure.info project, which archives and visualizes Israeli violations over Lebanese airspace. Baydoun's work has been recognized and cited by Amnesty International, L'Orient Le Jour, PBS, Al Jazeera, Arab News, and the American University of Beirut.
-                        <br />Email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
-                        <br />Website: <a href="https://ahmadbeydoun.com" target="_blank">ahmadbeydoun.com</a>
-                    </div><br />
-                    <div className="contribution">
-                        Team<br />
-                        <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun, Principal Investigator</a><br />
-                        Khodor Joujou, Research Assistant<br />
-                        <br />
-                        Collaborators:<br />
-                        Special thanks to <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> for their assistance in data collection and geolocation processes, which have been invaluable to the accuracy and integrity of our project.<br />
-                        <br />
-                        Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
-                        <br />
-                        Special thanks to:
-                        Marc Schoonderbeek, Aleksandar Stancic, Chris Oseik, Anno Nemo, Justin Salhani, Mona Fawaz, Wim Zwijnenburg, Seyran Khadimi, Abbas Baalbaki, Hisham Younes, Ali Sleiman, Usama Farhat, Karlie Zhao, Ramzi Kais, Maria Molijn, William Christou. </div>
-                </div>
                 <div className={`project-info`}>
                     <div>
-                        {/* <h2>WhitePhosphorus.info</h2> */}
                         <p>
                             In one year, we have verified and geolocated 191 incidents of white phosphorus deployment by Israel in South Lebanon. Our website now hosts an interactive cartographic display that organizes this data chronologically and spatially, providing insights into the patterns of deployment. This project aims to serve as a comprehensive, real-time database tracking the deployment of white phosphorus munitions in South Lebanon.</p>
                         <p>  Our mission is to expose the systematic use of white phosphorus—an incendiary weapon whose use in populated areas is restricted under international law due to its severe and often fatal consequences. By collecting, verifying, and mapping instances of white phosphorus use, we seek to increase transparency and accountability in warfare. Furthermore, we aim to inform residents whose lands have been exposed to white phosphorus, preparing for the post-war recovery by collaborating with local municipalities to mark affected territory and work with specialized teams to detoxify these areas. Our efforts are dedicated to ensuring that communities can safely rehabilitate and reclaim their environment once hostilities have ceased.
@@ -68,8 +47,26 @@ export default function Index() {
                         <h2>Methodology</h2>
                         <NavBar />
                     </div>
+                </div>
 
-
+                <div className={`team-info`}>
+                    <div>
+                        <span className="text-white">Ahmad Baydoun</span> is an architect and OSINT researcher whose work delves into the transformation of environments into tools of power. He is currently pursuing his PhD at the Technical University of Delft, with his dissertation titled “Weaponized Environments.” His research exposes the strategic manipulation of natural landscapes in modern warfare. He has worked on the AirPressure.info project, which archives and visualizes Israeli violations over Lebanese airspace. Baydoun's work has been recognized and cited by Amnesty International, L'Orient Le Jour, PBS, Al Jazeera, Arab News, and the American University of Beirut.
+                        <br />Email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
+                        <br />Website: <a href="https://ahmadbeydoun.com" target="_blank">ahmadbeydoun.com</a>
+                    </div><br />
+                    <div className="contribution">
+                        Team<br />
+                        <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun, Principal Investigator</a><br />
+                        Khodor Joujou, Research Assistant<br />
+                        <br />
+                        Collaborators:<br />
+                        Special thanks to <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> for their assistance in data collection and geolocation processes, which have been invaluable to the accuracy and integrity of our project.<br />
+                        <br />
+                        Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
+                        <br />
+                        Special thanks to:
+                        Marc Schoonderbeek, Aleksandar Stancic, Chris Oseik, Anno Nemo, Justin Salhani, Mona Fawaz, Wim Zwijnenburg, Seyran Khadimi, Abbas Baalbaki, Hisham Younes, Ali Sleiman, Usama Farhat, Karlie Zhao, Ramzi Kais, Maria Molijn, William Christou. </div>
                 </div>
             </main >
         </div >
