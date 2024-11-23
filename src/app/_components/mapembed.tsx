@@ -19,6 +19,7 @@ export function Map() {
         loading="lazy"
         className="bg-black overflow-hidden z-10 fixed mt-4 w-full border-0"
       ></iframe>
+      <div className="z-50 absolute left-20 ml-1 bottom-8 text-sm text-white">Adjust the selected timestamp to view more.</div>
     </section>
   );
 }

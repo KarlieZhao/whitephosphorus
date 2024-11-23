@@ -29,13 +29,13 @@ export default function Index() {
     <div>
       <Header TypeWriterFinished={TypeWriterFinished} />
       <main className="relative">
-        <div className="w-full text-5xl z-50 mt-6 fixed text-white ml-8">
+        <div className="w-full text-5xl z-40 mt-6 fixed text-white ml-8">
           <Typewriter textLines={textToType} period={2000}
             speed={100} //lower value = faster typing
             onFinish={onFinish} // on finish, trigger the onFinish function
           />
+          <div className="z-50 absolute left-12 bottom-12 text-white">Adjust the selected timestamp to view more.</div>
         </div>
-
         {isMobile ? (<div className="fixed bottom-20 m-3 text-white text-sm">
           Please visit with a desktop device to interact with the map.<br /><br /><br />
           On a mobile device, you can view the white phosphorus attacks timeline, the cloud catalog, and read more about this project by navigating through the menu.
