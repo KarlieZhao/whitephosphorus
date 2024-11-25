@@ -31,20 +31,20 @@ const inputData: DataInputRow[] = [
     video_count: 3
   },
   {
-    name: "Smoke Bomb M150",
-    name_ar: "قنبلة دخان M150",
-    text: "The M150 is an Israeli 155mm artillery smoke projectile designed to produce screening smoke using a hexachloroethane (HC)-based composition. Upon detonation, it ejects five HC smoke canisters that ignite upon exposure to air, generating dense, white smoke. The resulting smoke cloud is thick and white. Unlike white phosphorus munitions, the M150's smoke is less toxic and does not have incendiary properties. ",
-    text_ar: "هذه القذيفة الإسرائيلية للمدفعية قطرها 155 ملم، مصممة لإنتاج دخان التمويه. عند الانفجار، تطلق خمس علب دخان تشتعل عند تعرضها للهواء، مما يولد دخانًا كثيفًا وأبيض. السحابة الدخانية الناتجة تكون سميكة وبيضاء. على عكس قذائف الفوسفور الأبيض، هذا الدخان لا يمتلك خصائص حارقة.",
-    img_count: 0,
-    video_count: 1
-  },
-  {
     name: "Flare",
     name_ar: "القنبلة الضوئية",
     text: "A military flare is a pyrotechnic device designed to produce a bright light or intense heat without an explosion. Flares serve multiple purposes, including signaling and illumination. Upon activation, they emit a brilliant light, often accompanied by a trail of smoke, making them visible over long distances. Some flares are equipped with small parachutes to slow their descent, allowing for prolonged illumination or signaling. ",
     text_ar: "القنبلة الضوئية هي جهاز مصمم لإنتاج ضوء ساطع أو حرارة شديدة دون حدوث انفجار. تستخدم هذه القنابل لأغراض عدة منها الإشارة والإضاءة. عند تفعيلها، تصدر ضوءًا براقًا يصحبه مسار من الدخان، ما يجعلها مرئية من مسافات بعيدة. بعض هذه القنابل مزودة بمظلات صغيرة لتبطئ من سرعة هبوطها، مما يتيح إضاءة أو إشارة لفترة أطول.",
     img_count: 3,
     video_count: 2
+  },
+  {
+    name: "Smoke Bomb M150",
+    name_ar: "قنبلة دخان M150",
+    text: "The M150 is an Israeli 155mm artillery smoke projectile designed to produce screening smoke using a hexachloroethane (HC)-based composition. Upon detonation, it ejects five HC smoke canisters that ignite upon exposure to air, generating dense, white smoke. The resulting smoke cloud is thick and white. Unlike white phosphorus munitions, the M150's smoke is less toxic and does not have incendiary properties. ",
+    text_ar: "هذه القذيفة الإسرائيلية للمدفعية قطرها 155 ملم، مصممة لإنتاج دخان التمويه. عند الانفجار، تطلق خمس علب دخان تشتعل عند تعرضها للهواء، مما يولد دخانًا كثيفًا وأبيض. السحابة الدخانية الناتجة تكون سميكة وبيضاء. على عكس قذائف الفوسفور الأبيض، هذا الدخان لا يمتلك خصائص حارقة.",
+    img_count: 0,
+    video_count: 1
   },
   {
     name: "Rocket Launches",

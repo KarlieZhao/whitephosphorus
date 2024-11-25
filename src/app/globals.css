@@ -670,11 +670,11 @@ h2 {
   position: relative;
   flex-direction: row;
   color: #aaa;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   word-spacing: -1px;
   line-height: 1.5;
-  margin: 12rem 3rem;
-  /* margin-top: vh; */
+  margin: 3rem;
+  margin-top: 10vh;
   z-index: 10;
   width: 25vw;
 }
@@ -697,7 +697,7 @@ h2 {
   z-index: 10;
   width: 68vw;
   display: block;
-  margin-left: 3rem;
+  margin-left: 4.5vw;
   margin-right: 3rem;
   color: #eee;
   max-width: 1100px;

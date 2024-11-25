@@ -2,12 +2,12 @@
   "name": "WhitePhosophorus.info",
   "short_name": "WhitePhosophorus.info",
   "icons": [{
-      "src": "/favicons/wpicon192.png",
+      "src": "/favicons/favicon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/favicons/wpicon512.png",
+      "src": "/favicons/favicon.png",
       "sizes": "512x512",
       "type": "image/png"
     }

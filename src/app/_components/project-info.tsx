@@ -40,8 +40,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                                 <div>
                                     {Object.entries(item.answer).map(([key, value]) => (
                                         < p key={key} >
-                                            {key === "land-formula" || "air-formula" ? <span dangerouslySetInnerHTML={{ __html: value }} /> : value
-                                            }
+                                            <span dangerouslySetInnerHTML={{ __html: value }} />
                                         </p>
                                     ))}
                                 </div>
@@ -50,12 +49,11 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                 ))
                 }
             </div >
-
             {/* methodology */}
-            <div className={`${isMobileDevice() ? "hidden" : ""} methodology mt-32`}>
+            {/* <div className={`${isMobileDevice() ? "hidden" : ""} methodology mt-32`}>
                 <h2>Methodology</h2>
                 <NavBar />
-            </div>
+            </div> */}
         </div >
     );
 };
