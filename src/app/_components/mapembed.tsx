@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { useWindowHeight } from "@/lib/resize";
 
 export function Map() {
