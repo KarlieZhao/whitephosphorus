@@ -1,5 +1,6 @@
 import Collapsible from "../_components/collapsible";
 import NavBar from "../_components/select-display-bar";
+import { isMobileDevice } from "./mobile-detector";
 
 type QnaItem = {
     question: string;
@@ -51,10 +52,10 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
             </div >
 
             {/* methodology */}
-            {/* <div className={`${isMobileDevice() ? "hidden" : ""} methodology mt-32`}>
-                        <h2>Methodology</h2>
-                        <NavBar />
-                    </div>  */}
+            <div className={`${isMobileDevice() ? "hidden" : ""} methodology mt-32`}>
+                <h2>Methodology</h2>
+                <NavBar />
+            </div>
         </div >
     );
 };
