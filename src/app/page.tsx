@@ -14,23 +14,23 @@ export default function Index() {
   const [isPromptVisible, setIsPromptVisible] = useState<boolean>(false);
 
   const onFinish = () => {
+    if (!TypeWriterFinished) showPrompt();
     setTypeWriterFinished(true);
-    // showPrompt();
   };
 
-  // const showPrompt = () => {
-  //   const showprompt = setTimeout(() => {
-  //     setIsPromptVisible(true);
-  //   }, 4500);
-  //   const hideprompt = setTimeout(() => {
-  //     setIsPromptVisible(false);
-  //   }, 15000);
+  const showPrompt = () => {
+    const showprompt = setTimeout(() => {
+      setIsPromptVisible(true);
+    }, 4500);
+    const hideprompt = setTimeout(() => {
+      setIsPromptVisible(false);
+    }, 15000);
 
-  //   return () => {
-  //     clearTimeout(showprompt);
-  //     clearTimeout(hideprompt)
-  //   }; // Cleanup on unmount
-  // }
+    return () => {
+      clearTimeout(showprompt);
+      clearTimeout(hideprompt)
+    }; // Cleanup on unmount
+  }
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
@@ -55,7 +55,9 @@ export default function Index() {
         </div>) : (
           <div className={"relative z-0 " + (TypeWriterFinished ? "fadeIn" : "opacity-0")}>
             {/* fade in if typewriter is finished; if not, hide */}
-            <div className={`z-50 fixed left-12 ml-1 bottom-[19vh] text-sm text-white transition-opacity ${isPromptVisible ? "opacity-100" : "opacity-0"}`}>Adjust selected timestamp to view more.</div>
+            <div className={`z-50 fixed left-12 ml-1 bottom-[10vw] bg-red-900 bg-opacity-60 text-sm text-white transition-all 
+              ${isPromptVisible ? "opacity-100" : "opacity-0"}`}>
+              Drag the ends of the red bar to set time range.</div>
             <Map />
           </div>
         )}
