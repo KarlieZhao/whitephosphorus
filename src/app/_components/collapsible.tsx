@@ -16,10 +16,8 @@ const Collapsible: React.FC<CollapsibleProps> = ({ label, children, reset }) => 
         const content = contentRef.current;
         if (content) {
             if (isOpen) {
-                // Close the collapsible
                 content.style.maxHeight = "";
             } else {
-                // Open the collapsible
                 content.style.maxHeight = `${content.scrollHeight}px`;
             }
         }
