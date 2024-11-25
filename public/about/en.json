@@ -1,0 +1,53 @@
+{
+  "lang": "en",
+  "abstract": "In one year, we have verified and geolocated 191 incidents of white phosphorus deployment by Israel in South Lebanon. Our website now hosts an interactive cartographic display that organizes this data chronologically and spatially, providing insights into the patterns of deployment. This project aims to serve as a comprehensive, real-time database tracking the deployment of white phosphorus munitions in South Lebanon. <br/><br/> Our mission is to expose the systematic use of white phosphorus—an incendiary weapon whose use in populated areas is restricted under international law due to its severe and often fatal consequences. By collecting, verifying, and mapping instances of white phosphorus use, we seek to increase transparency and accountability in warfare. Furthermore, we aim to inform residents whose lands have been exposed to white phosphorus, preparing for the post-war recovery by collaborating with local municipalities to mark affected territory and work with specialized teams to detoxify these areas. Our efforts are dedicated to ensuring that communities can safely rehabilitate and reclaim their environment once hostilities have ceased.",
+  "qna": [{
+      "question": "What is white phosphorus?",
+      "answer": "White phosphorus is a highly reactive chemical used in military operations, primarily for creating smoke screens and as an incendiary weapon. It ignites easily, producing a thick white smoke that can conceal troop movements. However, its use carries significant consequences, especially when deployed in populated areas. Contact with white phosphorus can cause severe burns, and its effects are often severe and potentially fatal. International law restricts its use due to these harmful impacts on human health and safety."
+    },
+    {
+      "question": "How does the toxicity counter work?",
+      "answer": {
+        "brief": "Our website features a toxicity counter that quantifies the impact of white phosphorus through three key metrics, each providing crucial information over a specific period: ",
+        "incidents": "Incidents (191): Represents the total number of verified and geolocated white phosphorus incidents recorded from October 7, 2023, to October 7, 2024. This metric highlights the frequency and distribution of these incidents.",
+        "land-p1": "Land (87.2 m²): To calculate the total land area affected by white phosphorus, we estimated the average area contaminated per incident. Assuming each incident affects approximately 0.456 m² of land, we multiply this figure by the total number of incidents:",
+        "land-formula": "<ul><li>A = π x r2</li><li>A = 3.14159 x (122.5 m) 2</li><li>A= 47123 m2</li></ul>",
+        "land-p2": "This metric emphasizes the cumulative environmental footprint, capturing the extent of land directly contaminated.",
+        "air-p1": "Air (95.3 m³): Similarly, to estimate the total volume of air contaminated by white phosphorus smoke, we calculated the average volume of air affected per incident. If each incident contaminates approximately 0.499 m³ of air, multiplying this by the total number of incidents gives:",
+        "air-formula": "<ul><li>V = A x h</li><li>V = 47,123 m2 x 10 m</li><li>V = 471,230 m3</li></ul>",
+        "air-p2": "This metric underlines the reach of air pollution, indicating the volume of air likely impacted by the toxic fumes."
+      }
+    },
+    {
+      "question": " Selected Facts and Figures",
+      "answer": "Maiss Al Jabal has been the most severely hit town in south Lebanon, taking in about a quarter of all attacks. February is the least month and July is the most month over that year."
+    },
+    {
+      "question": "Studies on the consequences of White Phosphorus",
+      "answer": [{
+          "World Health Organization": "https://www.who.int/news-room/fact-sheets/detail/white-phosphorus"
+        },
+        {
+          "Toxicological Profile for White Phosphorus": "https://wwwn.cdc.gov/TSP/ToxProfiles/ToxProfiles.aspx?id=285&tid=52"
+        },
+        {
+          "Human Rights Watch report 1": "https://www.hrw.org/news/2024/06/05/lebanon-israels-white-phosphorous-use-risks-civilian-harm"
+        },
+        {
+          "Human Rights Watch report 2": "https://www.hrw.org/news/2024/11/07/incendiary-weapons-new-use-calls-immediate-action"
+        }, {
+          "The Use of White Phosphorus Munitions in Urban Environments: An Effects-Based Analysis": "https://content.forensic-architecture.org/wp-content/uploads/2018/08/Report-The-Use-of-White-Phosphorus.pdf"
+        },
+        {
+          "The Social-environmental Impact of White Phosphorus Ammunition in South Lebanon": "https://www.aub.edu.lb/natureconservation/Documents/Brief%20WP%20English.pdf"
+        },
+        {
+          "Lebanon: Evidence of Israel's unlawful use of white phosphorus in southern Lebanon as cross-border hostilities escalate": "https://www.amnesty.org/en/latest/news/2023/10/lebanon-evidence-of-israels-unlawful-use-of-white-phosphorus-in-southern-lebanon-as-cross-border-hostilities-escalate/"
+        },
+        {
+          "Israel used U.S.-supplied white phosphorus in Lebanon attack": "https://www.washingtonpost.com/investigations/2023/12/11/israel-us-white-phosphorus-lebanon/"
+        }
+      ]
+    }
+  ]
+}

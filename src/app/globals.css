@@ -69,6 +69,20 @@ body {
   overscroll-behavior: contain;
 }
 
+.ar {
+  direction: rtl;
+  text-align: right;
+  font-family: 'Amiri', serif;
+}
+
+.en {
+  font-family: "Inconsolata";
+}
+
+.text-gray-400 {
+  color: #bbb;
+}
+
 main {
   position: relative;
   margin-top: 50px;
@@ -173,10 +187,6 @@ button {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
-}
-
-a {
-  color: #000;
 }
 
 :focus {
@@ -780,8 +790,8 @@ h2 {
   font-size: 1.1rem;
   word-spacing: -1px;
   line-height: 1.5;
-  margin: 6rem 3rem;
-  /* margin-top: 25vh; */
+  margin: 12rem 3rem;
+  /* margin-top: vh; */
   z-index: 10;
   width: 25vw;
 }
@@ -874,7 +884,7 @@ h2 {
 
 .collapsible-content {
   color: #aaa;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.3s ease-in-out;

@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 interface CollapsibleProps {
     label: string;
     children: React.ReactNode;
+    reset: boolean;
 }
 
-const Collapsible: React.FC<CollapsibleProps> = ({ label, children }) => {
+const Collapsible: React.FC<CollapsibleProps> = ({ label, children, reset }) => {
     const [isOpen, setIsOpen] = useState(false);
     const contentRef = useRef<HTMLDivElement>(null);
 
@@ -23,6 +24,17 @@ const Collapsible: React.FC<CollapsibleProps> = ({ label, children }) => {
             }
         }
     };
+
+    // Close collapsible when switch language
+    useEffect(() => {
+        if (reset && isOpen) {
+            setIsOpen(false);
+            const content = contentRef.current;
+            if (content) {
+                content.style.maxHeight = "";
+            }
+        }
+    }, [reset]);
 
     return (
         <div className="collapsible-container">
