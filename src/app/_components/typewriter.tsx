@@ -26,7 +26,7 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
             sessionStorage.setItem('visited', "true");
         }
         return () => { };
-    }, [isFinished, onFinish]);
+    }, [isFinished]);
 
     useEffect(() => {
         if (!hasMounted || isFinished) return;
@@ -57,7 +57,7 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
         }, typingSpeed);
 
         return () => clearTimeout(typingTimeout);
-    }, [text, isDeleting, lineNum, typingSpeed, textLines, period, speed, isFinished, hasMounted, onFinish]);
+    }, [text, isDeleting, lineNum, typingSpeed, textLines, period, speed, isFinished, hasMounted]);
 
     if (!hasMounted) {
         return null;
