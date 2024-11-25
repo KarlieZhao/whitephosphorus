@@ -1014,6 +1014,10 @@ ul li {
   color: #eee;
 }
 
+.z-100 {
+  z-index: 100;
+}
+
 @media (max-width:1400px) {
   .plumes-description p {
     display: none;

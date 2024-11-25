@@ -65,7 +65,7 @@ export default function Index() {
                 <div className={`project-info`}>
                     <div className="z-50 text-xl mb-6 cursor-pointer">
                         <span
-                            className={`transition-colors ${language === "en" ? "text-white underline" : "text-gray-500 no-underline"}`}
+                            className={`transition-colors ${language === "en" ? "text-white underline" : "text-gray-400 no-underline"}`}
                             onClick={() => { setLanguage("en") }}
                         >
                             English
