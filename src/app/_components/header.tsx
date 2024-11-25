@@ -156,14 +156,27 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
                       <div>TOXICITY  COUNTER</div>
                       <div className="last-update">Last update: Oct/07/2024</div>
                     </div>
-                    {data.map((obj) => {
+                    {data.map((obj, index) => {
                       return (
-                        <div className={`flex-initial ${obj.type === "Incidents" ? "basis-1/4" : "basis-1/3"} flex flex-col items-start`}>
-                          <div className={` ${obj.type === "Incidents" ? null : animationClass} `}>
-                            <span className={`${(obj.number === "1261 " || obj.number === "198") ? "opacity-100 inline-block" : "opacity-0 hidden"}`}>≈</span>
-                            <span className="headerData">{obj.number}</span><span className="text-xl"> {obj.unit}</span></div>
+                        <div
+                          key={obj.type || index} // Use a unique identifier (e.g., obj.type) or index as a fallback
+                          className={`flex-initial ${obj.type === "Incidents" ? "basis-1/4" : "basis-1/3"} flex flex-col items-start`}
+                        >
+                          <div className={`${obj.type === "Incidents" ? null : animationClass}`}>
+                            <span
+                              className={`${obj.number === "1261 " || obj.number === "198"
+                                  ? "opacity-100 inline-block"
+                                  : "opacity-0 hidden"
+                                }`}
+                            >
+                              ≈
+                            </span>
+                            <span className="headerData">{obj.number}</span>
+                            <span className="text-xl"> {obj.unit}</span>
+                          </div>
                           <div className="text-xl">{obj.type}</div>
-                        </div>)
+                        </div>
+                      );
                     })}
                   </div>
                 )}

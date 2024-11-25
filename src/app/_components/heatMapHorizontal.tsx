@@ -150,19 +150,33 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
       .padding(0.05);
 
     //x-axis labels (Dates)
+    const tickIndices = xLabelsFormatted
+      .map((label, i) => (label !== '' ? i : null)) // Mark indices with non-empty labels
+      .filter((i) => i !== null); // Remove null values
+
     g.append("g")
-      .attr("transform", `translate(-10, ${plotHeight + 10})`)
       .call(
         d3
           .axisBottom(xScale)
+          .tickValues(tickIndices)
           .tickFormat((i: number) => (xLabelsFormatted[i]))
+          .tickSize(-6)
       )
       .selectAll("text")
+      .attr("transform", `translate(-10, ${plotHeight + 20})`)
       .style("text-anchor", "start")
       .style("font-size", "12px")
       .style("fill", "#ccc")
       .attr("dx", "0.5em")
       .attr("dy", "-0.2em");
+
+    g.selectAll(".tick line")
+      .attr("transform", `translate(0, ${plotHeight + 6})`)
+      .style("stroke", "#ccc")
+      .style("stroke-width", "1px");
+
+    //remove label lines
+    //g.selectAll(".tick line").style("display", "none");
 
     // ========== Y-Axis Labels (Areas) ==========
     const yAxisSvg = d3
@@ -190,10 +204,6 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
       .style("text-anchor", "end")
       .style("font-size", "12px")
       .style("fill", "#ccc");
-
-
-    //remove label lines
-    g.selectAll(".tick line").style("display", "none");
 
     // Bind data
     const cells = g
@@ -354,7 +364,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
       const scrollDelta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
       translateXRef.current = Math.min(0,
         Math.max(translateXRef.current - scrollDelta,
-          (windowWidth - plotWidth - 210)));
+          (windowWidth - plotWidth - 260)));
 
       svg.style.transform = `translateX(${translateXRef.current}px)`;
       onTranslateXChange(translateXRef.current); // callback => chart continue label visibility
