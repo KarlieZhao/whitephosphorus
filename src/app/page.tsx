@@ -8,9 +8,7 @@ import { useState } from "react";
 import { isMobileDevice } from "./_components/mobile-detector";
 
 export default function Index() {
-  const textToType = [
-    "is a catalog and data visualization of \nIsrael's white phosphorus attacks in southern Lebanon. "
-  ];
+  const textToType = ["documents and visualizes Israel's white phosphorus attacks in southern Lebanon."];
 
   const [TypeWriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -29,7 +27,7 @@ export default function Index() {
     <div>
       <Header TypeWriterFinished={TypeWriterFinished} />
       <main className="relative">
-        <div className="w-full text-5xl z-40 mt-6 fixed text-white ml-8">
+        <div className="w-full text-5xl z-50 mt-4 fixed text-white ml-6">
           <Typewriter textLines={textToType} period={2000}
             speed={100} //lower value = faster typing
             onFinish={onFinish} // on finish, trigger the onFinish function
@@ -37,8 +35,8 @@ export default function Index() {
         </div>
 
         {isMobile ? (<div className="fixed bottom-20 m-3 text-white text-sm">
-          Please visit with a desktop device to interact with the map.<br /><br /><br />
-          On a mobile device, you can view the white phosphorus attacks timeline, the cloud catalog, and read more about this project by navigating through the menu.
+          The map feature is optimized for desktop devices.<br /><br />
+          On a mobile device, you can view the white phosphorus attacks timeline, the smoke plume catalog, and read more about this project through the navigation menu.
         </div>) : (
           <div className={"relative z-0" +
             " " + // padding

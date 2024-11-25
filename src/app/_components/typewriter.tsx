@@ -64,9 +64,9 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
     }
 
     return (
-        <span className="typewrite">
+        <div className="typewrite z-100">
             <span className="wrap">{text}</span>
-        </span>
+        </div>
     );
 };
 

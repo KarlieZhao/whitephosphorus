@@ -114,7 +114,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
     ) : (
       //browser env
       <header className="bg-black pt-2 pb-14 fixed top-0 left-0 right-0 z-50">
-        <div className="relative w-full h-full header-backdrop">
+        <div className="relative w-full h-full bg-black">
           <div className="absolute top-12 h-20 left-0 right-0 bottom-0 bg-gradient-to-b from-red-900 to-transparent pointer-events-none" />
           <div className="absolute z-50 top-12 h-2 w-full redbar" />
 
