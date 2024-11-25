@@ -8,7 +8,7 @@ import { useState } from "react";
 import { isMobileDevice } from "./_components/mobile-detector";
 
 export default function Index() {
-  const textToType = ["documents and visualizes Israel's white phosphorus attacks in southern Lebanon."];
+  const textToType = ["is a platform for geolocating, verifying, and mapping white phosphorus incidents in Lebanon to promote accountability."];
 
   const [TypeWriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);

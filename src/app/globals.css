@@ -78,7 +78,7 @@ main {
 }
 
 .typewrite {
-  width: 70vw;
+  width: 100vw;
   line-height: 3.5rem;
   display: block;
   color: #dedede;

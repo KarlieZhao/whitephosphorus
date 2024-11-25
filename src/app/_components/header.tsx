@@ -7,7 +7,7 @@ import { isMobileDevice } from "./mobile-detector";
 type HeaderProps = {
   TypeWriterFinished?: boolean;
 };
-type ToxicityData = Array<{ type: string; number: number; unit: string }>;
+type ToxicityData = Array<{ type: string; number: string; unit: string }>;
 
 const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -18,32 +18,31 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
 
   const [data, setData] = useState<ToxicityData>(
     [{
-      type: "INCIDENTS",
-      number: 191,
+      type: "Incidents",
+      number: "191",
       unit: " "
     }, {
-      type: "LAND",
-      number: 5.27,
-      unit: "million m²"
+      type: "Land Area",
+      number: "900",
+      unit: "Hectars"
     }, {
-      type: "AIR",
-      number: 527.16,
-      unit: "million m³",
+      type: "Air Volume",
+      number: "89.98",
+      unit: "million m3"
     }]
   );
-
   const altData: ToxicityData =
     [{
-      type: "INCIDENTS",
-      number: 191,
+      type: "Incidents",
+      number: "191",
       unit: ""
     }, {
-      type: "AREA",
-      number: 720,
+      type: "Land Area",
+      number: "1261 ",
       unit: "soccer fields"
     }, {
-      type: "VOLUME",
-      number: 439,
+      type: "Air Volume",
+      number: "198",
       unit: "stadiums"
     }];
 
@@ -51,14 +50,24 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
     setIsMobile(isMobileDevice());
     const interval = setInterval(() => {
       setAnimationClass("fadeOut");
+
       setTimeout(() => {
-        setData((prev) => (prev[1].number === 5.27 ? altData : [
-          { type: "INCIDENTS", number: 191, unit: "" },
-          { type: "LAND", number: 5.27, unit: "million m²" },
-          { type: "AIR", number: 527.16, unit: "million m³" },
-        ]));
+        setData((prev) => (prev[1].number === "900" ? altData : [{
+          type: "Incidents",
+          number: "191",
+          unit: " "
+        }, {
+          type: "Land Area",
+          number: "900",
+          unit: "Hectars"
+        }, {
+          type: "Air Volume",
+          number: "89.98",
+          unit: "million m3"
+        }]));
         setAnimationClass("fadeIn");
       }, 600);// Match the duration of fade-out animation
+
     }, 10000);
 
     return () => clearInterval(interval); // Cleanup on unmount
@@ -145,13 +154,15 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
                   <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn">
                     <div className="flex-initial basis-1/3 flex flex-col justify-center items-start">
                       <div>TOXICITY  COUNTER</div>
-                      <div className="last-update">Last update: Nov/20/2024</div>
+                      <div className="last-update">Last update: Oct/07/2024</div>
                     </div>
                     {data.map((obj) => {
                       return (
-                        <div className={`flex-initial ${obj.type === "INCIDENTS" ? "basis-1/4" : "basis-1/3"}  ${animationClass} flex flex-col items-start`}>
-                          <div> <span className="headerData">{obj.number}</span><span className="text-xl"> {obj.unit}</span></div>
-                          <span className="text-xl">{obj.type}</span>
+                        <div className={`flex-initial ${obj.type === "Incidents" ? "basis-1/4" : "basis-1/3"} flex flex-col items-start`}>
+                          <div className={` ${obj.type === "Incidents" ? null : animationClass} `}>
+                            <span className={`${(obj.number === "1261 " || obj.number === "198") ? "opacity-100 inline-block" : "opacity-0 hidden"}`}>≈</span>
+                            <span className="headerData">{obj.number}</span><span className="text-xl"> {obj.unit}</span></div>
+                          <div className="text-xl">{obj.type}</div>
                         </div>)
                     })}
                   </div>
