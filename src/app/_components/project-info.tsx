@@ -12,6 +12,8 @@ type ProjectInfoProps = {
         lang: string;
         abstract: string;
         qna: QnaItem[];
+        reachout: string;
+        method: string;
     };
     reset: boolean
 };
@@ -38,7 +40,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                                 </ul>
                             ) : (
                                 <div>
-                                    {Object.entries(item.answer).map(([key, value]) => (
+                                    {item?.answer && Object.entries(item.answer).map(([key, value]) => (
                                         < p key={key} >
                                             <span dangerouslySetInnerHTML={{ __html: value }} />
                                         </p>
@@ -49,11 +51,9 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                 ))
                 }
             </div >
-            {/* methodology */}
-            {/* <div className={`${isMobileDevice() ? "hidden" : ""} methodology mt-32`}>
-                <h2>Methodology</h2>
-                <NavBar />
-            </div> */}
+            <div className="mb-20 mt-10"><p dangerouslySetInnerHTML={{ __html: data.reachout }} /><br /><br />
+                {/* methodology */}
+                <a href="/" target="_blank"><span dangerouslySetInnerHTML={{ __html: data.method }} /></a></div>
         </div >
     );
 };

@@ -14,6 +14,8 @@ type Data = {
     lang: string;
     abstract: string;
     qna: QnaItem[];
+    reachout: string;
+    method: string;
 };
 
 export default function Index() {
@@ -62,7 +64,6 @@ export default function Index() {
                     {/* <ProjectInfo  */}
                     <ProjectInfo data={data} reset={reset} />
 
-                    <div className="mb-20 mt-10">If you have additional footage you would like to share with us, please reach out to us at phosphorusfinder@gmail.com.<br /><br /><a href="" target="_blank" className="underline">Click here to learn more about our project's methodology.</a></div>
                 </div>
 
                 <div className={`team-info`}>

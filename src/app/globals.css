@@ -505,6 +505,11 @@ h2 {
   justify-items: center;
   font-family: "PPSupplySans-Ultralight";
   color: #ccc;
+  text-shadow: 0 0 2px black, 0 0 1em red, 0 0 0.3em #00000077;
+}
+
+.project-info a {
+  text-decoration: underline;
 }
 
 .last-update {
