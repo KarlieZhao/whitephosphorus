@@ -17,6 +17,12 @@
   src: url("/assets/fonts/Inconsolata-VariableFont_wdth,wght.ttf");
 }
 
+
+@font-face {
+  font-family: "Helvetica Arabic";
+  src: url("/assets/fonts/HelveticaNeueLTArabic55Roman.otf");
+}
+
 *,
 *:before,
 *:after {
@@ -38,8 +44,7 @@ html,
 body {
   margin: 0;
   background-color: #000;
-  font-family: "Inconsolata", "PPSupplySans-Regular", "Times New Roman",
-    "Georgia", serif;
+  font-family: "Inconsolata", "PPSupplySans-Regular", "Helvetica Arabic", "Times New Roman", "Georgia", serif;
   vertical-align: middle;
   font-optical-sizing: auto;
   font-weight: 400;
@@ -59,9 +64,9 @@ body {
 }
 
 .ar {
+  font-family: "Helvetica Arabic", "Amiri";
   direction: rtl;
   text-align: right;
-  font-family: 'Amiri', serif;
 }
 
 .en {
