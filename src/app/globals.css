@@ -684,7 +684,7 @@ h2 {
   word-spacing: -1px;
   line-height: 1.5;
   margin: 3rem;
-  margin-top: 10vh;
+  margin-top: 18vh;
   z-index: 10;
   width: 25vw;
 }
@@ -716,9 +716,14 @@ h2 {
   line-height: 1.4;
 }
 
+/* 
 .project-info p+p {
   text-indent: 1.5em;
 }
+
+.project-info .Q-n-A p+p {
+  text-indent: 0;
+} */
 
 .project-info h3 {
   font-weight: bold;

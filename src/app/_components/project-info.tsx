@@ -51,9 +51,9 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                 ))
                 }
             </div >
-            <div className="mb-20 mt-10"><p dangerouslySetInnerHTML={{ __html: data.reachout }} /><br /><br />
-                {/* methodology */}
-                <a href="/" target="_blank"><span dangerouslySetInnerHTML={{ __html: data.method }} /></a></div>
+            <div className="mb-20 mt-20"><p dangerouslySetInnerHTML={{ __html: data.reachout }} /><br />
+                <a href="/" target="_blank"><span dangerouslySetInnerHTML={{ __html: data.method }} /></a>
+            </div>
         </div >
     );
 };

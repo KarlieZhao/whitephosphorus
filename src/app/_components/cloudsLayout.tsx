@@ -200,6 +200,8 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
 export default function CloudLayout() {
   const [visibleRows, setVisibleRows] = useState<boolean[]>(Array(cloudData.length).fill(false));
   const [lang, setLang] = useState<string>("en");
+  const [openOverlay, setOpenOverlay] = useState<boolean>(false);
+
   // onload effect
   useEffect(() => {
     cloudData.forEach((_, index) => {
@@ -229,7 +231,7 @@ export default function CloudLayout() {
 
   return (
     <div className="w-full h-full min-h-screen bg-transparent text-white p-4">
-      <div className=' fixed top-20 left-8 z-100 text-white cursor-pointer'>
+      <div className='fixed top-20 left-8 z-100 text-white cursor-pointer'>
         <span
           className={`transition-colors ${lang === "en" ? "text-white underline" : "text-gray-400 no-underline"}`}
           onClick={() => { setLang("en") }}
@@ -258,7 +260,7 @@ export default function CloudLayout() {
 
                 <section className={`transition-all ${lang === "ar" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
                   <h3 className="ar">{row.name_ar}</h3>
-                  <p className="mt-3">{row.text_ar}</p>
+                  <p className="mt-3 ar">{row.text_ar}</p>
                 </section>
               </div>
             </div>
@@ -266,10 +268,11 @@ export default function CloudLayout() {
             < div className={`${isMobileDevice() ? "hidden" : ""} dark-bg p-4 flex items-center max-h-[330px]`} >
               <div className={"grid grid-cols-5 grid-rows-2 gap-2 w-full h-full overflow-hidden"}>
                 {row.images.map((link, index) => (
-                  <div key={index} className="w-full h-full relative">
+                  <div key={index} className="img-container w-full h-full relative">
                     <img src={link}
                       className="w-full h-full object-cover inset-0"
-                      loading="lazy"></img>
+                      loading="lazy"
+                    ></img>
                   </div>
                 ))}
 
