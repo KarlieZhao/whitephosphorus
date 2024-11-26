@@ -7,7 +7,7 @@ import '@/app/globals.css'
 import { isMobileDevice } from "@/app/_components/mobile-detector";
 
 export default function Index() {
-  const textToType = ["is a platform for geolocating, verifying, and mapping white phosphorus incidents in Lebanon to promote accountability."];
+  const textToType = ["is a platform for geolocating, verifying, and mapping white phosphorus incidents in Lebanon."];
 
   const [TypeWriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);

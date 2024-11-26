@@ -851,6 +851,45 @@ ul li {
   z-index: 100;
 }
 
+#media-overlay {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#media-overlay.fade-in {
+  opacity: 1;
+  visibility: visible;
+}
+
+#media-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#media-overlay.hidden {
+  display: none !important;
+}
+
+#media-overlay img,
+#media-overlay video {
+  width: fit-content;
+  height: fit-content;
+  max-width: 80vw;
+  max-height: 80vh;
+}
+
+#overlay-content {
+  width: fit-content;
+  height: fit-content;
+  /* border: 3px solid #c42100; */
+}
+
+.img-container img,
+.video-container video {
+  cursor: pointer
+}
+
 /* ===== mobile ======= */
 .hamburger-menu {
   color: #fff;
