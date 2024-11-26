@@ -1,5 +1,4 @@
 "use client"
-import ContentWindow from "../_components/window";
 import Header from "@/app/_components/header";
 import '@/app/globals.css'
 import CloudLayout from "../_components/cloudsLayout";

@@ -52,7 +52,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                 }
             </div >
             <div className="mb-20 mt-20">
-                <p><a href="/" target="_blank"><span dangerouslySetInnerHTML={{ __html: data.method }} /></a></p>
+                <p><a href="/method"><span dangerouslySetInnerHTML={{ __html: data.method }} /></a></p>
                 <br />
                 <p dangerouslySetInnerHTML={{ __html: data.reachout }} />
             </div>

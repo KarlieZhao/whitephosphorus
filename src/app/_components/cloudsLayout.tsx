@@ -4,12 +4,6 @@ import $ from 'jquery';
 import { isMobileDevice } from './mobile-detector';
 import cloudData from './plumeData';
 
-interface MediaOverlayProps {
-  isOpen: boolean;
-  content: { type: "image" | "video"; src: string } | null;
-  onClose: () => void;
-}
-
 const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -92,8 +86,6 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
 export default function CloudLayout() {
   const [visibleRows, setVisibleRows] = useState<boolean[]>(Array(cloudData.length).fill(false));
   const [lang, setLang] = useState<string>("en");
-  const [openOverlay, setOpenOverlay] = useState<boolean>(false);
-
 
   useEffect(() => {
     // onload effect
