@@ -1,5 +1,8 @@
 import type { Metadata } from "next"
 import "./globals.css";
+import { GoogleAnalytics } from '@next/third-parties/google'
+
+const GA_TRACKING_ID = 'G-1SBDTJSVCG';
 
 export const metadata: Metadata = {
   title: `WhitePhosphorus.info`,
@@ -17,17 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-1SBDTJSVCG"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-1SBDTJSVCG');
-            `,
-          }}
-        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
@@ -59,6 +51,7 @@ export default function RootLayout({
       </head>
       <body>
         <div className="min-h-screen">{children}</div>
+        <GoogleAnalytics gaId={GA_TRACKING_ID} />
       </body>
     </html>
   );

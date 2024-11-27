@@ -1,5 +1,4 @@
 import Collapsible from "../_components/collapsible";
-import NavBar from "../_components/select-display-bar";
 import { isMobileDevice } from "./mobile-detector";
 
 type QnaItem = {
