@@ -997,6 +997,24 @@ ul li {
     border-bottom: 2px solid #c42100;
   }
 
+  .toxicity-counter {
+    width: 90vw;
+  }
+
+  .toxicity-counter .text-xl {
+    font-size: 0.7rem;
+    line-height: 1;
+  }
+
+  .headerData {
+    font-size: 1.2rem;
+  }
+
+  .toxicity-counter .counter-label,
+  .last-update {
+    font-size: 0.8rem;
+  }
+
   header ul {
     padding: 10px;
     margin: 0;

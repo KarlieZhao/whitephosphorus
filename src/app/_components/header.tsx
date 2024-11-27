@@ -108,8 +108,8 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
           <div className="menu-bar">
             <ul>
               <li onClick={() => router.push("/")}>MAP</li>
-              <li onClick={() => router.push("/footage")}>TIMELINE</li>
-              <li onClick={() => router.push("/clouds")}>PLUMES</li>
+              <li onClick={() => router.push("/timeline")}>TIMELINE</li>
+              <li onClick={() => router.push("/plumes")}>PLUMES</li>
               <li onClick={() => router.push("/about")}>ABOUT</li>
             </ul>
           </div>
@@ -120,6 +120,36 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
             WhitePhosophrus.info
           </h3>
         </div>
+        {TypeWriterFinished && (
+          <div className="toxicity-counter relative pl-2 flex flex-row fadeSlideIn">
+            <div className="counter-label flex-initial w-20 flex flex-col justify-center items-start">
+              <div>TOXICITY<br />COUNTER</div>
+              <div className="last-update">Last update: Oct/07/2024</div>
+            </div>
+            {data.map((obj, index) => {
+              return (
+                <div
+                  key={obj.type || index} // Use a unique identifier (e.g., obj.type) or index as a fallback
+                  className={`flex-initial ${obj.type === "Incidents" ? "w-[3.8rem]" : "w-[8rem]"} flex flex-col items-start`}
+                >
+                  <div className={`${obj.type === "Incidents" ? null : animationClass}`}>
+                    <span
+                      className={`${obj.number === "1261 " || obj.number === "198"
+                        ? "opacity-100 inline-block"
+                        : "opacity-0 hidden"
+                        }`}
+                    >
+                      ≈
+                    </span>
+                    <span className="headerData">{obj.number}</span>
+                    <span className="text-xl"> {obj.unit}</span>
+                  </div>
+                  <div className="text-xl">{obj.type}</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </header>
     ) : (
       //browser env
@@ -134,8 +164,8 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
               <tbody className="h-14">
                 <tr className="text-center mt-8 flex items-center">
                   {renderTab("MAP", "/", "tab1")}
-                  {renderTab("TIMELINE", "/footage", "tab2")}
-                  {renderTab("PLUMES", "/clouds", "tab3")}
+                  {renderTab("TIMELINE", "/timeline", "tab2")}
+                  {renderTab("PLUMES", "/plumes", "tab3")}
                   {renderTab("ABOUT", "/about", "tab4")}
                 </tr>
               </tbody>

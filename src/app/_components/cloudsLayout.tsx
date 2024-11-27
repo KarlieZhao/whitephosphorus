@@ -87,8 +87,10 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
 export default function CloudLayout() {
   const [visibleRows, setVisibleRows] = useState<boolean[]>(Array(cloudData.length).fill(false));
   const [lang, setLang] = useState<string>("en");
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsMobile(isMobileDevice());
     // onload effect
     cloudData.forEach((_, index) => {
       setTimeout(() => {
@@ -157,6 +159,8 @@ export default function CloudLayout() {
 
   }, [cloudData]);
 
+  if (isMobile === null) return null;
+
   return (
     <div className="w-full h-full min-h-screen bg-transparent text-white p-4">
 
@@ -185,7 +189,7 @@ export default function CloudLayout() {
             <VideoPlayer src={row.video} name={row.name} />
 
             {/* Text Column */}
-            <div className={`${isMobileDevice() ? "absolute" : "dark-bg"} p-4 flex justify-center max-h-[330px] overflow-hidden`}>
+            <div className={`${isMobile ? "absolute" : "dark-bg"} p-4 flex justify-center max-h-[330px] overflow-hidden`}>
               <div className="text-left plumes-description relative">
                 <section className={`absolute top-0 left-0 w-100 transition-all ${lang === "en" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
                   <h3 className="mb-4 w-60 font-bold">{row.name}</h3>
@@ -199,7 +203,7 @@ export default function CloudLayout() {
               </div>
             </div>
             {/* Image Grid Column */}
-            < div className={`${isMobileDevice() ? "hidden" : ""} dark-bg p-4 flex items-center max-h-[330px]`} >
+            < div className={`${isMobile ? "hidden" : ""} dark-bg p-4 flex items-center max-h-[330px]`} >
               <div className={"grid grid-cols-5 grid-rows-2 gap-2 w-full h-full overflow-hidden"}>
                 {row.images.map((link, index) => (
                   <div key={index} className="img-container w-full h-full relative">
