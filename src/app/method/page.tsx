@@ -57,7 +57,7 @@ export default function Index() {
                         <span
                             className={`transition-colors ${language === "ar" ? "text-white underline" : "text-gray-400 no-underline"}`}
                             onClick={() => { setLanguage("ar"); }}
-                        >   اَلْعَرَبِيَّةُ</span>
+                        >   العربية</span>
                     </div>
 
                     <div className={`en absolute transition-opacity duration-200 ${language === "en" ? "opacity-100 visible" : "opacity-0 invisible"}`}>

@@ -173,7 +173,7 @@ export default function CloudLayout() {
         <span
           className={`transition-colors ${lang === "ar" ? "text-white underline" : "text-gray-400 no-underline"}`}
           onClick={() => { setLang("ar"); }}
-        >   اَلْعَرَبِيَّةُ</span></div>
+        >   العربية</span></div>
 
       <div className="flex flex-col gap-2">
         {cloudData.map((row, rowIndex) => (

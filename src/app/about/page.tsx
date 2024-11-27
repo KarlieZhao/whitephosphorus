@@ -58,7 +58,7 @@ export default function Index() {
                             className={`transition-colors ${language === "ar" ? "text-white underline" : "text-gray-400 no-underline"}`}
                             onClick={() => { setLanguage("ar"); }}
                         >
-                            اَلْعَرَبِيَّةُ
+                            العربية
                         </span>
                     </div>
                     {/* <ProjectInfo  */}
@@ -83,7 +83,7 @@ export default function Index() {
                         Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
                         <br />
                         Special thanks to:<br />
-                        Marc Schoonderbeek, Aleksandar Stancic, Chris Oseik, Wim Zwijnenburg, Hisham Younes, Ali Sleiman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kais, Anno Nemo, Justin Salhani, Mona Fawaz, Seyran Khadimi, Maria Molijn, William Christou, @Easybakeovensz, @NemoAnno, @TedNoNumbers.
+                        Marc Schoonderbeek, Aleksandar Stancic, Chris Oseik, Wim Zwijnenburg, Hisham Younes, Ali Sleiman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kais, Justin Salhani, Mona Fawaz, Seyran Khadimi, Maria Molijn, William Christou, @Easybakeovensz, @NemoAnno, @TedNoNumbers.
                     </div>
                 </div>
             </main >

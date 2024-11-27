@@ -68,7 +68,7 @@ const inputData: DataInputRow[] = [
     },
     {
         name: "Fighter Jets",
-        name_ar: "طائرات المقاتلة",
+        name_ar: "طائرات المقاتلة (حربي)",
         text: "An airstrike from an F-16 or F-35, generates a rapid, intense explosion characterized by a bright flash and a swiftly expanding smoke plume. The plume's appearance varies based on the target and munitions used but typically features a dense, dark gray or black cloud that rises quickly, often forming a mushroom-like shape. The plume's opacity and color are influenced by factors such as the presence of fuel, building materials, and other combustibles at the target site. In some cases, secondary explosions may occur, leading to additional plumes.",
         text_ar: "يُولّد القصف الجوي من طائرة إف-16 أو إف-35 انفجارًا سريعًا وشديدًا يتميز ببريقًا ساطع وسحابة دخان سريعة التوسع. تختلف مظاهر السحابة بناءً على الهدف والذخائر المستخدمة، لكنها عادة ما تكون سحابة كثيفة وداكنة رمادية أو سوداء ترتفع بسرعة، غالبًا ما تكون بشكل مشابه للفطر. تتأثر كثافة ولون السحابة بعوامل مثل وجود الوقود، مواد البناء، ومواد قابلة للاحتراق في موقع الهدف.",
         img_count: 5,
@@ -76,7 +76,7 @@ const inputData: DataInputRow[] = [
     },
     {
         name: "UAV Strike",
-        name_ar: "ضربة طائرة بدون طيار",
+        name_ar: "ضربة طائرة بدون طيار (إم كمال)",
         text: "The plume's appearance varies based on the target and munitions used but typically features a dense, dark gray or black cloud that rises quickly, often forming a mushroom-like shape. The plume is generally smaller and more focused than those produced by fighter jet airstrikes, though its size and intensity can vary depending on what is exploding. The plume's opacity and color are influenced by factors such as the presence of fuel, building materials, and other combustibles at the target site.",
         text_ar: "تختلف مظاهر السحابة بناءً على الهدف والذخائر المستخدمة، لكنها عادة ما تتميز بسحابة كثيفة وداكنة رمادية أو سوداء ترتفع بسرعة، غالبًا ما تكون بشكل مشابه للفطر. عادةً ما تكون هذه السحابة أصغر حجمًا وأكثر تحديدًا من تلك التي تنتجها ضربات طائرات المقاتلة، رغم أن حجمها وشدتها يمكن أن يختلفان بناءً على ما ينفجر.",
         img_count: 2,

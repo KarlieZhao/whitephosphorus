@@ -48,29 +48,30 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
-    const interval = setInterval(() => {
-      setAnimationClass("fadeOut");
+    if (TypeWriterFinished) {
+      const interval = setInterval(() => {
+        setAnimationClass("fadeOut");
+        setTimeout(() => {
+          setData((prev) => (prev[1].number === "900" ? altData : [{
+            type: "Incidents",
+            number: "191",
+            unit: " "
+          }, {
+            type: "Land Area",
+            number: "900",
+            unit: "Hectars"
+          }, {
+            type: "Air Volume",
+            number: "89.98",
+            unit: "million m3"
+          }]));
+          setAnimationClass("fadeIn");
+        }, 600);// Match the duration of fade-out animation
 
-      setTimeout(() => {
-        setData((prev) => (prev[1].number === "900" ? altData : [{
-          type: "Incidents",
-          number: "191",
-          unit: " "
-        }, {
-          type: "Land Area",
-          number: "900",
-          unit: "Hectars"
-        }, {
-          type: "Air Volume",
-          number: "89.98",
-          unit: "million m3"
-        }]));
-        setAnimationClass("fadeIn");
-      }, 600);// Match the duration of fade-out animation
+      }, 10000);
 
-    }, 10000);
-
-    return () => clearInterval(interval); // Cleanup on unmount
+      return () => clearInterval(interval); // Cleanup on unmount
+    }
   })
 
   const isActive = (path: string) => pathname === path;
