@@ -52,7 +52,8 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
           {/*poster image */}
           <img
             src={`/cloud_thumb/${name.replace(/ /g, "")}.jpg`}
-            alt={`${name} placeholder`}
+            alt={`${name}`}
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover"
             style={{
               opacity: 1,
@@ -184,10 +185,10 @@ export default function CloudLayout() {
             <VideoPlayer src={row.video} name={row.name} />
 
             {/* Text Column */}
-            <div className={`${isMobileDevice() ? "absolute" : ""} dark-bg p-4 flex justify-center max-h-[330px] overflow-hidden`}>
+            <div className={`${isMobileDevice() ? "absolute" : "dark-bg"} p-4 flex justify-center max-h-[330px] overflow-hidden`}>
               <div className="text-left plumes-description relative">
                 <section className={`absolute top-0 left-0 w-100 transition-all ${lang === "en" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
-                  <h3 className="mb-4 font-bold">{row.name}</h3>
+                  <h3 className="mb-4 w-60 font-bold">{row.name}</h3>
                   <p className="mt-3 ">{row.text}</p>
                 </section>
 
@@ -205,6 +206,7 @@ export default function CloudLayout() {
                     <img src={link}
                       className="w-full h-full object-cover inset-0"
                       loading="lazy"
+                      alt="media loading..."
                     ></img>
                   </div>
                 ))}

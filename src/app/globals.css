@@ -976,6 +976,10 @@ ul li {
 }
 
 @media (max-width:1400px) {
+  .plumes-description {
+    width: 20rem
+  }
+
   .plumes-description p {
     display: none;
   }
@@ -983,6 +987,10 @@ ul li {
 
 /* mobile env */
 @media (max-width: 768px) {
+  h3 {
+    font-size: 1rem;
+  }
+
   header {
     background-color: #000;
     z-index: 500;

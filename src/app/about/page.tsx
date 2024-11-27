@@ -43,18 +43,18 @@ export default function Index() {
         <div>
             <Header TypeWriterFinished={false} />
             <main className={`min-h-screen ${isMobileDevice() ? "block mt-20" : "flex"}`}>
-                <div className="inner-backdrop"></div>
-
+                <div className={` ${isMobileDevice() ? null : "inner-backdrop"}`}></div>
                 <div className={`project-info`}>
                     <div className="z-50 text-xl mb-6 cursor-pointer">
-                        <span
+                        <span role="button"
                             className={`transition-colors ${language === "en" ? "text-white underline" : "text-gray-400 no-underline"}`}
-                            onClick={() => { setLanguage("en") }}
+                            onClick={() => { setLanguage("en") }
+                            }
                         >
                             English
                         </span>
                         &nbsp;/&nbsp;
-                        <span
+                        <span role="button"
                             className={`transition-colors ${language === "ar" ? "text-white underline" : "text-gray-400 no-underline"}`}
                             onClick={() => { setLanguage("ar"); }}
                         >
