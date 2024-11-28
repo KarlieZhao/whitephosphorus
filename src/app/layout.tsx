@@ -5,10 +5,10 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 const GA_TRACKING_ID = 'G-1SBDTJSVCG';
 
 export const metadata: Metadata = {
-  title: `WhitePhosphorus.info`,
-  description: ``,
+  title: `White Phosphorus`,
+  description: `Mapping, geolocating, and verifying Israel's use of white phosphorus in Lebanon over the past year.`,
   openGraph: {
-    images: [],
+    images: ["/favicon/thumnail.jpg"],
   },
 };
 
