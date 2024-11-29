@@ -656,18 +656,23 @@ h2 {
 .chart-continue-label {
   position: fixed;
   color: #eee;
-  background-color: #000;
+  background-color: #00000077;
   padding: 5px 5px;
   transition: all 0.3s ease-in-out;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .chart-continue-label {
-  right: 5px;
-  top: 9rem;
+  cursor: default;
+  right: -70px;
+  top: 8rem;
   display: flex;
   align-items: center;
   white-space: nowrap;
+}
+
+.chart-continue-label button {
+  cursor: pointer;
 }
 
 .click-label {

@@ -20,22 +20,27 @@ type HeatMapProps = {
     count: number;
     link: Array<string>
   }) => void;
-  onTranslateXChange: (translateX: number) => void;
+  scrollButtonVisible: boolean;
 };
 
 //entry data for D3
 type CellData = { x: number; y: number; value: number };
 
-const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTranslateXChange }) => {
+const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollButtonVisible }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const yAxisRef = useRef<SVGSVGElement | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const frameWidth = 7000;
+  const [plotWidthGlobal, setPlotWidthGlobal] = useState<number>(frameWidth);
   const frameHeight = useWindowHeight() * 0.7;
   const windowWidth = useWindowWidth();
   const majorEventDates = ["2023-10-08", "2023-11-24", "2023-12-31", "2024-01-02", "2024-10-01"];
   const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli assassinaion in Dahieh", " Israel invades South Lebanon"];
   const translateXRef = useRef<number>(0); // Accumulated translateX
+  const [heatmapLoaded, SetHeatMapLoaded] = useState<boolean>(false);
+  const [isContinueTagVisible, setIsContinueTagVisible] = useState(false);
+
+  const scrollRequest = useRef<number | null>(null);
 
   const processData = () => {
     const uniqueDates = Array.from(new Set(data.map(d => d.date))).filter(Boolean);
@@ -110,6 +115,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
     //calculate cell size to make cells square
     const cellSize = Math.min(availableWidth / numCols, (availableHeight - 60) / numRows);
     const plotWidth = cellSize / 1.5 * numCols;
+    setPlotWidthGlobal(plotWidth);
     const plotHeight = cellSize * numRows;
     // Update actual SVG width and height
     const svgWidth = plotWidth + margin.left + margin.right;
@@ -367,7 +373,6 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
           (windowWidth - plotWidth - 260)));
 
       svg.style.transform = `translateX(${translateXRef.current}px)`;
-      onTranslateXChange(translateXRef.current); // callback => chart continue label visibility
     }
 
     //for mobile
@@ -393,12 +398,11 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
           0,
           Math.max(
             currentTranslateX + deltaX, // Adjust translation based on touch movement
-            windowWidth - plotWidth - 210 // Ensure it doesn't scroll beyond bounds
+            windowWidth - plotWidth - 260 // Ensure it doesn't scroll beyond bounds
           )
         );
 
         svg.style.transform = `translateX(${translateXRef.current}px)`;
-        onTranslateXChange(translateXRef.current); // Callback to update label visibility
       };
 
       const handleTouchEnd = () => {
@@ -414,14 +418,14 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
         container.removeEventListener('touchmove', handleTouchMove);
         container.removeEventListener('touchend', handleTouchEnd);
       };
-
     };
 
     if (isMobileDevice()) {
+      scrollButtonVisible = false;
       handleTouch();
     }
-    if (container) container.addEventListener("wheel", handleWheel);
 
+    if (container) container.addEventListener("wheel", handleWheel);
     // Cleanup tooltip on unmount
     return () => {
       tooltip.remove();
@@ -430,6 +434,35 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
     };
   }, [frameHeight, windowWidth, data]);
 
+
+  const moveChart = (direction: "left" | "right") => {
+    const svg = svgRef.current;
+    if (!containerRef.current || !svg) return;
+
+    const scrollDelta = direction === "right" ? -3 : 3;
+    translateXRef.current = Math.min(
+      0,
+      Math.max(
+        translateXRef.current - scrollDelta,
+        windowWidth - plotWidthGlobal - 260
+      )
+    );
+
+    scrollRequest.current = requestAnimationFrame(() => moveChart(direction));
+    svg.style.transform = `translateX(${translateXRef.current}px)`;
+  };
+
+  const handleButtonDown = (direction: "left" | "right") => (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (event.button !== 0) return; // Only respond to left mouse button
+    scrollRequest.current = requestAnimationFrame(() => moveChart(direction));
+  };
+
+  const handleButtonUp = () => {
+    if (scrollRequest.current) {
+      cancelAnimationFrame(scrollRequest.current);
+      scrollRequest.current = null;
+    }
+  };
 
   return (
     <div
@@ -442,6 +475,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
         overflowX: "hidden"
       }}
     >
+
       <div className="fixed" style={{ zIndex: 100, backgroundColor: "#000", paddingLeft: "9px" }}>
         <svg ref={yAxisRef} style={{ left: 0 }} />
       </div>
@@ -450,6 +484,31 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, onTransla
           position: "sticky",
           top: 0,
         }} ref={svgRef} width={frameWidth} height={frameHeight}></svg>
+      </div>
+
+      <div className={`chart-continue-label ${scrollButtonVisible ? 'opacity-100' : 'opacity-0'} }`}>
+        <button onMouseDown={handleButtonDown("right")} onMouseUp={handleButtonUp} onMouseLeave={handleButtonUp} >
+          <svg
+            className="arrow-svg"
+            xmlns="http://www.w3.org/2000/svg"
+            width="110"
+            height="24"
+            viewBox="0 0 24 24"
+          > <path d="M15 18l-6-6 6-6" fill="red" />
+          </svg>
+        </button>
+        <div className="pb-1 absolute -z-50 right-28">Scroll to View More</div>
+        <button onMouseDown={handleButtonDown("left")} onMouseUp={handleButtonUp} onMouseLeave={handleButtonUp} >
+          <svg
+            className="arrow-svg"
+            xmlns="http://www.w3.org/2000/svg"
+            width="200"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path fill="red" d="M10 6l6 6-6 6V6z" />
+          </svg>
+        </button>
       </div>
     </div>
   );

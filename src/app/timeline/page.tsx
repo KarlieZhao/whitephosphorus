@@ -17,8 +17,8 @@ type CellClickData = {
 export default function Index() {
     const [isTimelineVisible, setIsTimelineVisible] = useState(true);
     const [clickedCellData, setClickedCellData] = useState<CellClickData | null>(null);
-    const [isContinueTagVisible, setIsContinueTagVisible] = useState(false);
     const [isFootageTagVisible, setIsFootageTagVisible] = useState(false);
+    const [isContinueTagVisible, setIsContinueTagVisible] = useState(false);
 
     //fetch data
     const incidentData = processExcelData();
@@ -26,10 +26,6 @@ export default function Index() {
     const handleCellClick = (data: CellClickData) => {
         setIsFootageTagVisible(false);
         setClickedCellData(data); //store clicked cell data
-    };
-
-    const handleTranslateX = (translateX: number) => {
-        if (translateX < -200) setIsContinueTagVisible(false);
     };
 
     useEffect(() => {
@@ -53,20 +49,21 @@ export default function Index() {
                         <HeatMapAnimation
                             data={incidentData}
                             onCellClick={handleCellClick}
-                            onTranslateXChange={handleTranslateX}
+                            scrollButtonVisible={isContinueTagVisible}
                         />
-                    </div>
-                    <div className={`chart-continue-label ${isContinueTagVisible ? 'opacity-100' : 'opacity-0'}`}>
-                        scroll for more
-                        <svg
-                            className="arrow-svg"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                        >
-                            <path fill="red" d="M10 6l6 6-6 6V6z" />
-                        </svg>
+
+                        {/* <div className={`chart-continue-label   ${isContinueTagVisible ? 'opacity-100' : 'opacity-0'}`}>
+                            <div className="pb-1">  scroll for more</div>
+                            <svg
+                                className="arrow-svg"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                            >
+                                <path fill="red" d="M10 6l6 6-6 6V6z" />
+                            </svg>
+                        </div> */}
                     </div>
 
                     <div className={`click-label ${isFootageTagVisible ? 'opacity-100' : 'opacity-0'}`}>Click on each data point to view footages.</div>
