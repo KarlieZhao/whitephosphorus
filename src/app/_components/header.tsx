@@ -67,8 +67,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
           }]));
           setAnimationClass("fadeIn");
         }, 600);// Match the duration of fade-out animation
-
-      }, 10000);
+      }, 8000);
 
       return () => clearInterval(interval); // Cleanup on unmount
     }

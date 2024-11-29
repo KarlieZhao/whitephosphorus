@@ -55,9 +55,9 @@ export default function Index() {
         </div>) : (
           <div className={"relative z-0 " + (TypeWriterFinished ? "fadeIn" : "opacity-0")}>
             {/* fade in if typewriter is finished; if not, hide */}
-            <div className={`z-50 fixed left-12 ml-1 bottom-[10vw] bg-red-900 bg-opacity-60 text-sm text-white transition-all 
+            {/* <div className={`z-50 fixed left-12 ml-1 bottom-[10vw] bg-red-900 bg-opacity-60 text-sm text-white transition-all 
               ${isPromptVisible ? "opacity-100" : "opacity-0"}`}>
-              Drag the ends of the red bar to set time range.</div>
+              Drag the ends of the red bar to set time range.</div> */}
             <Map />
           </div>
         )}
