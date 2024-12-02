@@ -24,7 +24,7 @@ export default function Index() {
     }, 4500);
     const hideprompt = setTimeout(() => {
       setIsPromptVisible(false);
-    }, 15000);
+    }, 30000);
 
     return () => {
       clearTimeout(showprompt);
@@ -55,9 +55,9 @@ export default function Index() {
         </div>) : (
           <div className={"relative z-0 " + (TypeWriterFinished ? "fadeIn" : "opacity-0")}>
             {/* fade in if typewriter is finished; if not, hide */}
-            {/* <div className={`z-50 fixed left-12 ml-1 bottom-[10vw] bg-red-900 bg-opacity-60 text-sm text-white transition-all 
+            <div className={`z-50 fixed left-2 ml-1 bottom-2 bg-red-900 bg-opacity-60 text-sm text-white transition-all 
               ${isPromptVisible ? "opacity-100" : "opacity-0"}`}>
-              Drag the ends of the red bar to set time range.</div> */}
+              Each red prism on the map represents a geolocated deployment of white phosphorus.</div>
             <Map />
           </div>
         )}
