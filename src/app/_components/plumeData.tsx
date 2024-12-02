@@ -39,7 +39,7 @@ const inputData: DataInputRow[] = [
         name_ar: "قنبلة دخان M150",
         text: "The M150 is an Israeli 155mm artillery smoke projectile designed to produce screening smoke using a hexachloroethane (HC)-based composition. Upon detonation, it ejects five HC smoke canisters that ignite upon exposure to air, generating dense, white smoke. The resulting smoke cloud is thick and white. Unlike white phosphorus munitions, the M150's smoke is less toxic and does not have incendiary properties. ",
         text_ar: "هذه القذيفة الإسرائيلية للمدفعية قطرها 155 ملم، مصممة لإنتاج دخان التمويه. عند الانفجار، تطلق خمس علب دخان تشتعل عند تعرضها للهواء، مما يولد دخانًا كثيفًا وأبيض. السحابة الدخانية الناتجة تكون سميكة وبيضاء. على عكس قذائف الفوسفور الأبيض، هذا الدخان لا يمتلك خصائص حارقة.",
-        img_count: 0,
+        img_count: 3,
         video_count: 1
     },
     {

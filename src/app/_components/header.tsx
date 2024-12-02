@@ -16,35 +16,35 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [animationClass, setAnimationClass] = useState("");
 
-  const [data, setData] = useState<ToxicityData>(
-    [{
-      type: "Incidents",
-      number: "191",
-      unit: " "
-    }, {
-      type: "Land Area",
-      number: "900",
-      unit: "Hectars"
-    }, {
-      type: "Air Volume",
-      number: "89.98",
-      unit: "million m3"
-    }]
-  );
+  const preciseData: ToxicityData = [{
+    type: "Incidents",
+    number: "199",
+    unit: " "
+  }, {
+    type: "Land Area",
+    number: "937",
+    unit: "Hectars"
+  }, {
+    type: "Air Volume",
+    number: "65.64",
+    unit: "million m³",
+  }]
   const altData: ToxicityData =
     [{
       type: "Incidents",
-      number: "191",
+      number: "199",
       unit: ""
     }, {
       type: "Land Area",
-      number: "1261 ",
+      number: "1312 ",
       unit: "soccer fields"
     }, {
       type: "Air Volume",
-      number: "198",
+      number: "50",
       unit: "stadiums"
     }];
+
+  const [data, setData] = useState<ToxicityData>(preciseData);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
@@ -52,19 +52,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
       const interval = setInterval(() => {
         setAnimationClass("fadeOut");
         setTimeout(() => {
-          setData((prev) => (prev[1].number === "900" ? altData : [{
-            type: "Incidents",
-            number: "191",
-            unit: " "
-          }, {
-            type: "Land Area",
-            number: "900",
-            unit: "Hectars"
-          }, {
-            type: "Air Volume",
-            number: "89.98",
-            unit: "million m3"
-          }]));
+          setData((prev) => (prev[1].unit === "Hectars" ? altData : preciseData));
           setAnimationClass("fadeIn");
         }, 600);// Match the duration of fade-out animation
       }, 8000);
