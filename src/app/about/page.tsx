@@ -68,7 +68,7 @@ export default function Index() {
 
                 <div className={`team-info`}>
                     <div>
-                        <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a> is an architect and OSINT researcher whose work delves into the transformation of environments into tools of power. He is currently pursuing his PhD at the Technical University of Delft, with his dissertation titled “Weaponized Environments.” His research exposes the strategic manipulation of natural landscapes in modern warfare. He has worked on the AirPressure.info project, which archives and visualizes Israeli violations over Lebanese airspace. Baydoun's work has been recognized and cited by Amnesty International, L'Orient Le Jour, PBS, Al Jazeera, Arab News, and the American University of Beirut.
+                        <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a> is an architect and OSINT researcher whose work delves into the transformation of environments into tools of power. He is currently pursuing his PhD at the Technical University of Delft, with his dissertation titled "Weaponized Environments." His research exposes the strategic manipulation of natural landscapes in modern warfare. He has worked on the award-winning "AirPressure.info" project, which archives and visualizes Israeli violations over Lebanese airspace. Baydoun's work has been recognized and cited by Amnesty International, L'Orient Le Jour, PBS, Al Jazeera, Arab News, and the American University of Beirut.
                         <br />Email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
                         <br />Website: <a href="https://ahmadbeydoun.com" target="_blank">ahmadbeydoun.com</a>
                     </div><br />
@@ -83,7 +83,7 @@ export default function Index() {
                         Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
                         <br />
                         Special thanks to:<br />
-                        Marc Schoonderbeek, Aleksandar Stancic, Chris Oseik, Wim Zwijnenburg, Hisham Younes, Ali Sleiman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kais, Justin Salhani, Mona Fawaz, Seyran Khadimi, Maria Molijn, William Christou, @Easybakeovensz, @NemoAnno, @TedNoNumbers.
+                        Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Ali Sleiman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kais, Justin Salhani, Mona Fawaz, Seyran Khadimi, Cosette Molijn, William Christou, @Easybakeovensz, @NemoAnno.
                     </div>
                 </div>
             </main >
