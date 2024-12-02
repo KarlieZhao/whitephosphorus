@@ -34,8 +34,8 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
   const [plotWidthGlobal, setPlotWidthGlobal] = useState<number>(frameWidth);
   const frameHeight = useWindowHeight() * 0.7;
   const windowWidth = useWindowWidth();
-  const majorEventDates = ["2023-10-08", "2023-11-24", "2023-11-30", "2024-01-02", "2024-10-01"];
-  const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli air strike on Dahieh", " Israel invades South Lebanon"];
+  const majorEventDates = ["2023-10-08", "2023-11-24", "2023-11-30", "2024-01-02", "2024-07-30", "2024-09-20", "2024-10-01"];
+  const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli air strike on Dahieh", "Assassination of Fuad Shukr", "Start of Israeli Airstrike Campaign", "Israel invades South Lebanon"];
   const translateXRef = useRef<number>(0); // Accumulated translateX
   const scrollRequest = useRef<number | null>(null);
 
@@ -324,7 +324,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       if (eventIndex !== -1) {
         const value = majorEventIndices[eventIndex];
         let ypos = -10;
-        if (eventIndex === 1) ypos = -25;
+        if (eventIndex === 1 || eventIndex === 5) ypos = -25;
 
         // Add the line
         const lines = g.append("line")
