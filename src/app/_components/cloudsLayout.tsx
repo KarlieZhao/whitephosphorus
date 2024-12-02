@@ -191,7 +191,7 @@ export default function CloudLayout() {
             {/* Text Column */}
             <div className={`${isMobile ? "absolute" : "dark-bg"} p-4 flex justify-center max-h-[330px] overflow-hidden`}>
               <div className="text-left plumes-description relative">
-                <section className={`absolute top-0 left-0 w-100 transition-all ${lang === "en" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
+                <section className={`absolute top-0 left-0 w-full transition-all ${lang === "en" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
                   <h3 className="mb-4 w-60 font-bold">{row.name}</h3>
                   <p className="mt-3 ">{row.text}</p>
                 </section>
