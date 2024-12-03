@@ -24,7 +24,8 @@ export const processExcelData = () => {
                 const mappedData = rawData.map((row: any) => {
                     const dateValue = XLSX.SSF.parse_date_code(row['Date']);
                     const jsDate = new Date(dateValue.y, dateValue.m - 1, dateValue.d);
-                    const cellDate = jsDate.toISOString().split('T')[0];
+                    // const cellDate = jsDate.toISOString().split('T')[0];
+                    const cellDate = `${jsDate.getFullYear()}-${String(jsDate.getMonth() + 1).padStart(2, '0')}-${String(jsDate.getDate()).padStart(2, '0')}`;
 
                     return {
                         date: cellDate,
