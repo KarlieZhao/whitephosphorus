@@ -134,23 +134,21 @@ export default function CloudLayout() {
           `);
       }
 
-      // Show the overlay
+      //show overlay
       overlay.removeClass('fade-out').addClass('fade-in');
     });
 
-    // Close overlay
     $('#close-overlay, #media-overlay').on('click', function (e) {
       if (e.target.id === 'media-overlay' || e.target.id === 'close-overlay') {
         const videoElement = $('#overlay-content video')[0] as HTMLVideoElement;
         if (videoElement) {
           videoElement.pause();
-          videoElement.currentTime = 0; // Reset playback position
+          videoElement.currentTime = 0;
         }
         $('#media-overlay').removeClass('fade-in').addClass('fade-out');
       }
     });
 
-    // Clean up event listeners
     return () => {
       $('.img-container img, .video-container video').off('click');
       $('#close-overlay, #media-overlay').off('click');
@@ -192,13 +190,13 @@ export default function CloudLayout() {
             <div className={`${isMobile ? "absolute" : "dark-bg"} p-4 flex justify-center max-h-[330px] overflow-hidden`}>
               <div className="text-left plumes-description relative">
                 <section className={`absolute top-0 left-0 w-full transition-all ${lang === "en" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
-                  <h3 className="mb-4 w-60 font-bold">{row.name}</h3>
-                  <p className="mt-3 ">{row.text}</p>
+                  <h3 className="en mb-2 font-bold plume-name">{row.name === "White Phosphorus" ? row.name + " (WP)" : row.name}</h3>
+                  <p className="en">{row.text}</p>
                 </section>
 
                 <section className={`transition-all ${lang === "ar" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
-                  <h3 className="ar">{row.name_ar}</h3>
-                  <p className="mt-3 ar">{row.text_ar}</p>
+                  <h3 className="ar mb-2 font-bold plume-name">{row.name_ar}</h3>
+                  <p className="3 ar">{row.text_ar}</p>
                 </section>
               </div>
             </div>
@@ -210,7 +208,7 @@ export default function CloudLayout() {
                     <img src={link}
                       className="w-full h-full object-cover inset-0"
                       loading="lazy"
-                      alt="media loading..."
+                      alt="footage loading..."
                     ></img>
                   </div>
                 ))}
