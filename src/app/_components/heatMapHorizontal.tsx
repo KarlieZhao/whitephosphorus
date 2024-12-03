@@ -65,8 +65,12 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       const [year, month, day] = d.split('-');
       const prevLabel = index > 0 ? xLabels[index - 1].split('-')[1] : null;
       if (!prevLabel || month !== prevLabel) {
-        const monthName = new Date(`2023-${month}-28`).toLocaleString('en-US', { month: 'short' });
-        return monthName + ", " + year;
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthName = months[parseInt(month, 10) - 1]; // Convert "month" string to index
+        return `${monthName}, ${year}`;
+
+        // const monthName = new Date(`2023-${month}-1`).toLocaleString('en-US', { month: 'short' });
+        // return monthName + ", " + year;
       }
       return '';
     });
@@ -240,7 +244,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
           .style("opacity", 0.9)
           .html(`<table>
              <tr><td>${xLabels[d.x]}</td></tr>
-            <tr><td>${yLabels[d.y] === "To be geolocated in South Lebanon" ? "To be geolocated" : yLabels[d.y]}</td></tr>
+            <tr><td>${yLabels[d.y]}</td></tr>
             <tr><td>${d.value} Incidents</td></tr>
             </table>`)
           .style("left", event.pageX + 10 + "px")

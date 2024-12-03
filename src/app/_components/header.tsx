@@ -23,7 +23,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
   }, {
     type: "Land Area",
     number: "937",
-    unit: "Hectars"
+    unit: "Hectares"
   }, {
     type: "Air Volume",
     number: "65.64",
