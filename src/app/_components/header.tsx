@@ -111,7 +111,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
           <div className="toxicity-counter relative pl-2 flex flex-row fadeSlideIn">
             <div className="counter-label flex-initial w-20 flex flex-col justify-center items-start">
               <div>TOXICITY<br />COUNTER</div>
-              <div className="last-update">Last update: Oct/07/2024</div>
+              <div className="last-update">Last update: Oct/03/2024</div>
             </div>
             {data.map((obj, index) => {
               return (
@@ -174,7 +174,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
               <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn">
                 <div className="flex-initial basis-1/3 flex flex-col justify-center items-start">
                   <div>TOXICITY  COUNTER</div>
-                  <div className="last-update">Last update: Oct/07/2024</div>
+                  <div className="last-update">Last update: Oct/03/2024</div>
                 </div>
                 {data.map((obj, index) => {
                   return (
