@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: `White Phosphorus`,
   description: `Mapping, geolocating, and verifying Israel's use of white phosphorus in Lebanon over the past year.`,
   openGraph: {
-    images: ["/favicon/thumbnail.jpg"],
+    images: ["/favicon/thumbnail2.jpg"],
   },
 };
 

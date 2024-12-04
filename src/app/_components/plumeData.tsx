@@ -76,7 +76,7 @@ const inputData: DataInputRow[] = [
     },
     {
         name: "UAV Strike",
-        name_ar: " طائرة بدون طيار (إم كامل)(MK)",
+        name_ar: " طائرة بدون طيار (إم كامل)",
         text: "The plume's appearance varies based on the target and munitions used but typically features a dense, dark gray or black cloud that rises quickly, often forming a mushroom-like shape. The plume is generally smaller and more focused than those produced by fighter jet airstrikes, though its size and intensity can vary depending on what is exploding.",
         text_ar: "تختلف مظاهر السحابة بناءً على الهدف والذخائر المستخدمة، لكنها عادة ما تتميز بسحابة كثيفة وداكنة رمادية أو سوداء ترتفع بسرعة، غالبًا ما تكون بشكل مشابه للفطر. عادةً ما تكون هذه السحابة أصغر حجمًا وأكثر تحديدًا من تلك التي تنتجها ضربات طائرات المقاتلة، رغم أن حجمها وشدتها يمكن أن يختلفان بناءً على ما ينفجر.",
         img_count: 2,
