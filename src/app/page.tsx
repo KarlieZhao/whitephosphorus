@@ -5,6 +5,7 @@ import Header from "@/app/_components/header";
 import Typewriter from '@/app/_components/typewriter';
 import '@/app/globals.css'
 import { isMobileDevice } from "@/app/_components/mobile-detector";
+import Footer from "./_components/footer";
 
 export default function Index() {
   const textToType = ["is a platform for geolocating, verifying, and mapping white phosphorus incidents in Lebanon."];
@@ -55,13 +56,14 @@ export default function Index() {
         </div>) : (
           <div className={"relative z-0 " + (TypeWriterFinished ? "fadeIn" : "opacity-0")}>
             {/* fade in if typewriter is finished; if not, hide */}
-            <div className={`z-50 fixed left-2 ml-1 bottom-2 bg-red-900 bg-opacity-60 text-sm text-white transition-all 
+            <div className={`z-50 fixed left-2 ml-1 bottom-5 bg-red-900 bg-opacity-60 text-sm text-white transition-all 
               ${isPromptVisible ? "opacity-100" : "opacity-0"}`}>
               Each red prism on the map represents a geolocated deployment of white phosphorus.</div>
             <Map />
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Header from "@/app/_components/header";
 import '@/app/globals.css'
 import HeatMapAnimation from "../_components/heatMapHorizontal";
 import { processExcelData } from "@/app/_components/dataParser"
+import Footer from "../_components/footer";
 
 type CellClickData = {
     count: number;
@@ -37,8 +38,12 @@ export default function Index() {
         }, 6000);
     }, []);
 
+    const handleContextMenu = (event: React.MouseEvent) => {
+        // event.preventDefault();
+    };
+
     return (
-        <div className="footage-page">
+        <div onContextMenu={handleContextMenu} className="footage-page">
             <Header />
             <main className="flex-grow relative h-auto overflow-hidden">
                 {/* <div className="inner-backdrop"></div> */}
@@ -89,6 +94,7 @@ export default function Index() {
                     </div>
                 )}
             </main >
+            <Footer />
         </div >
     );
 } 

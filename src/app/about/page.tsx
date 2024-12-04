@@ -4,6 +4,7 @@ import Header from "@/app/_components/header";
 import { isMobileDevice } from "../_components/mobile-detector";
 import '@/app/globals.css';
 import ProjectInfo from "../_components/project-info";
+import Footer from "../_components/footer";
 
 type QnaItem = {
     question: string;
@@ -84,9 +85,12 @@ export default function Index() {
                         <br />
                         Special thanks to:<br />
                         Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Ali Sleiman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kais, Justin Salhani, Mona Fawaz, Seyran Khadimi, Cosette Molijn, William Christou, @Easybakeovensz, @NemoAnno.
+                        <br />
+                        <div className="mt-10 mb-16">Follow us on <a href="https://x.com/Phosphor_Abyad" target="_blank">Twitter</a>, BlueSky</div>
                     </div>
                 </div>
             </main >
+            <Footer />
         </div >
     );
 }

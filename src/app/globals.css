@@ -151,24 +151,16 @@ p {
   top: auto;
   background-color: #000000;
   opacity: 0.3;
-  background-image: linear-gradient(
+  background-image: linear-gradient(#3a3a3a 1.2000000000000002px,
+      transparent 1.2000000000000002px),
+    linear-gradient(90deg,
       #3a3a3a 1.2000000000000002px,
-      transparent 1.2000000000000002px
-    ),
-    linear-gradient(
-      90deg,
-      #3a3a3a 1.2000000000000002px,
-      transparent 1.2000000000000002px
-    ),
-    linear-gradient(
+      transparent 1.2000000000000002px),
+    linear-gradient(#3a3a3a 0.6000000000000001px,
+      transparent 0.6000000000000001px),
+    linear-gradient(90deg,
       #3a3a3a 0.6000000000000001px,
-      transparent 0.6000000000000001px
-    ),
-    linear-gradient(
-      90deg,
-      #3a3a3a 0.6000000000000001px,
-      #000000 0.6000000000000001px
-    );
+      #000000 0.6000000000000001px);
   background-size: 30px 30px, 30px 30px, 6px 6px, 6px 6px;
   background-position: -1.2000000000000002px -1.2000000000000002px,
     -1.2000000000000002px -1.2000000000000002px,
@@ -225,6 +217,7 @@ button {
   scrollbar-width: none;
   -ms-overflow-style: none;
   white-space: nowrap;
+  margin-top: -10px;
 }
 
 .footage-display .draggable-container {
@@ -328,16 +321,14 @@ ul {
   display: block;
   height: 28px;
   width: 28px;
-  background-image: linear-gradient(
-    to bottom right,
-    #999,
-    #aaa,
-    #bbb,
-    #ccc,
-    #ddd,
-    #eee,
-    #fff
-  );
+  background-image: linear-gradient(to bottom right,
+      #999,
+      #aaa,
+      #bbb,
+      #ccc,
+      #ddd,
+      #eee,
+      #fff);
   border: 1px solid #222;
   box-shadow: inset 1px 1px 0px 0px #ccc, inset -1px -1px 0px 0px #888;
   text-indent: -99999em;
@@ -626,12 +617,10 @@ h2 {
   background-color: rgba(0, 0, 0, 0.8);
   visibility: hidden;
   transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-  mask: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 1) 95%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  mask: linear-gradient(to bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 95%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
 .overlay-visible {
@@ -706,7 +695,7 @@ h2 {
   width: 25vw;
 }
 
-.team-info > div {
+.team-info>div {
   flex: 1;
   /* Makes each child take equal width */
 }
@@ -994,6 +983,24 @@ ul li {
   margin-top: 2rem;
 }
 
+footer {
+  z-index: 1000;
+  position: fixed;
+  bottom: 0;
+  left: 20px;
+  height: fit-content;
+  font-size: 13px;
+  width: fit-content;
+  text-align: left;
+  backdrop-filter: blur(2px);
+  background-color: #00000033;
+  color: #999;
+}
+
+footer a {
+  text-decoration: underline;
+}
+
 @media (max-width: 1400px) {
   .typewrite {
     line-height: 1.8rem;
@@ -1004,6 +1011,7 @@ ul li {
     font-size: 0.8rem;
     overflow-y: hidden;
   }
+
   .plume-name {
     font-size: 1.2rem;
   }
@@ -1014,6 +1022,7 @@ ul li {
     width: inherit;
     font-size: 0.65rem;
   }
+
   .plume-name {
     font-size: 1rem;
   }
@@ -1097,13 +1106,13 @@ ul li {
     display: block;
   }
 
-  .methodNavBar > button {
+  .methodNavBar>button {
     width: 100%;
     text-align: left;
     margin: 3px 0;
   }
 
-  .methodNavBar > button:hover {
+  .methodNavBar>button:hover {
     border-bottom: 0px solid #000;
   }
 

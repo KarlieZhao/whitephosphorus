@@ -29,7 +29,8 @@ export default function FootageDisplay({ srcLink, enlarge }: FootageDisplayProps
                         <video
                             className="video-footage object-cover"
                             src={srcLink}
-                            controls={isHovered} // Video controls only on hover
+                            // controls={isHovered} // Video controls only on hover
+                            controlsList="nodownload"
                             style={{
                                 height: '100%',
                                 objectFit: 'contain'
