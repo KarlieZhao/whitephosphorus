@@ -18,29 +18,29 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
 
   const preciseData: ToxicityData = [{
     type: "Incidents",
-    number: "199",
+    number: "195",
     unit: " "
   }, {
     type: "Land Area",
-    number: "937",
+    number: "918",
     unit: "Hectares"
   }, {
     type: "Air Volume",
-    number: "65.64",
+    number: "64.32",
     unit: "million m³",
   }]
   const altData: ToxicityData =
     [{
       type: "Incidents",
-      number: "199",
+      number: "195",
       unit: ""
     }, {
       type: "Land Area",
-      number: "1312",
+      number: "1285",
       unit: "soccer fields"
     }, {
       type: "Air Volume",
-      number: "50",
+      number: "43",
       unit: "stadiums"
     }];
 
