@@ -59,7 +59,6 @@ body {
   /* Firefox */
   -ms-overflow-style: none;
   /* Internet Explorer 10+ */
-
   overscroll-behavior: contain;
 }
 
@@ -214,8 +213,8 @@ button {
   overflow-x: scroll;
   overflow-y: hidden;
   width: 100vw;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: 5px;
+  -ms-overflow-style: initial;
   white-space: nowrap;
   margin-top: -10px;
 }
@@ -229,8 +228,13 @@ button {
   -ms-overflow-style: none;
 }
 
-.footage-display::-webkit-scrollbar {
-  display: none;
+.showScrollBar {
+  scrollbar-width: auto;
+  -ms-overflow-style: auto;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
 }
 
 .mousePointer {
@@ -585,9 +589,9 @@ h2 {
 
 /* footage page media display metadata  */
 #metadata-bar {
-  position: absolute;
+  position: fixed;
   z-index: 10000;
-  top: 0;
+  top: 75vh;
   width: max-content;
   transition: all 0.3s ease-in-out;
 }

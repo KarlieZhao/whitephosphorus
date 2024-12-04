@@ -16,11 +16,9 @@ type CellClickData = {
 };
 
 export default function Index() {
-    const [isTimelineVisible, setIsTimelineVisible] = useState(true);
     const [clickedCellData, setClickedCellData] = useState<CellClickData | null>(null);
     const [isFootageTagVisible, setIsFootageTagVisible] = useState(false);
     const [isContinueTagVisible, setIsContinueTagVisible] = useState(false);
-
     //fetch data
     const incidentData = processExcelData();
 
@@ -39,7 +37,7 @@ export default function Index() {
     }, []);
 
     const handleContextMenu = (event: React.MouseEvent) => {
-        // event.preventDefault();
+        event.preventDefault();
     };
 
     return (
@@ -48,7 +46,7 @@ export default function Index() {
             <main className="flex-grow relative h-auto overflow-hidden">
                 {/* <div className="inner-backdrop"></div> */}
 
-                <div className={`footage-timeline  ${isTimelineVisible ? 'opacity-100' : 'opacity-0'}`}
+                <div className={`footage-timeline`}
                 >
                     <div id="heatmap" className="min-w-max overflow-x-auto overflow-y-hidden hideScrollBar">
                         <HeatMapAnimation
@@ -56,27 +54,14 @@ export default function Index() {
                             onCellClick={handleCellClick}
                             scrollButtonVisible={isContinueTagVisible}
                         />
-
-                        {/* <div className={`chart-continue-label   ${isContinueTagVisible ? 'opacity-100' : 'opacity-0'}`}>
-                            <div className="pb-1">  scroll for more</div>
-                            <svg
-                                className="arrow-svg"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                            >
-                                <path fill="red" d="M10 6l6 6-6 6V6z" />
-                            </svg>
-                        </div> */}
                     </div>
 
                     <div className={`click-label ${isFootageTagVisible ? 'opacity-100' : 'opacity-0'}`}>Click on each data point to view footages.</div>
                 </div>
 
                 {clickedCellData && (
-                    <div className="footage-display">
-                        <div id={`metadata-bar`}>
+                    <div className="footage-display showScrollBar">
+                        <div id={`metadata-bar`} className="fixed">
                             <div className={`content`}>
                                 <h4 className="title">{`${clickedCellData.area} | ${clickedCellData.date} `}</h4>
                             </div>
@@ -84,7 +69,7 @@ export default function Index() {
                         <div className="flex gap-1 h-full flex-nowrap w-full">
                             {Array.from({ length: clickedCellData.link.length }).map((_, index) => (
                                 <div key={index} className="flex-none snap-start">
-                                    <ContentWindow title={``}>
+                                    <ContentWindow title={``} >
                                         {/* ${clickedCellData.area} | ${clickedCellData.date} |  */}
                                         <FootageDisplay srcLink={`${process.env.NEXT_PUBLIC_CDN_URL}/WPdata/${clickedCellData.link[index]}`} enlarge={true} />
                                     </ContentWindow>
