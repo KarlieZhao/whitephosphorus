@@ -213,8 +213,12 @@ button {
   overflow-x: scroll;
   overflow-y: hidden;
   width: 100vw;
-  scrollbar-width: 5px;
-  -ms-overflow-style: initial;
+  overflow: auto;
+  scrollbar-width: auto;
+  /* Override for Firefox */
+  -ms-overflow-style: auto;
+  /* Override for Internet Explorer 10+ */
+
   white-space: nowrap;
   margin-top: -10px;
 }

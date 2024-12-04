@@ -172,7 +172,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       .selectAll("text")
       .attr("transform", `translate(-10, ${plotHeight + 20})`)
       .style("text-anchor", "start")
-      .style("font-size", "12px")
+      .style("font-size", `${cellSize / 1.5}px`)
       .style("fill", "#ccc")
       .attr("dx", "0.5em")
       .attr("dy", "-0.2em");
@@ -209,7 +209,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       )
       .selectAll("text")
       .style("text-anchor", "end")
-      .style("font-size", "12px")
+      .style("font-size", `${cellSize / 1.5}px`)
       .style("fill", "#ccc");
 
     // Bind data
@@ -347,7 +347,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
           .attr("x", xScale(value)!)
           .attr("y", ypos)
           .attr("text-anchor", "start")
-          .style("font-size", "12px")
+          .style("font-size", "0.75rem")
           .style("fill", "#ccc")
           .style("opacity", 0) // Initially hidden
           .text(majorEventNames[eventIndex])
@@ -359,7 +359,6 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       currentCol++;
       setTimeout(animateCol, 20);
     }
-
     animateCol();
 
     const container = containerRef.current;
