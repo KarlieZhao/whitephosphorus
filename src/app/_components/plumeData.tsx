@@ -44,7 +44,7 @@ const inputData: DataInputRow[] = [
     },
     {
         name: "Rocket Launches",
-        name_ar: "لصواريخ",
+        name_ar: "صواريخ",
         text: "Upon launch, Hezbollah's rockets, such as the Katyusha, Fajr-3, Fajr-5, and Zelzal, emit a bright flash due to propellant ignition. This is followed by a dense, white or gray smoke plume marking the rocket's ascent. As the rocket gains altitude, the visible flame diminishes, resulting in reduced light emission and a less pronounced smoke trail. ",
         text_ar: "عند إطلاقها، تنبعث من صواريخ مثل الكاتيوشا وفجر-3 وفجر-5 وزلزال بريقًا ساطعًا نتيجة اشتعال الوقود. يتبع ذلك عمود دخان كثيف أبيض أو رمادي يعلو مع الصاروخ. مع ارتفاع الصاروخ، يقل ظهور اللهب، مما يؤدي إلى تقليل الضوء المنبعث ويصبح مسار الدخان أقل وضوحًا.",
         img_count: 1,
@@ -76,7 +76,7 @@ const inputData: DataInputRow[] = [
     },
     {
         name: "UAV Strike",
-        name_ar: "(MK) (إم كامل) طائرة بدون طيار",
+        name_ar: " طائرة بدون طيار (إم كامل)(MK)",
         text: "The plume's appearance varies based on the target and munitions used but typically features a dense, dark gray or black cloud that rises quickly, often forming a mushroom-like shape. The plume is generally smaller and more focused than those produced by fighter jet airstrikes, though its size and intensity can vary depending on what is exploding.",
         text_ar: "تختلف مظاهر السحابة بناءً على الهدف والذخائر المستخدمة، لكنها عادة ما تتميز بسحابة كثيفة وداكنة رمادية أو سوداء ترتفع بسرعة، غالبًا ما تكون بشكل مشابه للفطر. عادةً ما تكون هذه السحابة أصغر حجمًا وأكثر تحديدًا من تلك التي تنتجها ضربات طائرات المقاتلة، رغم أن حجمها وشدتها يمكن أن يختلفان بناءً على ما ينفجر.",
         img_count: 2,
