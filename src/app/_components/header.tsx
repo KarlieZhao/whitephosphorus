@@ -36,7 +36,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
       unit: ""
     }, {
       type: "Land Area",
-      number: "1312 ",
+      number: "1312",
       unit: "soccer fields"
     }, {
       type: "Air Volume",
@@ -52,7 +52,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
       const interval = setInterval(() => {
         setAnimationClass("fadeOut");
         setTimeout(() => {
-          setData((prev) => (prev[1].unit === "Hectars" ? altData : preciseData));
+          setData((prev) => (prev[1].unit === "Hectares" ? altData : preciseData));
           setAnimationClass("fadeIn");
         }, 600);// Match the duration of fade-out animation
       }, 8000);
