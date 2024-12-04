@@ -989,6 +989,11 @@ ul li {
   margin-left: auto;
   margin-right: auto;
   margin-top: 2rem;
+  cursor: pointer;
+}
+
+.method-page section .gallery img {
+  margin-top: 0;
 }
 
 footer {

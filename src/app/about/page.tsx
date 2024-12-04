@@ -86,7 +86,7 @@ export default function Index() {
                         Special thanks to:<br />
                         Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Ali Sleiman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kais, Justin Salhani, Mona Fawaz, Seyran Khadimi, Cosette Molijn, William Christou, @Easybakeovensz, @NemoAnno.
                         <br />
-                        <div className="mt-10 mb-16">Follow us on <a href="https://x.com/Phosphor_Abyad" target="_blank">Twitter</a>, BlueSky</div>
+                        <div className="mt-10 mb-16">Follow us on <a href="https://x.com/Phosphor_Abyad" target="_blank">Twitter</a>, <a href="https://bsky.app/profile/whitephosphorus.info" target="_blank">BlueSky</a></div>
                     </div>
                 </div>
             </main >

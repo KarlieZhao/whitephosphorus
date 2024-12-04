@@ -128,7 +128,7 @@ export default function CloudLayout() {
       } else if ($(this).is('video')) {
         const videoSrc = $(this).find('source').attr('src');
         overlayContent.append(`
-            <video controls autoplay class="w-full h-full object-contain">
+            <video controls autoPlay class="w-full h-full object-contain">
               <source src="${videoSrc}" type="video/mp4" />
             </video>
           `);

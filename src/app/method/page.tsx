@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Header from "@/app/_components/header";
 import { isMobileDevice } from "../_components/mobile-detector";
 import '@/app/globals.css';
+import Footer from "../_components/footer";
 import $ from 'jquery';
 
 export default function Index() {
@@ -33,6 +34,11 @@ export default function Index() {
             $('#close-overlay, #media-overlay').off('click');
         };
     })
+
+
+    const handleContextMenu = (event: React.MouseEvent) => {
+        event.preventDefault();
+    };
     return (
         <div>
             <Header TypeWriterFinished={false} />
@@ -42,7 +48,7 @@ export default function Index() {
                 <div id="overlay-content" className="border-2 flex justify-center items-center"></div>
             </div>
 
-            <main className={`method-page min-h-screen ${isMobileDevice() ? "block mt-20" : "flex justify-center"}`}>
+            <main onContextMenu={handleContextMenu} className={`method-page min-h-screen ${isMobileDevice() ? "block mt-20" : "flex justify-center"}`}>
                 <div className="inner-backdrop"></div>
 
                 <div className="relative mx-20 mt-32 w-[60vw] text-white block">
@@ -77,11 +83,42 @@ export default function Index() {
                         </section>
 
                         <section>
-                            <h3>Geolocation and Chronolocation</h3>
-                            <p>Once the authenticity of the footage is verified, our next step is to accurately locate and date the incidents. Geolocation involves analyzing visual cues within the footage such as landmarks, landscape features, and urban layouts to pinpoint the exact location of the event. This process is important for mapping the areas most affected by white phosphorus and for validating claims against geographical data. For chronolocation, we assess satellite imagery taken before and after the incident alongside the metadata of the footage to determine the precise date and time it occurred. This helps ensure the temporal accuracy of our data, preventing the use of outdated or misleading information. </p>
+                            <h3>Geolocation</h3>
+                            <p>Geolocation is critical for verifying the exact
+                                coordinates of each incident from the footage.
+                                This involves analysing visual cues such
+                                as landmarks, landscape features, and urban
+                                layouts visible in the videos. We use these
+                                cues to cross-reference with existing geographic
+                                data and satellite imagery to pinpoint
+                                the precise location where each incident
+                                occurred. This process confirms that
+                                the events took place within specific regions
+                                of Lebanon and prevents the recycling of
+                                footage from other conflicts.</p>
                             <img src="/about/03_geolocationChronolocation.jpg" alt="geolocation and chronolocation" />
                         </section>
 
+                        <section><h3>Chronolocation</h3><p>
+                            This process verifies the claimed dates of incidents by cross-referencing satellite imagery from periods surrounding
+                            each reported event. This method involves analyzing imagery taken before and after the alleged dates to identify any
+                            signs of white phosphorus use, such as burn marks, confirming whether the incidents occurred as reported. However,
+                            several challenges affect this verification process. Cloud cover can obscure the earth's surface, preventing the detection
+                            of changes. There are also gaps in satellite coverage, which mean no images are available for certain days, and the
+                            non-visible impact of white phosphorus, particularly in urban settings or instances where it doesn't make ground contact,
+                            may leave no detectable traces.
+                        </p>
+                            <div className="grid grid-cols-2 w-full gallery mt-10">
+                                <img className="object-cover  w-full" src="/about/Chronolocation1.jpeg" alt="chronolocation_img" />
+                                <img className="object-cover w-full " src="/about/Chronolocation2.jpeg" alt="chronolocation_img" />
+                                <img className="object-cover w-full" src="/about/Chronolocation3.jpeg" alt="chronolocation_img" />
+                                <video className="object-cover w-full h-full" controls={false} autoPlay loop muted>
+                                    <source src="/about/Chronolocation4.mp4" type="video/mp4" />
+                                </video>
+                            </div>
+
+
+                        </section>
                         <section>
                             <h3>Data Integration and Visualization</h3>
                             <p>The next step is to integrate this data into our mapping systems. We use ArcGIS to log each incident, ensuring that all data points are accurately plotted on the map. Simultaneously, we update our website with the logged data, which automatically refreshes the charts and the toxicity counter on our digital platform. This ensures that our analysis is current and reflects updated data. Additionally, associated video footage and other relevant data are embedded alongside the mapped incidents to provide a broad view of each event. </p>
@@ -127,6 +164,7 @@ export default function Index() {
                     </div>
                 </div>
             </main >
+            <Footer />
         </div >
     );
 }
