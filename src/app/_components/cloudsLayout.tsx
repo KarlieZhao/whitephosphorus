@@ -208,7 +208,7 @@ export default function CloudLayout() {
                     <img src={link}
                       className="w-full h-full object-cover inset-0"
                       loading="lazy"
-                      alt="footage loading..."
+                      alt=""
                     ></img>
                   </div>
                 ))}
