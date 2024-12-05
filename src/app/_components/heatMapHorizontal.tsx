@@ -106,7 +106,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
     d3.select(svgRef.current).selectAll("*").remove();
 
     //set svg dimensions and margins
-    const margin = { top: 60, right: 150, bottom: 50, left: isMobileDevice() ? windowWidth / 5 : 100 };
+    const margin = { top: 60, right: 150, bottom: 50, left: isMobileDevice() ? 75 : 100 };
     const availableWidth = frameWidth - margin.left - margin.right;
     const availableHeight = frameHeight - margin.top - margin.bottom;
 

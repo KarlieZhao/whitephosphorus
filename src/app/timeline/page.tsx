@@ -20,7 +20,7 @@ export default function Index() {
     const [clickedCellData, setClickedCellData] = useState<CellClickData | null>(null);
     const [isFootageTagVisible, setIsFootageTagVisible] = useState(false);
     const [isContinueTagVisible, setIsContinueTagVisible] = useState(false);
-    const isMobile = isMobileDevice();
+    const [isMobile, setIsMobile] = useState(false);
 
     //fetch data
     const incidentData = processExcelData();
@@ -31,6 +31,7 @@ export default function Index() {
     };
 
     useEffect(() => {
+        setIsMobile(isMobileDevice());
         setTimeout(() => {
             setIsContinueTagVisible(true);
         }, 4000);
@@ -59,7 +60,8 @@ export default function Index() {
                         />
                     </div>
 
-                    <div className={`click-label ${isFootageTagVisible ? 'opacity-100' : 'opacity-0'}`}>Click on each data point to view footages.</div>
+                    <div className={`click-label ${(isFootageTagVisible && !isMobile) ? 'opacity-100' : 'opacity-0'}`}>Click on each data point to view footages.</div>
+                    <div className={`click-label ${isMobile ? 'opacity-100' : 'opacity-0'}`}>Footage media can be viewed on desktops.</div>
                 </div>
 
                 {clickedCellData && (
@@ -69,7 +71,7 @@ export default function Index() {
                                 <h4 className="title">{`${clickedCellData.area} | ${clickedCellData.date} `}</h4>
                             </div>
                         </div>
-                        <div className="flex gap-1 h-full flex-nowrap w-full">
+                        {!isMobile && (<div className="flex gap-1 h-full flex-nowrap w-full">
                             {Array.from({ length: clickedCellData.link.length }).map((_, index) => (
                                 <div key={index} className="flex-none snap-start">
                                     <ContentWindow title={``} >
@@ -78,7 +80,7 @@ export default function Index() {
                                     </ContentWindow>
                                 </div>
                             ))}
-                        </div>
+                        </div>)}
                     </div>
                 )}
             </main >
