@@ -7,6 +7,7 @@ import '@/app/globals.css'
 import HeatMapAnimation from "../_components/heatMapHorizontal";
 import { processExcelData } from "@/app/_components/dataParser"
 import Footer from "../_components/footer";
+import { isMobileDevice } from "../_components/mobile-detector";
 
 type CellClickData = {
     count: number;
@@ -19,6 +20,8 @@ export default function Index() {
     const [clickedCellData, setClickedCellData] = useState<CellClickData | null>(null);
     const [isFootageTagVisible, setIsFootageTagVisible] = useState(false);
     const [isContinueTagVisible, setIsContinueTagVisible] = useState(false);
+    const isMobile = isMobileDevice();
+
     //fetch data
     const incidentData = processExcelData();
 
@@ -79,7 +82,7 @@ export default function Index() {
                     </div>
                 )}
             </main >
-            <Footer />
+            {!isMobile && (<Footer />)}
         </div >
     );
 } 

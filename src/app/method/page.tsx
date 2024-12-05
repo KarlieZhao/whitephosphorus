@@ -116,9 +116,8 @@ export default function Index() {
                                     <source src="/about/Chronolocation4.mp4" type="video/mp4" />
                                 </video>
                             </div>
-
-
                         </section>
+
                         <section>
                             <h3>Data Integration and Visualization</h3>
                             <p>The next step is to integrate this data into our mapping systems. We use ArcGIS to log each incident, ensuring that all data points are accurately plotted on the map. Simultaneously, we update our website with the logged data, which automatically refreshes the charts and the toxicity counter on our digital platform. This ensures that our analysis is current and reflects updated data. Additionally, associated video footage and other relevant data are embedded alongside the mapped incidents to provide a broad view of each event. </p>
@@ -150,7 +149,15 @@ export default function Index() {
                             <p>
                                 بمجرد التحقق من صحة اللقطات، تصبح الخطوة التالية هي تحديد مواقع وتواريخ الحوادث بدقة. يشمل تحديد الموقع الجغرافي تحليل الإشارات البصرية داخل اللقطات مثل المعالم، وميزات المناظر الطبيعية، وتخطيطات المدن لتحديد موقع الحدث بدقة. هذه العملية مهمة لرسم خرائط للمناطق الأكثر تأثراً بالفوسفور الأبيض وللتحقق من صحة الادعاءات مقابل البيانات الجغرافية. بالنسبة لتحديد التوقيت، نقيم الصور الفضائية الملتقطة قبل وبعد الحادثة بالتزامن مع بيانات اللقطات لتحديد التاريخ والوقت الدقيقين اللذين وقعت فيهما. هذا يساعد على ضمان دقة بياناتنا الزمنية، مما يمنع استخدام معلومات قديمة أو مضللة.                            </p>
                             <img src="/about/03_geolocationChronolocation.jpg" alt="geolocation and chronolocation" />
-                        </section>
+
+                            <div className="grid grid-cols-2 w-full gallery mt-10">
+                                <img className="object-cover  w-full" src="/about/Chronolocation1.jpeg" alt="chronolocation_img" />
+                                <img className="object-cover w-full " src="/about/Chronolocation2.jpeg" alt="chronolocation_img" />
+                                <img className="object-cover w-full" src="/about/Chronolocation3.jpeg" alt="chronolocation_img" />
+                                <video className="object-cover w-full h-full" controls={false} autoPlay loop muted>
+                                    <source src="/about/Chronolocation4.mp4" type="video/mp4" />
+                                </video>
+                            </div> </section>
 
                         <section>
                             <h3>رفع البيانات على الموقع الإلكتروني</h3>
