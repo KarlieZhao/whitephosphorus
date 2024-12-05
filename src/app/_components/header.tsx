@@ -164,7 +164,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
                 <tr className="relative">
                   <td colSpan={3} className="h-full fixed left-0 command_button_unclickable">
                     <h3 className="mt-3 w-full text-left pl-5 z-50 tracking-wider text-2xl">
-                      WhitePhosophrus.info
+                      WhitePhosphorus.info
                     </h3>
                   </td>
                 </tr>
