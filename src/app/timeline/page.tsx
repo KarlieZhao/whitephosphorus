@@ -38,6 +38,12 @@ export default function Index() {
         setTimeout(() => {
             setIsFootageTagVisible(true);
         }, 6000);
+
+        setTimeout(() => {
+            setIsFootageTagVisible(true);
+        }, 20000);
+
+
     }, []);
 
     const handleContextMenu = (event: React.MouseEvent) => {
