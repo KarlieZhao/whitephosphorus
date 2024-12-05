@@ -104,7 +104,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
 
         <div className="fixed left-0 command_button_unclickable">
           <h3 className="mt-4 w-1/2 pl-4 text-xl">
-            WhitePhosophrus.info
+            WhitePhoophorus.info
           </h3>
         </div>
         {TypeWriterFinished && (
