@@ -68,9 +68,9 @@ const inputData: DataInputRow[] = [
     },
     {
         name: "Fighter Jets",
-        name_ar: "طائرات مقاتلة (حربي)",
-        text: "An airstrike from an F-16 or F-35, generates a rapid, intense explosion and a swiftly expanding smoke plume. The plume's appearance varies based on the target and munitions used but typically features a dense, dark gray or black cloud, often forming a mushroom-like shape. The plume's opacity and color are influenced by factors such as the presence of fuel, building materials, and other combustibles at the target site.",
-        text_ar: "يُولّد القصف الجوي من طائرة إف-16 أو إف-35 انفجارًا سريعًا وشديدًا يتميز ببريقًا ساطع وسحابة دخان سريعة التوسع. تختلف مظاهر السحابة بناءً على الهدف والذخائر المستخدمة، لكنها عادة ما تكون سحابة كثيفة وداكنة رمادية أو سوداء ترتفع بسرعة، غالبًا ما تكون بشكل مشابه للفطر. تتأثر كثافة ولون السحابة بعوامل مثل وجود الوقود، مواد البناء، ومواد قابلة للاحتراق في موقع الهدف.",
+        name_ar: "طائرات حربي وطائرات بدون طيار (إم كامل)",
+        text: "Smoke plumes from airstrikes, whether from fighter jets like F-16s or F-35s or unmanned aerial vehicles (UAVs), often look similar when they drop the same type of bombs. Typically characterized by a rapidly expanding, dense dark gray or black cloud that forms a mushroom-like shape, these plumes are influenced by the explosives used and the materials at the impact site.",
+        text_ar: "عوادم الدخان الناتجة عن الغارات الجوية، سواء كانت من طائرات مقاتلة مثل F-16 أو F-35 أو من المركبات الجوية بدون طيار (UAVs)، غالبًا ما تبدو متشابهة عندما تُلقي نفس نوع القنابل. تتميز هذه العوادم عادةً بسحابة كثيفة مظلمة باللون الرمادي أو الأسود تتوسع بسرعة وتتخذ شكلًا يشبه الفطر، وتتأثر هذه العوادم بالمتفجرات المستخدمة والمواد الموجودة في موقع الاصطدام.",
         img_count: 5,
         video_count: 5
     },
