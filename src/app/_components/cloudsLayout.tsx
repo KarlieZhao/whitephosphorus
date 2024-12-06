@@ -179,6 +179,7 @@ export default function CloudLayout() {
         >   العربية</span></div>
 
       <div className="flex flex-col gap-2">
+
         {cloudData.map((row, rowIndex) => (
           <div key={rowIndex}
             className={`grid grid-cols-1 md:grid-cols-[300px,0.5fr,1fr] gap-2 max-h-[330px] transition-all duration-700 ease-in-out transform 
@@ -190,7 +191,7 @@ export default function CloudLayout() {
             <div className={`${isMobile ? "absolute" : "dark-bg"} p-4 flex justify-center max-h-[330px] overflow-hidden`}>
               <div className="text-left plumes-description relative">
                 <section className={`absolute top-0 left-0 w-full transition-all ${lang === "en" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
-                  <h3 className="en mb-2 font-bold plume-name">{row.name === "White Phosphorus" ? row.name + " (WP)" : row.name}</h3>
+                  <h3 className="en mb-2 font-bold plume-name">{row.name === "White Phosphorus" ? row.name + " (WP)" : row.name === "Fighter Jets" ? row.name + " & UAVs" : row.name}</h3>
                   <p className="en">{row.text}</p>
                 </section>
 

@@ -84,7 +84,7 @@ export default function Index() {
                         Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
                         <br />
                         Special thanks to:<br />
-                        Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Ali Sleiman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kais, Justin Salhani, Mona Fawaz, Seyran Khadimi, Cosette Molijn, William Christou, @Easybakeovensz, @NemoAnno.
+                        Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Ali Slayman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kaiss, Justin Salhani, Mona Fawaz, Seyran Khadimi, Cosette Molijn, William Christou, @Easybakeovensz, @NemoAnno, @TedNoNumbers.
                         <br />
                         <div className="mt-10 mb-16">Follow us on <a href="https://x.com/Phosphor_Abyad" target="_blank">Twitter</a>, <a href="https://bsky.app/profile/whitephosphorus.info" target="_blank">BlueSky</a></div>
                     </div>

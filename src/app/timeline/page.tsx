@@ -66,7 +66,7 @@ export default function Index() {
                         />
                     </div>
 
-                    <div className={`click-label ${(isFootageTagVisible && !isMobile) ? 'opacity-100' : 'opacity-0'}`}>Click on each data point to view footages.</div>
+                    <div className={`click-label ${(isFootageTagVisible && !isMobile) ? 'opacity-100' : 'opacity-0'}`}>Click on each data point to view the footage.</div>
                     <div className={`click-label ${isMobile ? 'opacity-100' : 'opacity-0'}`}>Footage media can be viewed on desktops.</div>
                 </div>
 

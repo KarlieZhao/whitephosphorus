@@ -74,14 +74,14 @@ const inputData: DataInputRow[] = [
         img_count: 5,
         video_count: 5
     },
-    {
-        name: "UAV Strike",
-        name_ar: " طائرة بدون طيار (إم كامل)",
-        text: "The plume's appearance varies based on the target and munitions used but typically features a dense, dark gray or black cloud that rises quickly, often forming a mushroom-like shape. The plume is generally smaller and more focused than those produced by fighter jet airstrikes, though its size and intensity can vary depending on what is exploding.",
-        text_ar: "تختلف مظاهر السحابة بناءً على الهدف والذخائر المستخدمة، لكنها عادة ما تتميز بسحابة كثيفة وداكنة رمادية أو سوداء ترتفع بسرعة، غالبًا ما تكون بشكل مشابه للفطر. عادةً ما تكون هذه السحابة أصغر حجمًا وأكثر تحديدًا من تلك التي تنتجها ضربات طائرات المقاتلة، رغم أن حجمها وشدتها يمكن أن يختلفان بناءً على ما ينفجر.",
-        img_count: 2,
-        video_count: 3
-    },
+    // {
+    //     name: "UAV Strike",
+    //     name_ar: " طائرة بدون طيار (إم كامل)",
+    //     text: "The plume's appearance varies based on the target and munitions used but typically features a dense, dark gray or black cloud that rises quickly, often forming a mushroom-like shape. The plume is generally smaller and more focused than those produced by fighter jet airstrikes, though its size and intensity can vary depending on what is exploding.",
+    //     text_ar: "تختلف مظاهر السحابة بناءً على الهدف والذخائر المستخدمة، لكنها عادة ما تتميز بسحابة كثيفة وداكنة رمادية أو سوداء ترتفع بسرعة، غالبًا ما تكون بشكل مشابه للفطر. عادةً ما تكون هذه السحابة أصغر حجمًا وأكثر تحديدًا من تلك التي تنتجها ضربات طائرات المقاتلة، رغم أن حجمها وشدتها يمكن أن يختلفان بناءً على ما ينفجر.",
+    //     img_count: 2,
+    //     video_count: 3
+    // },
     {
         name: "Artillery Shelling",
         name_ar: "قصف مدفعي",
@@ -107,10 +107,10 @@ const generateLinks = (inputArray: DataInputRow[]): CloudRow[] => {
         video: `${process.env.NEXT_PUBLIC_CDN_URL}/cloud_videos/${item.name
             .replace(/ /g, "")}.mp4`, // Generate video path
         images: Array.from({ length: item.img_count }, (_, i) =>
-            `${process.env.NEXT_PUBLIC_CDN_URL}/cloud_videos/cloud_footage/${index + 1}_${item.name}/i${i + 1}.jpg`
+            `${process.env.NEXT_PUBLIC_CDN_URL}/cloud_videos/cloud_footage/${index < 7 ? index + 1 : index + 2}_${item.name}/i${i + 1}.jpg`
         ),// Generate footage paths
         videos: Array.from({ length: item.video_count }, (_, i) =>
-            `${process.env.NEXT_PUBLIC_CDN_URL}/cloud_videos/cloud_footage/${index + 1}_${item.name}/v${i + 1}.mp4`)
+            `${process.env.NEXT_PUBLIC_CDN_URL}/cloud_videos/cloud_footage/${index < 7 ? index + 1 : index + 2}_${item.name}/v${i + 1}.mp4`)
     }));
 };
 
