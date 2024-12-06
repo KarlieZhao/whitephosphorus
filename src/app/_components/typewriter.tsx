@@ -6,9 +6,10 @@ interface TypewriterProps {
     period: number;
     speed: number;
     onFinish: () => void;
+    forceStopped?: boolean;
 }
 
-const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFinish }) => {
+const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFinish, forceStopped = false }) => {
     const [text, setText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
     const [typingSpeed, setTypingSpeed] = useState(40);
@@ -30,6 +31,13 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
 
     useEffect(() => {
         if (!hasMounted || isFinished) return;
+
+        if (forceStopped) {
+            setText('');
+            setIsFinished(true);
+            onFinish();
+            return;
+        }
 
         const handleTyping = () => {
             const fullTxt = textLines[lineNum];

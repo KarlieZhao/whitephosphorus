@@ -13,6 +13,7 @@ export default function Index() {
   const [TypeWriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isPromptVisible, setIsPromptVisible] = useState<boolean>(false);
+  const [forceStop, setForceStop] = useState<boolean>(false);
 
   const onFinish = () => {
     if (!TypeWriterFinished) showPrompt();
@@ -40,13 +41,14 @@ export default function Index() {
   if (isMobile === null) return null;
 
   return (
-    <div>
+    <div onClick={() => { setTypeWriterFinished(true); setForceStop(true) }}>
       <Header TypeWriterFinished={TypeWriterFinished} />
       <main className="relative">
         <div className="w-full text-5xl z-50 mt-4 fixed text-white ml-6">
           <Typewriter textLines={textToType} period={2000}
             speed={100} //lower value = faster typing
             onFinish={onFinish} // on finish, trigger the onFinish function
+            forceStopped={forceStop}
           />
         </div>
 
