@@ -16,23 +16,26 @@ export default function Index() {
   const [forceStop, setForceStop] = useState<boolean>(false);
 
   const onFinish = () => {
-    if (!TypeWriterFinished) showPrompt();
     setTypeWriterFinished(true);
   };
 
-  const showPrompt = () => {
-    const showprompt = setTimeout(() => {
-      setIsPromptVisible(true);
-    }, 4500);
-    const hideprompt = setTimeout(() => {
-      setIsPromptVisible(false);
-    }, 30000);
+  useEffect(() => {
+    console.log("forceStop changed:", forceStop);
+    // setTypeWriterFinished(true);
+  }, [forceStop]);
 
-    return () => {
-      clearTimeout(showprompt);
-      clearTimeout(hideprompt)
-    }; // Cleanup on unmount
-  }
+  useEffect(() => {
+    if (TypeWriterFinished) {
+      const showPromptTimeout = setTimeout(() => setIsPromptVisible(true), 4500);
+      const hidePromptTimeout = setTimeout(() => setIsPromptVisible(false), 30000);
+
+      return () => {
+        clearTimeout(showPromptTimeout);
+        clearTimeout(hidePromptTimeout);
+      }; // Cleanup on unmount
+    }
+  }, [TypeWriterFinished]); // Only run when TypeWriterFinished changes
+
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
@@ -41,7 +44,13 @@ export default function Index() {
   if (isMobile === null) return null;
 
   return (
-    <div className="w-full h-full" onClick={() => { setTypeWriterFinished(true); setForceStop(true) }}>
+    <div className="w-full h-[100vh]">
+      <div className={`fixed w-full h-[100vh] main-page-block ${TypeWriterFinished ? "opacity-0 invisible -z-50" : "opacity-100 visible z-10"}`}
+        onClick={(e) => {
+          e.preventDefault();
+          setTypeWriterFinished(true);
+          setForceStop(true)
+        }}></div>
       <Header TypeWriterFinished={TypeWriterFinished} />
       <main className="relative">
         <div className="w-full text-5xl z-50 mt-4 fixed text-white ml-6">

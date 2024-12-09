@@ -730,6 +730,12 @@ h2 {
   line-height: 1.4;
 }
 
+.main-page-block {
+  z-index: 10;
+  pointer-events: auto;
+  background-color: #00000000;
+}
+
 /* 
 .project-info p+p {
   text-indent: 1.5em;
