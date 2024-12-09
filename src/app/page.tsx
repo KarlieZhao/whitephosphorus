@@ -41,7 +41,7 @@ export default function Index() {
   if (isMobile === null) return null;
 
   return (
-    <div onClick={() => { setTypeWriterFinished(true); setForceStop(true) }}>
+    <div className="w-full h-full" onClick={() => { setTypeWriterFinished(true); setForceStop(true) }}>
       <Header TypeWriterFinished={TypeWriterFinished} />
       <main className="relative">
         <div className="w-full text-5xl z-50 mt-4 fixed text-white ml-6">
