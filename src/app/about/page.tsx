@@ -79,7 +79,7 @@ export default function Index() {
                         Khodor Joujou, Research Assistant<br />
                         <br />
                         Collaborators:<br />
-                        Special thanks to <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> for their assistance in data collection and geolocation processes, which have been invaluable to the accuracy and integrity of our project.<br />
+                        In collaboration with <a href="https://greensoutherners.org" target="_blank">Green Southerners</a>, who played a key role through their team on the ground in data collection, verification, and geolocating.<br />
                         <br />
                         Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
                         <br />
