@@ -4,12 +4,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import '@/app/globals.css';
 import { isMobileDevice } from "./mobile-detector";
 
-type HeaderProps = {
+export type TypewriterProps = {
   TypeWriterFinished?: boolean;
 };
 type ToxicityData = Array<{ type: string; number: string; unit: string }>;
 
-const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
+const Header = ({ TypeWriterFinished = true }: TypewriterProps) => {
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();

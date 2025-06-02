@@ -1,15 +1,16 @@
 "use client"
 import { useState, useEffect } from "react";
 import { Map } from "@/app/_components/mapembed";
+import DataSource from "./_components/datasource";
 import Header from "@/app/_components/header";
 import Typewriter from '@/app/_components/typewriter';
 import '@/app/globals.css'
 import { isMobileDevice } from "@/app/_components/mobile-detector";
 import Footer from "./_components/footer";
 
+
 export default function Index() {
   const textToType = ["is a platform for geolocating, verifying, and mapping white phosphorus incidents in Lebanon."];
-
   const [TypeWriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isPromptVisible, setIsPromptVisible] = useState<boolean>(false);
@@ -20,11 +21,6 @@ export default function Index() {
   };
 
   useEffect(() => {
-    console.log("forceStop changed:", forceStop);
-    // setTypeWriterFinished(true);
-  }, [forceStop]);
-
-  useEffect(() => {
     if (TypeWriterFinished) {
       const showPromptTimeout = setTimeout(() => setIsPromptVisible(true), 4500);
       const hidePromptTimeout = setTimeout(() => setIsPromptVisible(false), 30000);
@@ -32,10 +28,9 @@ export default function Index() {
       return () => {
         clearTimeout(showPromptTimeout);
         clearTimeout(hidePromptTimeout);
-      }; // Cleanup on unmount
+      };
     }
-  }, [TypeWriterFinished]); // Only run when TypeWriterFinished changes
-
+  }, [TypeWriterFinished]);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
@@ -61,18 +56,18 @@ export default function Index() {
           />
         </div>
 
-        {isMobile ? (<div className="fixed bottom-20 m-3 text-white text-sm">
+        {/* {isMobile ? (<div className="fixed bottom-20 m-3 text-white text-sm">
           The map feature is optimized for desktop devices.<br /><br />
           On a mobile device, you can view the white phosphorus attacks timeline, the smoke plume catalog, and read more about this project through the navigation menu.
-        </div>) : (
-          <div className={"relative z-0 " + (TypeWriterFinished ? "fadeIn" : "opacity-0")}>
-            {/* fade in if typewriter is finished; if not, hide */}
-            <div className={`z-50 fixed left-2 ml-1 bottom-5 bg-red-900 bg-opacity-60 text-sm text-white transition-all 
+        </div>) : ( */}
+        <div className={"relative z-0 h-screen " + (TypeWriterFinished ? "fadeIn" : "opacity-0")}>
+          <DataSource TypeWriterFinished={TypeWriterFinished} />
+          {/* <div className={`z-50 fixed left-2 ml-1 bottom-5 bg-red-900 bg-opacity-60 text-sm text-white transition-all 
               ${isPromptVisible ? "opacity-100" : "opacity-0"}`}>
-              Each red prism on the map represents a geolocated deployment of white phosphorus.</div>
-            <Map />
-          </div>
-        )}
+              Each red prism on the map represents a geolocated deployment of white phosphorus.</div> */}
+          {/* <Map /> */}
+        </div>
+        {/* )} */}
       </main>
       <Footer />
     </div>

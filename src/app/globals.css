@@ -37,6 +37,8 @@
     inset -2px -2px 0px 0px #aaa, inset 1px 1px 0px 0px #ddd,
     inset 2px 2px 0px 0px #fff;
   --button-hover-bezel: 0 0 0 1px #aaa, 0 0 0 2px #ddd, 0 0 0 3px #000;
+  --height: 8px;
+
 }
 
 html,
@@ -150,24 +152,16 @@ p {
   top: auto;
   background-color: #000000;
   opacity: 0.3;
-  background-image: linear-gradient(
+  background-image: linear-gradient(#3a3a3a 1.2000000000000002px,
+      transparent 1.2000000000000002px),
+    linear-gradient(90deg,
       #3a3a3a 1.2000000000000002px,
-      transparent 1.2000000000000002px
-    ),
-    linear-gradient(
-      90deg,
-      #3a3a3a 1.2000000000000002px,
-      transparent 1.2000000000000002px
-    ),
-    linear-gradient(
+      transparent 1.2000000000000002px),
+    linear-gradient(#3a3a3a 0.6000000000000001px,
+      transparent 0.6000000000000001px),
+    linear-gradient(90deg,
       #3a3a3a 0.6000000000000001px,
-      transparent 0.6000000000000001px
-    ),
-    linear-gradient(
-      90deg,
-      #3a3a3a 0.6000000000000001px,
-      #000000 0.6000000000000001px
-    );
+      #000000 0.6000000000000001px);
   background-size: 30px 30px, 30px 30px, 6px 6px, 6px 6px;
   background-position: -1.2000000000000002px -1.2000000000000002px,
     -1.2000000000000002px -1.2000000000000002px,
@@ -337,16 +331,14 @@ ul {
   display: block;
   height: 28px;
   width: 28px;
-  background-image: linear-gradient(
-    to bottom right,
-    #999,
-    #aaa,
-    #bbb,
-    #ccc,
-    #ddd,
-    #eee,
-    #fff
-  );
+  background-image: linear-gradient(to bottom right,
+      #999,
+      #aaa,
+      #bbb,
+      #ccc,
+      #ddd,
+      #eee,
+      #fff);
   border: 1px solid #222;
   box-shadow: inset 1px 1px 0px 0px #ccc, inset -1px -1px 0px 0px #888;
   text-indent: -99999em;
@@ -635,12 +627,10 @@ h2 {
   background-color: rgba(0, 0, 0, 0.8);
   visibility: hidden;
   transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-  mask: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 1) 95%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  mask: linear-gradient(to bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 95%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
 .overlay-visible {
@@ -715,7 +705,7 @@ h2 {
   width: 25vw;
 }
 
-.team-info > div {
+.team-info>div {
   flex: 1;
   /* Makes each child take equal width */
 }
@@ -1032,6 +1022,131 @@ footer a {
   text-decoration: underline;
 }
 
+.segment-bars {
+  filter: saturate(50%)
+}
+
+.country-legal {
+  font-size: 1.5em;
+  color: #222;
+  font-family: "PPSupplySans-Regular";
+  font-style: italic;
+  letter-spacing: 0.4em;
+}
+
+.interaction-layer {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  /* border: 1px solid white; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.map-legend {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  left: auto;
+  font-size: calc(var(--height)*1.7);
+  color: #aaa
+}
+
+.map-legend-points {
+  margin: calc(var(--height)*0.8) 1rem;
+  width: 8px;
+  height: var(--height);
+  border-radius: 50%;
+}
+
+.map-legend-points.rural {
+  background-color: #aaa;
+  box-shadow: #aaa 0 0 12px 2px;
+}
+
+.map-legend-points.civilian {
+  background-color: white;
+  box-shadow: white 0 0 12px 2px;
+}
+
+.map-data-points {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: white 0 0 12px 2px;
+}
+
+.map-data-points.active {
+  background-color: red;
+  box-shadow: red 0 0 15px 4px;
+}
+
+.map-readout {
+  --height: 8px;
+  position: fixed;
+  top: 4rem;
+  left: 22vw;
+  color: #aaa;
+  font-family: "PPSupplySans-Ultralight";
+  /* font-size: 1.1rem; */
+  letter-spacing: 0.5px;
+  word-spacing: 0.6px;
+  line-height: 1.5rem;
+  transition: opacity 0.3s ease;
+}
+
+.dynamic-readout {
+  margin-top: 10rem;
+  font-family: "PPSupplySans-Ultralight";
+  transition: opacity 0.3s ease;
+  font-size: calc(var(--height)*2.3);
+  line-height: calc(var(--height)*3.5);
+}
+
+
+.dynamic-readout div:nth-child(1),
+.dynamic-readout div:nth-child(2) {
+  /* font-size: 1.1rem; 
+   line-height: 1.8rem; */
+
+  font-size: 1.7rem;
+  line-height: 2.3rem;
+
+  /* font-family: "PPSupplySans-Regular"; */
+}
+
+.highlight {
+  color: white
+}
+
+.chart-labels {
+  font-family: "Inconsolata";
+  font-size: 0.75rem;
+  font-weight: 300;
+}
+
+.chart-titles {
+  color: #aaa;
+  font-family: "Inconsolata";
+  font-size: 0.8rem;
+  font-weight: 300;
+  display: flex;
+  word-wrap: 100%;
+  justify-content: center;
+}
+
+.histogram svg:hover {
+  cursor: pointer;
+}
+
+.border-path {
+  transition: opacity 1s ease;
+}
+
 @media (max-width: 1400px) {
   .typewrite {
     line-height: 1.8rem;
@@ -1146,13 +1261,13 @@ footer a {
     display: block;
   }
 
-  .methodNavBar > button {
+  .methodNavBar>button {
     width: 100%;
     text-align: left;
     margin: 3px 0;
   }
 
-  .methodNavBar > button:hover {
+  .methodNavBar>button:hover {
     border-bottom: 0px solid #000;
   }
 
