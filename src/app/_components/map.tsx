@@ -53,6 +53,13 @@ export function VectorMap({
     });
   }, [geoData, projection]);
 
+
+  // Use these bounds in your Leaflet map:
+  // West: 35.003370
+  // East: 35.857410
+  // South: 32.978150
+  // North: 33.465180
+
   //user clicking on city || resize window
   useEffect(() => {
     const filteredList = projectedPoints.filter(pt => {
@@ -79,7 +86,7 @@ export function VectorMap({
         const interval = setInterval(() => {
           if (i >= projectedPoints.length) {
             clearInterval(interval);
-            setBorderOpacity(1);
+            setBorderOpacity(0.7);
             setShowOverview(true);
             enableHover(true);
             return;
@@ -90,7 +97,7 @@ export function VectorMap({
         }, 50);
       } else {
         setVisiblePoints(projectedPoints);
-        setBorderOpacity(1);
+        setBorderOpacity(0.7);
         setShowOverview(true);
         enableHover(true);
       }

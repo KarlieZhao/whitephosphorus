@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import React, { useRef, useState, useEffect } from "react";
-import { geoDataProps } from "./datasource";
+import { geoDataProps, RED_GRADIENT } from "./datasource";
 
 export default function Area({ geoData, selectedCity }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
@@ -14,7 +14,7 @@ export default function Area({ geoData, selectedCity }: geoDataProps) {
         const svg = d3.select(svgRef.current);
         svg.selectAll('*').remove(); // Clear previous content
 
-        const margin = { top: 20, right: 20, bottom: 30, left: 30 };
+        const margin = { top: 10, right: 5, bottom: 20, left: 30 };
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
 
@@ -66,21 +66,27 @@ export default function Area({ geoData, selectedCity }: geoDataProps) {
 
         g.append('g')
             .attr('transform', `translate(0,${innerHeight})`)
-            .call(xAxis)
-            .selectAll('text')
-            .attr("fill", "#aaa")
-            .attr('class', "chart-labels");
+            .call(xAxis);
 
         // Y Axis
-        const yAxis = d3.axisLeft(yScale).ticks(5);
-
+        const yAxis = d3.axisLeft(yScale).ticks(5).tickSize(4);
         g.append('g').call(yAxis);
+
+        //style them
+        g.selectAll('.tick')
+            .select('line')
+            .attr("stroke", "#aaa");
+
+        g.selectAll('.tick')
+            .select('text')
+            .attr("fill", "#aaa")
+            .attr('class', "chart-labels");
 
         // Area path
         g.append('path')
             .datum(binnedCounts)
             // .attr('fill', '#842E1E')
-            .attr('fill', '#aaa')
+            .attr('fill', RED_GRADIENT[5])
             .attr('d', area);
 
     }, [geoData, width, height, selectedCity]);

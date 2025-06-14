@@ -1015,7 +1015,7 @@ footer {
   text-align: left;
   backdrop-filter: blur(2px);
   background-color: #00000033;
-  color: #999;
+  color: #777;
 }
 
 footer a {
@@ -1047,11 +1047,10 @@ footer a {
 
 .map-legend {
   position: fixed;
-  right: 2rem;
-  bottom: 2rem;
-  left: auto;
+  left: 0.5rem;
+  bottom: 1.7rem;
   font-size: calc(var(--height)*1.7);
-  color: #aaa
+  color: #777
 }
 
 .map-legend-points {
@@ -1088,7 +1087,7 @@ footer a {
 .map-readout {
   --height: 8px;
   position: fixed;
-  top: 7rem;
+  top: 2rem;
   left: 1rem;
   color: #aaa;
   font-family: "PPSupplySans-Ultralight";
@@ -1097,33 +1096,31 @@ footer a {
   word-spacing: 0.6px;
   line-height: 1.5rem;
   transition: opacity 0.3s ease;
+  z-index: 100;
 }
 
 .dynamic-readout {
   margin-top: 10rem;
   font-family: "PPSupplySans-Ultralight";
   transition: opacity 0.3s ease;
-  font-size: calc(var(--height)*2.3);
-  line-height: calc(var(--height)*3.5);
+  /* font-size: calc(var(--height)*2.1); */
+  /* line-height: calc(var(--height)*3); */
+  font-size: 1.05rem;
+  line-height: 1.45rem;
 }
 
 
 .dynamic-readout div:nth-child(1),
 .dynamic-readout div:nth-child(2) {
-  /* font-size: 1.1rem; 
-   line-height: 1.8rem; */
-  font-size: 1.7rem;
-  line-height: 2.3rem;
-  color: #fff;
+  font-size: 1.1rem;
+  height: 1.7rem;
+  /* font-size: 1.7rem; */
+  /* line-height: 2.3rem; */
   /* font-family: "PPSupplySans-Regular"; */
 }
 
 .dynamic-readout div:nth-child(3) {
-  margin-top: 2rem;
-}
-
-.highlight {
-  color: #db2f0f;
+  margin-top: 1rem;
 }
 
 .chart-labels {
@@ -1133,7 +1130,7 @@ footer a {
 }
 
 .chart-titles {
-  color: #aaa;
+  color: #ccc;
   font-family: "Inconsolata";
   font-size: 0.8rem;
   font-weight: 300;
@@ -1142,8 +1139,26 @@ footer a {
   justify-content: center;
 }
 
+.side-bar {
+  background-color: #000a;
+  /* border: 1px solid white; */
+  padding: 2rem;
+  filter: drop-shadow(-5px 0 7px #000);
+}
+
 .histogram svg:hover {
   cursor: pointer;
+}
+
+.timeline-xaxis {
+  width: fit-content;
+  /* border: 1px solid white; */
+  transform: translateX(50%);
+  padding: 2px 2px;
+  font-size: 12px;
+  pointer-events: none;
+  white-space: nowrap;
+  color: #eee;
 }
 
 .border-path {

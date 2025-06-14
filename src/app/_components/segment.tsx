@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
-import { geoDataProps, RED_GRADIENT } from "./datasource";
+import * as d3 from "d3";
+import { geoDataProps } from "./datasource";
+const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 7);
 
 export default function Segment({ geoData, selectedCity, selectedDay, onSegmentClick }: geoDataProps) {
     const width = 300;

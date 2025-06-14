@@ -1,7 +1,8 @@
 import * as d3 from "d3";
 import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps } from "./datasource";
-import { RED_GRADIENT } from "./datasource";
+const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 8);
+
 export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
@@ -51,7 +52,7 @@ export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove(); // clear previous render
 
-        const margin = { top: 5, right: 30, bottom: 30, left: 100 };
+        const margin = { top: 5, right: 30, bottom: 5, left: 100 };
         const width = dimensions.width - margin.left - margin.right;
         const height = dimensions.height - margin.top - margin.bottom;
 
@@ -76,7 +77,7 @@ export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
             .range([0, height])
             .padding(0.2);
 
-        const yAxis = d3.axisLeft(y);
+        const yAxis = d3.axisLeft(y).tickSize(3);
         g.append("g")
             .call(yAxis)
             .selectAll("text")
