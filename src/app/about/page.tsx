@@ -78,15 +78,15 @@ export default function Index() {
                         Ahmad Baydoun, Principal Investigator<br />
                         Khodor Joujou, Research Assistant<br />
                         <br />
-                        Collaborators:<br />
-                        In collaboration with <a href="https://greensoutherners.org" target="_blank">Green Southerners</a>, who played a key role through their team on the ground in data collection, verification, and geolocating.<br />
-                        <br />
-                        Website designed and developed by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
+                        Field Support: <br />
+                        <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> provided field-level support in the form of data collection, verification, and geolocation.
+                        <br /> <br />
+                        Website designed and built by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
                         <br />
                         Special thanks to:<br />
-                        Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Ali Slayman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kaiss, Justin Salhani, Mona Fawaz, Seyran Khadimi, Cosette Molijn, William Christou, @Easybakeovensz, @NemoAnno, @TedNoNumbers.
+                        Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Ali Slayman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kaiss, Justin Salhani, Cosette Molijn, William Christou, Alex Spoerndli, Jake Tacchi, Georges Sopwith, X:@Easybakeovensz, X:@NemoAnno.
                         <br />
-                        <div className="mt-10 mb-16">Follow us on <a href="https://x.com/Phosphor_Abyad" target="_blank">Twitter</a>, <a href="https://bsky.app/profile/whitephosphorus.info" target="_blank">BlueSky</a></div>
+                        <div className="mt-10 mb-16">Follow us on <a href="https://x.com/Phosphor_Abyad" target="_blank">Twitter</a> and <a href="https://bsky.app/profile/whitephosphorus.info" target="_blank">BlueSky</a>.</div>
                     </div>
                 </div>
             </main >
