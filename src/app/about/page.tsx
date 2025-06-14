@@ -78,11 +78,8 @@ export default function Index() {
                         Ahmad Baydoun, Principal Investigator<br />
                         Khodor Joujou, Research Assistant<br />
                         <br />
-                        Collaborators:<br />
-                        In collaboration with <a href="https://greensoutherners.org" target="_blank">Green Southerners</a>, who played a key role through their team on the ground in data collection, verification, and geolocating.<br />
-                        <br />
                         Field Support: <br />
-                        Green Southerners provided field-level support in the form of data collection, verification, and geolocation.
+                        <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> provided field-level support in the form of data collection, verification, and geolocation.
                         <br /> <br />
                         Website designed and built by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
                         <br />
