@@ -1,3 +1,4 @@
+import * as d3 from "d3";
 import React, { useEffect, useState } from "react";
 import { VectorMap } from "./map";
 import { Histogram } from "./histo";
@@ -5,7 +6,8 @@ import Area from "./area";
 import Segment from "./segment";
 import { TypewriterProps } from "./header";
 // export const RED_GRADIENT = ["#db2f0f", "#C03117", "#A5331E", "#8A3525", "#6E362C", "#7C3629", "#6E362C"]
-export const RED_GRADIENT = ["#ccc", "#aaa", "#888", "#777", "#666", "#555", "#444"]
+// export const RED_GRADIENT = ["#cfcfcf", "#aaa", "#909090", "#858585", "#777", "#666", "#606060"]
+export const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#6E362C"), 8);
 
 export type geoDataProps = {
     geoData: any[];
@@ -15,13 +17,23 @@ export type geoDataProps = {
     onSegmentClick?: (data: number | null) => void;
 };
 
+
+// TODO
+// interactive segment chart
+// timeline => right side small panel (also area chart?)
+// interactive area chart
+// map zoom and mouse drag
+// satellite images tiling? => new component, toggle
+// responsive chart sizing 
+
 export default function DataSource({ TypeWriterFinished = true }: TypewriterProps) {
     const [geoData, setGeoData] = useState<any[]>([]);
     const [selectedCity, setSelectedCity] = useState<string>("");
     const [selectedDay, setselectedDay] = useState<number>(-1);
 
     const [details, updateDetails] = useState<any[]>([]);
-    const [showOverview, setshowOverview] = useState(true)
+    const [showOverview, setshowOverview] = useState(true);
+
     useEffect(() => {
         fetch("/data/geoData.json")
             .then((res) => res.json())
@@ -37,30 +49,40 @@ export default function DataSource({ TypeWriterFinished = true }: TypewriterProp
     }, []);
 
 
-    const getDetails = (pt: any) => {
-        //selected city => multi point
+    const getDetails = (pt: any, arg?: any) => {
         let readout1, readout2, readout3, readout4, readout5 = "";
-        if (Array.isArray(pt)) {
-            if (pt.length === 0) {
+        if (arg != undefined) {
+            //multi point array
+            if (pt.length === 0 || !Array.isArray(pt)) {
                 updateDetails([readout1, readout2, readout3, readout4, readout5]);
                 return;
             }
-            const dates = pt.map(p => {
-                const dateTimeString = `${p.date}T${p.time}`;
-                const date = new Date(dateTimeString);
-                return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: 'numeric' });
-                // const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/\s(am|pm)/, (match) => match.toUpperCase());;
-            })
+            if (typeof arg === "string") {
+                const dates = pt.map(p => {
+                    const dateTimeString = `${p.date}T${p.time}`;
+                    const date = new Date(dateTimeString);
+                    return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: 'numeric' });
+                    // const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/\s(am|pm)/, (match) => match.toUpperCase());;
+                })
 
-            if (pt.length > 1) {
-                readout1 = <>Between {dates[0]} and {dates[dates.length - 1]}</>
-                readout2 = <>{pt.length} white phosphorus shells were deployed to <span className="highlight">{pt[0].name}</span></>
+                if (pt.length > 1) {
+                    readout1 = <>Between {dates[0]} and {dates[dates.length - 1]},</>
+                    readout2 = <>{pt.length} white phosphorus shells were deployed to <span className="highlight">{pt[0].name}</span>.</>
+                } else {
+                    readout1 = <>On {dates[0]},</>
+                    readout2 = <>{pt.length} white phosphorus shell was deployed to <span className="highlight">{pt[0].name}</span>.</>
+                }
+            } else if (typeof arg === 'number') {
+                const date = new Date(pt[0].date);
+                let day = date.getDay();
+                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                readout1 = <>Among 195 white phosophorus incidents, </>
+                readout2 = <>{pt.length} happened on {days[day]}s.</>
             } else {
-                readout1 = <>On {dates[0]}</>
-                readout2 = <>{pt.length} white phosphorus shell was deployed to <span className="highlight">{pt[0].name}</span></>
+                readout1 = <></>
+                readout2 = <></>
             }
-        } else if (typeof pt === "object") {
-
+        } else {
             //single point
             const dateTimeString = `${pt.date}T${pt.time}`;
             const date = new Date(dateTimeString);
@@ -83,16 +105,18 @@ export default function DataSource({ TypeWriterFinished = true }: TypewriterProp
             readout5 = `Classified as: ${siteType} area`;
         }
         updateDetails([readout1, readout2, readout3, readout4, readout5]);
-    };
+    }
 
 
     return (<>
         <div onClick={() => {
             if (selectedCity != "") {
                 setSelectedCity("");
-                getDetails([]);
+            }
+            if (selectedDay != -1) {
                 setselectedDay(-1);
             }
+            getDetails([], "clear");
         }}>
             <VectorMap geoData={geoData} selectedCity={selectedCity} selectedDay={selectedDay} TypeWriterFinished={TypeWriterFinished}
                 getMapDetails={getDetails} />
@@ -123,18 +147,27 @@ export default function DataSource({ TypeWriterFinished = true }: TypewriterProp
                         // const newCity = data === null ? "" : data[0]
                         setSelectedCity(newCity);
 
+                        // reset day to avoid confusion  
+                        setselectedDay(-1);
                         const pts = geoData.filter((p: any) => p.name === newCity);
-                        getDetails(pts);
+                        getDetails(pts, newCity);
                     }} />
             </div>
             <div className="mb-5"><Area geoData={geoData} selectedCity={selectedCity} /></div>
-            <div className="mt-6 mb-7"><Segment geoData={geoData} selectedCity={selectedCity}
-            //    disabled for now 
-            //   onSegmentClick={(day) => {
-            //     if (day === null) return;
-            //     const newDay = selectedDay === day ? -1 : day;
-            //     setselectedDay(newDay);
-            // }}
+            <div className="mt-6 mb-7"><Segment geoData={geoData} selectedCity={selectedCity} selectedDay={selectedDay}
+                onSegmentClick={(day) => {
+                    if (day === null) return;
+                    const newDay = selectedDay === day ? -1 : day; //if clicked again, reset
+                    setselectedDay(newDay);
+
+                    const pts = geoData.filter((p: any) => {
+                        const date = new Date(p.date);
+                        return date.getDay() === newDay
+                    });
+                    getDetails(pts, newDay);
+                    //reset city to avoid confusion
+                    setSelectedCity("");
+                }}
             /> </div>
 
         </div>

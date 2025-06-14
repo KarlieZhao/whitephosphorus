@@ -57,10 +57,11 @@ export function VectorMap({
   useEffect(() => {
     const filteredList = projectedPoints.filter(pt => {
       const matchesCity = selectedCity === "" || pt.name === selectedCity;
-      // const date = new Date(pt.date);
-      // const day = (date.getDay() + 6) % 7;
-      // const matchesDay = selectedDay === -1 ? true : day === selectedDay;
-      return matchesCity;
+
+      const date = new Date(pt.date);
+      const day = (date.getDay() + 6) % 7;
+      const matchesDay = selectedDay === -1 ? true : day === selectedDay;
+      return matchesCity && matchesDay;
     });
 
     setVisiblePoints(filteredList);
@@ -95,15 +96,6 @@ export function VectorMap({
       }
     }
   }, [geoData, TypeWriterFinished])
-
-  // TODO
-  // ZOOM: set scale and translate projection
-  // interactive area chart (class)
-  // interactive segment chart
-  // timeline => right side small panel
-  // satellite images tiling? => new component, toggle
-  // mouse drag
-
 
   return (
     <section className="z-10 top-20 fixed overflow-hidden overscroll-contain" style={{ width: `100vw`, height: `91%` }}    >

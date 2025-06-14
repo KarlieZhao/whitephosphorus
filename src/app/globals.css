@@ -1088,8 +1088,8 @@ footer a {
 .map-readout {
   --height: 8px;
   position: fixed;
-  top: 4rem;
-  left: 22vw;
+  top: 7rem;
+  left: 1rem;
   color: #aaa;
   font-family: "PPSupplySans-Ultralight";
   /* font-size: 1.1rem; */
@@ -1112,15 +1112,18 @@ footer a {
 .dynamic-readout div:nth-child(2) {
   /* font-size: 1.1rem; 
    line-height: 1.8rem; */
-
   font-size: 1.7rem;
   line-height: 2.3rem;
-
+  color: #fff;
   /* font-family: "PPSupplySans-Regular"; */
 }
 
+.dynamic-readout div:nth-child(3) {
+  margin-top: 2rem;
+}
+
 .highlight {
-  color: white
+  color: #db2f0f;
 }
 
 .chart-labels {

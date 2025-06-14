@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps, RED_GRADIENT } from "./datasource";
 
-export default function Segment({ geoData, selectedCity, onSegmentClick }: geoDataProps) {
+export default function Segment({ geoData, selectedCity, selectedDay, onSegmentClick }: geoDataProps) {
     const width = 300;
     const height = 120;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
@@ -23,7 +23,7 @@ export default function Segment({ geoData, selectedCity, onSegmentClick }: geoDa
 
     return (<>
         <div className="chart-titles mb-3">WP shells by days of week</div>
-        <div className="flex gap-1" style={{ width }}>
+        <div className="flex gap-1 cursor-pointer" style={{ width }}>
             {(() => {
                 const sorted = [...counts].sort((a, b) => b - a);
                 return counts.map((count, i) => {
@@ -34,9 +34,11 @@ export default function Segment({ geoData, selectedCity, onSegmentClick }: geoDa
                             style={{
                                 width: `${count}px`,
                                 height: '10px',
-                                background: RED_GRADIENT[sorted.indexOf(count)]
+                                background: selectedDay === i ? "#CF705F" : RED_GRADIENT[sorted.indexOf(count)]
                             }}
-                        // onClick={() => { if (onSegmentClick) onSegmentClick(i) }}
+                            onClick={() => {
+                                if (onSegmentClick) onSegmentClick(i);
+                            }}
                         ></div>
                     );
                 });
@@ -46,7 +48,7 @@ export default function Segment({ geoData, selectedCity, onSegmentClick }: geoDa
         <div className="flex gap-1" style={{ width }}>
             {bins.map((day, i) => {
                 if (counts[i] === 0) return;
-                return <div key={i} className="chart-labels flex justify-center" style={{ color: "#aaa", width: `${counts[i]}px`, height: `${height / 10}px` }}>{day}</div>
+                return <div key={i} className="chart-labels flex justify-center " style={{ color: "#aaa", width: `${counts[i]}px`, height: `${height / 10}px` }}>{day}</div>
             })}
         </div>
     </>)

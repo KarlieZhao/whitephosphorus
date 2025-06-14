@@ -1,11 +1,10 @@
 import * as d3 from "d3";
 import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps } from "./datasource";
-
+import { RED_GRADIENT } from "./datasource";
 export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
-    const red = d3.quantize(d3.interpolateRgb("#db2f0f", "#6E362C"), 8);
     let colorIndex = Array(30).fill(0);
 
     const highlightHovered = (event: MouseEvent, d: [string, number]) => {
@@ -20,7 +19,7 @@ export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
         if (d[0] === selectedCity) return;
         const target = event.currentTarget as SVGRectElement;
         const index = d3.selectAll("rect.interaction").nodes().indexOf(target);
-        d3.select(svgRef.current).selectAll("rect.render").filter((_, i) => i === index).attr("fill", red[colorIndex[index]]);
+        d3.select(svgRef.current).selectAll("rect.render").filter((_, i) => i === index).attr("fill", RED_GRADIENT[colorIndex[index]]);
         d3.select(svgRef.current).selectAll(".chart-labels").filter((_, i) => i === index).attr("fill", "#aaa");
     }
 
@@ -94,7 +93,7 @@ export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
             .attr("x", 0)
             .attr("height", y.bandwidth())
             .attr("width", ([, count]) => x(count))
-            .attr("fill", ([], i) => red[colorIndex[i]]);
+            .attr("fill", ([], i) => RED_GRADIENT[colorIndex[i]]);
 
         //interaction bars
         g.selectAll("rect.interaction")
