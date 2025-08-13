@@ -1,11 +1,12 @@
 import * as d3 from "d3";
 import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps } from "./datasource";
+import { width } from "./datasource";
 const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 8);
 
-export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
+export function Histogram({ geoData, selectedCity, selectedDates, onBarClick }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
-    const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
+    const [dimensions, setDimensions] = useState({ width: width, height: 440 });
     let colorIndex = Array(30).fill(0);
 
     const highlightHovered = (event: MouseEvent, d: [string, number]) => {
@@ -24,22 +25,64 @@ export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
         d3.select(svgRef.current).selectAll(".chart-labels").filter((_, i) => i === index).attr("fill", "#aaa");
     }
 
-    const sortData = () => {
-        if (!geoData || geoData.length === 0) return;
+    const parseDate = d3.timeParse('%Y-%m-%d'); //return Date 
+
+    const allCityNames = [
+        "Meiss El Jabal",
+        "Kfar Kila",
+        "Al Khiam",
+        "Yaroun",
+        "Houla",
+        "Markaba",
+        "Aadaisse",
+        "Dhaira",
+        "Aita Ech Chaab",
+        "Blida",
+        "Kfar Chouba",
+        "Rmaysh",
+        "Talet Irmis",
+        "El Merri",
+        "Labboune",
+        "Alma Echaab",
+        "Ramyeh",
+        "El Boustane",
+        "Slaiyeb",
+        "Aamra",
+        "Tell en Nhas",
+        "Chebaa",
+        "Maisat",
+        "Deir Mimass",
+        "Talloussa",
+        "Kounine",
+        "Ouazzani"
+    ]
+
+    const sortData = (dataset: any[]) => {
         let processedData: { [key: string]: number } = {};
-        geoData.forEach((item) => {
+        dataset.forEach((item) => {
             if (item.name) {
                 processedData[item.name] = (processedData[item.name] || 0) + 1;
             }
         });
         return Object.entries(processedData).sort(([, a], [, b]) => b - a);
     }
+    const filteredData = selectedDates ? geoData.filter(d => {
+        const date = parseDate(d.date);
+        const start = parseDate(selectedDates[0]);
+        const end = parseDate(selectedDates[1]);
+        if (!date || !start || !end) return true;
+        return date >= start && date <= end;
+    }) : geoData;
 
     useEffect(() => {
-        const sortedData = sortData();
+        if (!geoData || geoData.length === 0) return;
+
+        const sortedData = sortData(filteredData);
         if (!sortedData) return;
-        const names = sortedData.map((ele) => ele[0]);
+        // const names = sortedData.map((ele) => ele[0]);
+        const counts_ydomain = sortData(geoData).map((ele) => ele[1]);
         const counts = sortedData.map((ele) => ele[1]);
+
         let index = 0;
 
         colorIndex = counts.map((count, i) => {
@@ -67,13 +110,13 @@ export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
         //scales
         const x = d3
             .scaleLinear()
-            .domain([0, d3.max(counts) || 0])
+            .domain([0, d3.max(counts_ydomain) || 0])
             .nice()
             .range([0, width]);
 
         const y = d3
             .scaleBand()
-            .domain(names)
+            .domain(allCityNames)
             .range([0, height])
             .padding(0.2);
 
@@ -120,7 +163,7 @@ export function Histogram({ geoData, selectedCity, onBarClick }: geoDataProps) {
                 if (onBarClick) onBarClick(d);
             })
 
-    }, [geoData, dimensions, selectedCity]);
+    }, [geoData, dimensions, selectedCity, selectedDates]);
 
     return <>
         <div className="chart-titles">WP shells by City</div>

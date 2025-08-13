@@ -1,158 +1,178 @@
-import { useWindowWidth, useWindowHeight } from "@/lib/resize";
-import React, { useState, useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import * as d3 from "d3";
 import { geoDataProps } from "./datasource";
 import { TypewriterProps } from "./header";
+
 type VectorMapProps = geoDataProps & TypewriterProps & {
   getMapDetails: (point: any) => void;
+  mapZoom: number;
+  leafletCenter: [number, number];
+  mapInstance: any;
 };
 
 export function VectorMap({
   geoData,
   selectedCity,
   selectedDay,
+  selectedDates,
   TypeWriterFinished = true,
-  getMapDetails
+  getMapDetails,
+  mapZoom,
+  leafletCenter,
+  mapInstance
 }: VectorMapProps) {
-  const [hoverEnabled, enableHover] = useState<boolean>(false);
-  const [hoveredPointIndex, setHoveredPointIndex] = useState<Number | null>(null);
-  const [visiblePoints, setVisiblePoints] = useState<any[]>([]);
-  const [borderGeoJson, setBorderGeoJson] = useState<any | null>(null);
-  const [borderOpacity, setBorderOpacity] = useState(0);
-
-  const [showOverview, setShowOverview] = useState<boolean>(false);
-
-  const frameHeight = useWindowHeight() * 0.85;
-  const frameWidth = useWindowWidth() * 0.95;
-
-  const [scale, setScale] = useState(110000);
 
   useEffect(() => {
-    // Fetch border data once on mount
-    fetch("/data/LBN_geoBoundaries_clipped.geojson")
-      .then((res) => res.json())
-      .then((data) => {
-        setBorderGeoJson(data);
-      })
-      .catch((err) => console.error("Failed to load geoData:", err));
-  }, []);
+    const svg = document.querySelector("#map .leaflet-overlay-pane svg") as SVGSVGElement;
+    if (!svg) return;
 
-  const projection = d3.geoMercator()
-    .center([35.54, 33.22])
-    .scale(scale)
-    .translate([frameWidth / 2, frameHeight / 2]);
+    let g: d3.Selection<SVGGElement, unknown, null, undefined> = d3.select(svg).select<SVGGElement>("g");
+    if (g.empty()) {
+      g = d3.select(svg).append("g");
+    } else {
+      g.selectAll("*").remove(); // Clear previous
+    }
 
-  const pathGenerator = d3.geoPath().projection(projection);
+    let defs: d3.Selection<SVGGElement, unknown, null, undefined> = d3.select(svg).select<SVGGElement>("defs");
+    if (defs.empty()) {
+      defs = d3.select(svg).append("defs");
+    } else {
+      defs.selectAll("#pointGlow").remove();
+    }
 
-  const projectedPoints = useMemo(() => {
-    return geoData.map((d) => {
-      const projected = projection([d.lon, d.lat]);
-      if (!projected) return { ...d, x: 0, y: 0 };
-      const [x, y] = projected;
-      return { ...d, x, y };
-    });
-  }, [geoData, projection]);
+    // radial gradient for glow
+    const whiteGradient = defs.append("radialGradient")
+      .attr("id", "whiteGradient")
+      .attr("cx", "50%")
+      .attr("cy", "50%")
+      .attr("r", "50%")
+      .attr("fx", "50%")
+      .attr("fy", "50%");
+
+    whiteGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "#eee") // center
+      .attr("stop-opacity", 0.7);
+
+    whiteGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "#eee")// edge
+      .attr("stop-opacity", 0);
 
 
-  // Use these bounds in your Leaflet map:
-  // West: 35.003370
-  // East: 35.857410
-  // South: 32.978150
-  // North: 33.465180
+    const redGradient = defs.append("radialGradient")
+      .attr("id", "redGradient")
+      .attr("cx", "50%")
+      .attr("cy", "50%")
+      .attr("r", "50%")
+      .attr("fx", "50%")
+      .attr("fy", "50%");
 
-  //user clicking on city || resize window
-  useEffect(() => {
-    const filteredList = projectedPoints.filter(pt => {
+    redGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "#ff0000") // center
+      .attr("stop-opacity", 0.7);
+
+    redGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "#ff0000")// edge
+      .attr("stop-opacity", 0);
+
+    // Projection using Leaflet's latLngToLayerPoint
+    const L = require("leaflet");
+    const projectPoint = (lon: number, lat: number) => {
+      if (!mapInstance) return [0, 0];
+      const point = mapInstance.latLngToLayerPoint([lat, lon]);
+      return [point.x, point.y];
+    };
+
+    const leafletProjection = {
+      stream: (stream: any) => {
+        return {
+          point: (x: number, y: number) => {
+            const [px, py] = projectPoint(x, y);
+            stream.point(px, py);
+          },
+          sphere: () => stream.sphere?.(),
+          lineStart: () => stream.lineStart?.(),
+          lineEnd: () => stream.lineEnd?.(),
+          polygonStart: () => stream.polygonStart?.(),
+          polygonEnd: () => stream.polygonEnd?.(),
+        };
+      },
+    };
+
+    const geoPath = d3.geoPath().projection(leafletProjection as any);
+
+    // filter by selected city/day
+    const visiblePoints = geoData.filter(pt => {
       const matchesCity = selectedCity === "" || pt.name === selectedCity;
-
       const date = new Date(pt.date);
       const day = (date.getDay() + 6) % 7;
       const matchesDay = selectedDay === -1 ? true : day === selectedDay;
-      return matchesCity && matchesDay;
+      let withinDateRange = true;
+      if (selectedDates && selectedDates[0] && selectedDates[1]) {
+        const start = new Date(selectedDates[0]);
+        const end = new Date(selectedDates[1]);
+        withinDateRange = date >= start && date <= end;
+      }
+
+      return matchesCity && matchesDay && withinDateRange;
     });
 
-    setVisiblePoints(filteredList);
-  }, [selectedCity, selectedDay, frameHeight, frameWidth])
+    // draw border
+    fetch("/data/LB_regions.geojson")
+      .then((res) => res.json())
+      .then((borderGeoJson) => {
+        g.selectAll("path")
+          .data(borderGeoJson.features)
+          .enter()
+          .append("path")
+          .attr("d", geoPath as any)
+          .attr("stroke", "#451111")
+          .attr("stroke-width", 3)
+          .attr("fill", "none");
+
+        // radial gradient glow
+        g.selectAll("circle.interaction-layer")
+          .data(visiblePoints)
+          .enter()
+          .append("circle")
+          .attr("class", "map-data-points map-data-points-hover interaction-layer")
+          .attr("cx", (d) => projectPoint(d.lon, d.lat)[0])
+          .attr("cy", (d) => projectPoint(d.lon, d.lat)[1])
+          .attr("r", 15)
+          .style("pointer-events", "all")
+          .attr("fill", "url(#whiteGradient)")
+          .on("mouseover", function (event, d) {
+            d3.select(
+              g.selectAll("circle.incident-point").nodes()[visiblePoints.indexOf(d)]
+            ).classed("active", true);
+            d3.select(this).attr("fill", "url(#redGradient)");
+            getMapDetails(d);
+          })
+          .on("mouseout", function (event, d) {
+            d3.select(
+              g.selectAll("circle.incident-point").nodes()[visiblePoints.indexOf(d)]
+            ).classed("active", false);
+            d3.select(this).attr("fill", "url(#whiteGradient)");
+          });
 
 
-  //dots emerge animation
-  useEffect(() => {
-    if (!TypeWriterFinished || projectedPoints.length === 0) return;
+        // center circle
+        g.selectAll("circle.incident-point")
+          .data(visiblePoints)
+          .enter()
+          .append("circle")
+          .attr("class", "map-data-points incident-point")
+          .attr("cx", (d) => projectPoint(d.lon, d.lat)[0])
+          .attr("cy", (d) => projectPoint(d.lon, d.lat)[1])
+          .attr("r", 3.5)
+          .attr("fill", "#ffffff")
 
-    if (geoData.length > 0) {
-      if (sessionStorage.getItem('visited') != "true") {
-        sessionStorage.setItem('visited', "true");
-        let i = 0;
-        const interval = setInterval(() => {
-          if (i >= projectedPoints.length) {
-            clearInterval(interval);
-            setBorderOpacity(0.7);
-            setShowOverview(true);
-            enableHover(true);
-            return;
-          }
-          const point = projectedPoints[i];
-          i++;
-          setVisiblePoints((prev) => [...prev, point]);
-        }, 50);
-      } else {
-        setVisiblePoints(projectedPoints);
-        setBorderOpacity(0.7);
-        setShowOverview(true);
-        enableHover(true);
-      }
-    }
-  }, [geoData, TypeWriterFinished])
 
-  return (
-    <section className="z-10 top-20 fixed overflow-hidden overscroll-contain" style={{ width: `100vw`, height: `91%` }}    >
+      });
+  }, [geoData, selectedCity, selectedDates, selectedDay, mapZoom, leafletCenter]);
 
-      <div className="absolute left-[30%] top-[45%] country-legal" style={{ opacity: borderOpacity }}>Lebanon</div>
-      <div className="absolute left-[58%] top-[60%] country-legal" style={{ opacity: borderOpacity }}>Israel</div>
-      {/* SVG border */}
-      <svg
-        className="absolute top-2 left-4 z-0 border-path"
-        width={frameWidth}
-        height={frameHeight}
-        style={{ pointerEvents: "none" }}
-        opacity={borderOpacity}
-      >
-        {borderGeoJson && borderGeoJson.features.map((feature: any, i: number) => {
-          return <path
-            key={i}
-            d={pathGenerator(feature) || undefined}
-            stroke="#451111"
-            strokeWidth={3}
-            fill="none"
-          />
-        })}
-      </svg>
-
-      {/* map projection  */}
-      {visiblePoints.map((pt, i) => {
-        return (
-          <div className="interaction-layer"
-            key={i}
-            style={{
-              left: `${pt.x}px`,
-              top: `${pt.y}px`,
-            }}
-            onMouseOver={() => {
-              if (hoverEnabled) {
-                setHoveredPointIndex(i);
-                getMapDetails(pt)
-              }
-            }}
-          // onMouseOut={() => setHoveredPointIndex(null)}
-          >
-            <div
-              key={i}
-              id={`data-point${pt.name}`}
-              className={`map-data-points ${hoveredPointIndex === i ? 'active' : ''}`}
-            />
-          </div>
-        )
-      })}
-    </section>
-  );
+  return null;
 }

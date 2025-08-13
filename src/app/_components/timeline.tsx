@@ -1,16 +1,51 @@
 import * as d3 from "d3";
 import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps } from "./datasource";
-const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 5);
+import { width } from "./datasource";
 
-export default function Timeline({ geoData, selectedCity }: geoDataProps) {
+export default function Timeline({ geoData, selectedCity, selectedDates, onTimelineDragged }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
+    const startDateRef = useRef<Date | null>(null);
     const [hoverInfo, setHoverInfo] = useState<{ x: number; date: Date } | null>(null);
     const margin = { top: 10, right: 10, bottom: 5, left: 10 };
-
-    const width = 300;
     const height = 55;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
+
+    const getTotalCounts = (data: typeof geoData) => {
+        const counts = new Map<string, number>();
+        data.forEach(d => {
+            counts.set(d.date, (counts.get(d.date) ?? 0) + 1);
+        });
+        return counts;
+    }
+
+    function scaleColor(maxCount: number) {
+        return d3.scaleSequential()
+            .domain([0, maxCount + 1])
+            .interpolator(d3.interpolateRgb("#2e1f1f", "#db2f0f"));
+    }
+    const highlightSelection = (rangeStart: Date, rangeEnd: Date, d: Date) => {
+        return (d >= rangeStart && d <= rangeEnd) ? 1 : 0.5;
+    }
+
+    const parseDate = d3.timeParse('%Y-%m-%d'); //return Date 
+    const formatDate = d3.timeFormat("%Y-%m-%d"); // return string
+    const totalCounts = getTotalCounts(geoData);
+
+    // full date range (unfiltered)
+    const dates = Array.from(totalCounts.keys()).map(d => parseDate(d)!);
+    const minDate = d3.min(dates)!
+    const maxDate = d3.max(dates)!
+    const allDates: Date[] = d3.timeDay.range(minDate, d3.timeDay.offset(maxDate, 1));
+
+    const getFilteredCounts = (data: typeof geoData, city?: string) => {
+        const filtered = city ? data.filter(d => d.name === city) : data;
+        const counts = new Map<string, number>();
+        filtered.forEach(d => {
+            counts.set(d.date, (counts.get(d.date) ?? 0) + 1);
+        });
+        return counts;
+    }
 
     useEffect(() => {
         if (!geoData || geoData.length === 0) return;
@@ -21,25 +56,13 @@ export default function Timeline({ geoData, selectedCity }: geoDataProps) {
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
 
-        const parseDate = d3.timeParse('%Y-%m-%d');
-        const countsMap = new Map<string, number>();
+        const filteredCounts = getFilteredCounts(geoData, selectedCity);
+        const maxCount = Math.max(...Array.from(filteredCounts.values()), 0);
 
-        geoData.forEach(d => {
-            countsMap.set(d.date, (countsMap.get(d.date) ?? 0) + 1);
-        });
-
-        // Create a full date range from min to max
-        const dateStrings = Array.from(countsMap.keys());
-        const dates = dateStrings.map(d => parseDate(d)!);
-        const minDate = d3.min(dates)!;
-        const maxDate = d3.max(dates)!;
-
-        const allDates: Date[] = d3.timeDay.range(minDate, d3.timeDay.offset(maxDate, 1)); // include maxDate
         const countsByDate = allDates.map(date => ({
             date,
-            count: countsMap.get(d3.timeFormat('%Y-%m-%d')(date)) ?? 0
+            count: filteredCounts.get(formatDate(date)) ?? 0
         }));
-
 
         const g = svg.append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -50,8 +73,7 @@ export default function Timeline({ geoData, selectedCity }: geoDataProps) {
             .range([0, innerWidth])
         // .padding(0.1);
 
-        // for color
-        const maxCount = d3.max(countsByDate, d => d.count) ?? 1;
+        const RED_GRADIENT = scaleColor(maxCount);
 
         // Draw bars
         g.selectAll('rect')
@@ -62,16 +84,59 @@ export default function Timeline({ geoData, selectedCity }: geoDataProps) {
             .attr('y', 0)
             .attr('width', xScale.bandwidth())
             .attr('height', innerHeight)
-            .attr('fill', d => RED_GRADIENT[maxCount - d.count])
+            .attr('fill', d => RED_GRADIENT(d.count))
             .on('mouseover', function (e, d) {
                 const x = (xScale(d.date) ?? 0) + margin.left + xScale.bandwidth() / 2;
+                d3.select(this).attr("fill", "red");
                 setHoverInfo({ x, date: d.date });
             })
-            .on('mouseout', () => {
+            .on('mouseout', function (e, d) {
                 setHoverInfo(null);
-            });
+                d3.select(this).attr('fill', (d: any) => RED_GRADIENT(d.count))
+            })
+            .on('mousedown', function (e, d) {
+                startDateRef.current = d.date;
+            })
+            .on('mousemove', function (e, d) {
+                if (!startDateRef.current) return;
+                const start = startDateRef.current;
+                const current = d.date;
+                const rangeStart = start < current ? start : current;
+                const rangeEnd = start > current ? start : current;
 
-    }, [geoData, width, height, selectedCity]);
+                g.selectAll('rect')
+                    .attr('opacity', (rectData: any) => {
+                        if (!rectData || !rectData.date) { return 0.7; }
+                        else return (rectData.date >= rangeStart && rectData.date <= rangeEnd ? 1 : 0.5)
+                    });
+            })
+            .on('mouseup', function (e, d) {
+                if (startDateRef.current) {
+                    const start = startDateRef.current;
+                    const end = d.date;
+
+                    // normalize so start <= end
+                    const rangeStart = start < end ? start : end;
+                    const rangeEnd = start > end ? start : end;
+
+                    const theDates: [string, string] = [formatDate(rangeStart), formatDate(rangeEnd)];
+                    if (onTimelineDragged) onTimelineDragged(theDates);
+                }
+                // Reset startDateRef
+                startDateRef.current = null;
+            })
+
+        if (selectedDates && selectedDates[0] && selectedDates[1]) {
+            const start = parseDate(selectedDates[0])!;
+            const end = parseDate(selectedDates[1])!;
+            g.selectAll('rect')
+                .attr('opacity', (rectData: any) => highlightSelection(start, end, rectData.date));
+        } else {
+            g.selectAll('rect').attr('opacity', 0.5);
+        }
+
+
+    }, [geoData, width, height, selectedDates, selectedCity]);
 
     return <> <div className="chart-titles">WP shells by day</div>
         <svg ref={svgRef} width={width} height={height} />

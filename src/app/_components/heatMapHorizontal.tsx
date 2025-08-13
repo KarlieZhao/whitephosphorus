@@ -25,6 +25,7 @@ type HeatMapProps = {
 
 //entry data for D3
 type CellData = { x: number; y: number; value: number };
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollButtonVisible }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -65,7 +66,6 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       const [year, month, day] = d.split('-');
       const prevLabel = index > 0 ? xLabels[index - 1].split('-')[1] : null;
       if (!prevLabel || month !== prevLabel) {
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const monthName = months[parseInt(month, 10) - 1]; // Convert "month" string to index
         return `${monthName}, ${year}`;
 

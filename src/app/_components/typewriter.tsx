@@ -24,9 +24,9 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
             setIsFinished(true);
             onFinish();
         }
-        //  else if (isFinished) {
-        //     sessionStorage.setItem('visited', "true");
-        // }
+        else if (isFinished) {
+            sessionStorage.setItem('visited', "true");
+        }
         return () => { };
     }, [isFinished, onFinish]);
 

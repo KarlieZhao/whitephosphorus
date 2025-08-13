@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
 import * as d3 from "d3";
 import { geoDataProps } from "./datasource";
+import { width } from "./datasource";
+
 const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 7);
 
-export default function Segment({ geoData, selectedCity, selectedDay, onSegmentClick }: geoDataProps) {
-    const width = 300;
+export default function Segment({ geoData, selectedCity, selectedDay, selectedDates, onSegmentClick }: geoDataProps) {
     const height = 120;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
     const [counts, setCounts] = useState<number[]>([]);
@@ -25,7 +26,7 @@ export default function Segment({ geoData, selectedCity, selectedDay, onSegmentC
 
     return (<>
         <div className="chart-titles mb-3">WP shells by days of week</div>
-        <div className="flex gap-1 cursor-pointer" style={{ width }}>
+        <div className="flex gap-1 cursor-pointer" style={{ width: width }}>
             {(() => {
                 const sorted = [...counts].sort((a, b) => b - a);
                 return counts.map((count, i) => {
