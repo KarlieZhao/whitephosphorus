@@ -21,8 +21,8 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
 
     function scaleColor(maxCount: number) {
         return d3.scaleSequential()
-            .domain([0, maxCount + 1])
-            .interpolator(d3.interpolateRgb("#2e1f1f", "#db2f0f"));
+            .domain([0, maxCount])
+            .interpolator(d3.interpolateRgb("#2e1f1f", "#ff0000"));
     }
     const highlightSelection = (rangeStart: Date, rangeEnd: Date, d: Date) => {
         return (d >= rangeStart && d <= rangeEnd) ? 1 : 0.5;
@@ -39,7 +39,7 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
     const allDates: Date[] = d3.timeDay.range(minDate, d3.timeDay.offset(maxDate, 1));
 
     const getFilteredCounts = (data: typeof geoData, city?: string) => {
-        const filtered = city ? data.filter(d => d.name === city) : data;
+        const filtered = city ? data.filter(d => d.town === city) : data;
         const counts = new Map<string, number>();
         filtered.forEach(d => {
             counts.set(d.date, (counts.get(d.date) ?? 0) + 1);
@@ -87,7 +87,7 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
             .attr('fill', d => RED_GRADIENT(d.count))
             .on('mouseover', function (e, d) {
                 const x = (xScale(d.date) ?? 0) + margin.left + xScale.bandwidth() / 2;
-                d3.select(this).attr("fill", "red");
+                d3.select(this).attr("fill", "#ffaaaa");
                 setHoverInfo({ x, date: d.date });
             })
             .on('mouseout', function (e, d) {
@@ -106,8 +106,8 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
 
                 g.selectAll('rect')
                     .attr('opacity', (rectData: any) => {
-                        if (!rectData || !rectData.date) { return 0.7; }
-                        else return (rectData.date >= rangeStart && rectData.date <= rangeEnd ? 1 : 0.5)
+                        if (!rectData || !rectData.date) { return 1; }
+                        else return (rectData.date >= rangeStart && rectData.date <= rangeEnd ? 1 : 0.4)
                     });
             })
             .on('mouseup', function (e, d) {
@@ -132,7 +132,7 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
             g.selectAll('rect')
                 .attr('opacity', (rectData: any) => highlightSelection(start, end, rectData.date));
         } else {
-            g.selectAll('rect').attr('opacity', 0.5);
+            g.selectAll('rect').attr('opacity', 1);
         }
 
 

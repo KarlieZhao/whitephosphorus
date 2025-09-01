@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps } from "./datasource";
 import { width } from "./datasource";
-const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 8);
+const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 16);
 
 export function Histogram({ geoData, selectedCity, selectedDates, onBarClick }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
@@ -27,41 +27,18 @@ export function Histogram({ geoData, selectedCity, selectedDates, onBarClick }: 
 
     const parseDate = d3.timeParse('%Y-%m-%d'); //return Date 
 
-    const allCityNames = [
-        "Meiss El Jabal",
-        "Kfar Kila",
-        "Al Khiam",
-        "Yaroun",
-        "Houla",
-        "Markaba",
-        "Aadaisse",
-        "Dhaira",
-        "Aita Ech Chaab",
-        "Blida",
-        "Kfar Chouba",
-        "Rmaysh",
-        "Talet Irmis",
-        "El Merri",
-        "Labboune",
-        "Alma Echaab",
-        "Ramyeh",
-        "El Boustane",
-        "Slaiyeb",
-        "Aamra",
-        "Tell en Nhas",
-        "Chebaa",
-        "Maisat",
-        "Deir Mimass",
-        "Talloussa",
-        "Kounine",
-        "Ouazzani"
-    ]
+    const getAllTownNames = (data: any[]): string[] => {
+        //get all town names and sort by count
+        const sorted = sortData(data);
+        const towns = sorted.map(item => item[0])
+        return Array.from(new Set(towns));
+    }
 
     const sortData = (dataset: any[]) => {
         let processedData: { [key: string]: number } = {};
         dataset.forEach((item) => {
-            if (item.name) {
-                processedData[item.name] = (processedData[item.name] || 0) + 1;
+            if (item.town) {
+                processedData[item.town] = (processedData[item.town] || 0) + item.shell_count;
             }
         });
         return Object.entries(processedData).sort(([, a], [, b]) => b - a);
@@ -74,6 +51,8 @@ export function Histogram({ geoData, selectedCity, selectedDates, onBarClick }: 
         return date >= start && date <= end;
     }) : geoData;
 
+    const allCityNames = getAllTownNames(geoData);
+
     useEffect(() => {
         if (!geoData || geoData.length === 0) return;
 
@@ -82,7 +61,6 @@ export function Histogram({ geoData, selectedCity, selectedDates, onBarClick }: 
         // const names = sortedData.map((ele) => ele[0]);
         const counts_ydomain = sortData(geoData).map((ele) => ele[1]);
         const counts = sortedData.map((ele) => ele[1]);
-
         let index = 0;
 
         colorIndex = counts.map((count, i) => {

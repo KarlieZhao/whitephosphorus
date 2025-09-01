@@ -46,7 +46,7 @@ export default function Index() {
     };
     return (
         <div>
-            <Header TypeWriterFinished={false} />
+            <Header TypewriterFinished={false} />
 
             {/* media overlay */}
             <div id="media-overlay" className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">

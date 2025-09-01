@@ -5,11 +5,11 @@ import '@/app/globals.css';
 import { isMobileDevice } from "./mobile-detector";
 
 export type TypewriterProps = {
-  TypeWriterFinished?: boolean;
+  TypewriterFinished?: boolean;
 };
 type ToxicityData = Array<{ type: string; number: string; unit: string }>;
 
-const Header = ({ TypeWriterFinished = true }: TypewriterProps) => {
+const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -48,7 +48,7 @@ const Header = ({ TypeWriterFinished = true }: TypewriterProps) => {
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
-    if (TypeWriterFinished) {
+    if (TypewriterFinished) {
       const interval = setInterval(() => {
         setAnimationClass("fadeOut");
         setTimeout(() => {
@@ -107,7 +107,7 @@ const Header = ({ TypeWriterFinished = true }: TypewriterProps) => {
             WhitePhosphorus.info
           </h3>
         </div>
-        {TypeWriterFinished && (
+        {TypewriterFinished && (
           <div className="toxicity-counter relative pl-2 flex flex-row fadeSlideIn">
             <div className="counter-label flex-initial w-20 flex flex-col justify-center items-start">
               <div>TOXICITY<br />COUNTER</div>
@@ -170,7 +170,7 @@ const Header = ({ TypeWriterFinished = true }: TypewriterProps) => {
                 </tr>
               </tbody>
             </table>
-            {TypeWriterFinished && (
+            {TypewriterFinished && (
               <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn">
                 <div className="flex-initial basis-1/3 flex flex-col justify-center items-start">
                   <div>TOXICITY  COUNTER</div>

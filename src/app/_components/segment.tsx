@@ -10,14 +10,14 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
     const [counts, setCounts] = useState<number[]>([]);
     const bins = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
     useEffect(() => {
         if (!geoData || geoData.length === 0) return;
         const dayCount = Array(7).fill(0);
-        const gd = selectedCity === "" ? geoData : geoData.filter(item => item.name === selectedCity)
+        const gd = selectedCity === "" ? geoData : geoData.filter(item => item.town === selectedCity)
         gd.forEach(data => {
             const date = new Date(data.date);
             let day = date.getDay();
-            day = day === 0 ? 6 : day - 1;
             dayCount[day]++;
         })
         const widthFactor = (width - 20) / gd.length;

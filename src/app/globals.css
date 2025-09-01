@@ -1082,7 +1082,9 @@ footer a {
 
 .map-data-points {
   position: absolute;
-
+  /* mix-blend-mode: soft-light; */
+  cursor: pointer;
+  z-index: 10;
   /* filter: drop-shadow(0 0 18px #eee) drop-shadow(0 0 13px #eee) drop-shadow(0 0 8px #eee) drop-shadow(0 0 3px #eee); */
 }
 
@@ -1090,9 +1092,8 @@ footer a {
   fill: radial-gradient(circle at center, #ff7e5f, #feb47b);
 }
 
-
 .map-data-points:hover {
-  cursor: pointer;
+  z-index: 100000;
 }
 
 .map-data-points.active {
@@ -1114,6 +1115,8 @@ footer a {
   line-height: 1.5rem;
   transition: opacity 0.3s ease;
   z-index: 100;
+  max-width: 40vw;
+  min-width: 300px;
 }
 
 .dynamic-readout {
@@ -1126,6 +1129,9 @@ footer a {
   line-height: 1.45rem;
 }
 
+.dynamic-thumbnails {
+  margin-top: 1.3rem;
+}
 
 .dynamic-readout div:nth-child(1),
 .dynamic-readout div:nth-child(2) {
@@ -1137,7 +1143,7 @@ footer a {
 }
 
 .dynamic-readout div:nth-child(3) {
-  margin-top: 1rem;
+  margin-top: 2.5rem;
 }
 
 .chart-labels {
@@ -1213,7 +1219,12 @@ footer a {
 
 #map,
 .vector-map-svg {
-  height: 90.5vh;
+  height: 95.5vh;
+}
+
+.leaflet-container .leaflet-control-attribution {
+  background-color: #000;
+  color: #aaa
 }
 
 #map .leaflet-control-container .leaflet-bottom {
@@ -1234,6 +1245,10 @@ footer a {
   overflow: visible;
 }
 
+.dynamic-thumbnail a,
+.dynamic-readout a {
+  text-decoration: underline;
+}
 
 @media (max-width: 1400px) {
   .typewrite {

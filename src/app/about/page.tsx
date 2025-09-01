@@ -42,7 +42,7 @@ export default function Index() {
 
     return (
         <div>
-            <Header TypeWriterFinished={false} />
+            <Header TypewriterFinished={false} />
             <main className={`min-h-screen ${isMobileDevice() ? "block mt-20" : "flex"}`}>
                 <div className={` ${isMobileDevice() ? null : "inner-backdrop"}`}></div>
                 <div className={`project-info`}>

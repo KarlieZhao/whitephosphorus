@@ -25,7 +25,7 @@ export default function Area({ geoData, selectedCity, selectedDates, x_unit }: A
         const innerHeight = height - margin.top - margin.bottom;
 
         //format time
-        const gd = selectedCity === "" ? geoData : geoData.filter(item => item.name === selectedCity)
+        const gd = selectedCity === "" ? geoData : geoData.filter(item => item.town === selectedCity)
 
         // ========= DATA AGGREGATION =========
         let binnedCounts: { time: number; count: number }[] = [];
