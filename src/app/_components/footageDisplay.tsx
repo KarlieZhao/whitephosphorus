@@ -16,7 +16,7 @@ export default function FootageDisplay({ srcLink, enlarge }: FootageDisplayProps
         <div>
             <div className="text-white text-xl overflow-hidden p-0">
                 <div
-                    style={{ height: '19vh', minHeight: '140px', maxWidth: '26rem', cursor: 'pointer' }}
+                    style={{ height: '23vh', minHeight: '140px', maxWidth: '26rem', cursor: 'pointer' }}
                     onMouseEnter={() => { if (enlarge) { setIsEnlarged(true); setIsHovered(true) } }}
                     onMouseLeave={() => {
                         if (enlarge) {

@@ -7,7 +7,6 @@ import Area from "./area";
 import Segment from "./segment";
 import { TypewriterProps } from "./header";
 import SatelliteMap from "./satellite-map";
-import { controlEnabledTimeout } from "./map";
 
 // export const RED_GRADIENT = ["#db2f0f", "#C03117", "#A5331E", "#8A3525", "#6E362C", "#7C3629", "#6E362C"]
 // export const RED_GRADIENT = ["#cfcfcf", "#aaa", "#909090", "#858585", "#777", "#666", "#606060"]
@@ -65,6 +64,10 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         "cultivate": "Cultivated Land",
         "veg": "Natural Vegetation"
     }
+
+    const DOT_ANIMATION_DELAY = TypewriterFinished ? 20 : 60;
+    const BORDER_DELAY = 500;
+    const controlEnabledTimeout = DOT_ANIMATION_DELAY * 111 + BORDER_DELAY;
 
     useEffect(() => {
         if (!TypewriterFinished) return;
@@ -215,7 +218,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             <div className="dynamic-thumbnails"><p className={`${(!details[5] || details[5]?.length == 0) ? 'visuallyhidden' : ''}`}>Media source: </p><p>{details[5]?.map((line: string, idx: number) => (<a href={line} key={idx} target="_blank">link </a>))}</p></div>
         </div>
 
-        <div className="map-legend block">
+        <div className={`map-legend block ${TypewriterFinished ? "fade-in" : "hidden"}`}>
             <div className="flex"><div className="map-legend-points rural"></div>Bare/open terrain or natural vegetation</div>
             <div className="flex"><div className="map-legend-points civilian"></div>Built-up area or cultivated land</div>
         </div>
@@ -228,8 +231,9 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     selectedDates={selectedDates}
                     onTimelineDragged={(data) => {
                         if (!data) return;
+                        //reset other params
                         setSelectedDates([data[0], data[1]]);
-                        //filter 
+                        setselectedDay(-1);
                     }} />
             </div>
 
@@ -258,8 +262,9 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                             return date.getDay() === newDay
                         });
                         getDetails(pts, newDay);
-                        //reset city to avoid confusion
+                        //reset other params
                         setSelectedCity("");
+                        setSelectedDates(["", ""]);
                     }}
                 />
             </div>
@@ -268,13 +273,14 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     geoData={geoData}
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
+                    selectedDay={selectedDay}
                     onBarClick={(data) => {
                         if (!data) return;
                         const newCity = data[0] === selectedCity ? "" : data[0];
                         // const newCity = data === null ? "" : data[0]
                         setSelectedCity(newCity);
 
-                        // reset day to avoid confusion  
+                        //reset other params
                         setselectedDay(-1);
                         const pts = geoData.filter((p: any) => p.town === newCity);
                         getDetails(pts, newCity);

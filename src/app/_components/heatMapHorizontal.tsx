@@ -33,7 +33,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
   const containerRef = useRef<HTMLDivElement | null>(null);
   const frameWidth = 7000;
   const [plotWidthGlobal, setPlotWidthGlobal] = useState<number>(frameWidth);
-  const frameHeight = useWindowHeight() * 0.7;
+  const frameHeight = useWindowHeight() * 0.64;
   const windowWidth = useWindowWidth();
   const majorEventDates = ["2023-10-08", "2023-11-24", "2023-11-30", "2024-01-02", "2024-07-30", "2024-09-20", "2024-10-01"];
   const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli air strike on Dahieh", "Assassination of Fuad Shukr", "Start of Israeli Airstrike Campaign", "Israel invades South Lebanon"];
@@ -115,7 +115,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
     //calculate cell size to make cells square
     const cellSize = Math.min(availableWidth / numCols, (availableHeight - 60) / numRows);
-    const plotWidth = cellSize / 1.5 * numCols;
+    const plotWidth = cellSize * numCols;
     setPlotWidthGlobal(plotWidth);
     const plotHeight = cellSize * numRows;
     // Update actual SVG width and height
@@ -519,4 +519,3 @@ function scale(number: number, inMin: number, inMax: number, outMin: number, out
 }
 
 export default HeatMapAnimation;
-

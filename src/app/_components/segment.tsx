@@ -10,19 +10,31 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
     const [counts, setCounts] = useState<number[]>([]);
     const bins = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const parseDate = d3.timeParse('%Y-%m-%d'); //return Date 
 
     useEffect(() => {
         if (!geoData || geoData.length === 0) return;
         const dayCount = Array(7).fill(0);
-        const gd = selectedCity === "" ? geoData : geoData.filter(item => item.town === selectedCity)
-        gd.forEach(data => {
+        let filteredData = geoData;
+        if (selectedCity != "") {
+            filteredData = filteredData.filter(item => item.town === selectedCity)
+        } else if (selectedDates && selectedDates[0] && selectedDates[1]) {
+            filteredData = filteredData.filter(d => {
+                const date = parseDate(d.date);
+                const start = parseDate(selectedDates[0]);
+                const end = parseDate(selectedDates[1]);
+                if (!date || !start || !end) return true;
+                return date >= start && date <= end;
+            })
+        }
+        filteredData.forEach(data => {
             const date = new Date(data.date);
             let day = date.getDay();
             dayCount[day]++;
         })
-        const widthFactor = (width - 20) / gd.length;
+        const widthFactor = (width - 20) / filteredData.length;
         setCounts(dayCount.map(count => count *= widthFactor));
-    }, [geoData, selectedCity])
+    }, [geoData, selectedCity, selectedDates])
 
     return (<>
         <div className="chart-titles mb-3">WP shells by days of week</div>

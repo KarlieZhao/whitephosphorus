@@ -39,7 +39,7 @@ export default function Index() {
   if (isMobile === null) return null;
 
   return (
-    <div className="w-full h-[100vh]">
+    <div className="w-full h-[100vh] overflow-hidden">
       <div className={`fixed w-full h-[100vh] main-page-block ${TypewriterFinished ? "opacity-0 invisible -z-50" : "opacity-100 visible z-10"}`}
         onClick={(e) => {
           e.preventDefault();
@@ -60,7 +60,7 @@ export default function Index() {
           The map feature is optimized for desktop devices.<br /><br />
           On a mobile device, you can view the white phosphorus attacks timeline, the smoke plume catalog, and read more about this project through the navigation menu.
         </div>) : ( */}
-        <div className={"relative z-0 h-screen " + (TypewriterFinished ? "fadeIn" : "opacity-0")}>
+        <div className={"relative z-0 h-screen overflow-hidden"}>
           <DataSource TypewriterFinished={TypewriterFinished} />
           {/* <div className={`z-50 fixed left-2 ml-1 bottom-5 bg-red-900 bg-opacity-60 text-sm text-white transition-all 
               ${isPromptVisible ? "opacity-100" : "opacity-0"}`}>

@@ -13,10 +13,6 @@ type VectorMapProps = geoDataProps & TypewriterProps & {
   TypeWriterFinished?: boolean;
 };
 
-const DOT_ANIMATION_DELAY = 60;
-const BORDER_DELAY = 800;
-export const controlEnabledTimeout = DOT_ANIMATION_DELAY * 111 + BORDER_DELAY;
-
 const GRADIENTS = {
   white: "whiteGradient",
   gray: "grayGradient",
@@ -47,6 +43,9 @@ export function VectorMap({
   const cartodbLayerRef = useRef<any>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout[]>([]);
   const [hasAnimated, setHasAnimated] = useState(false);
+
+  const DOT_ANIMATION_DELAY = TypeWriterFinished ? 20 : 60;
+  const BORDER_DELAY = 500;
 
   const projectPts = useCallback((lon: number, lat: number): [number, number] => {
     if (!mapInstance || !lat || !lon || isNaN(lat) || isNaN(lon)) {
@@ -197,7 +196,6 @@ export function VectorMap({
 
     // Render function
     const renderMap = (borderGeoJson: any) => {
-      if (!visiblePoints || visiblePoints.length === 0 || !TypeWriterFinished) return;
       // Always create border elements
       const borders = g.selectAll("path.border")
         .data(borderGeoJson.features)
@@ -209,6 +207,8 @@ export function VectorMap({
         .attr("stroke-width", 5)
         .attr("fill", "none")
         .style("opacity", hasAnimated ? 1 : 0);
+
+      if (!visiblePoints || visiblePoints.length === 0) return;
 
       // Create all circles
       const interactionCircles = g.selectAll("circle.interaction-layer")
@@ -290,7 +290,7 @@ export function VectorMap({
     if (borderDataRef.current) {
       renderMap(borderDataRef.current);
     } else {
-      fetch("/data/LB_regions.geojson")
+      fetch("/data/LBN_extendedBorder.geojson")
         .then(res => res.json())
         .then(borderGeoJson => {
           borderDataRef.current = borderGeoJson; // Cache the data

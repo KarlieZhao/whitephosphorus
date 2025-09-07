@@ -85,6 +85,7 @@ body {
 main {
   position: relative;
   margin-top: 50px;
+  overflow: hidden;
 }
 
 .typewrite {
@@ -98,7 +99,7 @@ main {
 
 header {
   font-family: "PPSupplySans-Regular";
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   position: fixed;
   top: 0;
   left: 0;
@@ -207,7 +208,7 @@ button {
 .footage-timeline {
   width: auto;
   display: block;
-  height: 70vh;
+  height: 66vh;
   min-height: 400px;
   z-index: 0;
   background-color: #000000cc;
@@ -278,7 +279,7 @@ button {
 
 .footage-display .inner {
   width: fit-content;
-  height: 19vh;
+  height: 23vh;
   min-height: 100px;
 }
 
@@ -300,7 +301,7 @@ button {
 }
 
 .title {
-  font-size: 0.8rem;
+  font-size: 1.05rem;
   text-align: center;
   font-weight: inherit;
   padding: 3px 10px;
@@ -630,7 +631,7 @@ h2 {
   top: 3rem;
   left: 0;
   width: 100vw;
-  height: 70vh;
+  height: 64vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1125,7 +1126,7 @@ footer a {
   transition: opacity 0.3s ease;
   /* font-size: calc(var(--height)*2.1); */
   /* line-height: calc(var(--height)*3); */
-  font-size: 1.05rem;
+  font-size: 1rem;
   line-height: 1.45rem;
 }
 
@@ -1167,6 +1168,8 @@ footer a {
   /* border: 1px solid white; */
   padding: 2rem;
   filter: drop-shadow(-5px 0 7px #000);
+  height: 85vh;
+  overflow: auto;
 }
 
 .histogram svg:hover {
@@ -1197,11 +1200,6 @@ footer a {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   text-align: right;
-}
-
-.title {
-  font-size: 18pt;
-  font-weight: bold;
 }
 
 .src {

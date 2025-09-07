@@ -2,7 +2,6 @@
 import React, { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 export const mapZoomLevel = 11
-import { controlEnabledTimeout } from "./map";
 
 type SatelliteMapProps = {
     onZoomChange?: (zoom: number) => void;
@@ -18,11 +17,21 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
     const svgLayerRef = useRef<SVGElement | null>(null);
     const tileLayerRef = useRef<any>(null);
 
+    const DOT_ANIMATION_DELAY = TypewriterFinished ? 20 : 60;
+    const BORDER_DELAY = 500;
+    const controlEnabledTimeout = DOT_ANIMATION_DELAY * 111 + BORDER_DELAY;
+
+
     useEffect(() => {
         const L = require("leaflet");
         const map = L.map(mapRef.current!, {
-            minZoom: 10,
+            minZoom: 11,
             maxZoom: 15,
+            maxBounds: L.latLngBounds(
+                [32.8, 34.9],  //  southwest
+                [33.6, 36.3]   //  northeast
+            ),
+            maxBoundsViscosity: 0.7,
             zoomControl: false
         }).setView([33.2, 35.57], mapZoomLevel);
 
@@ -48,11 +57,7 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
         // tile layer
         const tileLayer = L.tileLayer("/tiles/{z}/{x}/{y}.png", {
             tms: true,
-            opacity: 0.8,
-            bounds: L.latLngBounds(
-                [33.0, 35.02],  //  southwest
-                [33.46, 35.9]   //  northeast
-            )
+            opacity: 0.8
         }).addTo(map);
 
         tileLayerRef.current = tileLayer;
