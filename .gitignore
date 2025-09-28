@@ -6,7 +6,7 @@ node_modules/
 /legacy
 **/.DS_Store
 .env.local
-/public
 preprocess
 package-lock.json
-public/tiles
+/public/tiles
+/public/tiles_old
