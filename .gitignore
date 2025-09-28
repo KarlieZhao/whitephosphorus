@@ -1,9 +1,13 @@
 node_modules/
+/preprocess
 .next/
 .swc/
 .*.env
 /legacy
 **/.DS_Store
 .env.local
+/public
 preprocess
 package-lock.json
+public/data/incidents_old.xlsx
+public/tiles

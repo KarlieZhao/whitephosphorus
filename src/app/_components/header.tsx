@@ -4,12 +4,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import '@/app/globals.css';
 import { isMobileDevice } from "./mobile-detector";
 
-type HeaderProps = {
-  TypeWriterFinished?: boolean;
+export type TypewriterProps = {
+  TypewriterFinished?: boolean;
 };
 type ToxicityData = Array<{ type: string; number: string; unit: string }>;
 
-const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
+const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -48,7 +48,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
-    if (TypeWriterFinished) {
+    if (TypewriterFinished) {
       const interval = setInterval(() => {
         setAnimationClass("fadeOut");
         setTimeout(() => {
@@ -107,7 +107,7 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
             WhitePhosphorus.info
           </h3>
         </div>
-        {TypeWriterFinished && (
+        {TypewriterFinished && (
           <div className="toxicity-counter relative pl-2 flex flex-row fadeSlideIn">
             <div className="counter-label flex-initial w-20 flex flex-col justify-center items-start">
               <div>TOXICITY<br />COUNTER</div>
@@ -163,18 +163,18 @@ const Header = ({ TypeWriterFinished = true }: HeaderProps) => {
               <tbody>
                 <tr className="relative">
                   <td colSpan={3} className="h-full fixed left-0 command_button_unclickable">
-                    <h3 className="mt-3 w-full text-left pl-5 z-50 tracking-wider text-2xl">
+                    <h3 className="mt-3 w-full text-left pl-5 z-50 tracking-wider text-2xl font-light">
                       WhitePhosphorus.info
                     </h3>
                   </td>
                 </tr>
               </tbody>
             </table>
-            {TypeWriterFinished && (
+            {TypewriterFinished && (
               <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn">
                 <div className="flex-initial basis-1/3 flex flex-col justify-center items-start">
                   <div>TOXICITY  COUNTER</div>
-                  <div className="last-update">Last update: Oct/03/2024</div>
+                  <div className="last-update">Last update: Sep/23/2025</div>
                 </div>
                 {data.map((obj, index) => {
                   return (

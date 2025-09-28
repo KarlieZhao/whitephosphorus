@@ -42,7 +42,7 @@ export default function Index() {
 
     return (
         <div>
-            <Header TypeWriterFinished={false} />
+            <Header TypewriterFinished={false} />
             <main className={`min-h-screen ${isMobileDevice() ? "block mt-20" : "flex"}`}>
                 <div className={` ${isMobileDevice() ? null : "inner-backdrop"}`}></div>
                 <div className={`project-info`}>
@@ -70,15 +70,15 @@ export default function Index() {
                 <div className={`team-info`}>
                     <div>
                         <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a> is an architect and OSINT researcher whose work delves into the transformation of environments into tools of power. He is currently pursuing his PhD at the Technical University of Delft, with his dissertation titled "Weaponized Environments." His research exposes the strategic manipulation of natural landscapes in modern warfare. He has worked on the award-winning "AirPressure.info" project, which archives and visualizes Israeli violations over Lebanese airspace. Baydoun's work has been recognized and cited by Amnesty International, L'Orient Le Jour, PBS, Al Jazeera, Arab News, and the American University of Beirut.
-                        <br />Email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
+                        <br /><br />Email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
                         <br />Website: <a href="https://ahmadbeydoun.com" target="_blank">ahmadbeydoun.com</a>
                     </div><br />
                     <div className="contribution">
-                        Team<br />
+                        <span className="text-gray-100">Team</span><br />
                         Ahmad Baydoun, Principal Investigator<br />
                         Khodor Joujou, Research Assistant<br />
                         <br />
-                        Field Support: <br />
+                        <span className="text-gray-100">Field Support:</span> <br />
                         <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> provided field-level support in the form of data collection, verification, and geolocation.
                         <br /> <br />
                         Website designed and built by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
