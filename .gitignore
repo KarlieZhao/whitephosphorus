@@ -9,5 +9,4 @@ node_modules/
 /public
 preprocess
 package-lock.json
-public/data/incidents_old.xlsx
 public/tiles
