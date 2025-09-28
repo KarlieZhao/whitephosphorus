@@ -8,7 +8,7 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
     const startDateRef = useRef<Date | null>(null);
     const [hoverInfo, setHoverInfo] = useState<{ x: number; date: Date } | null>(null);
     const margin = { top: 10, right: 10, bottom: 5, left: 10 };
-    const height = 55;
+    const height = 45;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
 
     const getTotalCounts = (data: typeof geoData) => {
@@ -138,7 +138,7 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
 
     }, [geoData, width, height, selectedDates, selectedCity]);
 
-    return <> <div className="chart-titles">WP shells by day</div>
+    return <> <div className="chart-titles">Timeline </div>
         <svg ref={svgRef} width={width} height={height} />
         {hoverInfo && (
             <div className="timeline-xaxis"

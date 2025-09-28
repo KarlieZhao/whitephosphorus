@@ -1,51 +1,86 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import * as d3 from "d3";
 import { useWindowHeight } from "@/lib/resize";
 import { useWindowWidth } from "@/lib/resize";
 import { isMobileDevice } from "./mobile-detector";
 
-type IncidentData = {
+export type IncidentData = {
+  code: string;
   date: string;
   area: string;
   count: number;
-  link: Array<string>;
+  link: string;
+  file_name: string[];
 };
 
 type HeatMapProps = {
   data: IncidentData[];
   onCellClick: (data: {
+    code: string;
     date: string;
     area: string;
     count: number;
-    link: Array<string>
+    link: string;
+    file_name: string[];
   }) => void;
   scrollButtonVisible: boolean;
 };
 
-//entry data for D3
-type CellData = { x: number; y: number; value: number };
+type CellData = { code: string; x: number; y: number; value: number };
+
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollButtonVisible }) => {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return <div className="w-[100vw] h-[70vh] flex items-center justify-center text-gray-500">Loading data...</div>;
+  }
+
   const svgRef = useRef<SVGSVGElement | null>(null);
   const yAxisRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const tooltipRef = useRef<d3.Selection<HTMLDivElement, unknown, HTMLElement, any> | null>(null);
+  const animationRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollRequest = useRef<number | null>(null);
+  const translateXRef = useRef<number>(0);
+
   const frameWidth = 7000;
   const [plotWidthGlobal, setPlotWidthGlobal] = useState<number>(frameWidth);
+
   const frameHeight = useWindowHeight() * 0.64;
   const windowWidth = useWindowWidth();
-  const majorEventDates = ["2023-10-08", "2023-11-24", "2023-11-30", "2024-01-02", "2024-07-30", "2024-09-20", "2024-10-01"];
-  const majorEventNames = ["Hezbollah launches rockets into Israel", "Start of ceasefire", "End of ceasefire", "First Israeli air strike on Dahieh", "Assassination of Fuad Shukr", "Start of Israeli Airstrike Campaign", "Israel invades South Lebanon"];
-  const translateXRef = useRef<number>(0); // Accumulated translateX
-  const scrollRequest = useRef<number | null>(null);
 
-  const processData = () => {
-    const uniqueDates = Array.from(new Set(data.map(d => d.date))).filter(Boolean);
+  const majorEventDates = [
+    "2023-10-08", "2023-11-24", "2023-11-30",
+    "2024-01-02", "2024-07-30", "2024-09-20", "2024-10-01"
+  ];
+
+  const majorEventNames = [
+    "Hezbollah launches rockets into Israel",
+    "Start of ceasefire",
+    "End of ceasefire",
+    "First Israeli air strike on Dahieh",
+    "Assassination of Fuad Shukr",
+    "Start of Israeli Airstrike Campaign",
+    "Israel invades South Lebanon"
+  ];
+
+  // Memoized data processing
+  const processedChartData = useMemo(() => {
+    const minDate = d3.min(data, d => new Date(d.date))!;
+    const maxDate = d3.max(data, d => new Date(d.date))!;
+
+    const uniqueDates = getDateRange(
+      minDate.toISOString().slice(0, 10),
+      maxDate.toISOString().slice(0, 10)
+    );
+
     const uniqueAreas = Array.from(new Set(data.map(d => d.area))).filter(Boolean);
 
-    // 2D array
+    // Build lookup map for (date+area)
     const incidentMap = new Map(data.map(d => [`${d.date}-${d.area}`, d.count]));
+
+    // Fill in 0s for missing dates
     const processedData = uniqueAreas.map(area => {
       return uniqueDates.map(date => incidentMap.get(`${date}-${area}`) || 0);
     });
@@ -56,89 +91,123 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       xLabelsVisibility: uniqueDates.map((_, i) => i % 1 === 0),
       processedData
     };
+  }, [data]);
+
+  function getDateRange(start: string, end: string): string[] {
+    const dates: string[] = [];
+    let current = new Date(start);
+    const endDate = new Date(end);
+
+    while (current <= endDate) {
+      const year = current.getFullYear();
+      const month = String(current.getMonth() + 1).padStart(2, "0");
+      const day = String(current.getDate()).padStart(2, "0");
+      dates.push(`${year}-${month}-${day}`);
+      current.setDate(current.getDate() + 1);
+    }
+    return dates;
   }
 
-  useEffect(() => {
-    const { xLabels, yLabels, xLabelsVisibility, processedData } = processData();
+  const cleanup = useCallback(() => {
+    if (tooltipRef.current) {
+      tooltipRef.current.remove();
+      tooltipRef.current = null;
+    }
+    if (animationRef.current) {
+      clearTimeout(animationRef.current);
+      animationRef.current = null;
+    }
+    if (scrollRequest.current) {
+      cancelAnimationFrame(scrollRequest.current);
+      scrollRequest.current = null;
+    }
+  }, []);
 
-    //format xLabels (dates) for label
+  useEffect(() => {
+    const { xLabels, yLabels, processedData } = processedChartData;
+
+    // Format xLabels (dates) for display
     const xLabelsFormatted = xLabels.map((d, index) => {
-      const [year, month, day] = d.split('-');
+      const [year, month] = d.split('-');
       const prevLabel = index > 0 ? xLabels[index - 1].split('-')[1] : null;
       if (!prevLabel || month !== prevLabel) {
-        const monthName = months[parseInt(month, 10) - 1]; // Convert "month" string to index
+        const monthName = months[parseInt(month, 10) - 1];
         return `${monthName}, ${year}`;
-
-        // const monthName = new Date(`2023-${month}-1`).toLocaleString('en-US', { month: 'short' });
-        // return monthName + ", " + year;
       }
       return '';
     });
 
-    //total incidents for each area
+    // Calculate total incidents for each area
     const areaTotals = yLabels.map((area, index) => ({
       area,
       total: d3.sum(processedData[index])
     }));
 
-    yLabels.sort((a, b) => {
+    // Sort areas by total incidents (ascending)
+    const sortedAreas = [...yLabels].sort((a, b) => {
       const totalA = areaTotals.find(t => t.area === a)?.total || 0;
       const totalB = areaTotals.find(t => t.area === b)?.total || 0;
       return totalA - totalB;
     });
 
-    const yLabelIndices = yLabels.map(area => areaTotals.findIndex(t => t.area === area));
-
-    const sortedProcessedData = yLabelIndices.map(index =>
-      processedData[index]
+    const yLabelIndices = sortedAreas.map(area =>
+      yLabels.findIndex(label => label === area)
     );
 
-    const targetIndex = yLabels.indexOf("To be geolocated in South Lebanon")
-    if (targetIndex > -1) {
-      yLabels.splice(targetIndex, 1);
-      const targetData = sortedProcessedData.splice(targetIndex, 1)[0];
-      yLabels.push("To be geolocated in South Lebanon");
-      sortedProcessedData.push(targetData);
-    }
+    const sortedProcessedData = yLabelIndices.map(index => processedData[index]);
 
-    //============ rendering SVG ==============
-    //clean up SVG
+    // Clean up existing SVG
     d3.select(svgRef.current).selectAll("*").remove();
+    d3.select(yAxisRef.current).selectAll("*").remove();
 
-    //set svg dimensions and margins
-    const margin = { top: 60, right: 150, bottom: 50, left: isMobileDevice() ? 75 : 100 };
+    const margin = {
+      top: 60,
+      right: 150,
+      bottom: 50,
+      left: isMobileDevice() ? 75 : 100
+    };
+
     const availableWidth = frameWidth - margin.left - margin.right;
     const availableHeight = frameHeight - margin.top - margin.bottom;
 
-    const numRows = yLabels.length; //areas
-    const numCols = xLabels.length; //dates
+    const numRows = sortedAreas.length;
+    const numCols = xLabels.length;
 
-    //calculate cell size to make cells square
-    const cellSize = Math.min(availableWidth / numCols, (availableHeight - 60) / numRows);
+    // Calculate cell size to make cells square
+    let cellSize = Math.min(availableWidth / numCols, (availableHeight - 60) / numRows);
+    // cellSize *= 0.85;
     const plotWidth = cellSize * numCols;
     setPlotWidthGlobal(plotWidth);
     const plotHeight = cellSize * numRows;
-    // Update actual SVG width and height
+
+    // Update actual SVG dimensions
     const svgWidth = plotWidth + margin.left + margin.right;
     const svgHeight = plotHeight + margin.top + margin.bottom;
 
     // Flatten data for D3
-    const flatData = [];
+    const flatData: CellData[] = [];
     for (let i = 0; i < numRows; i++) {
       for (let j = 0; j < numCols; j++) {
+        // Find the original data entry for this cell to get the code
+        const originalEntry = data.find(d =>
+          d.date === xLabels[j] && d.area === sortedAreas[i]
+        );
+
         flatData.push({
-          x: j, // Date index
-          y: i, // Area index
+          x: j,
+          y: i,
           value: sortedProcessedData[i][j],
+          code: originalEntry?.code || ''
         });
       }
     }
 
-    // Create SVG container
+    // Create main SVG container
     const svg = d3
       .select(svgRef.current)
       .attr("width", svgWidth)
       .attr("height", svgHeight);
+
     const g = svg
       .append("g")
       .attr("transform", `translate(${margin.left + 10},${margin.top})`);
@@ -156,23 +225,23 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       .range([0, plotHeight])
       .padding(0.05);
 
-    //x-axis labels (Dates)
+    // X-axis labels (Dates)
     const tickIndices = xLabelsFormatted
-      .map((label, i) => (label !== '' ? i : null)) // Mark indices with non-empty labels
-      .filter((i) => i !== null); // Remove null values
+      .map((label, i) => (label !== '' ? i : null))
+      .filter((i): i is number => i !== null);
 
     g.append("g")
       .call(
         d3
           .axisBottom(xScale)
           .tickValues(tickIndices)
-          .tickFormat((i: number) => (xLabelsFormatted[i]))
+          .tickFormat((i: number) => xLabelsFormatted[i])
           .tickSize(-6)
       )
       .selectAll("text")
       .attr("transform", `translate(-10, ${plotHeight + 20})`)
       .style("text-anchor", "start")
-      .style("font-size", `${cellSize / 1.5}px`)
+      .style("font-size", `${cellSize / 1.2}px`)
       .style("fill", "#ccc")
       .attr("dx", "0.5em")
       .attr("dy", "-0.2em");
@@ -182,16 +251,11 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       .style("stroke", "#ccc")
       .style("stroke-width", "1px");
 
-    //remove label lines
-    //g.selectAll(".tick line").style("display", "none");
-
-    // ========== Y-Axis Labels (Areas) ==========
+    // Y-Axis Labels (Areas)
     const yAxisSvg = d3
       .select(yAxisRef.current)
       .attr("width", margin.left)
       .attr("height", plotHeight + margin.top + margin.bottom);
-
-    yAxisSvg.selectAll("*").remove();
 
     const yAxisG = yAxisSvg
       .append("g")
@@ -200,19 +264,31 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
     yAxisG
       .call(
         d3.axisLeft(yScale)
-          .tickFormat((_: any, i: number) => {
-            if (yLabels[i] === "To be geolocated in South Lebanon") {
-              return "To be geolocated";
-            }
-            return yLabels[i];
-          })
+          .tickFormat((_, i: number) => sortedAreas[i])
       )
       .selectAll("text")
       .style("text-anchor", "end")
-      .style("font-size", `${cellSize / 1.5}px`)
+      .style("font-size", `${cellSize / 1.3}px`)
       .style("fill", "#ccc");
 
-    // Bind data
+    // Create tooltip
+    if (!tooltipRef.current) {
+      tooltipRef.current = d3
+        .select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("background", "#fff")
+        .style("padding", "4px 10px")
+        // .style("border", "1px solid #ccc")
+        .style("border-radius", "2px")
+        .style("pointer-events", "none")
+        .style("opacity", 0)
+        .style("font-size", `${cellSize}px`)
+        .style("box-shadow", "0 2px 4px rgba(0,0,0,0.1)")
+        .style("z-index", "1000");
+    }
+
+    // Create cells
     const cells = g
       .selectAll("rect")
       .data(flatData)
@@ -224,185 +300,150 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       .attr("height", yScale.bandwidth())
       .style("fill", "#ffffff00")
       .style("stroke", "#333")
+      .style("stroke-width", "0.5px");
 
-    // Tooltip for displaying values
-    const tooltip = d3
-      .select("body")
-      .append("div")
-      .style("position", "absolute")
-      .style("background", "#fff")
-      .style("padding", "5px")
-      .style("border", "1px solid #ccc")
-      .style("border-radius", "3px")
-      .style("pointer-events", "none")
-      .style("opacity", 0);
-
+    // Add interactions only to cells with data
     cells.filter((d: CellData) => d.value > 0)
-      .attr("class", "mousePointer")
+      .style("cursor", "pointer")
       .on("mouseover", (event: MouseEvent, d: CellData) => {
-        tooltip
-          .style("opacity", 0.9)
-          .html(`<table>
-             <tr><td>${xLabels[d.x]}</td></tr>
-            <tr><td>${yLabels[d.y]}</td></tr>
-            <tr><td>${d.value} Incidents</td></tr>
-            </table>`)
-          .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY - 30 + "px");
+        if (tooltipRef.current) {
+          tooltipRef.current
+            .style("opacity", 0.85)
+            .html(`
+              <div style="font-weight: bold;">${xLabels[d.x]}</div>
+              <div>${sortedAreas[d.y]}</div>
+              <div>${d.value} Incident${d.value !== 1 ? 's' : ''}</div>
+            `)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 30) + "px");
+        }
       })
       .on("mouseout", () => {
-        tooltip.style("opacity", 0);
+        if (tooltipRef.current) {
+          tooltipRef.current.style("opacity", 0);
+        }
       })
       .on("click", (event: MouseEvent, d: CellData) => {
         const matchedEntry = data.find(
-          (entry) => entry.date === xLabels[d.x] && entry.area === yLabels[d.y]
+          (entry) => entry.date === xLabels[d.x] && entry.area === sortedAreas[d.y]
         );
 
         const clickedData = {
+          code: matchedEntry?.code || d.code,
           count: d.value,
-          date: yLabels[d.y],
-          area: xLabels[d.x],
-          link: matchedEntry?.link || []
+          date: xLabels[d.x], // Fixed: was incorrectly swapped
+          area: sortedAreas[d.y], // Fixed: was incorrectly swapped  
+          link: matchedEntry?.link || "",
+          file_name: matchedEntry?.file_name || []
         };
         onCellClick(clickedData);
       });
 
-    //adding major event lines
-    const majorEventIndices = majorEventDates.map(date => xLabels.indexOf(date));
+    // Get major event indices
+    const majorEventIndices = majorEventDates
+      .map(date => xLabels.indexOf(date))
+      .filter(index => index !== -1);
 
-    // mouse hover display
-    // majorEventIndices.forEach((value, index) => {
-    //   // Add text annotation
-    //   let ypos = -10;
-    //   if (index === 3 || index === 5 || index === 7) {
-    //     ypos = -25;
-    //   }
-    //   let textAnchorPos = index === 0 ? "start" : "middle";
-    //   const annotation = g.append("text")
-    //     .attr("x", xScale(value)!)
-    //     .attr("y", ypos)
-    //     .attr("text-anchor", textAnchorPos)
-    //     .style("font-size", "14px")
-    //     .style("fill", "#ccc")
-    //     .style("opacity", 0)
-    //     .text(majorEventNames[index]);
-
-    //   g.append("line")
-    //     .attr("x1", xScale(value)!)
-    //     .attr("x2", xScale(value)!)
-    //     .attr("class", "mousePointer")
-    //     .attr("y1", 0)
-    //     .attr("y2", plotHeight)
-    //     .attr("stroke", "#FF000088")
-    //     .attr("stroke-width", 2)
-    //     .on("mouseover", (event: MouseEvent) => {
-    //       // show top annotation
-    //       annotation.transition().duration(20).style("opacity", 1);
-
-    //     })
-    //     .on("mouseout", () => {
-    //       // hide top annotation (fade out 3s)
-    //       annotation.transition().duration(5000).style("opacity", 0);
-    //     });
-    // })
-
-    // Animation: fill in each column vertically
+    // Animation
     const maxValue = d3.max(sortedProcessedData.flat()) ?? 0;
     let currentCol = 0;
+
     const animateCol = () => {
       if (currentCol >= numCols) return;
+
       cells
         .filter((d: CellData) => d.x === currentCol)
         .transition()
-        .duration(300)
-        .attr("x", (d: CellData) => xScale(d.x) ?? 0)
-        .attr("y", (d: CellData) => yScale(d.y) ?? 0)
+        .duration(200)
         .style("fill", (d: CellData) => {
-          let opacity = 1 - ((maxValue) - d.value) / (maxValue);
-          opacity = opacity === 0 ? 0 : scale(opacity, 0, 1, 0.3, 1.0);
-          return `rgba(255, ${85 + 10 * opacity}, 66, ${opacity})`;
-        })
+          if (d.value === 0) return "#ffffff00";
 
-      // display annotations for the current column if it matches an event
+          let opacity = 1 - ((maxValue - d.value) / maxValue);
+          opacity = opacity === 0 ? 0 : scale(opacity, 0, 1, 0.3, 1.0);
+          return `rgba(255, ${Math.floor(85 + 10 * opacity)}, 66, ${opacity})`;
+        });
+
+      // Add event annotations
       const eventIndex = majorEventIndices.indexOf(currentCol);
       if (eventIndex !== -1) {
-        const value = majorEventIndices[eventIndex];
-        let ypos = -10;
-        if (eventIndex === 1 || eventIndex === 5) ypos = -25;
+        const xPos = xScale(currentCol)!;
+        let yPos = -10;
+        if (eventIndex === 1 || eventIndex === 5) yPos = -25;
 
-        // Add the line
-        const lines = g.append("line")
-          .attr("x1", xScale(value)!)
-          .attr("x2", xScale(value)!)
-          .attr("y1", ypos + 10)
+        // Add event line
+        g.append("line")
+          .attr("x1", xPos)
+          .attr("x2", xPos)
+          .attr("y1", yPos + 10)
           .attr("y2", plotHeight)
           .attr("stroke", "#FF0000")
           .attr("stroke-width", 1.5)
-          .style("opacity", 0) // Initially hidden
+          .style("opacity", 0)
           .transition()
           .duration(200)
-          .style("opacity", 1); // Fade in with the cell animation
+          .style("opacity", 1);
 
-        const annotation = g.append("text")
-          .attr("x", xScale(value)!)
-          .attr("y", ypos)
+        // Add event label
+        g.append("text")
+          .attr("x", xPos)
+          .attr("y", yPos)
           .attr("text-anchor", "start")
-          .style("font-size", "0.75rem")
+          .style("font-size", "0.8rem")
           .style("fill", "#ccc")
-          .style("opacity", 0) // Initially hidden
+          .style("opacity", 0)
           .text(majorEventNames[eventIndex])
           .transition()
           .duration(200)
-          .style("opacity", 1); // Fade in with the cell animation
+          .style("opacity", 1);
       }
 
       currentCol++;
-      setTimeout(animateCol, 20);
-    }
+      animationRef.current = setTimeout(animateCol, 20);
+    };
+
     animateCol();
 
+    // Scroll handlers
     const container = containerRef.current;
+    const svgElement = svgRef.current;
 
     const handleWheel = (event: WheelEvent) => {
-      const svg = svgRef.current;
-      if (!container || !svg) return;
+      if (!container || !svgElement) return;
 
+      event.preventDefault();
       const scrollDelta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
       translateXRef.current = Math.min(0,
-        Math.max(translateXRef.current - scrollDelta,
-          (windowWidth - plotWidth - 260)));
+        Math.max(translateXRef.current - scrollDelta, windowWidth - plotWidth - 260));
 
-      svg.style.transform = `translateX(${translateXRef.current}px)`;
-    }
+      svgElement.style.transform = `translateX(${translateXRef.current}px)`;
+    };
 
-    //for mobile
+    // Touch handlers for mobile
     const handleTouch = () => {
-      let startX = 0; // Tracks the starting touch X position
+      let startX = 0;
       let currentTranslateX = translateXRef.current;
 
-      if (!container || !svg) {
-        return () => { };
-      }
+      if (!container || !svgElement) return () => { };
+
       const handleTouchStart = (event: TouchEvent) => {
-        startX = event.touches[0].clientX; // Record the initial touch point
+        startX = event.touches[0].clientX;
       };
 
       const handleTouchMove = (event: TouchEvent) => {
-        const svg = svgRef.current;
-        if (!container || !svg) return;
+        if (!container || !svgElement) return;
 
-        const touchX = event.touches[0].clientX; // Current touch point
-        const deltaX = touchX - startX; // Change in X from starting touch point
+        const touchX = event.touches[0].clientX;
+        const deltaX = touchX - startX;
 
         translateXRef.current = Math.min(
           0,
           Math.max(
-            currentTranslateX + deltaX, // Adjust translation based on touch movement
-            windowWidth - plotWidth - 260 // Ensure it doesn't scroll beyond bounds
+            currentTranslateX + deltaX,
+            windowWidth - plotWidth - 260
           )
         );
 
-        svg.style.transform = `translateX(${translateXRef.current}px)`;
+        svgElement.style.transform = `translateX(${translateXRef.current}px)`;
       };
 
       const handleTouchEnd = () => {
@@ -420,53 +461,70 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       };
     };
 
+    let touchCleanup: (() => void) | null = null;
     if (isMobileDevice()) {
-      scrollButtonVisible = false;
-      handleTouch();
+      touchCleanup = handleTouch();
     }
 
-    if (container) container.addEventListener("wheel", handleWheel);
-    // Cleanup tooltip on unmount
+    if (container && !isMobileDevice()) {
+      container.addEventListener("wheel", handleWheel, { passive: false });
+    }
+
+    // Cleanup function
     return () => {
-      tooltip.remove();
-      if (container) container.removeEventListener("wheel", handleWheel);
-
+      cleanup();
+      if (container && !isMobileDevice()) {
+        container.removeEventListener("wheel", handleWheel);
+      }
+      if (touchCleanup) {
+        touchCleanup();
+      }
     };
-  }, [frameHeight, windowWidth, data]);
+  }, [frameHeight, windowWidth, processedChartData, cleanup, data]);
 
-
-  const moveChart = (direction: "left" | "right") => {
+  // Button handlers with proper event handling
+  const moveChart = useCallback((direction: "left" | "right") => {
     const svg = svgRef.current;
     if (!containerRef.current || !svg) return;
 
-    const scrollDelta = direction === "right" ? -3 : 3;
+    const scrollDelta = direction === "right" ? -5 : 5; // Increased for smoother scrolling
     translateXRef.current = Math.min(
       0,
       Math.max(
-        translateXRef.current - scrollDelta,
+        translateXRef.current + scrollDelta,
         windowWidth - plotWidthGlobal - 260
       )
     );
 
-    scrollRequest.current = requestAnimationFrame(() => moveChart(direction));
     svg.style.transform = `translateX(${translateXRef.current}px)`;
-  };
 
-  const handleButtonDown = (direction: "left" | "right") => (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (event.button !== 0) return; // Only respond to left mouse button
-    scrollRequest.current = requestAnimationFrame(() => moveChart(direction));
-  };
+    if (scrollRequest.current) {
+      scrollRequest.current = requestAnimationFrame(() => moveChart(direction));
+    }
+  }, [windowWidth, plotWidthGlobal]);
 
-  const handleButtonUp = () => {
+  const handleButtonDown = useCallback((direction: "left" | "right") =>
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      scrollRequest.current = requestAnimationFrame(() => moveChart(direction));
+    }, [moveChart]);
+
+  const handleButtonUp = useCallback(() => {
     if (scrollRequest.current) {
       cancelAnimationFrame(scrollRequest.current);
       scrollRequest.current = null;
     }
-  };
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return cleanup;
+  }, [cleanup]);
 
   return (
     <div
-      className=" pt-2 scroll-behavior-none hideScrollBar"
+      className="pt-2 scroll-behavior-none hideScrollBar"
       ref={containerRef}
       style={{
         width: "100vw",
@@ -475,46 +533,66 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
         overflowX: "hidden"
       }}
     >
-
       <div className="fixed" style={{ zIndex: 100, backgroundColor: "#000", paddingLeft: "9px" }}>
         <svg ref={yAxisRef} style={{ left: 0 }} />
       </div>
+
       <div className="relative" style={{ height: frameWidth - frameHeight - windowWidth }}>
-        <svg style={{
-          position: "sticky",
-          top: 0,
-        }} ref={svgRef} width={frameWidth} height={frameHeight}></svg>
+        <svg
+          style={{
+            position: "sticky",
+            top: 0,
+          }}
+          ref={svgRef}
+          width={frameWidth}
+          height={frameHeight}
+        />
       </div>
 
-      <div className={`chart-continue-label ${scrollButtonVisible ? 'opacity-100' : 'opacity-0'} }`}>
-        <button onMouseDown={handleButtonDown("right")} onMouseUp={handleButtonUp} onMouseLeave={handleButtonUp} >
-          <svg
-            className="arrow-svg"
-            xmlns="http://www.w3.org/2000/svg"
-            width="110"
-            height="24"
-            viewBox="0 0 24 24"
-          > <path d="M15 18l-6-6 6-6" fill="red" />
-          </svg>
-        </button>
-        <div className="pb-1 absolute -z-50 right-28">Scroll to View More</div>
-        <button onMouseDown={handleButtonDown("left")} onMouseUp={handleButtonUp} onMouseLeave={handleButtonUp} >
-          <svg
-            className="arrow-svg"
-            xmlns="http://www.w3.org/2000/svg"
-            width="200"
-            height="24"
-            viewBox="0 0 24 24"
+      {!isMobileDevice() && (
+        <div className={`chart-continue-label ${scrollButtonVisible ? 'opacity-100' : 'opacity-0'}`}>
+          <button
+            onMouseDown={handleButtonDown("left")}
+            onMouseUp={handleButtonUp}
+            onMouseLeave={handleButtonUp}
+            aria-label="Scroll left"
           >
-            <path fill="red" d="M10 6l6 6-6 6V6z" />
-          </svg>
-        </button>
-      </div>
+            <svg
+              className="arrow-svg"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path d="M15 18l-6-6 6-6" fill="red" />
+            </svg>
+          </button>
+
+          <div className="pb-1 absolute -z-50 right-28">Scroll to View More</div>
+
+          <button
+            onMouseDown={handleButtonDown("right")}
+            onMouseUp={handleButtonUp}
+            onMouseLeave={handleButtonUp}
+            aria-label="Scroll right"
+          >
+            <svg
+              className="arrow-svg"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path fill="red" d="M10 6l6 6-6 6V6z" />
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
-function scale(number: number, inMin: number, inMax: number, outMin: number, outMax: number) {
+function scale(number: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
   return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 }
 

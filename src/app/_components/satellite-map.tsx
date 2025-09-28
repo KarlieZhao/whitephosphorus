@@ -28,7 +28,7 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
             minZoom: 11,
             maxZoom: 15,
             maxBounds: L.latLngBounds(
-                [32.8, 34.9],  //  southwest
+                [32.8, 34.7],  //  southwest
                 [33.6, 36.3]   //  northeast
             ),
             maxBoundsViscosity: 0.7,

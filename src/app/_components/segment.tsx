@@ -37,7 +37,7 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
     }, [geoData, selectedCity, selectedDates])
 
     return (<>
-        <div className="chart-titles mb-3">WP shells by days of week</div>
+        <div className="chart-titles mb-3">By days of week</div>
         <div className="flex gap-1 cursor-pointer" style={{ width: width }}>
             {(() => {
                 const sorted = [...counts].sort((a, b) => b - a);
@@ -46,6 +46,7 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
                     return (
                         <div
                             key={i}
+                            className="segment"
                             style={{
                                 width: `${count}px`,
                                 height: '10px',

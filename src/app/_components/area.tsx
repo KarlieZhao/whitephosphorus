@@ -10,7 +10,7 @@ interface AreaProps extends geoDataProps {
 
 export default function Area({ geoData, selectedCity, selectedDates, x_unit }: AreaProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
-    const height = 100;
+    const height = 80;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

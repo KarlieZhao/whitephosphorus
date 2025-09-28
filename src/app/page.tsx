@@ -1,6 +1,5 @@
 "use client"
 import { useState, useEffect } from "react";
-import { Map } from "@/app/_components/mapembed";
 import DataSource from "./_components/datasource";
 import Header from "@/app/_components/header";
 import Typewriter from '@/app/_components/typewriter';
@@ -10,27 +9,14 @@ import Footer from "./_components/footer";
 
 
 export default function Index() {
-  const textToType = ["is a platform for geolocating, verifying, and mapping white phosphorus incidents in Lebanon."];
+  const textToType = ["WhitePhosphorus.info documents and analyzes the use of white phosphorus munitions in South Lebanon between October 2023 and November 2024.", "It has verified over 650 images and videos, and geolocated 198 strikes. The resulting spatial archive traces how these munitions interact with landscapes, agriculture, and communities.", "Click anywhere to start."];
   const [TypewriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [isPromptVisible, setIsPromptVisible] = useState<boolean>(false);
   const [forceStop, setForceStop] = useState<boolean>(false);
 
   const onFinish = () => {
     setTypeWriterFinished(true);
   };
-
-  useEffect(() => {
-    if (TypewriterFinished) {
-      const showPromptTimeout = setTimeout(() => setIsPromptVisible(true), 4500);
-      const hidePromptTimeout = setTimeout(() => setIsPromptVisible(false), 30000);
-
-      return () => {
-        clearTimeout(showPromptTimeout);
-        clearTimeout(hidePromptTimeout);
-      };
-    }
-  }, [TypewriterFinished]);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
@@ -48,9 +34,9 @@ export default function Index() {
         }}></div>
       <Header TypewriterFinished={TypewriterFinished} />
       <main className="relative">
-        <div className="w-full text-5xl z-50 mt-4 fixed text-white ml-6">
-          <Typewriter textLines={textToType} period={2000}
-            speed={100} //lower value = faster typing
+        <div className="w-[44vw] min-w-20 z-50 mt-48 fixed text-white ml-5">
+          <Typewriter textLines={textToType} period={500}
+            speed={45} //lower value = faster typing
             onFinish={onFinish} // on finish, trigger the onFinish function
             forceStopped={forceStop}
           />

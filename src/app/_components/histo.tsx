@@ -175,7 +175,7 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, o
     }, [geoData, dimensions, selectedCity, selectedDates, selectedDay, allCityNames]);
 
     return <>
-        <div className="chart-titles">WP shells by City</div>
+        <div className="chart-titles">By City</div>
         <svg ref={svgRef}></svg>
     </>;
 }

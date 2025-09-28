@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 
 interface TypewriterProps {
     textLines: string[];
@@ -10,12 +10,15 @@ interface TypewriterProps {
 }
 
 const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFinish, forceStopped = false }) => {
-    const [text, setText] = useState('');
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [typingSpeed, setTypingSpeed] = useState(40);
-    const [lineNum, setLineNum] = useState(0);
+    const [p1, setp1] = useState<string>("");
+    const [p2, setp2] = useState<string>("");
+    const [p3, setp3] = useState<string>("");
+    const [currentLine, setCurrentLine] = useState(0);
+    const [currentChar, setCurrentChar] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     const getRandomSpeed = useCallback(() => Math.random() * speed + 10, [speed]);
 
     useEffect(() => {
@@ -31,42 +34,61 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
     }, [isFinished, onFinish]);
 
     useEffect(() => {
-        if (!hasMounted || isFinished) return;
+        if (!hasMounted || isFinished || forceStopped) return;
 
-        if (forceStopped) {
-            setText('');
-            setIsFinished(true);
-            onFinish();
-            return;
-        }
-
-        const handleTyping = () => {
-            const fullTxt = textLines[lineNum];
-            setText(fullTxt.substring(0, isDeleting ? (text.length - 1) : (text.length + 1)));
-            let delta = isDeleting ? speed / 3 : getRandomSpeed(); // Faster deleting speed
-
-            if (!isDeleting && lineNum === textLines.length - 1 && text === fullTxt) {
-                delta = period; // Pause before deleting
-                setIsDeleting(true);
-            } else if (isDeleting && text === '') { // if not yet finish typing all the lines
-                if (lineNum + 1 < textLines.length) {
-                    setIsDeleting(false);
-                    setLineNum(lineNum + 1);
-                    delta = 500; // Pause before starting the next word
-                } else {
-                    setIsFinished(true); // End typing once all words are done
-                    onFinish(); // will run this function when typing is finished
-                }
+        const typeNextCharacter = () => {
+            if (currentLine >= textLines.length) {
+                setIsFinished(true);                
+                return;
             }
-            setTypingSpeed(delta);
+
+            const currentText = textLines[currentLine];
+            if (currentChar < currentText.length) {
+                const newChar = currentText.substring(0, currentChar + 1);
+
+                // Update the appropriate paragraph state
+                if (currentLine === 0) {
+                    setp1(newChar);
+                } else if (currentLine === 1) {
+                    setp2(newChar);
+                } else if (currentLine === 2) {
+                    setp3(newChar);
+                }
+
+                setCurrentChar(prev => prev + 1);
+
+                const nextSpeed = getRandomSpeed();
+                timeoutRef.current = setTimeout(typeNextCharacter, nextSpeed);
+            } else {
+                // Move to next line after period delay
+                timeoutRef.current = setTimeout(() => {
+                    setCurrentLine(prev => prev + 1);
+                    setCurrentChar(0);
+                }, period);
+            }
         };
 
-        const typingTimeout = setTimeout(() => {
-            handleTyping();
-        }, typingSpeed);
+        // Start typing after initial delay
+        timeoutRef.current = setTimeout(typeNextCharacter, speed);
 
-        return () => clearTimeout(typingTimeout);
-    }, [text, isDeleting, lineNum, typingSpeed, textLines, period, speed, isFinished, hasMounted, onFinish]);
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, [hasMounted, isFinished, forceStopped, currentLine, currentChar, textLines, period, getRandomSpeed, onFinish]);
+
+    useEffect(() => {
+        if (forceStopped) {
+            setp1("");
+            setp2("");
+            setp3("");
+            setCurrentLine(0);
+            setCurrentChar(0);
+            setIsFinished(true);
+            onFinish();
+        }
+    }, [forceStopped, onFinish]);
 
     if (!hasMounted) {
         return null;
@@ -74,7 +96,9 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
 
     return (
         <div className="typewrite">
-            <span className="wrap">{text}</span>
+            <p className="wrap">{p1}</p>
+            <p className="wrap">{p2}</p>
+            <p className="wrap text-sm text-gray-400">{p3}</p>
         </div>
     );
 };
