@@ -21,8 +21,8 @@ type RawIncident = {
     landscape: string | null;
     sourced_by: string;
     shell_count: number;
-    external_link: string;
-    file_name: string[];
+    links: string[];
+    filename: string[];
 };
 
 // Constants
@@ -40,8 +40,8 @@ const mapData = (raw: RawIncident[]): IncidentData[] => {
         date: d.date,
         area: d.town || d.country || "Unknown",
         count: d.shell_count ?? 0,
-        link: d.external_link ?? "",
-        file_name: d.file_name ?? []
+        links: d.links ?? [],
+        filename: d.filename ?? []
     }));
 };
 
@@ -123,12 +123,12 @@ export default function Index() {
     // Memoized footage items to prevent unnecessary re-renders
     const footageItems = useMemo(() => {
         if (!clickedCellData || isMobile) return null;
-        return Array.from({ length: clickedCellData.file_name.length }).map((_, index) => (
+        return Array.from({ length: clickedCellData.filename.length }).map((_, index) => (
             <div key={`${clickedCellData.area}-${clickedCellData.date}-${index}`} className="flex-none snap-start">
                 <ContentWindow title="">
                     <FootageDisplay
-                        srcLink={`${clickedCellData.link}`}
-                        fileName={`/data/media/${clickedCellData.code}/${clickedCellData.file_name[index]}`}
+                        srcLink={`${clickedCellData.links[index]}`}
+                        fileName={`/media/${clickedCellData.code}/${clickedCellData.filename[index]}.jpg`}
                         enlarge={true}
                     />
                 </ContentWindow>

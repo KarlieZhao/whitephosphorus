@@ -61,13 +61,13 @@ const CENTER_FILL = {
   // nature_clicked: "#8D9482"
 
   residential: "#ccc",
-  residential_clicked: "#E6695B",
+  residential_clicked: "#ff3333",
 
   cultivate: "#ccc",
-  cultivate_clicked: "#E6695B",
+  cultivate_clicked: "#ff3333",
 
   nature: "#ccc",
-  nature_clicked: "#E6695B"
+  nature_clicked: "#ff3333"
 }
 
 export function VectorMap({

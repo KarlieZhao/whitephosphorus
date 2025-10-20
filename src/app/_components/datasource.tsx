@@ -9,12 +9,8 @@ import { TypewriterProps } from "./header";
 import SatelliteMap from "./satellite-map";
 
 // TODO
-// style satelite toggle (hide for now?)
-// add right padding to timeline heatmap
-// remove extra footages: 404, too many & check all media
 // responsive chart sizing
-// where to host satelite? s3 bucket? 
-// figure out sitelite fetching & hosting
+// sitelite fetching & hosting
 
 // export const RED_GRADIENT = ["#db2f0f", "#C03117", "#A5331E", "#8A3525", "#6E362C", "#7C3629", "#6E362C"]
 // export const RED_GRADIENT = ["#cfcfcf", "#aaa", "#909090", "#858585", "#777", "#666", "#606060"]
@@ -32,26 +28,10 @@ export type geoDataProps = {
     onAreaTypeClicked?: (data: string | null) => void;
 };
 
-// type dataPointProps = {
-//     code: string,
-//     date: string,
-//     time: string,
-//     town: string,
-//     country: string,
-//     geolocated_by: string,
-//     lat: number,
-//     lon: number,
-//     landscape: string,
-//     sourced_by: string,
-//     shell_count: number,
-//     external_link: string,
-//     file_name: string
-// }
-
 interface landscape_mapping_prop {
-    b_up: string;
-    cultivate: string;
-    veg: string
+    resident: string;
+    bare: string;
+    agri: string
 }
 
 export default function DataSource({ TypewriterFinished = false }: TypewriterProps) {
@@ -76,9 +56,9 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
     const [overlayImage, setOverlayImage] = useState<String | null>(null);
 
     const landscape_map: landscape_mapping_prop = {
-        "b_up": "residential areas",
-        "cultivate": "cultivated land",
-        "veg": "natural vegetation"
+        "resident": "residential",
+        "agri": "agricultural",
+        "bare": "forested/open terrain"
     }
 
     const controlEnabledTimeout = 500;
@@ -94,7 +74,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         fetch("/data/geoData.json")
             .then((res) => res.json())
             .then((data) => {
-                console.log("data loaded")
+                console.log("data loaded. Total", data.length, "entries.")
                 const sortedData = data.sort((a: any, b: any) => {
                     const dateA = new Date(`${a.date}T${a.time}`);
                     const dateB = new Date(`${b.date}T${b.time}`);
@@ -125,7 +105,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     const key = arg as keyof landscape_mapping_prop;
                     const counts = pt.filter(p => p.landscape === arg).length
                     readout1 = <>Of the 195 white phosophorus incidents, </>
-                    readout2 = <><span className="text-2xl text-white">{counts}</span> of them stroke <span className="text-2xl text-white">{landscape_map[key]}</span>.</>
+                    readout2 = <><span className="text-2xl text-white">{counts}</span> of them stroke <span className="text-2xl text-white">{landscape_map[key]}</span> areas.</>
                 } else {
                     let shellCount = 0;
                     const dates = pt.map(p => {
@@ -171,8 +151,8 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     readout5 = `${landscape_map[pt.landscape as keyof typeof landscape_map]}`;
                 } else readout5 = "Landscape type is not yet unidentified."
 
-                thumbnails = pt.file_name.map((name: string) => `/data/media/${pt.code}/${name}`)
-                ext_link = [pt.external_link]
+                thumbnails = pt.filename.map((name: string) => `/media/${pt.code}/${name}.jpg`)
+                ext_link = [...pt.links]
             } else {
                 readout3 = "";
                 readout4 = "";
@@ -189,8 +169,8 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         <div className={`${showOverlay ? "" : "hidden"} map-overlay`}>
             <img src={`${overlayImage}`} alt="" className="max-w-[50vw] max-h-[70vh]" />
         </div>
-        <div className="hidden satellite-toggle-container mb-4 ml-12 z-50 absolute bottom-16 left-3">
-            <div className="flex items-center space-x-3">
+        {/* <div className="satellite-toggle-container mb-4 ml-12 z-50 absolute bottom-16 left-3">
+            <div className={`flex items-center space-x-3 ${TypewriterFinished ? "" : "hidden"}`}>
                 <span className={`text-sm font-medium ${!showSatelliteMap ? 'text-white' : 'text-gray-500'}`}>
                     Vector
                 </span>
@@ -209,7 +189,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     Satellite
                 </span>
             </div>
-        </div>
+        </div> */}
 
         <div onClick={() => {
             if (selectedCity != "") {
@@ -231,7 +211,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 onZoomChange={setMapZoom}
                 onCenterChange={setLeafletCenter}
                 setMapInstance={setMapInstance}
-                showSatellite={showSatelliteMap}
+                showSatellite={false}
                 TypewriterFinished={TypewriterFinished}
             />
 
@@ -256,12 +236,13 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             {/* <p>Between Oct. 10, 2023 and Oct. 02, 2024, <br />
           195 white phosphorus shells were deployed to south Lebanon.</p> */}
 
-            <div className="dynamic-readout">{details.slice(0, 5).map((line, idx) => (<div key={idx}>{line}</div>))}
+            <div className="dynamic-readout">
+                {details.slice(0, 5).map((line, idx) => (<div key={idx}>{line}</div>))}
             </div>
             <div className="dynamic-thumbnails overflow-y-auto">
                 <p className="flex gap-4 flex-wrap max-w-[30vw] h-auto">
                     {details[5]?.map((line: string, idx: number) =>
-                    (<a href={details[6][0]} key={idx} target="_blank">
+                    (<a href={details[6][idx]} key={idx} target="_blank">
                         <img src={`${line}`} className="max-w-24 max-h-20" key={idx} alt=""
                             onMouseOver={() => {
                                 setOverlayImage(line);
@@ -271,7 +252,8 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                                 setShowOverlay(false);
                             }}
                         />
-                    </a>))}
+                    </a>)
+                    )}
                 </p>
             </div>
         </div>
@@ -282,6 +264,8 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 <Timeline geoData={geoData}
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
+                    selectedDay={selectedDay}
+                    selectedAreaType={selectedAreaType}
                     onTimelineDragged={(data) => {
                         if (!data) return;
                         //reset other params
@@ -297,14 +281,16 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 <Area geoData={geoData}
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
+                    selectedDay={selectedDay}
+                    selectedAreaType={selectedAreaType}
                     x_unit={areaXaxis} />
             </div>
             <div className="mt-7">
-                <Segment
-                    geoData={geoData}
+                <Segment geoData={geoData}
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
                     selectedDay={selectedDay}
+                    selectedAreaType={selectedAreaType}
                     onSegmentClick={(day) => {
                         if (day === null) return;
                         const newDay = selectedDay === day ? -1 : day; //if clicked again, reset
@@ -326,42 +312,45 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             <div className={`mt-8`}>
                 <div className="chart-titles">By Landscape</div>
                 <div className="flex gap-3 justify-center mt-3">
-                    <div className="chart-titles area-type-legend"
+                    <div className={`chart-titles area-type-legend 
+                    ${selectedAreaType === "resident" ? "area-type-legend-active" : ""}`}
                         onClick={() => {
                             const pts = geoData.filter((p: any) => {
-                                return p.landscape === "b_up"
+                                return p.landscape === "resident"
                             });
-                            setSelectedAreaType("b_up");
-                            getDetails(pts, "b_up");
+                            setSelectedAreaType("resident");
+                            getDetails(pts, "resident");
                             //reset other params
                             setSelectedCity("");
                             setSelectedDates(["", ""]);
                             setselectedDay(-1);
-                        }}>Residential</div>
-                    <div className="chart-titles area-type-legend"
+                        }}>{landscape_map.resident}</div>
+                    <div className={`chart-titles area-type-legend 
+                    ${selectedAreaType === "agri" ? "area-type-legend-active" : ""}`}
                         onClick={() => {
                             const pts = geoData.filter((p: any) => {
-                                return p.landscape === "cultivate"
+                                return p.landscape === "agri"
                             });
-                            setSelectedAreaType("cultivate");
-                            getDetails(pts, "cultivate");
+                            setSelectedAreaType("agri");
+                            getDetails(pts, "agri");
                             //reset other params
                             setSelectedCity("");
                             setSelectedDates(["", ""]);
                             setselectedDay(-1);
-                        }}>Cultivated land</div>
-                    <div className="chart-titles area-type-legend"
+                        }}>{landscape_map.agri}</div>
+                    <div className={`chart-titles area-type-legend 
+                    ${selectedAreaType === "bare" ? "area-type-legend-active" : ""}`}
                         onClick={() => {
                             const pts = geoData.filter((p: any) => {
-                                return p.landscape === "veg"
+                                return p.landscape === "bare"
                             });
-                            setSelectedAreaType("veg");
-                            getDetails(pts, "veg");
+                            setSelectedAreaType("bare");
+                            getDetails(pts, "bare");
                             //reset other params
                             setSelectedCity("");
                             setSelectedDates(["", ""]);
                             setselectedDay(-1);
-                        }}>Natural vegetation</div>
+                        }}>{landscape_map.bare}</div>
                 </div>
             </div>
 
@@ -371,6 +360,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
                     selectedDay={selectedDay}
+                    selectedAreaType={selectedAreaType}
                     onBarClick={(data) => {
                         if (!data) return;
                         const newCity = data[0] === selectedCity ? "" : data[0];

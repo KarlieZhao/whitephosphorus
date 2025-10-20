@@ -57,7 +57,7 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
         // tile layer
         const tileLayer = L.tileLayer("/tiles/{z}/{x}/{y}.png", {
             tms: true,
-            opacity: 0.8
+            opacity: 0.65
         }).addTo(map);
 
         tileLayerRef.current = tileLayer;

@@ -80,6 +80,7 @@ body {
 .team-info a {
   color: #eee
 }
+
 .text-gray-400 {
   color: #bbb;
 }
@@ -1034,8 +1035,8 @@ ul li {
   word-spacing: 0.6px;
   line-height: 1.5rem;
 }
-  
-  .method-page section img {
+
+.method-page section img {
   max-width: 50vw;
   min-width: 200px;
   display: block;
@@ -1068,7 +1069,11 @@ footer a {
 }
 
 .segment:hover {
-  filter: brightness(2) saturate(0.7)
+  filter: brightness(1.5) saturate(0.7)
+}
+
+.segment-active {
+  filter: none !important;
 }
 
 .country-legal {
@@ -1199,7 +1204,7 @@ footer a {
 .side-bar {
   background-color: #000a;
   /* border: 1px solid white; */
-  padding: 2rem;
+  padding: 1.3rem;
   filter: drop-shadow(-5px 0 7px #000);
   height: 85vh;
   overflow: auto;
@@ -1288,15 +1293,17 @@ footer a {
 
 .area-type-legend {
   background-color: #561a188e;
-  padding: 0.2em 0.4em;
-  border-radius: 0.15rem;
+  padding: 0.05em 0.25em 0.25em 0.25em;
+  border-radius: 0.1rem;
   cursor: pointer;
   transition: background-color 0.07s ease-in;
+  text-align: center;
 }
 
-.area-type-legend:hover {
+.area-type-legend:hover,
+.area-type-legend-active {
   color: #eee;
-  background-color: #561a18;
+  background-color: #831713;
 }
 
 @media (max-width: 1400px) {

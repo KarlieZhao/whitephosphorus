@@ -4,9 +4,11 @@ import { geoDataProps } from "./datasource";
 import { width } from "./datasource";
 const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 16);
 
-export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, onBarClick }: geoDataProps) {
+export const parseDate = d3.timeParse('%Y-%m-%d'); //return Date 
+
+export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, onBarClick }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
-    const [dimensions, setDimensions] = useState({ width: width, height: 440 });
+    const [dimensions, setDimensions] = useState({ width: width, height: 480 });
     const colorIndexRef = useRef<number[]>(Array(30).fill(0));
     const hasSorted = useRef(false);
     const [allCityNames, setAllCityNames] = useState<string[]>([]);
@@ -27,7 +29,6 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, o
         d3.select(svgRef.current).selectAll(".chart-labels").filter((_, i) => i === index).attr("fill", "#aaa");
     }
 
-    const parseDate = d3.timeParse('%Y-%m-%d'); //return Date 
 
     const getAllTownNames = (data: any[]): string[] => {
         const sorted = formatData(data);
@@ -84,8 +85,11 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, o
                 const day = date.getDay();
                 return day === selectedDay
             })
+        } else if (selectedAreaType) {
+            filteredData = filteredData.filter(d => {
+                return d.landscape === selectedAreaType;
+            })
         }
-
         // only sort on initial load
         let sortedData = formatData(filteredData);
         if (!hasSorted.current) {
@@ -172,7 +176,7 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, o
                 if (onBarClick) onBarClick([d.name, d.count]);
             })
 
-    }, [geoData, dimensions, selectedCity, selectedDates, selectedDay, allCityNames]);
+    }, [geoData, dimensions, selectedCity, selectedDates, selectedDay, selectedAreaType, allCityNames]);
 
     return <>
         <div className="chart-titles">By City</div>

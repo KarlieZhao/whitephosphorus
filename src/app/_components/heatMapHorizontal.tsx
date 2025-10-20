@@ -10,8 +10,8 @@ export type IncidentData = {
   date: string;
   area: string;
   count: number;
-  link: string;
-  file_name: string[];
+  links: string[];
+  filename: string[];
 };
 
 type HeatMapProps = {
@@ -21,8 +21,8 @@ type HeatMapProps = {
     date: string;
     area: string;
     count: number;
-    link: string;
-    file_name: string[];
+    links: string[];
+    filename: string[];
   }) => void;
   scrollButtonVisible: boolean;
 };
@@ -333,8 +333,8 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
           count: d.value,
           date: xLabels[d.x], // Fixed: was incorrectly swapped
           area: sortedAreas[d.y], // Fixed: was incorrectly swapped  
-          link: matchedEntry?.link || "",
-          file_name: matchedEntry?.file_name || []
+          links: matchedEntry?.links || [],
+          filename: matchedEntry?.filename || []
         };
         onCellClick(clickedData);
       });

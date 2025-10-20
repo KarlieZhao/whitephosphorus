@@ -2,13 +2,13 @@ import * as d3 from "d3";
 import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps, RED_GRADIENT } from "./datasource";
 import { width } from "./datasource";
-
+import { parseDate } from "./histo";
 interface AreaProps extends geoDataProps {
     x_unit: "hour" | "month";
 }
 
 
-export default function Area({ geoData, selectedCity, selectedDates, x_unit }: AreaProps) {
+export default function Area({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, x_unit }: AreaProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const height = 80;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
@@ -24,14 +24,36 @@ export default function Area({ geoData, selectedCity, selectedDates, x_unit }: A
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
 
-        //format time
-        const gd = selectedCity === "" ? geoData : geoData.filter(item => item.town === selectedCity)
+        let filteredData = geoData;
+        if (selectedDates && selectedDates[0] && selectedDates[1]) {
+            filteredData = filteredData.filter(d => {
+                const date = parseDate(d.date);
+                const start = parseDate(selectedDates[0]);
+                const end = parseDate(selectedDates[1]);
+                if (!date || !start || !end) return true;
+                return date >= start && date <= end;
+            })
+        } else if (selectedDay !== undefined && selectedDay > -1) {
+            filteredData = filteredData.filter(d => {
+                const date = new Date(d.date);
+                const day = date.getDay();
+                return day === selectedDay
+            })
+        } else if (selectedAreaType) {
+            filteredData = filteredData.filter(d => {
+                return d.landscape === selectedAreaType;
+            })
+        } else if (selectedCity) {
+            filteredData = filteredData.filter(d => {
+                return d.town === selectedCity
+            })
+        }
 
         // ========= DATA AGGREGATION =========
         let binnedCounts: { time: number; count: number }[] = [];
         let monthLabels: string[] = [];
         if (x_unit === "hour") {
-            const hours = gd.map(d => parseInt(d.time.slice(0, 2), 10));
+            const hours = filteredData.map(d => parseInt(d.time.slice(0, 2), 10));
             const hourlyCounts = new Array(25).fill(0);
             hours.forEach(hour => {
                 if (hour >= 0 && hour < 25) hourlyCounts[hour]++;
@@ -46,7 +68,7 @@ export default function Area({ geoData, selectedCity, selectedDates, x_unit }: A
             const parseDate = d3.timeParse("%Y-%m-%d");
             const monthCounts = new Map<string, number>(); // month index (0–11) as key
 
-            gd.forEach(d => {
+            filteredData.forEach(d => {
                 const dateObj = parseDate(d.date);
                 if (dateObj) {
                     const year = dateObj.getFullYear();
@@ -138,7 +160,7 @@ export default function Area({ geoData, selectedCity, selectedDates, x_unit }: A
             .attr('fill', RED_GRADIENT[5])
             .attr('d', area);
 
-    }, [geoData, width, height, selectedCity, x_unit]);
+    }, [geoData, width, height, selectedCity, selectedDates, selectedDay, selectedAreaType, x_unit]);
 
     return <>
         <svg ref={svgRef} width={width} height={height} /></>;

@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps } from "./datasource";
 import { width } from "./datasource";
 
-export default function Timeline({ geoData, selectedCity, selectedDates, onTimelineDragged }: geoDataProps) {
+export default function Timeline({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, onTimelineDragged }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const startDateRef = useRef<Date | null>(null);
     const [hoverInfo, setHoverInfo] = useState<{ x: number; date: Date } | null>(null);
@@ -38,10 +38,33 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
     const maxDate = d3.max(dates)!
     const allDates: Date[] = d3.timeDay.range(minDate, d3.timeDay.offset(maxDate, 1));
 
-    const getFilteredCounts = (data: typeof geoData, city?: string) => {
-        const filtered = city ? data.filter(d => d.town === city) : data;
+    const getFilteredCounts = (data: typeof geoData) => {
+        let filteredData = data;
+        if (selectedDates && selectedDates[0] && selectedDates[1]) {
+            filteredData = filteredData.filter(d => {
+                const date = parseDate(d.date);
+                const start = parseDate(selectedDates[0]);
+                const end = parseDate(selectedDates[1]);
+                if (!date || !start || !end) return true;
+                return date >= start && date <= end;
+            })
+        } else if (selectedDay !== undefined && selectedDay > -1) {
+            filteredData = filteredData.filter(d => {
+                const date = new Date(d.date);
+                const day = date.getDay();
+                return day === selectedDay
+            })
+        } else if (selectedAreaType) {
+            filteredData = filteredData.filter(d => {
+                return d.landscape === selectedAreaType;
+            })
+        } else if (selectedCity) {
+            filteredData = filteredData.filter(d => {
+                return d.town === selectedCity
+            })
+        }
         const counts = new Map<string, number>();
-        filtered.forEach(d => {
+        filteredData.forEach(d => {
             counts.set(d.date, (counts.get(d.date) ?? 0) + 1);
         });
         return counts;
@@ -56,7 +79,7 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
 
-        const filteredCounts = getFilteredCounts(geoData, selectedCity);
+        const filteredCounts = getFilteredCounts(geoData);
         const maxCount = Math.max(...Array.from(filteredCounts.values()), 0);
 
         const countsByDate = allDates.map(date => ({
@@ -136,7 +159,7 @@ export default function Timeline({ geoData, selectedCity, selectedDates, onTimel
         }
 
 
-    }, [geoData, width, height, selectedDates, selectedCity]);
+    }, [geoData, width, height, selectedDates, selectedCity, selectedDay, selectedAreaType]);
 
     return <> <div className="chart-titles">Timeline </div>
         <svg ref={svgRef} width={width} height={height} />

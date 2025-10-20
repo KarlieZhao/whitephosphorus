@@ -5,7 +5,7 @@ import { width } from "./datasource";
 
 const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 7);
 
-export default function Segment({ geoData, selectedCity, selectedDay, selectedDates, onSegmentClick }: geoDataProps) {
+export default function Segment({ geoData, selectedCity, selectedDay, selectedDates, selectedAreaType, onSegmentClick }: geoDataProps) {
     const height = 120;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
     const [counts, setCounts] = useState<number[]>([]);
@@ -26,6 +26,10 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
                 if (!date || !start || !end) return true;
                 return date >= start && date <= end;
             })
+        } else if (selectedAreaType) {
+            filteredData = filteredData.filter(d => {
+                return d.landscape === selectedAreaType;
+            })
         }
         filteredData.forEach(data => {
             const date = new Date(data.date);
@@ -34,10 +38,10 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
         })
         const widthFactor = (width - 20) / filteredData.length;
         setCounts(dayCount.map(count => count *= widthFactor));
-    }, [geoData, selectedCity, selectedDates])
+    }, [geoData, selectedCity, selectedDates, selectedAreaType])
 
     return (<>
-        <div className="chart-titles mb-3">By days of week</div>
+        <div className="chart-titles mb-3">By Days of Week</div>
         <div className="flex gap-1 cursor-pointer" style={{ width: width }}>
             {(() => {
                 const sorted = [...counts].sort((a, b) => b - a);
@@ -46,7 +50,7 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
                     return (
                         <div
                             key={i}
-                            className="segment"
+                            className={`segment ${selectedDay === i ? "segment-active" : ""}`}
                             style={{
                                 width: `${count}px`,
                                 height: '10px',
