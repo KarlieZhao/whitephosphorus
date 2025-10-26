@@ -36,9 +36,9 @@
   },
   {
     "links": [
-      "www.flickr.com/photos/201797790@N02/54690616823/in/album-72177720328045524",
-      "www.flickr.com/photos/201797790@N02/54690616858/in/album-72177720328045524",
-      "www.flickr.com/photos/201797790@N02/54690724800/in/album-72177720328045524"
+      "https://www.flickr.com/photos/201797790@N02/54690616823/in/album-72177720328045524",
+      "https://www.flickr.com/photos/201797790@N02/54690616858/in/album-72177720328045524",
+      "https://www.flickr.com/photos/201797790@N02/54690724800/in/album-72177720328045524"
     ],
     "filename": ["wp107_media1", "wp107_media2", "wp107_media3"],
     "code": "WP107",
@@ -144,9 +144,9 @@
   },
   {
     "links": [
-      "www.anadoluimages.com/p/israeli-artillery-hit-areas-along-lebanon-border-amid-accusations-of-white-phosph/27182466",
-      "www.flickr.com/photos/201797790@N02/albums/72177720329558669",
-      "www.flickr.com/photos/201797790@N02/albums/72177720329558669"
+      "https://www..anadoluimages.com/p/israeli-artillery-hit-areas-along-lebanon-border-amid-accusations-of-white-phosph/27182466",
+      "https://www.flickr.com/photos/201797790@N02/albums/72177720329558669",
+      "https://www.flickr.com/photos/201797790@N02/albums/72177720329558669"
     ],
     "filename": ["wp7_media1", "wp7_media2", "wp7_media3"],
     "code": "WP7",
@@ -184,9 +184,9 @@
   {
     "links": [
       "https://x.com/GreenSoutherns/status/1720388429656010788?s=20",
-      "x.com/hmalla72/status/1713607043909603489/photo/2",
-      "x.com/hmalla72/status/1713607043909603489/photo/3",
-      "x.com/hmalla72/status/1713607043909603489/photo/4"
+      "https://x.com/hmalla72/status/1713607043909603489/photo/2",
+      "https://x.com/hmalla72/status/1713607043909603489/photo/3",
+      "https://x.com/hmalla72/status/1713607043909603489/photo/4"
     ],
     "filename": ["wp9_media1", "wp9_media2", "wp9_media3", "wp9_media4"],
     "code": "WP9",
@@ -205,9 +205,9 @@
   {
     "links": [
       "https://x.com/GreenSoutherns/status/1720388429656010788?s=20",
-      "x.com/hmalla72/status/1713607043909603489/photo/2",
-      "x.com/hmalla72/status/1713607043909603489/photo/3",
-      "x.com/hmalla72/status/1713607043909603489/photo/4"
+      "https://x.com/hmalla72/status/1713607043909603489/photo/2",
+      "https://x.com/hmalla72/status/1713607043909603489/photo/3",
+      "https://x.com/hmalla72/status/1713607043909603489/photo/4"
     ],
     "filename": [
       "wp148_media1",
@@ -283,10 +283,10 @@
   },
   {
     "links": [
-      "www.flickr.com/photos/201797790@N02/54181004197/in/album-72177720321917066",
-      "www.flickr.com/photos/201797790@N02/54182325865/in/album-72177720321917066",
-      "www.flickr.com/photos/201797790@N02/54182325875/in/album-72177720321917066",
-      "www.flickr.com/photos/201797790@N02/54182325880/in/album-72177720321917066",
+      "https://www.flickr.com/photos/201797790@N02/54181004197/in/album-72177720321917066",
+      "https://www.flickr.com/photos/201797790@N02/54182325865/in/album-72177720321917066",
+      "https://www.flickr.com/photos/201797790@N02/54182325875/in/album-72177720321917066",
+      "https://www.flickr.com/photos/201797790@N02/54182325880/in/album-72177720321917066",
       "https://x.com/Aya_Majzoub/status/1719307819898323129",
       "https://www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727863106"
     ],
@@ -314,14 +314,14 @@
   {
     "links": [
       "https://www.anadoluimages.com/p/nna-news-agency-says-israel-using-white-phosphorus-on-lebanon/27197329",
-      "www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727859789",
-      "www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727860844",
-      "www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727860871",
-      "www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727861398",
-      "www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727861843",
-      "www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727862921",
-      "www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727864905",
-      "www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727865140.jpg"
+      "https://www..gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727859789",
+      "https://www..gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727860844",
+      "https://www..gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727860871",
+      "https://www..gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727861398",
+      "https://www..gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727861843",
+      "https://www..gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727862921",
+      "https://www..gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727864905",
+      "https://www..gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727865140.jpg"
     ],
     "filename": [
       "wp132_media1",
@@ -383,8 +383,8 @@
   },
   {
     "links": [
-      "x.com/sentdefender/status/1715759706747133954/video/1",
-      "x.com/sentdefender/status/1715759706747133954/video/2"
+      "https://x.com/sentdefender/status/1715759706747133954/video/1",
+      "https://x.com/sentdefender/status/1715759706747133954/video/2"
     ],
     "filename": ["wp15_media1", "wp15_media2"],
     "code": "WP15",
@@ -402,8 +402,8 @@
   },
   {
     "links": [
-      "x.com/sentdefender/status/1715759706747133954/video/1",
-      "x.com/sentdefender/status/1715759706747133954/video/2"
+      "https://x.com/sentdefender/status/1715759706747133954/video/1",
+      "https://x.com/sentdefender/status/1715759706747133954/video/2"
     ],
     "filename": ["wp16_media1", "wp16_media2"],
     "code": "WP16",
@@ -550,8 +550,8 @@
   },
   {
     "links": [
-      "x.com/PalinfoAr/status/1722922193053516265/photo/1",
-      "x.com/PalinfoAr/status/1722922193053516265/photo/2"
+      "https://x.com/PalinfoAr/status/1722922193053516265/photo/1",
+      "https://x.com/PalinfoAr/status/1722922193053516265/photo/2"
     ],
     "filename": ["wp21_media1", "wp21_media2"],
     "code": "WP21",
@@ -1018,12 +1018,12 @@
   },
   {
     "links": [
-      "www.flickr.com/photos/201797790@N02/54136027942/in/album-72177720321914333",
-      "www.flickr.com/photos/201797790@N02/54136873466/in/album-72177720321914333",
-      "www.flickr.com/photos/201797790@N02/54136873486/in/album-72177720321914333",
-      "www.flickr.com/photos/201797790@N02/54136873546/in/album-72177720321914333",
-      "www.flickr.com/photos/201797790@N02/54137333285/in/album-72177720321914333",
-      "www.flickr.com/photos/201797790@N02/54137333305/in/album-72177720321914333"
+      "https://www.flickr.com/photos/201797790@N02/54136027942/in/album-72177720321914333",
+      "https://www.flickr.com/photos/201797790@N02/54136873466/in/album-72177720321914333",
+      "https://www.flickr.com/photos/201797790@N02/54136873486/in/album-72177720321914333",
+      "https://www.flickr.com/photos/201797790@N02/54136873546/in/album-72177720321914333",
+      "https://www.flickr.com/photos/201797790@N02/54137333285/in/album-72177720321914333",
+      "https://www.flickr.com/photos/201797790@N02/54137333305/in/album-72177720321914333"
     ],
     "filename": [
       "wp36_media1",
@@ -1048,17 +1048,17 @@
   },
   {
     "links": [
-      "www.flickr.com/photos/201797790@N02/54136213167/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54136213542/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54136213967/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54137062566/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54137347763/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54137347923/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54137519975/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54137520330/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54137520795/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54685744757/in/album-72177720321921989",
-      "www.flickr.com/photos/201797790@N02/54686787268/in/album-72177720321921989"
+      "https://www.flickr.com/photos/201797790@N02/54136213167/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54136213542/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54136213967/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54137062566/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54137347763/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54137347923/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54137519975/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54137520330/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54137520795/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54685744757/in/album-72177720321921989",
+      "https://www.flickr.com/photos/201797790@N02/54686787268/in/album-72177720321921989"
     ],
     "filename": [
       "wp37_media1",
@@ -1088,9 +1088,9 @@
   },
   {
     "links": [
-      "www.flickr.com/photos/201797790@N02/54685758867/in/album-72177720327959449",
-      "www.flickr.com/photos/201797790@N02/54778379265/in/album-72177720327959449",
-      "www.flickr.com/photos/201797790@N02/54843597696/in/album-72177720327959449"
+      "https://www.flickr.com/photos/201797790@N02/54685758867/in/album-72177720327959449",
+      "https://www.flickr.com/photos/201797790@N02/54778379265/in/album-72177720327959449",
+      "https://www.flickr.com/photos/201797790@N02/54843597696/in/album-72177720327959449"
     ],
     "filename": ["wp38_media1", "wp38_media2", "wp38_media3"],
     "code": "WP38",
@@ -1108,8 +1108,8 @@
   },
   {
     "links": [
-      "www.flickr.com/photos/201797790@N02/54686739513/in/album-72177720327950034",
-      "www.flickr.com/photos/201797790@N02/54686757524/in/album-72177720327950034"
+      "https://www.flickr.com/photos/201797790@N02/54686739513/in/album-72177720327950034",
+      "https://www.flickr.com/photos/201797790@N02/54686757524/in/album-72177720327950034"
     ],
     "filename": ["wp104_media1", "wp104_media2"],
     "code": "WP104",
@@ -1127,8 +1127,8 @@
   },
   {
     "links": [
-      "www.flickr.com/photos/201797790@N02/54136340797/in/album-72177720321901816",
-      "www.flickr.com/photos/201797790@N02/54182195593/in/album-72177720321901816"
+      "https://www.flickr.com/photos/201797790@N02/54136340797/in/album-72177720321901816",
+      "https://www.flickr.com/photos/201797790@N02/54182195593/in/album-72177720321901816"
     ],
     "filename": ["wp39_media1", "wp39_media2"],
     "code": "WP39",
@@ -1146,21 +1146,21 @@
   },
   {
     "links": [
-      "www.flickr.com/photos/201797790@N02/54136345522/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54136347012/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54136347792/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54136350152/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54137193666/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54137194451/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54137198196/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54137478458/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54137528359/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54137653635/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54137656325/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54686636798/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54686636803/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54686746745/in/album-72177720321902832",
-      "www.flickr.com/photos/201797790@N02/54686746830/in/album-72177720321902832"
+      "https://www.flickr.com/photos/201797790@N02/54136345522/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54136347012/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54136347792/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54136350152/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54137193666/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54137194451/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54137198196/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54137478458/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54137528359/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54137653635/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54137656325/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54686636798/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54686636803/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54686746745/in/album-72177720321902832",
+      "https://www.flickr.com/photos/201797790@N02/54686746830/in/album-72177720321902832"
     ],
     "filename": [
       "wp40_media1",
@@ -1194,20 +1194,20 @@
   },
   {
     "links": [
-      "www.flickr.com/photos/201797790@N02/54136364817/in/album-72177720321902902/.JPG",
-      "www.flickr.com/photos/201797790@N02/54137213476/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54137214391/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54137214776/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54137498668/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54137544194/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54137545509/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54137545859/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54137672170/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54686431046/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54686431091/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54686652798/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54686669594/in/album-72177720321902902",
-      "www.flickr.com/photos/201797790@N02/54686762095/in/album-72177720321902902"
+      "https://www.flickr.com/photos/201797790@N02/54136364817/in/album-72177720321902902/.JPG",
+      "https://www.flickr.com/photos/201797790@N02/54137213476/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54137214391/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54137214776/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54137498668/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54137544194/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54137545509/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54137545859/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54137672170/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54686431046/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54686431091/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54686652798/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54686669594/in/album-72177720321902902",
+      "https://www.flickr.com/photos/201797790@N02/54686762095/in/album-72177720321902902"
     ],
     "filename": [
       "wp41_media1",

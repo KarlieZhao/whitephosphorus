@@ -2,7 +2,7 @@ import { useEffect, useCallback, useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
 import { geoDataProps } from "./datasource";
 import { TypewriterProps } from "./header";
-
+import { MONTHS } from "./datasource";
 type VectorMapProps = geoDataProps & TypewriterProps & {
   getMapDetails: (point: any | null, arg?: any, clicked?: boolean) => void;
   mapZoom: number;
@@ -76,6 +76,7 @@ export function VectorMap({
   selectedDay,
   selectedDates,
   selectedAreaType,
+  selectedMonth,
   TypeWriterFinished,
   getMapDetails,
   mapZoom,
@@ -114,20 +115,21 @@ export function VectorMap({
       const date = new Date(pt.date);
       const day = (date.getDay() + 6) % 7;
       const matchesDay = selectedDay === -1 || day === selectedDay;
-
+      let mathcesMonth = false;
+      if (selectedMonth === null) mathcesMonth = true;
+      else if (selectedMonth != null && pt.date.slice(0, 7) === MONTHS[selectedMonth]) mathcesMonth = true;
       let withinDateRange = true;
       if (selectedDates?.[0] && selectedDates[1]) {
         const start = new Date(selectedDates[0]);
         const end = new Date(selectedDates[1]);
         withinDateRange = date >= start && date <= end;
       }
-
-      return matchesCity && matchesDay && matchesAreaType && withinDateRange;
+      return matchesCity && matchesDay && matchesAreaType && mathcesMonth && withinDateRange;
     });
 
     // Sort by date chronologically for animation
     return filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [geoData, selectedCity, selectedDay, selectedDates, selectedAreaType]);
+  }, [geoData, selectedCity, selectedDay, selectedDates, selectedAreaType, selectedMonth]);
 
   const clearAnimationTimeouts = useCallback(() => {
     animationTimeoutRef.current.forEach(timeout => clearTimeout(timeout));

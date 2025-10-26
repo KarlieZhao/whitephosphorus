@@ -2,11 +2,12 @@ import * as d3 from "d3";
 import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps } from "./datasource";
 import { width } from "./datasource";
+import { MONTHS } from "./datasource";
 const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 16);
 
 export const parseDate = d3.timeParse('%Y-%m-%d'); //return Date 
 
-export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, onBarClick }: geoDataProps) {
+export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, onBarClick }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const [dimensions, setDimensions] = useState({ width: width, height: 480 });
     const colorIndexRef = useRef<number[]>(Array(30).fill(0));
@@ -26,7 +27,7 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
         const target = event.currentTarget as SVGRectElement;
         const index = d3.select(svgRef.current).selectAll("rect.interaction").nodes().indexOf(target);
         d3.select(svgRef.current).selectAll("rect.render").filter((_, i) => i === index).attr("fill", RED_GRADIENT[colorIndexRef.current[index]]);
-        d3.select(svgRef.current).selectAll(".chart-labels").filter((_, i) => i === index).attr("fill", "#aaa");
+        d3.select(svgRef.current).selectAll(".chart-labels").filter((_, i) => i === index).attr("fill", "#bbb");
     }
 
 
@@ -89,6 +90,10 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
             filteredData = filteredData.filter(d => {
                 return d.landscape === selectedAreaType;
             })
+        } else if (selectedMonth != null) {
+            filteredData = filteredData.filter(d => {
+                return d.date.slice(0, 7) === MONTHS[selectedMonth];
+            })
         }
         // only sort on initial load
         let sortedData = formatData(filteredData);
@@ -140,7 +145,7 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
             .call(yAxis)
             .selectAll("text")
             .attr('class', 'chart-labels')
-            .attr('fill', "#aaa");
+            .attr('fill', "#bbb");
 
         // color bars
         g.selectAll("rect.render")
@@ -176,7 +181,7 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
                 if (onBarClick) onBarClick([d.name, d.count]);
             })
 
-    }, [geoData, dimensions, selectedCity, selectedDates, selectedDay, selectedAreaType, allCityNames]);
+    }, [geoData, dimensions, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, allCityNames]);
 
     return <>
         <div className="chart-titles">By City</div>

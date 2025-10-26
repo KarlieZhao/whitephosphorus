@@ -1,14 +1,10 @@
 import * as d3 from "d3";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { geoDataProps, RED_GRADIENT } from "./datasource";
 import { width } from "./datasource";
 import { parseDate } from "./histo";
-interface AreaProps extends geoDataProps {
-    x_unit: "hour" | "month";
-}
-
-
-export default function Area({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, x_unit }: AreaProps) {
+import { MONTHS } from "./datasource";
+export default function Area({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const height = 80;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
@@ -47,58 +43,27 @@ export default function Area({ geoData, selectedCity, selectedDates, selectedDay
             filteredData = filteredData.filter(d => {
                 return d.town === selectedCity
             })
+        } else if (selectedMonth != null) {
+            filteredData = filteredData.filter(d => {
+                return d.date.slice(0, 7) === MONTHS[selectedMonth];
+            })
         }
 
         // ========= DATA AGGREGATION =========
         let binnedCounts: { time: number; count: number }[] = [];
         let monthLabels: string[] = [];
-        if (x_unit === "hour") {
-            const hours = filteredData.map(d => parseInt(d.time.slice(0, 2), 10));
-            const hourlyCounts = new Array(25).fill(0);
-            hours.forEach(hour => {
-                if (hour >= 0 && hour < 25) hourlyCounts[hour]++;
-            });
-            for (let i = 0; i <= 24; i += 2) {
-                const binCount = i === 24 ? hourlyCounts[0] + hourlyCounts[1] : hourlyCounts[i] + hourlyCounts[i + 1];
-                binnedCounts.push({ time: i, count: binCount });
-            }
-        }
-        else if (x_unit === "month") {
-            // group by month (YYYY-MM)
-            const parseDate = d3.timeParse("%Y-%m-%d");
-            const monthCounts = new Map<string, number>(); // month index (0–11) as key
 
-            filteredData.forEach(d => {
-                const dateObj = parseDate(d.date);
-                if (dateObj) {
-                    const year = dateObj.getFullYear();
-                    const month = dateObj.getMonth(); // 0–11
-                    const key = `${year}-${month}`;
-                    monthCounts.set(key, (monthCounts.get(key) ?? 0) + 1);
-                }
-            });
-            const sortedKeys = Array.from(monthCounts.keys()).sort((a, b) => {
-                const [ay, am] = a.split("-").map(Number);
-                const [by, bm] = b.split("-").map(Number);
-                return ay === by ? am - bm : ay - by;
-            });
-
-            binnedCounts = sortedKeys.map((key, i) => ({
-                time: i, // sequential index
-                count: monthCounts.get(key) ?? 0,
-            }));
-
-            monthLabels = sortedKeys.map((k, i) => {
-                const [y, m] = k.split("-").map(Number);
-                if (i > 0) {
-                    let [ly, lm] = sortedKeys[i - 1].split("-").map(Number);
-                    if (ly === y) return months[m];
-                }
-                return y + ""
-            });
+        const hours = filteredData.map(d => parseInt(d.time.slice(0, 2), 10));
+        const hourlyCounts = new Array(25).fill(0);
+        hours.forEach((hour: number) => {
+            if (hour >= 0 && hour < 25) hourlyCounts[hour]++;
+        });
+        for (let i = 0; i <= 24; i += 2) {
+            const binCount = i === 24 ? hourlyCounts[0] + hourlyCounts[1] : hourlyCounts[i] + hourlyCounts[i + 1];
+            binnedCounts.push({ time: i, count: binCount });
         }
 
-        const xDomain = x_unit === "hour" ? [0, 24] : [0, binnedCounts.length - 1]
+        const xDomain = [0, 24]
 
         const xScale = d3.scaleLinear()
             .domain(xDomain)
@@ -120,20 +85,15 @@ export default function Area({ geoData, selectedCity, selectedDates, selectedDay
             .attr('transform', `translate(${margin.left},${margin.top})`);
 
         // X Axis
-        const xAxis = x_unit === "hour"
-            ? d3.axisBottom(xScale)
-                .ticks(7)
-                .tickSize(5)
-                .tickFormat((d) => {
-                    const h = +d;
-                    const period = (h < 12 || h === 24) ? 'AM' : 'PM';
-                    const hour = h % 12 === 0 ? 12 : h % 12;
-                    return `${hour}${period}`;
-                })
-            : d3.axisBottom(xScale)
-                .tickSize(5)
-                .ticks(binnedCounts.length)
-                .tickFormat((d: d3.NumberValue) => monthLabels[+d] || "");
+        const xAxis = d3.axisBottom(xScale)
+            .ticks(7)
+            .tickSize(5)
+            .tickFormat((d) => {
+                const h = +d;
+                const period = (h < 12 || h === 24) ? 'AM' : 'PM';
+                const hour = h % 12 === 0 ? 12 : h % 12;
+                return `${hour}${period}`;
+            })
 
         g.append('g')
             .attr('transform', `translate(0,${innerHeight})`)
@@ -146,21 +106,21 @@ export default function Area({ geoData, selectedCity, selectedDates, selectedDay
         //style them
         g.selectAll('.tick')
             .select('line')
-            .attr("stroke", "#aaa");
+            .attr("stroke", "#bbb");
 
         g.selectAll('.tick')
             .select('text')
-            .attr("fill", "#aaa")
+            .attr("fill", "#bbb")
             .attr('class', "chart-labels");
 
         // Area path
         g.append('path')
             .datum(binnedCounts)
             // .attr('fill', '#842E1E')
-            .attr('fill', RED_GRADIENT[5])
+            .attr('fill', RED_GRADIENT[4])
             .attr('d', area);
 
-    }, [geoData, width, height, selectedCity, selectedDates, selectedDay, selectedAreaType, x_unit]);
+    }, [geoData, width, height, selectedCity, selectedDates, selectedDay, selectedAreaType]);
 
     return <>
         <svg ref={svgRef} width={width} height={height} /></>;

@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import React, { useRef, useState, useEffect } from "react";
 import { geoDataProps } from "./datasource";
 import { width } from "./datasource";
-
+import { MONTHS } from "./datasource";
 export default function Timeline({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, onTimelineDragged }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const startDateRef = useRef<Date | null>(null);
@@ -161,7 +161,7 @@ export default function Timeline({ geoData, selectedCity, selectedDates, selecte
 
     }, [geoData, width, height, selectedDates, selectedCity, selectedDay, selectedAreaType]);
 
-    return <> <div className="chart-titles">Timeline </div>
+    return <> <div className="chart-titles items-baseline">Timeline <small className="ml-2 mb-1">Drag to select</small></div>
         <svg ref={svgRef} width={width} height={height} />
         {hoverInfo && (
             <div className="timeline-xaxis"

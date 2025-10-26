@@ -727,7 +727,8 @@ h2 {
   white-space: nowrap;
 }
 
-.chart-continue-label button {
+.chart-continue-label button,
+.landscape-histo-transparent {
   cursor: pointer;
 }
 
@@ -1217,9 +1218,9 @@ footer a {
 .timeline-xaxis {
   width: fit-content;
   /* border: 1px solid white; */
-  transform: translateX(50%);
-  padding: 2px 2px;
-  font-size: 12px;
+  transform: translateX(40%);
+  padding: 1px 1px;
+  font-size: 11px;
   /* pointer-events: none; */
   white-space: nowrap;
   color: #eee;
@@ -1304,6 +1305,10 @@ footer a {
 .area-type-legend-active {
   color: #eee;
   background-color: #831713;
+}
+
+small {
+  text-align: center;
 }
 
 @media (max-width: 1400px) {

@@ -1,11 +1,11 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import { geoDataProps } from "./datasource";
 import { width } from "./datasource";
-
+import { MONTHS } from "./datasource";
 const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 7);
 
-export default function Segment({ geoData, selectedCity, selectedDay, selectedDates, selectedAreaType, onSegmentClick }: geoDataProps) {
+export default function Segment({ geoData, selectedCity, selectedDay, selectedDates, selectedAreaType, selectedMonth, onSegmentClick }: geoDataProps) {
     const height = 120;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
     const [counts, setCounts] = useState<number[]>([]);
@@ -30,6 +30,10 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
             filteredData = filteredData.filter(d => {
                 return d.landscape === selectedAreaType;
             })
+        } else if (selectedMonth != null) {
+            filteredData = filteredData.filter(d => {
+                return d.date.slice(0, 7) === MONTHS[selectedMonth];
+            })
         }
         filteredData.forEach(data => {
             const date = new Date(data.date);
@@ -38,7 +42,7 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
         })
         const widthFactor = (width - 20) / filteredData.length;
         setCounts(dayCount.map(count => count *= widthFactor));
-    }, [geoData, selectedCity, selectedDates, selectedAreaType])
+    }, [geoData, selectedCity, selectedDates, selectedAreaType, selectedMonth])
 
     return (<>
         <div className="chart-titles mb-3">By Days of Week</div>
@@ -68,7 +72,7 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
         <div className="flex gap-1" style={{ width }}>
             {bins.map((day, i) => {
                 if (counts[i] === 0) return;
-                return <div key={i} className="chart-labels flex justify-center " style={{ color: "#aaa", width: `${counts[i]}px`, height: `${height / 10}px` }}>{day}</div>
+                return <div key={i} className="chart-labels flex justify-center " style={{ color: "#bbb", width: `${counts[i]}px`, height: `${height / 10}px` }}>{day}</div>
             })}
         </div>
     </>)
