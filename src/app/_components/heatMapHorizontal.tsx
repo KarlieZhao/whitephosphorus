@@ -68,7 +68,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
   // Memoized data processing
   const processedChartData = useMemo(() => {
     const minDate = d3.min(data, d => new Date(d.date))!;
-    const maxDate = d3.max(data, d => new Date(d.date))!;
+    const maxDate = new Date("2024-11-23");
 
     const uniqueDates = getDateRange(
       minDate.toISOString().slice(0, 10),
@@ -78,7 +78,10 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
     const uniqueAreas = Array.from(new Set(data.map(d => d.area))).filter(Boolean);
 
     // Build lookup map for (date+area)
-    const incidentMap = new Map(data.map(d => [`${d.date}-${d.area}`, d.count]));
+    const incidentMap = new Map(data.map(d => {
+      const dateKey = d.date.slice(0, 10);
+      return [`${dateKey}-${d.area}`, d.count];
+    }));
 
     // Fill in 0s for missing dates
     const processedData = uniqueAreas.map(area => {
@@ -125,7 +128,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
   useEffect(() => {
     const { xLabels, yLabels, processedData } = processedChartData;
-
+    console.log(xLabels)
     // Format xLabels (dates) for display
     const xLabelsFormatted = xLabels.map((d, index) => {
       const [year, month] = d.split('-');
@@ -189,10 +192,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
     for (let i = 0; i < numRows; i++) {
       for (let j = 0; j < numCols; j++) {
         // Find the original data entry for this cell to get the code
-        const originalEntry = data.find(d =>
-          d.date === xLabels[j] && d.area === sortedAreas[i]
-        );
-
+        const originalEntry = data.find(d => d.date.slice(0, 10) === xLabels[j] && d.area === sortedAreas[i]);
         flatData.push({
           x: j,
           y: i,

@@ -18,29 +18,29 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
 
   const preciseData: ToxicityData = [{
     type: "Incidents",
-    number: "195",
+    number: "248",
     unit: " "
   }, {
     type: "Land Area",
-    number: "918",
+    number: "384.4",
     unit: "Hectares"
   }, {
     type: "Air Volume",
-    number: "64.32",
+    number: "557.38",
     unit: "million m³",
   }]
   const altData: ToxicityData =
     [{
       type: "Incidents",
-      number: "195",
+      number: "248",
       unit: ""
     }, {
       type: "Land Area",
-      number: "1285",
+      number: "557",
       unit: "soccer fields"
     }, {
       type: "Air Volume",
-      number: "43",
+      number: "1548",
       unit: "stadiums"
     }];
 
@@ -54,10 +54,10 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
         setTimeout(() => {
           setData((prev) => (prev[1].unit === "Hectares" ? altData : preciseData));
           setAnimationClass("fadeIn");
-        }, 600);// Match the duration of fade-out animation
+        }, 600);
       }, 8000);
 
-      return () => clearInterval(interval); // Cleanup on unmount
+      return () => clearInterval(interval);
     }
   })
 
