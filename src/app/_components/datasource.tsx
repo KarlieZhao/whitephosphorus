@@ -186,7 +186,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         <div className={`${showOverlay ? "" : "hidden"} map-overlay`}>
             <img src={`${overlayImage}`} alt="" className="max-w-[50vw] max-h-[70vh]" />
         </div>
-        <div className="satellite-toggle-container mb-4 ml-12 z-50 absolute bottom-16 left-3">
+        {/* <div className="satellite-toggle-container mb-4 ml-12 z-50 absolute bottom-16 left-3">
             <div className={`flex items-center space-x-3 ${TypewriterFinished ? "" : "hidden"}`}>
                 <span className={`text-sm font-medium ${!showSatelliteMap ? 'text-white' : 'text-gray-500'}`}>
                     Vector
@@ -206,7 +206,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     Satellite
                 </span>
             </div>
-        </div>
+        </div> */}
 
         <div onClick={() => {
             if (selectedCity != "") {
