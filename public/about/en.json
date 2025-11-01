@@ -1,36 +1,40 @@
 {
   "lang": "en",
-  "abstract": "<p>From Oct. 8th, 2023, to Oct. 3rd, 2024, we have verified 195 incidents of white phosphorus deployment by Israel in South Lebanon. Our website now features an interactive cartographic display that organizes this data chronologically and spatially, offering detailed insights into deployment patterns. This project serves as a continuously updated database for tracking white phosphorus munitions in South Lebanon.</p><p>Our mission is to expose the systematic use of white phosphorus, which is an incendiary weapon whose deployment in populated areas is restricted under international law due to its severe and often fatal consequences. By geolocating, verifying, and mapping instances of white phosphorus use, we aim to increase transparency and accountability in warfare. We also seek to inform residents whose lands have been contaminated by white phosphorus, preparing for post-war recovery by collaborating with local municipalities to mark affected territories and working with specialized teams to detoxify these areas. Our efforts are dedicated to ensuring that communities can safely rehabilitate and reclaim their environments once hostilities have ceased.</p>",
-  "qna": [{
+  "abstract": "<p>From October 2023 to November 2024, we verified 248 incidents of white phosphorus use—247 in South Lebanon and one in northern Israel (friendly fire)—identified from more than 650 verified images and videos. The website visualizes this data through an interactive cartographic platform, organizing each incident chronologically and spatially to reveal both geographic and temporal patterns.</p><p>This work seeks to expose the systematic use of white phosphorus, an incendiary weapon whose deployment in populated areas is restricted under international law due to its devastating and often fatal effects. By geolocating, verifying, and mapping each incident, the project advances transparency and accountability in warfare. It also aims to inform returning residents whose lands have been contaminated, assisting municipalities in marking affected territories and coordinating with specialized teams to detoxify and rehabilitate these areas.</p>",
+  "qna": [
+    {
       "question": "What is white phosphorus?",
       "answer": "White phosphorus is a highly reactive chemical used in military operations, primarily for creating smoke screens and as an incendiary weapon. It ignites easily upon contact with air, producing a thick white smoke that effectively conceals troop movements. The immediate consequences of exposure to white phosphorus are severe; it can cause deep, painful burns upon contact with skin. Inhalation of white phosphorus smoke can damage the respiratory tract and cause breathing difficulties. Long-term exposure is linked to more serious health issues, including chronic respiratory problems and organ damage. The effects are often severe and can be fatal."
-    }, {
+    },
+    {
       "question": "Is it legal to use White Phosphorus?",
-      "answer": "<p>White phosphorus is regulated under international law primarily through Protocol III of the Convention on Certain Conventional Weapons (CCW), which restricts its use as an incendiary weapon, particularly against civilian populations or in civilian areas. Although not an outright ban, the protocol aims to minimize harm to civilians by prohibiting indiscriminate attacks.</p><p>While Israel has not ratified Protocol III and is not bound by its specific stipulations, it, like all nations, is still subject to International Humanitarian Law (IHL) and customary international law. These broader legal frameworks require all combatants to distinguish between military targets and civilians, prohibit indiscriminate attacks, and avoid causing unnecessary suffering. </p><p>Legally, white phosphorus can be used in military operations for creating smoke screens or signaling. Its use as an incendiary weapon against enemy combatants is permissible only in scenarios that ensure compliance with IHL, particularly the principles of distinction, proportionality, and necessity. Use in civilian areas, where it can cause indiscriminate injury, is highly contentious and could potentially constitute a violation of international law.</p><p>The legality of using white phosphorus centers on the context of its use, adherence to IHL principles, and the potential for civilian harm. Misuse, especially in civilian contexts, could result in legal repercussions under international law.</p>"
-    }, {
+      "answer": "<p>White phosphorus is regulated under Protocol III of the Convention on Certain Conventional Weapons (CCW), which restricts its use as an incendiary weapon in or near civilian areas. While Israel has not ratified Protocol III, it is still bound by International Humanitarian Law (IHL) and customary law, which prohibit indiscriminate attacks and require protection of civilians.</p><p>White phosphorus may be used for smoke screens or signaling under lawful conditions, but its use in populated areas—where it causes indiscriminate and severe harm—is highly contentious and may constitute a violation of international law depending on context and intent.</p>"
+    },
+    {
+      "question": "Our Findings on the Use of White Phosphorus",
+      "answer": "<p>Between October 2023 and November 2024, we verified 248 incidents of white phosphorus use—247 in South Lebanon and one in northern Israel (friendly fire).</p><p><b>Temporal Pattern:</b> Approximately 91 % of all verified incidents occurred before Israel’s ground invasion in October 2024. While the stated purpose of white phosphorus is battlefield concealment, its extensive use prior to the invasion of Israeli forces suggests that the weapon was deployed in contexts not directly linked to troop movement.<br/>Limitation: Fewer recordings were available after early 2024 due to mass displacement and reduced civilian presence in the south.</p><p><b>Time of Day:</b> 79 % of strikes occurred during daylight hours, while 21 % took place at night. The overwhelming daytime concentration contradicts claims that white phosphorus was deployed for illumination.Limitation: Nighttime incidents may be underreported since fewer witnesses are awake or able to film after dark.<p><b>Land-Use Impact: </b>Of the total incidents analyzed, 39 % occurred in residential areas, 17 % in agricultural lands, and 44 % in forested or open terrain. For classification purposes, a strike is attributed to a residential, agricultural, or open-terrain area if it occurred within a 100-meter diameter of that land-use type.Israel has justified the use of white phosphorus to clear vegetation and improve visibility to prevent militants from hiding. Yet 56 % of all verified strikes occurred in inhabited and cultivated zones — contradicting that claim and highlighting the unlawful deployment of incendiary weapons near civilians and civilian infrastructure.<br/>Limitation: Remote areas are likely under-documented due to limited access and visibility.</p><p><b>Geographic Distribution:</b> Nearly all verified incidents were concentrated along the southern border strip, forming a dense and continuous band parallel to the Blue Line. The heaviest-hit localities include Al Khiam (30), Meiss El Jabal (28), Kfar Kila (26), Yaroun (24), Markaba (17), and Rmaych (17) — all within a few kilometers of the frontier. This spatial concentration indicates systematic targeting of border-adjacent towns and cities, rather than sporadic or purely tactical strikes.</p>"
+    },
+    {
       "question": "How does the toxicity counter work?",
       "answer": {
         "brief": "The Toxicity Counter is a tracking tool that quantifies the environmental impact of white phosphorus incidents. It updates continuously as new incidents are logged on the map.",
-        "incidents": "Incidents: Total of 195 verified incidents of white phosphorus use.",
-        "land-p1": "Land Area: <p>White phosphorus can spread over a large area when deployed, determined by the height of the burst above the ground. Given a dispersal radius range of 55 meters to 190 meters, we calculate the midpoint to determine an average radius. This midpoint, 122.5 meters, represents a typical spread radius, providing a reliable estimate for most scenarios.<p/><p>To estimate the area affected by one deployment, we use the formula for the area of a circle, which is: </p>",
-        "land-formula": "<ul><li>A = π x r<sup>2</sup></li><li>A = 3.14159 x (122.5 m)<sup>2</sup></li><li>A= 47123 m<sup>2</sup></li></ul>",
-        "land-p2": "By multiplying the area affected by a single deployment of white phosphorus, approximately 47,123 m², by the total number of incidents (195), we find that the cumulative area impacted is about 9,188,985 m², which equals 918 hectares.",
-        "air-p1": "Air Volume: <p>The volume of smoke generated by white phosphorus is primarily determined by the height at which the smoke disperses. Additionally, the volume released and its dispersal efficiency are significantly influenced by weather conditions such as wind, temperature, and particularly humidity. For our calculations, we use a standard smoke column height of 7 meters.</p><p>To estimate the volume of smoke generated from one deployment, we use the formula for the volume of a cylinder: </p>",
-        "air-formula": "<ul><li>V = A x h</li><li>V = 47,123 m<sup>2</sup> x 7 m</li><li>V = 329,861 m<sup>3</sup></li></ul>",
-        "air-p2": "<p>Each white phosphorus shell releases approximately 329,861 cubic meters of smoke, though the actual amount can vary due to factors like humidity and other atmospheric conditions, which can impact combustion efficiency and reduce smoke coverage.</p><p>By multiplying the volume of smoke generated by a single deployment, approximately 329,861 m<sup>3</sup>, by the total number of incidents (195), we find that the cumulative volume impacted is about 64,322,895 m<sup>3</sup>.</p>",
-        "notes": "<i>Note: Our air volume calculations, based on the average height reached by white phosphorus smoke, provide an immediate estimate of impact. However, they do not account for the prolonged dispersion of smoke, which can significantly increase the affected area over time due to atmospheric conditions. White phosphorus can burn for a duration ranging from 5 to 15 minutes, influencing how far and wide the smoke disperses over time.</i>"
+        "incidents": "<b>Strikes: </b>Represents the total number of verified white phosphorus attacks (n = 248). Each incident is geolocated and chronolocated based on verified photo and video evidence.",
+        "land-p1": "<b>Land Area:</b> <p>Estimated total contaminated surface area: 372 hectares. This is calculated using the average dispersion area per M825/M825A1 shell, based on the Forensic Architecture (2018) study “The Use of White Phosphorus Munitions in Urban Environments.”</p>",
+        "land-formula": "<p>Each shell disperses phosphorus over 5,000 – 30,000 m² (≈ 0.5 – 3 ha)</p><p>We apply an average of 1.5 ha per shell as a conservative mid-range value.</p>",
+        "land-p2": "Formula: Total Land Area (ha) = Total Shells × 1.5 ha",
+        "air-p1": "<b>Felt Wedges:</b> <p>Each M825/M825A1 shell contains 116 white phosphorus–soaked felt wedges. Using the total number of estimated shells deployed across 248 incidents, we derive:</p> <p>Total Felt Wedges = Total Shells × 116 = 28,768 </p>",
+        "air-formula": "<b>Sources:</b><p>Forensic Architecture, The Use of White Phosphorus Munitions in Urban Environments: An Effects-Based Analysis (2018); <br/>Our verified dataset of 650+ geolocated images and videos (2023–2024)</p>",
+        "notes": "<b>Limitations: </b> Dispersion varies with burst height (150–300 m), wind, and terrain. Actual ground impact may range from 0.5 – 3 ha per shell. Underreporting is likely in remote or unpopulated areas, especially during nighttime hours."
       }
     },
     {
-      "question": "Findings on the Use of White Phosphorus",
-      "answer": "Our research has revealed an alarming pattern in the deployment of white phosphorus, suggesting it is part of a systematic strategy that extends beyond its conventional uses for incendiary purposes and creating smoke screens. It appears to be used indiscriminately over civilian areas, including homes and agricultural fields. Geolocated and verified incidents indicate a geographic strategy where white phosphorus is utilized to create an intended buffer zone along the Lebanese border. This use leads to long-term environmental contamination. Environmentally degraded areas left in the wake of such deployments will prevent residents from returning to their homes and resuming agricultural activities, which are a major part of the economy in these regions. These findings highlight the role of white phosphorus in a broader strategy that significantly impacts the demographic and economic landscape."
-    }, {
       "question": "How does it look like on the ground?",
-      "answer": "When deployed, a white phosphorus shell releases 161 felt wedges impregnated with the substance. These wedges can burn for 5 to 15 minutes, and they can reignite even weeks after deployment if they are exposed to oxygen, depending on environmental conditions. This persistent reactivity makes white phosphorus particularly hazardous. The intense white smoke produced by these burning wedges is a distinct hallmark of white phosphorus use, visibly marking the impact area and presenting ongoing risks to anyone encountering remnants of these munitions. <br/><br/> <video width='678' height='384' controls> <source src='/about/ground.mp4' type='video/mp4'></video>"
+      "answer": "<p>When deployed, a white phosphorus shell releases 116 felt wedges impregnated with the substance. Each wedge burns at temperatures exceeding 800 °C for approximately 5 to 15 minutes, depending on wind, humidity, and impact surface (U.S. Army Technical Manual TM 3-215, 1984; Forensic Architecture, 2018). What makes white phosphorus exceptionally dangerous is its persistent reactivity—residues can reignite weeks or even months later when re-exposed to oxygen.</p><p>This persistence was confirmed in Meiss el Jabal, where a first video filmed by Green Southerners on November 26, 2023, documented active burning wedges. A second video, recorded by journalist Jake Tacchi on March 16, 2025, shows the same site nearly a year later, where a residual felt wedge reignited upon being gently disturbed. The two videos, filmed more than one year apart, demonstrate the long-term volatility and environmental danger of white phosphorus residues.</p><p>The toxic white smoke produced during combustion poses severe and ongoing risks to anyone encountering contaminated soil, vegetation, or debris.</p><br/><div class='about-video'><video height='200' width='auto' controls> <source src='/about/ground.mp4' type='video/mp4'></video><video height='200' width='auto' controls> <source src='/about/ground_2.mp4' type='video/mp4'></video></div>"
     },
     {
       "question": "Studies on the consequences of White Phosphorus",
-      "answer": [{
+      "answer": [
+        {
           "World Health Organization": "https://www.who.int/news-room/fact-sheets/detail/white-phosphorus"
         },
         {
@@ -41,7 +45,8 @@
         },
         {
           "Human Rights Watch report 2": "https://www.hrw.org/news/2024/11/07/incendiary-weapons-new-use-calls-immediate-action"
-        }, {
+        },
+        {
           "The Use of White Phosphorus Munitions in Urban Environments: An Effects-Based Analysis": "https://content.forensic-architecture.org/wp-content/uploads/2018/08/Report-The-Use-of-White-Phosphorus.pdf"
         },
         {
@@ -52,6 +57,32 @@
         },
         {
           "Israel used U.S.-supplied white phosphorus in Lebanon attack": "https://www.washingtonpost.com/investigations/2023/12/11/israel-us-white-phosphorus-lebanon/"
+        }
+      ]
+    },
+    {
+      "question": "Media Coverage",
+      "answer": [
+        {
+          "AlJazeera—Israel's buffer zone, created by bombing Lebanon with white phosphorous": "https://www.aljazeera.com/features/2024/12/5/israel-buffer-zone-created-by-bombing-lebanon-with-white-phosphorus"
+        },
+        {
+          "NRC—The white phosphorus in southern Lebanon is poisoning us all. It's a long-lasting bomb.": "https://www.nrc.nl/nieuws/2025/08/07/de-witte-fosfor-in-zuid-libanon-vergiftigt-ons-allemaal-het-is-een-langdurige-bom-a4902309 "
+        },
+        {
+          "CEOBS: Scoping conflict-linked environmental harm in southern Lebanon": "https://web.archive.org/web/20250618190341/https://ceobs.org/conflict-linked-environmental-harm-in-southern-lebanon/"
+        },
+        {
+          "Arab News—Will harm to Lebanon's environment, public health force Israeli military to admit and end use of white phosphorus?": "https://www.arabnews.com/node/2402896/middle-east"
+        },
+        {
+          "Arab News—How a Lebanese researcher is using visual data to map Israeli military's use of white phosphorus": "https://www.arabnews.com/node/2578937/middle-east"
+        },
+        {
+          "Fanack—White Phosphorus in Lebanon: Fire, Smoke, and Erasure from 1982 to today": "https://fanack.com/politics/features-insights/white-phosphorus-in-lebanon-fire-smoke-and-erasure-from-1982-to-today~270906/"
+        },
+        {
+          "AUB—The Socio-Environmental Impact of White Phosphorous Ammunition in South Lebanon Analysis and Risk Mitigation Strategies": "https://www.aub.edu.lb/natureconservation/Documents/Brief%20WP%20English.pdf"
         }
       ]
     }

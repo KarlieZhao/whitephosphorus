@@ -9,7 +9,7 @@ import Footer from "./_components/footer";
 
 
 export default function Index() {
-  const textToType = ["WhitePhosphorus.info documents and analyzes the use of white phosphorus munitions in South Lebanon between October 2023 and November 2024.", "It has verified over 650 images and videos, and geolocated 198 strikes. The resulting spatial archive traces how these munitions interact with landscapes, agriculture, and communities.", "Click anywhere to start."];
+  const textToType = ["This platform documents 248 verified white phosphorus strikes in South Lebanon between October 2023 and November 2024.", " These strikes were identified and verified through spatial analysis and open-source investigation, with more than 650 images and videos. Each strike was geolocated, chronolocated, and cross-referenced to create a public spatial archive.", "Click anywhere to start."];
   const [TypewriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [forceStop, setForceStop] = useState<boolean>(false);

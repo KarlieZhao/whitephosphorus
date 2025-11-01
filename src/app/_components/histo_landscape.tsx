@@ -41,7 +41,7 @@ export default function LandscapeHisto({
                 const year = dateObj.getFullYear();
                 const month = dateObj.getMonth(); // 0–11
                 const key = `${year}-${month}`;
-                monthCounts.set(key, (monthCounts.get(key) ?? 0) + 1);
+                monthCounts.set(key, (monthCounts.get(key) ?? 0) + d.shell_count);
             }
         });
 

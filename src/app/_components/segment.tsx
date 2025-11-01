@@ -38,7 +38,7 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
         filteredData.forEach(data => {
             const date = new Date(data.date);
             let day = date.getDay();
-            dayCount[day]++;
+            dayCount[day] += data.shell_count;
         })
         const widthFactor = (width - 20) / filteredData.length;
         setCounts(dayCount.map(count => count *= widthFactor));

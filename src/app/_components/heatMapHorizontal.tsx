@@ -52,23 +52,23 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
   const majorEventDates = [
     "2023-10-08", "2023-11-24", "2023-11-30",
-    "2024-01-02", "2024-07-30", "2024-09-20", "2024-10-01"
+    "2023-12-01", "2024-09-17", "2024-10-01", "2024-11-27"
   ];
 
   const majorEventNames = [
     "Hezbollah launches rockets into Israel",
-    "Start of ceasefire",
+    "Start of Ceasefire synchronized with Gaza Truce",
     "End of ceasefire",
-    "First Israeli air strike on Dahieh",
-    "Assassination of Fuad Shukr",
-    "Start of Israeli Airstrike Campaign",
-    "Israel invades South Lebanon"
+    "Start of Low-Intensity Cross-Border Strikes",
+    "Israel detonates communication devices across Lebanon",
+    "End of Low-Intensity Cross-Border Strikes; Ground Invasion of Southern Lebanon",
+    "Ceasefire Agreement Signed",
   ];
 
   // Memoized data processing
   const processedChartData = useMemo(() => {
-    const minDate = d3.min(data, d => new Date(d.date))!;
-    const maxDate = new Date("2024-11-23");
+    const minDate = new Date("2023-10-07");
+    const maxDate = new Date("2024-11-30");
 
     const uniqueDates = getDateRange(
       minDate.toISOString().slice(0, 10),
@@ -128,7 +128,6 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
   useEffect(() => {
     const { xLabels, yLabels, processedData } = processedChartData;
-    console.log(xLabels)
     // Format xLabels (dates) for display
     const xLabelsFormatted = xLabels.map((d, index) => {
       const [year, month] = d.split('-');
@@ -366,9 +365,13 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       // Add event annotations
       const eventIndex = majorEventIndices.indexOf(currentCol);
       if (eventIndex !== -1) {
+        // console.log(eventIndex, majorEventIndices[eventIndex], majorEventNames[eventIndex], majorEventDates[eventIndex]);
         const xPos = xScale(currentCol)!;
         let yPos = -10;
-        if (eventIndex === 1 || eventIndex === 5) yPos = -25;
+        let labelxOffset = 0;
+        if (eventIndex === 6) labelxOffset = -100;
+        else if ([1].includes(eventIndex)) yPos = -40;
+        else if ([2, 4].includes(eventIndex)) yPos = -25;
 
         // Add event line
         g.append("line")
@@ -385,7 +388,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
         // Add event label
         g.append("text")
-          .attr("x", xPos)
+          .attr("x", xPos + labelxOffset)
           .attr("y", yPos)
           .attr("text-anchor", "start")
           .style("font-size", "0.8rem")

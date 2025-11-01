@@ -17,31 +17,31 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
   const [animationClass, setAnimationClass] = useState("");
 
   const preciseData: ToxicityData = [{
-    type: "Incidents",
+    type: "Shells",
     number: "248",
     unit: " "
   }, {
     type: "Land Area",
-    number: "384.4",
+    number: "372",
     unit: "Hectares"
   }, {
-    type: "Air Volume",
-    number: "557.38",
-    unit: "million m³",
+    type: "Felt Wedges",
+    number: "28,768",
+    unit: "",
   }]
   const altData: ToxicityData =
     [{
-      type: "Incidents",
+      type: "Shells",
       number: "248",
       unit: ""
     }, {
       type: "Land Area",
-      number: "557",
+      number: "531",
       unit: "soccer fields"
     }, {
-      type: "Air Volume",
-      number: "1548",
-      unit: "stadiums"
+      type: "Felt Wedges",
+      number: "28,768",
+      unit: " "
     }];
 
   const [data, setData] = useState<ToxicityData>(preciseData);
@@ -143,12 +143,12 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
       <header className="bg-black pt-2 pb-14 fixed top-0 left-0 right-0 z-50">
         <div className="relative w-full h-full bg-black">
           <div className="absolute top-12 h-20 left-0 right-0 bottom-0 bg-gradient-to-b from-red-900 to-transparent pointer-events-none" />
-          <div className="absolute z-50 top-12 h-2 w-full redbar" />
+          <div className="absolute z-50 top-[2.85rem] h-[0.4rem] w-full redbar" />
 
           <div className="relative">
             {/* Navigation Tabs */}
             <table className="table1">
-              <tbody className="h-14">
+              <tbody className="h-12">
                 <tr className="text-center mt-8 flex items-center">
                   {renderTab("MAP", "/", "tab1")}
                   {renderTab("TIMELINE", "/timeline", "tab2")}
@@ -163,7 +163,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
               <tbody>
                 <tr className="relative">
                   <td colSpan={3} className="h-full fixed left-0 command_button_unclickable">
-                    <h3 className="mt-3 w-full text-left pl-5 z-50 tracking-wider text-2xl font-light">
+                    <h3 className="mt-3 w-full text-left pl-5 z-50 tracking-wider text-[1.2rem] font-light">
                       WhitePhosphorus.info
                     </h3>
                   </td>
@@ -171,9 +171,9 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
               </tbody>
             </table>
             {TypewriterFinished && (
-              <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn">
-                <div className="flex-initial basis-1/3 flex flex-col justify-center items-start">
-                  <div>TOXICITY  COUNTER</div>
+              <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn [&>div:nth-child(2)]:basis-1/4">
+                <div className="flex-initial basis-1/3 flex flex-col justify-center items-start text-xl">
+                  <div>Toxicity  Counter</div>
                   <div className="last-update">Last update: Oct/19/2025</div>
                 </div>
                 {data.map((obj, index) => {

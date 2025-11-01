@@ -108,7 +108,7 @@ main {
 header {
   font-family: "PPSupplySans-Regular";
   font-weight: 300;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   position: fixed;
   top: 0;
   left: 0;
@@ -394,10 +394,10 @@ ul {
 
 .command_button {
   width: 15vw;
-  height: 45px;
+  height: 40px;
   transition: all 0.3s ease;
   background-image: url("/assets/img/tab.png");
-  background-size: 13.5vw 50px;
+  background-size: 13.5vw 42px;
   background-repeat: no-repeat;
   background-position: left top;
   color: #dedede;
@@ -439,8 +439,8 @@ ul {
 }
 
 .command_button:hover {
-  transition: 0.2s ease;
-  transform: translateY(-6px);
+  transition: 0.1s ease;
+  transform: translateY(-3px);
   /* background-color: #4d4d4d; */
 }
 
@@ -453,7 +453,7 @@ ul {
   z-index: 40;
   background-image: url("/assets/img/tabActive2.png");
   transition: 0.2s ease;
-  transform: translateY(-6px);
+  transform: translateY(-5px) !important;
 }
 
 /* Hide only visually, but have it available for screenreaders & for SEO purposes. See h5bp.com/v */
@@ -536,8 +536,8 @@ h2 {
 }
 
 .toxicity-counter {
-  top: 66px;
-  width: 47rem;
+  top: 62px;
+  width: 42rem;
   min-width: 450px;
   font-weight: 400;
   justify-items: center;
@@ -749,7 +749,7 @@ h2 {
   word-spacing: 1px;
   line-height: 1.5;
   margin: 3rem;
-  margin-top: 18vh;
+  margin-top: 15vh;
   z-index: 10;
   width: 25vw;
 }
@@ -764,7 +764,7 @@ h2 {
 }
 
 .project-info {
-  margin-top: 13vh;
+  margin-top: 10vh;
   z-index: 10;
   width: 68vw;
   display: block;
@@ -860,6 +860,10 @@ h2 {
   margin-bottom: 1rem;
 }
 
+.collapsible-content b {
+  color: #eee
+}
+
 .collapsible-content li {
   color: #aaa;
 }
@@ -922,9 +926,16 @@ ul li {
 }
 
 #media-overlay {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#media-overlay a {
+  text-decoration: underline;
 }
 
 #media-overlay.fade-in {
@@ -941,10 +952,9 @@ ul li {
   display: none !important;
 }
 
-#media-overlay img,
-#media-overlay video {
-  width: fit-content;
-  height: fit-content;
+#media-overlay img {
+  height: auto;
+  width: 46rem;
   max-width: 80vw;
   max-height: 80vh;
 }
@@ -958,6 +968,15 @@ ul li {
 .img-container img,
 .video-container video {
   cursor: pointer;
+}
+
+.collapsible-container .about-video {
+  display: flex;
+  gap: 1rem
+}
+
+.collapsible-container .about-video video {
+  height: 14rem;
 }
 
 /* ===== mobile ======= */

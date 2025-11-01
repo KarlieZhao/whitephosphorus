@@ -111,17 +111,21 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, thumbnails, ext_link]);
                 return;
             }
+            const shellCount = pt.reduce((sum, p) => sum + p.shell_count, 0)
             if (typeof arg === "string") {
-                if (arg.indexOf("-") > 0) {
-                    readout1 = <>Of the 248 white phosophorus incidents, </>
-                    readout2 = <><span className="text-2xl text-white">{pt.length}&nbsp;&nbsp;({(100 * pt.length / 248).toFixed(1)}%)</span> of them happended in <span className="text-2xl text-white">{monthParser(arg)}</span>.</>
 
+                if (arg.indexOf("-") > 0) {
+                    //month
+                    readout1 = <><span className="text-2xl text-white">{shellCount}&nbsp;&nbsp;({(100 * shellCount / 224).toFixed(1)}%)</span> wp strikes happened in <span className="text-2xl text-white">{monthParser(arg)}</span>.</>
+                    readout2 = <></>
                 } else if (Object.keys(landscape_map).includes(arg)) {
+                    //landscape
                     const key = arg as keyof landscape_mapping_prop;
-                    const counts = pt.filter(p => p.landscape === arg).length
-                    readout1 = <>Of the 248 white phosophorus incidents, </>
-                    readout2 = <><span className="text-2xl text-white">{counts}&nbsp;&nbsp;({(100 * counts / 248).toFixed(1)}%)</span> of them stroke <span className="text-2xl text-white">{landscape_map[key]}</span> areas.</>
-                } else {
+                    const subset = pt.filter(p => p.landscape === arg);
+                    readout1 = <><span className="text-2xl text-white">{shellCount}&nbsp;&nbsp;({(100 * shellCount / 224).toFixed(1)}%)</span> wp shells struck  <span className="text-2xl text-white">{landscape_map[key]}</span> areas.</>
+                    readout2 = <></>
+                }
+                else {
                     let shellCount = 0;
                     const dates = pt.map(p => {
                         const dateTimeString = `${p.date}T${p.time}`;
@@ -131,20 +135,32 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                         // const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/\s(am|pm)/, (match) => match.toUpperCase());;
                     })
 
-                    if (pt.length > 1) { //filtered by town
+                    if (pt.length > 1) {
+                        // city/town
                         readout1 = <>Between <span className="text-2xl text-white">{dates[0]}</span> and  <span className="text-2xl text-white">{dates[dates.length - 1]}</span>,</>
-                        readout2 = <><span className="text-2xl text-white">{shellCount} </span>wp shells were deployed to <span className="text-2xl text-white">{pt[0].town}</span> across {pt.length} attacks.</>
+                        readout2 = <><span className="text-2xl text-white">{shellCount} </span>wp shell{shellCount > 1 ? "s" : ""}  struck
+                            <span className="text-2xl text-white"> {pt[0].town}</span>.</>
                     } else {
                         readout1 = <>On <span className="text-2xl text-white">{dates[0]}</span>,</>
-                        readout2 = <>{shellCount} white phosphorus shell was deployed to <span className="text-2xl text-white">{pt[0].town}</span>.</>
+                        readout2 = <>{shellCount} wp shell{shellCount > 1 ? "s" : ""} struck <span className="text-2xl text-white">{pt[0].town}</span>.</>
                     }
                 }
-            } else if (typeof arg === 'number') { //filtered by day of week
+            } else if (Array.isArray(arg)) {
+                //clicked on timeline
+                const townCount = new Set(pt.map(p => p.town));
+                const date1 = new Date(arg[0]);
+                const date_start = date1.toLocaleDateString("en-US", { month: "short", day: "numeric", year: 'numeric' });
+                const date2 = new Date(arg[1]);
+                const date_end = date2.toLocaleDateString("en-US", { month: "short", day: "numeric", year: 'numeric' });
+                readout1 = <>Between <span className="text-2xl text-white">{date_start}</span> and <span className="text-2xl text-white">{date_end}</span>,</>
+                readout2 = <><span className="text-2xl text-white">{shellCount} </span>wp shell{shellCount > 1 ? "s" : ""}  struck <span className="text-2xl text-white">{townCount.size}</span> cities/towns.</>
+            }
+            else if (typeof arg === 'number') { //filtered by day of week
                 const date = new Date(pt[0].date);
                 let day = date.getDay();
                 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-                readout1 = <>Of the 248 white phosophorus incidents, </>
-                readout2 = <><span className="text-2xl text-white">{pt.length}&nbsp;&nbsp;({(100 * pt.length / 248).toFixed(1)}%)</span> of them happened on <span className="text-2xl text-white">{days[day]}s</span>.</>
+                readout2 = <></>
+                readout1 = <><span className="text-2xl text-white">{shellCount}&nbsp;&nbsp;({(100 * shellCount / 224).toFixed(1)}%)</span> wp strikes happened on <span className="text-2xl text-white">{days[day]}s</span>.</>
             } else {
                 readout1 = <></>
                 readout2 = <></>
@@ -157,7 +173,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             const formattedDate = date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: 'numeric' });
             const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/\s(am|pm)/, (match) => match.toUpperCase());;
             readout1 = <>On <span className="text-2xl text-white">{formattedDate}</span>, at <span className="text-2xl text-white">{formattedTime}</span>,</>;
-            readout2 = <>{pt.shell_count} white phosphorus shell was deployed to <span className="text-2xl text-white">{pt.town}</span>.</>
+            readout2 = <><span className="text-2xl text-white">{pt.shell_count}</span> wp shell{pt.shell_count > 1 ? "s" : ""} struck <span className="text-2xl text-white">{pt.town}</span>.</>
             //only on click
             if (clicked) {
                 readout3 = `Latitude: ${pt.lat}`;
@@ -290,59 +306,55 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     selectedMonth={selectedMonth}
                     onTimelineDragged={(data) => {
                         if (!data) return;
-                        //reset other params
                         setSelectedDates([data[0], data[1]]);
+                        //reset other params
                         setselectedDay(-1);
                         setSelectedAreaType(null);
                         setSelectedMonth(null)
-                        getDetails(null)
+                        const pts = geoData.filter((p: any) => { return p.date <= data[1] && p.date >= data[0] })
+                        getDetails(pts, [data[0], data[1]])
                     }} />
             </div>
 
             <div className="mt-5">
-                <div className="chart-titles">Incidents by&nbsp;
-                    <span onClick={() => setShowMonth(true)} className={`button ${showMonth ? 'underline' : ''}`}> month</span>
-                    &nbsp;/&nbsp;
-                    <span className={`button ${!showMonth ? 'underline' : ''}`} onClick={() => setShowMonth(false)}>hour</span>
-                </div>
-                <div className={`${showMonth ? '' : "hidden"}`}>
-                    <LandscapeHisto geoData={geoData}
-                        selectedCity={selectedCity}
-                        selectedDates={selectedDates}
-                        selectedDay={selectedDay}
-                        selectedAreaType={selectedAreaType}
-                        selectedMonth={selectedMonth}
-                        onMonthClick={(d: ([string, number] | null)) => { //[d.key, d.count]
-                            if (d) {
-                                const [year, month] = d[0].split("-");
-                                const realMonth = year + "-" + (parseInt(month))
-                                setSelectedMonth(MONTHS_CONVERT.indexOf(realMonth));
-                                const realMonthinData = MONTHS[MONTHS_CONVERT.indexOf(realMonth)];
-                                const pts = geoData.filter((p: any) => { return p.date.slice(0, 7) === realMonthinData })
-                                console.log(realMonthinData)
-                                getDetails(pts, realMonthinData);
+                <div className="chart-titles">Strikes by month</div>
+                <LandscapeHisto geoData={geoData}
+                    selectedCity={selectedCity}
+                    selectedDates={selectedDates}
+                    selectedDay={selectedDay}
+                    selectedAreaType={selectedAreaType}
+                    selectedMonth={selectedMonth}
+                    onMonthClick={(d: ([string, number] | null)) => { //[d.key, d.count]
+                        if (d) {
+                            const [year, month] = d[0].split("-");
+                            const realMonth = year + "-" + (parseInt(month))
+                            setSelectedMonth(MONTHS_CONVERT.indexOf(realMonth));
+                            const realMonthinData = MONTHS[MONTHS_CONVERT.indexOf(realMonth)];
+                            const pts = geoData.filter((p: any) => { return p.date.slice(0, 7) === realMonthinData })
+                            getDetails(pts, realMonthinData);
 
-                                // console.log("selected month is ", MONTHS_CONVERT.indexOf(realMonth))
-                                // console.log(realMonth, d[1])
-                            } else {
-                                setSelectedMonth(null);
-                            }
-                            //reset others
-                            setSelectedCity("");
-                            setSelectedDates(["", ""]);
-                            setSelectedAreaType(null);
-                            setselectedDay(-1)
-                        }}
-                    />
-                </div>
-                <div className={`${!showMonth ? '' : "hidden"}`}>
-                    <Area geoData={geoData}
-                        selectedCity={selectedCity}
-                        selectedDates={selectedDates}
-                        selectedDay={selectedDay}
-                        selectedAreaType={selectedAreaType}
-                        selectedMonth={selectedMonth}
-                    /></div>
+                            // console.log("selected month is ", MONTHS_CONVERT.indexOf(realMonth))
+                            // console.log(realMonth, d[1])
+                        } else {
+                            setSelectedMonth(null);
+                        }
+                        //reset others
+                        setSelectedCity("");
+                        setSelectedDates(["", ""]);
+                        setSelectedAreaType(null);
+                        setselectedDay(-1)
+                    }}
+                />
+            </div>
+            <div className="mt-4 ">
+                <div className="chart-titles">Strikes by hour</div>
+                <Area geoData={geoData}
+                    selectedCity={selectedCity}
+                    selectedDates={selectedDates}
+                    selectedDay={selectedDay}
+                    selectedAreaType={selectedAreaType}
+                    selectedMonth={selectedMonth}
+                />
             </div>
             <div className="mt-7">
                 <Segment geoData={geoData}
@@ -435,6 +447,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                         //reset other params
                         setselectedDay(-1);
                         setSelectedAreaType(null);
+                        setSelectedDates(["", ""])
                         const pts = geoData.filter((p: any) => p.town === newCity);
                         getDetails(pts, newCity);
                         setSelectedMonth(null)

@@ -53,10 +53,11 @@ export default function Area({ geoData, selectedCity, selectedDates, selectedDay
         let binnedCounts: { time: number; count: number }[] = [];
         let monthLabels: string[] = [];
 
-        const hours = filteredData.map(d => parseInt(d.time.slice(0, 2), 10));
+        const hours = filteredData.map(d => [parseInt(d.time.slice(0, 2), 10), d.shell_count]);
+
         const hourlyCounts = new Array(25).fill(0);
-        hours.forEach((hour: number) => {
-            if (hour >= 0 && hour < 25) hourlyCounts[hour]++;
+        hours.forEach((hour: any[]) => {
+            if (hour[0] >= 0 && hour[0] < 25) hourlyCounts[hour[0]] += hour[1];
         });
         for (let i = 0; i <= 24; i += 2) {
             const binCount = i === 24 ? hourlyCounts[0] + hourlyCounts[1] : hourlyCounts[i] + hourlyCounts[i + 1];
@@ -120,7 +121,7 @@ export default function Area({ geoData, selectedCity, selectedDates, selectedDay
             .attr('fill', RED_GRADIENT[4])
             .attr('d', area);
 
-    }, [geoData, width, height, selectedCity, selectedDates, selectedDay, selectedAreaType]);
+    }, [geoData, width, height, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth]);
 
     return <>
         <svg ref={svgRef} width={width} height={height} /></>;

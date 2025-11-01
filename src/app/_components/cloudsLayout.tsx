@@ -2,7 +2,23 @@ import React from 'react';
 import { useRef, useEffect, useState } from 'react';
 import $ from 'jquery';
 import { isMobileDevice } from './mobile-detector';
-import cloudData from './plumeData';
+
+interface CloudRow {
+  name: string;
+  name_ar: string;
+  text: string;
+  text_ar: string;
+  video: string;
+  filenames: Array<string>;
+  links: Array<string>;
+}
+
+export interface DataInputRow {
+  name: string;
+  name_ar: string;
+  text: string;
+  text_ar: string;
+}
 
 const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -85,56 +101,50 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
 };
 
 export default function CloudLayout() {
-  const [visibleRows, setVisibleRows] = useState<boolean[]>(Array(cloudData.length).fill(false));
   const [lang, setLang] = useState<string>("en");
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [cloudData, setCloudData] = useState<CloudRow[] | null>(null);
+  const [visibleRows, setVisibleRows] = useState<boolean[]>(Array(8).fill(false));
+
+  useEffect(() => {
+    fetch("/data/plume.json")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("plume media config loaded.")
+        setCloudData(data);
+      })
+      .catch((err) => console.error("Failed to load plumae data:", err));
+  }, []);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
     // onload effect
-    cloudData.forEach((_, index) => {
-      setTimeout(() => {
-        setVisibleRows((prev) => {
-          const newVisibleRows = [...prev];
-          newVisibleRows[index] = true;
-          return newVisibleRows;
-        });
-      }, index * 50); // 100ms delay for each row
-    });
-  }, []);
+    if (cloudData) {
+      cloudData.forEach((_, index) => {
+        setTimeout(() => {
+          setVisibleRows((prev) => {
+            const newVisibleRows = [...prev];
+            newVisibleRows[index] = true;
+            return newVisibleRows;
+          });
+        }, index * 50); // 100ms delay for each row
+      });
+    }
+  }, [cloudData]);
 
   useEffect(() => {
-    //show video control on hover?
-    // $('.video-container').on('mouseenter', function () {
-    //   $(this).find('video').prop('controls', true);
-    // });
-
-    // $('.video-container').on('mouseleave', function () {
-    //   $(this).find('video').prop('controls', false);
-    // });
-
     // Open overlay on image or video click
-    $('.img-container img, .video-container video').on('click', function () {
+    $('.img-container img').on('click', function () {
       const overlay = $('#media-overlay');
       const overlayContent = $('#overlay-content');
-
+      const source = $('#overlay-source');
       // Clear previous content
       overlayContent.empty();
-
-      // Check if the clicked element is an image or video
-      if ($(this).is('img')) {
-        const imgSrc = $(this).attr('src');
-        overlayContent.append(`<img src="${imgSrc}" class="w-full h-full object-contain" />`);
-      } else if ($(this).is('video')) {
-        const videoSrc = $(this).find('source').attr('src');
-        overlayContent.append(`
-            <video controls autoPlay class="w-full h-full object-contain">
-              <source src="${videoSrc}" type="video/mp4" />
-            </video>
-          `);
-      }
-
-      //show overlay
+      const imgSrc = $(this).attr('src');
+      const link = $(this).attr('alt');
+      overlayContent.append(`<img src="${imgSrc}" class="w-full h-full object-contain" />`);
+      source.empty();
+      source.append(`<a href="${link}" target='_blank'>source<a>`)
       overlay.removeClass('fade-out').addClass('fade-in');
     });
 
@@ -150,11 +160,9 @@ export default function CloudLayout() {
     });
 
     return () => {
-      $('.img-container img, .video-container video').off('click');
+      $('.img-container img').off('click');
       $('#close-overlay, #media-overlay').off('click');
-      // $('.video-container').off('mouseenter mouseleave');
     };
-
   }, [cloudData]);
 
   if (isMobile === null) return null;
@@ -165,6 +173,7 @@ export default function CloudLayout() {
       {/* media overlay */}
       <div id="media-overlay" className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
         <div id="overlay-content" className="border-2 flex justify-center items-center"></div>
+        <div id="overlay-source"></div>
       </div>
 
       <div className='fixed top-20 left-8 z-100 text-white cursor-pointer'>
@@ -180,15 +189,15 @@ export default function CloudLayout() {
 
       <div className="flex flex-col gap-2">
 
-        {cloudData.map((row, rowIndex) => (
+        {cloudData?.map((row, rowIndex) => (
           <div key={rowIndex}
-            className={`grid grid-cols-1 md:grid-cols-[300px,0.5fr,1fr] gap-2 max-h-[330px] transition-all duration-700 ease-in-out transform 
+            className={`grid grid-cols-1 md:grid-cols-[260px,0.7fr,1fr] gap-2 max-h-[300px] transition-all duration-700 ease-in-out transform 
             ${visibleRows[rowIndex] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
 
             <VideoPlayer src={row.video} name={row.name} />
 
             {/* Text Column */}
-            <div className={`${isMobile ? "absolute" : "dark-bg"} p-4 flex justify-center max-h-[330px] overflow-hidden`}>
+            <div className={`${isMobile ? "absolute" : "dark-bg"} p-0 flex justify-center items-center max-h-[330px] overflow-hidden`}>
               <div className="text-left plumes-description relative">
                 <section className={`absolute top-0 left-0 w-full transition-all ${lang === "en" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
                   <h3 className="en mb-2 font-bold plume-name">{row.name === "White Phosphorus" ? row.name + " (WP)" : row.name === "Fighter Jets" ? row.name + " & UAVs" : row.name}</h3>
@@ -202,23 +211,15 @@ export default function CloudLayout() {
               </div>
             </div>
             {/* Image Grid Column */}
-            < div className={`${isMobile ? "hidden" : ""} dark-bg p-4 flex items-center max-h-[330px]`} >
-              <div className={"grid grid-cols-5 grid-rows-2 gap-2 w-full h-full overflow-hidden"}>
-                {row.images.map((link, index) => (
+            < div className={`${isMobile ? "hidden" : ""} dark-bg px-4 py-8 flex items-center max-h-[330px]`} >
+              <div className={"grid grid-cols-5 grid-rows-1 gap-2 w-full h-full overflow-hidden"}>
+                {row.filenames.map((name, index) => (
                   <div key={index} className="img-container w-full h-full relative">
-                    <img src={link}
+                    <img src={name}
                       className="w-full h-full object-cover inset-0"
                       loading="lazy"
-                      alt=""
+                      alt={row.links[index]}
                     ></img>
-                  </div>
-                ))}
-
-                {row.videos.map((link, index) => (
-                  <div key={index} className="video-container w-full h-full relative">
-                    <video controls={false} className="w-full h-full object-cover inset-0">
-                      <source src={link} type='video/mp4' />
-                    </video>
                   </div>
                 ))}
               </div>

@@ -69,23 +69,18 @@ export default function Index() {
 
                 <div className={`team-info`}>
                     <div>
-                        <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a> is an architect and OSINT researcher whose work delves into the transformation of environments into tools of power. He is currently pursuing his PhD at the Technical University of Delft, with his dissertation titled "Weaponized Environments." His research exposes the strategic manipulation of natural landscapes in modern warfare. He has worked on the award-winning "AirPressure.info" project, which archives and visualizes Israeli violations over Lebanese airspace. Baydoun's work has been recognized and cited by Amnesty International, L'Orient Le Jour, PBS, Al Jazeera, Arab News, and the American University of Beirut.
+                        <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a> is an architect, researcher, and PhD candidate at TU Delft's Faculty of Architecture and the Built Environment. His work investigates the spatial and environmental consequences of warfare through open-source intelligence (OSINT), satellite imagery, and architectural mapping. His ongoing research, Weaponized Environments, examines the use of white phosphorus in South Lebanon, combining verified visual evidence with spatial analysis to expose patterns of systematic environmental destruction. Recent collaborations include forensic and geospatial analysis for Amnesty International, PBS NewsHour, and Al Jazeera, focusing on the architecture of evidence and the politics of visibility in conflict zones.
                         <br /><br />Email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
-                        <br />Website: <a href="https://ahmadbeydoun.com" target="_blank">ahmadbeydoun.com</a>
+                        <br />Website: <a href="https://baydoun.nl" target="_blank">baydoun.nl</a>
                     </div><br />
+                    Website designed and built by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
+                    <br />
                     <div className="contribution">
-                        <span className="text-gray-100">Team</span><br />
-                        Ahmad Baydoun, Principal Investigator<br />
-                        Khodor Joujou, Research Assistant<br />
-                        <br />
-                        <span className="text-gray-100">Field Support:</span> <br />
-                        <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> provided field-level support in the form of data collection, verification, and geolocation.
+                        <span className="text-gray-100">Field Support: </span> <br />
+                        <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> provided on-the-ground support, contributing footage and assisting with geolocation.
                         <br /> <br />
-                        Website designed and built by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
-                        <br />
-                        Special thanks to:<br />
-                        Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Ali Slayman, Usama Farhat, Karlie Zhao, Abbas Baalbaki, Ramzi Kaiss, Justin Salhani, Cosette Molijn, William Christou, Alex Spoerndli, Jake Tacchi, Georges Sopwith, X:@Easybakeovensz, X:@NemoAnno.
-                        <br />
+                        <span className="text-gray-100">Special thanks to:</span><br />
+                        Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Khodor Joujou, Ali Slayman, Karlie Zhao, Abbas Baalbaki, Ramzi Kaiss, Justin Salhani, Cosette Molijn, Carmen Joukhadar, William Christou, Alex Spoerndli, Jake Tacchi, X:@Easybakeovensz, X:@NemoAnno.
                         <div className="mt-10 mb-16">Follow us on <a href="https://x.com/Phosphor_Abyad" target="_blank">Twitter</a> and <a href="https://bsky.app/profile/whitephosphorus.info" target="_blank">BlueSky</a>.</div>
                     </div>
                 </div>
