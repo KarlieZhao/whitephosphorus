@@ -41,9 +41,7 @@ export default function Index() {
     })
 
 
-    const handleContextMenu = (event: React.MouseEvent) => {
-        // event.preventDefault();
-    };
+
     return (
         <div>
             <Header TypewriterFinished={false} />
@@ -53,7 +51,7 @@ export default function Index() {
                 <div id="overlay-content" className="border-2 flex justify-center items-center"></div>
             </div>
 
-            <main onContextMenu={handleContextMenu} className={`method-page h-[95vh] overflow-scroll min-h-screen ${isMobile ? "block mt-20 mx-3" : "flex justify-center"}`}>
+            <main className={`method-page h-[95vh] overflow-scroll min-h-screen ${isMobile ? "block mt-20 mx-3" : "flex justify-center"}`}>
                 <div className={`relative ${isMobile ? "mt-10 mx-0 w-100" : "mt-32 mx-20 w-[60vw] h-max"} text-white block`}>
 
                     {/* language select  */}

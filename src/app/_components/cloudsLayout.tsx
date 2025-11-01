@@ -142,7 +142,7 @@ export default function CloudLayout() {
       overlayContent.empty();
       const imgSrc = $(this).attr('src');
       const link = $(this).attr('alt');
-      overlayContent.append(`<img src="${imgSrc}" class="w-full h-full object-contain" />`);
+      overlayContent.append(`<img src="${imgSrc}" alt="" class="w-full h-full object-contain" />`);
       source.empty();
       source.append(`<a href="${link}" target='_blank'>source<a>`)
       overlay.removeClass('fade-out').addClass('fade-in');
@@ -214,11 +214,11 @@ export default function CloudLayout() {
             < div className={`${isMobile ? "hidden" : ""} dark-bg px-4 py-8 flex items-center max-h-[330px]`} >
               <div className={"grid grid-cols-5 grid-rows-1 gap-2 w-full h-full overflow-hidden"}>
                 {row.filenames.map((name, index) => (
-                  <div key={index} className="img-container w-full h-full relative">
+                  <div key={index} className="img-container w-full h-full relative cursor-pointer">
                     <img src={name}
-                      className="w-full h-full object-cover inset-0"
+                      className="w-full h-full object-cover inset-0 cursor-pointer"
                       loading="lazy"
-                      alt={row.links[index]}
+                      alt=""
                     ></img>
                   </div>
                 ))}

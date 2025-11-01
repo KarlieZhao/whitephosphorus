@@ -426,6 +426,7 @@ ul {
 
 .command_button div {
   margin-right: 3vw;
+  cursor: pointer !important;
 }
 
 .command_button_unclickable {
@@ -453,7 +454,7 @@ ul {
   z-index: 40;
   background-image: url("/assets/img/tabActive2.png");
   transition: 0.2s ease;
-  transform: translateY(-5px) !important;
+  transform: translateY(0px) !important;
 }
 
 /* Hide only visually, but have it available for screenreaders & for SEO purposes. See h5bp.com/v */
@@ -967,7 +968,7 @@ ul li {
 
 .img-container img,
 .video-container video {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .collapsible-container .about-video {

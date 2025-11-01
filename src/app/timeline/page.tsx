@@ -62,11 +62,6 @@ export default function Index() {
         setClickedCellData(data);
     }, []);
 
-    // Memoized context menu handler
-    const handleContextMenu = useCallback((event: React.MouseEvent) => {
-        event.preventDefault();
-    }, []);
-
     // Data fetching
     useEffect(() => {
         let isMounted = true;
@@ -152,7 +147,7 @@ export default function Index() {
     }
 
     return (
-        <div onContextMenu={handleContextMenu} className="footage-page">
+        <div className="footage-page">
             <Header />
             <main className="flex-grow relative h-auto overflow-hidden">
                 <div className="footage-timeline">
