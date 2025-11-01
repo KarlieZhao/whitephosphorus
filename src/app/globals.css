@@ -440,7 +440,7 @@ ul {
 
 .command_button:hover {
   transition: 0.1s ease;
-  transform: translateY(-3px);
+  transform: translateY(-5px);
   /* background-color: #4d4d4d; */
 }
 
