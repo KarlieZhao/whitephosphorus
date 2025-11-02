@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: `White Phosphorus`,
   description: `Mapping, geolocating, and verifying Israel's use of white phosphorus in Lebanon over the past year.`,
   openGraph: {
-    images: ["/favicon/thumbnail2.jpg"],
+    images: ["/favicon/thumbnail.jpg"],
   },
 };
 
@@ -24,15 +24,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
           rel="icon"
-          type="image/png"
+          type="image/jpg"
           sizes="32x32"
-          href="/favicon/favicon.png"
+          href="/favicon/favicon.jpg"
         />
         <link
           rel="icon"
-          type="image/png"
+          type="image/jpg"
           sizes="16x16"
-          href="/favicon/favicon.png"
+          href="/favicon/favicon.jpg"
         />
         <link rel="manifest" href="/favicon/site.webmanifest" />
         <link
@@ -40,7 +40,7 @@ export default function RootLayout({
           href="/favicon/safari-pinned-tab.svg"
           color="#000000"
         />
-        <link rel="shortcut icon" href="/favicon/favicon.png" />
+        <link rel="shortcut icon" href="/favicon/favicon.jpg" />
         <meta name="msapplication-TileColor" content="#000000" />
         <meta
           name="msapplication-config"
