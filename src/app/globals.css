@@ -975,7 +975,7 @@ ul li {
 
 #media-overlay img {
   height: auto;
-  width: 46rem;
+  /* width: 46rem; */
   max-width: 80vw;
   max-height: 80vh;
 }
