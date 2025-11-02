@@ -2,24 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+/* PPSupplySans Regular */
 @font-face {
   font-family: "PPSupplySans-Regular";
-  src: url("/assets/fonts/PPSupplySans-Regular.otf");
+  font-weight: 400;
+  /* regular */
+  font-style: normal;
+  src: url("/assets/fonts/PPSupplySans-Regular.woff2") format("woff");
+  font-display: swap;
 }
 
+/* PPSupplySans Ultralight */
 @font-face {
   font-family: "PPSupplySans-Ultralight";
-  src: url("/assets/fonts/PPSupplySans-Ultralight.otf");
+  font-weight: 200;
+  /* ultralight */
+  font-style: normal;
+  src: url("/assets/fonts/PPSupplySans-Ultralight.woff2") format("woff");
+  font-display: swap;
 }
 
+/* Inconsolata Variable */
 @font-face {
   font-family: "Inconsolata";
-  src: url("/assets/fonts/Inconsolata-VariableFont_wdth,wght.ttf");
+  font-weight: 100 900;
+  /* variable font range */
+  font-style: normal;
+  src: url("/assets/fonts/Inconsolata-VariableFont_wdth,wght.woff2") format("woff");
+  font-display: swap;
 }
 
+/* Helvetica Arabic */
 @font-face {
   font-family: "Helvetica Arabic";
-  src: url("/assets/fonts/HelveticaNeueLTArabic55Roman.otf");
+  font-weight: 400;
+  font-style: normal;
+  src: url("/assets/fonts/HelveticaNeueLTArabic55Roman.woff2") format("woff");
+  font-display: swap;
 }
 
 *,
@@ -720,9 +739,10 @@ h2 {
 }
 
 .chart-continue-label {
+  font-size: 1.1rem;
   cursor: default;
-  right: -70px;
-  top: 7rem;
+  top: 8rem;
+  right: 1rem;
   display: flex;
   align-items: center;
   white-space: nowrap;

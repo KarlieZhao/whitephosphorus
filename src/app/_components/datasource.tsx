@@ -18,6 +18,14 @@ export const MONTHS_CONVERT = ["2023-9", "2023-10", "2023-11", "2024-0", "2024-1
     "2024-7", "2024-8", "2024-9", "2024-10"];
 const MONTHS_PRINT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+const geoSource = {
+    "AB": "Ahmad Baydoun",
+    "AN": "X: AnnoNemo",
+    "AUB": "American University of Beirut",
+    "GS": "Green Southerners",
+    "AS": "Alex Spoerndli",
+    "MM": "Maria Molijn"
+}
 export const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 8);
 export const width = 350;
 export type geoDataProps = {
@@ -97,18 +105,18 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
     }
 
     const getDetails = (pt?: any, arg?: any, clicked?: boolean) => {
-        let readout1, readout2, readout3, readout4, readout5, readout6 = "";
+        let readout1, readout2, readout3, readout4, readout5, readout6, readout7 = "";
         let thumbnails: string[] = [];
         let ext_link: string[] = [];
 
         if (!pt) {
-            updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, thumbnails, ext_link]);
+            updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, thumbnails, ext_link]);
             return;
         }
         if (arg != undefined) {
             //multi point array
             if (pt.length === 0 || !Array.isArray(pt)) {
-                updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, thumbnails, ext_link]);
+                updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, thumbnails, ext_link]);
                 return;
             }
             const shellCount = pt.reduce((sum, p) => sum + p.shell_count, 0)
@@ -116,13 +124,13 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
                 if (arg.indexOf("-") > 0) {
                     //month
-                    readout1 = <><span className="text-2xl text-white">{shellCount}&nbsp;&nbsp;({(100 * shellCount / 224).toFixed(1)}%)</span> wp strikes happened in <span className="text-2xl text-white">{monthParser(arg)}</span>.</>
+                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strikes happened in <span className="text-2xl text-white">{monthParser(arg)}</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 248).toFixed(1)}%</span> of total strikes.</>
                     readout2 = <></>
                 } else if (Object.keys(landscape_map).includes(arg)) {
                     //landscape
                     const key = arg as keyof landscape_mapping_prop;
                     const subset = pt.filter(p => p.landscape === arg);
-                    readout1 = <><span className="text-2xl text-white">{shellCount}&nbsp;&nbsp;({(100 * shellCount / 224).toFixed(1)}%)</span> wp shells struck  <span className="text-2xl text-white">{landscape_map[key]}</span> areas.</>
+                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus shells struck  <span className="text-2xl text-white">{landscape_map[key]}</span> areas.<br /><span className="text-2xl text-white">{(100 * shellCount / 224).toFixed(1)}%</span> of total strikes.</>
                     readout2 = <></>
                 }
                 else {
@@ -138,11 +146,11 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     if (pt.length > 1) {
                         // city/town
                         readout1 = <>Between <span className="text-2xl text-white">{dates[0]}</span> and  <span className="text-2xl text-white">{dates[dates.length - 1]}</span>,</>
-                        readout2 = <><span className="text-2xl text-white">{shellCount} </span>wp shell{shellCount > 1 ? "s" : ""}  struck
+                        readout2 = <><span className="text-2xl text-white">{shellCount} </span>white phosphorus shell{shellCount > 1 ? "s" : ""} struck
                             <span className="text-2xl text-white"> {pt[0].town}</span>.</>
                     } else {
                         readout1 = <>On <span className="text-2xl text-white">{dates[0]}</span>,</>
-                        readout2 = <>{shellCount} wp shell{shellCount > 1 ? "s" : ""} struck <span className="text-2xl text-white">{pt[0].town}</span>.</>
+                        readout2 = <>{shellCount} white phosphorus shell{shellCount > 1 ? "s" : ""} struck <span className="text-2xl text-white">{pt[0].town}</span>.</>
                     }
                 }
             } else if (Array.isArray(arg)) {
@@ -153,14 +161,14 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 const date2 = new Date(arg[1]);
                 const date_end = date2.toLocaleDateString("en-US", { month: "short", day: "numeric", year: 'numeric' });
                 readout1 = <>Between <span className="text-2xl text-white">{date_start}</span> and <span className="text-2xl text-white">{date_end}</span>,</>
-                readout2 = <><span className="text-2xl text-white">{shellCount} </span>wp shell{shellCount > 1 ? "s" : ""}  struck <span className="text-2xl text-white">{townCount.size}</span> cities/towns.</>
+                readout2 = <><span className="text-2xl text-white">{shellCount} </span>white phosphorus shell{shellCount > 1 ? "s" : ""}  struck <span className="text-2xl text-white">{townCount.size}</span> cities/towns.</>
             }
             else if (typeof arg === 'number') { //filtered by day of week
                 const date = new Date(pt[0].date);
                 let day = date.getDay();
                 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                 readout2 = <></>
-                readout1 = <><span className="text-2xl text-white">{shellCount}&nbsp;&nbsp;({(100 * shellCount / 224).toFixed(1)}%)</span> wp strikes happened on <span className="text-2xl text-white">{days[day]}s</span>.</>
+                readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strikes happened on <span className="text-2xl text-white">{days[day]}s</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 248).toFixed(1)}%</span> of total strikes.</>
             } else {
                 readout1 = <></>
                 readout2 = <></>
@@ -173,7 +181,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             const formattedDate = date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: 'numeric' });
             const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/\s(am|pm)/, (match) => match.toUpperCase());;
             readout1 = <>On <span className="text-2xl text-white">{formattedDate}</span>, at <span className="text-2xl text-white">{formattedTime}</span>,</>;
-            readout2 = <><span className="text-2xl text-white">{pt.shell_count}</span> wp shell{pt.shell_count > 1 ? "s" : ""} struck <span className="text-2xl text-white">{pt.town}</span>.</>
+            readout2 = <><span className="text-2xl text-white">{pt.shell_count}</span> white phosphorus shell{pt.shell_count > 1 ? "s" : ""} struck <span className="text-2xl text-white">{pt.town}</span>.</>
             //only on click
             if (clicked) {
                 readout3 = `Latitude: ${pt.lat}`;
@@ -182,6 +190,8 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 if (pt.landscape) {
                     readout6 = `${landscape_map[pt.landscape as keyof typeof landscape_map]} area`;
                 } else readout6 = "Landscape type is not yet unidentified."
+                const geolocator = geoSource[pt.by as keyof typeof geoSource] ?? "unknown";
+                readout7 = `Geolocated by: ${geolocator}`
 
                 thumbnails = pt.filename.map((name: string) => `/media/${pt.code}/${name}.jpg`)
                 ext_link = [...pt.links]
@@ -194,7 +204,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 ext_link = []
             }
         }
-        updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, thumbnails, ext_link]);
+        updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, thumbnails, ext_link]);
     }
 
 
@@ -274,12 +284,12 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
           248 white phosphorus shells were deployed to south Lebanon.</p> */}
 
             <div className="dynamic-readout">
-                {details.slice(0, 5).map((line, idx) => (<div key={idx}>{line}</div>))}
+                {details.slice(0, 7).map((line, idx) => (<div key={idx}>{line}</div>))}
             </div>
             <div className="dynamic-thumbnails overflow-y-auto">
                 <p className="flex gap-4 flex-wrap max-w-[30vw] h-auto">
-                    {details[6]?.map((line: string, idx: number) =>
-                    (<a href={details[7][idx]} key={idx} target="_blank">
+                    {details[7]?.map((line: string, idx: number) =>
+                    (<a href={details[8][idx]} key={idx} target="_blank">
                         <img src={`${line}`} className="max-w-24 max-h-20" key={idx} alt=""
                             onMouseOver={() => {
                                 setOverlayImage(line);

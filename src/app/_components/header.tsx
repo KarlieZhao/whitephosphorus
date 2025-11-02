@@ -17,7 +17,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
   const [animationClass, setAnimationClass] = useState("");
 
   const preciseData: ToxicityData = [{
-    type: "Shells",
+    type: "Strikes",
     number: "248",
     unit: " "
   }, {
@@ -31,7 +31,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
   }]
   const altData: ToxicityData =
     [{
-      type: "Shells",
+      type: "Strikes",
       number: "248",
       unit: ""
     }, {
@@ -111,7 +111,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
           <div className="toxicity-counter relative pl-2 flex flex-row fadeSlideIn">
             <div className="counter-label flex-initial w-20 flex flex-col justify-center items-start">
               <div>TOXICITY<br />COUNTER</div>
-              <div className="last-update">Last update: Oct/19/202</div>
+              <div className="last-update">Last update: Nov/02/2025</div>
             </div>
             {data.map((obj, index) => {
               return (

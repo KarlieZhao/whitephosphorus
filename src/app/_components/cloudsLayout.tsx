@@ -144,7 +144,7 @@ export default function CloudLayout() {
       const link = $(this).attr('alt');
       overlayContent.append(`<img src="${imgSrc}" alt="" class="w-full h-full object-contain" />`);
       source.empty();
-      source.append(`<a href="${link}" target='_blank'>source<a>`)
+      source.append(`<a href="${link}" target='_blank'>Click here to view source.<a>`)
       overlay.removeClass('fade-out').addClass('fade-in');
     });
 

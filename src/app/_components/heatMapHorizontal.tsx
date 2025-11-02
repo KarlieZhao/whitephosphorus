@@ -52,16 +52,15 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
   const majorEventDates = [
     "2023-10-08", "2023-11-24", "2023-11-30",
-    "2023-12-01", "2024-09-17", "2024-10-01", "2024-11-27"
+    "2024-05-01", "2024-09-17",
+    "2024-11-27"
   ];
 
   const majorEventNames = [
     "Hezbollah launches rockets into Israel",
-    "Start of Ceasefire synchronized with Gaza Truce",
-    "End of ceasefire",
-    "Start of Low-Intensity Cross-Border Strikes",
+    "Ceasefire synchronized with Gaza Truce", "",
+    "Low-Intensity Cross-Border Strikes",
     "Israel detonates communication devices across Lebanon",
-    "End of Low-Intensity Cross-Border Strikes; Ground Invasion of Southern Lebanon",
     "Ceasefire Agreement Signed",
   ];
 
@@ -164,7 +163,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
     const margin = {
       top: 60,
-      right: 150,
+      right: 170,
       bottom: 50,
       left: isMobileDevice() ? 75 : 100
     };
@@ -369,9 +368,9 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
         const xPos = xScale(currentCol)!;
         let yPos = -10;
         let labelxOffset = 0;
-        if (eventIndex === 6) labelxOffset = -100;
-        else if ([1].includes(eventIndex)) yPos = -40;
-        else if ([2, 4].includes(eventIndex)) yPos = -25;
+        if (eventIndex === 1) labelxOffset = -60;
+        // else if ([1].includes(eventIndex)) yPos = -40;
+        // else if ([2, 4].includes(eventIndex)) yPos = -25;
 
         // Add event line
         g.append("line")
@@ -554,41 +553,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
       {!isMobileDevice() && (
         <div className={`chart-continue-label ${scrollButtonVisible ? 'opacity-100' : 'opacity-0'}`}>
-          <button
-            onMouseDown={handleButtonDown("left")}
-            onMouseUp={handleButtonUp}
-            onMouseLeave={handleButtonUp}
-            aria-label="Scroll left"
-          >
-            <svg
-              className="arrow-svg"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path d="M15 18l-6-6 6-6" fill="red" />
-            </svg>
-          </button>
-
-          <div className="pb-1 absolute -z-50 right-28">Scroll to View More</div>
-
-          <button
-            onMouseDown={handleButtonDown("right")}
-            onMouseUp={handleButtonUp}
-            onMouseLeave={handleButtonUp}
-            aria-label="Scroll right"
-          >
-            <svg
-              className="arrow-svg"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path fill="red" d="M10 6l6 6-6 6V6z" />
-            </svg>
-          </button>
+          Scroll to View More
         </div>
       )}
     </div>

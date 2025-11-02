@@ -162,7 +162,7 @@ export default function Index() {
 
                     <div className={`click-label transition-opacity duration-300 ${(isFootageTagVisible && !isMobile) ? 'opacity-100' : 'opacity-0'
                         }`}>
-                        Click on each data point to view the footage.
+                        Click on each cell to view the footage.
                     </div>
 
                     <div className={`click-label transition-opacity duration-300 ${isMobile ? 'opacity-100' : 'opacity-0'
