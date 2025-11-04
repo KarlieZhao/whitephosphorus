@@ -171,7 +171,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
               <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn [&>div:nth-child(2)]:basis-1/4">
                 <div className="flex-initial basis-1/3 flex flex-col justify-center items-start text-xl">
                   <div>Toxicity  Counter</div>
-                  <div className="last-update">Last update: Oct/19/2025</div>
+                  <div className="last-update">Last update: Nov/02/2025</div>
                 </div>
                 {data.map((obj, index) => {
                   return (

@@ -6,7 +6,7 @@ const GA_TRACKING_ID = 'G-1SBDTJSVCG';
 
 export const metadata: Metadata = {
   title: `White Phosphorus`,
-  description: `Mapping, geolocating, and verifying Israel's use of white phosphorus in Lebanon over the past year.`,
+  description: `Geolocating, mapping, and documenting Israeli military's use of white phosphorus in Lebanon between 2023 and 2024.`,
   openGraph: {
     images: ["/favicon/thumbnail.jpg"],
   },
