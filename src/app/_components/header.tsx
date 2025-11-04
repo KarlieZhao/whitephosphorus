@@ -63,12 +63,12 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
 
   const isActive = (path: string) => pathname === path;
   const renderTab = (label: string, path: string, tabClass: string) => (
-    <td
-      className={`fixed command_button ${tabClass} w-1/4 cursor-pointer ${isActive(path) ? "tabIsActive" : ""}`}
+    <div
+      className={`command_button ${tabClass} cursor-pointer ${isActive(path) ? "tabIsActive" : ""}`}
       onClick={() => router.push(path)}
     >
       <div className="label">{label}</div>
-    </td>
+    </div>
   );
 
   const toggleMenu = () => {
@@ -109,7 +109,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
         </div>
         {TypewriterFinished && (
           <div className="toxicity-counter relative pl-2 flex flex-row fadeSlideIn">
-            <div className="counter-label flex-initial w-20 flex flex-col justify-center items-start">
+            <div className="counter-label w-full flex-initial flex flex-col justify-center items-start">
               <div>TOXICITY<br />COUNTER</div>
               <div className="last-update">Last update: Nov/02/2025</div>
             </div>
@@ -147,16 +147,13 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
 
           <div className="relative">
             {/* Navigation Tabs */}
-            <table className="table1">
-              <tbody className="h-12">
-                <tr className="text-center mt-8 flex items-center">
-                  {renderTab("MAP", "/", "tab1")}
-                  {renderTab("TIMELINE", "/timeline", "tab2")}
-                  {renderTab("PLUMES", "/plumes", "tab3")}
-                  {renderTab("ABOUT", "/about", "tab4")}
-                </tr>
-              </tbody>
-            </table>
+            <div className="fixed right-0 top-5 flex items-center">
+              {renderTab("MAP", "/", "tab1")}
+              {renderTab("TIMELINE", "/timeline", "tab2")}
+              {renderTab("PLUMES", "/plumes", "tab3")}
+              {renderTab("ABOUT", "/about", "tab4")}
+            </div>
+
 
             {/* left section: Title + Toxity counter */}
             <table className="align-middle font-semibold tracking-wide relative table2" style={{ color: "#FFDCD988" }}>

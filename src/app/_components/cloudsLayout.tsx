@@ -141,7 +141,7 @@ export default function CloudLayout() {
       // Clear previous content
       overlayContent.empty();
       const imgSrc = $(this).attr('src');
-      const link = $(this).attr('alt');
+      const link = $(this).attr('data-link');
       overlayContent.append(`<img src="${imgSrc}" alt="" class="w-full h-full object-contain" />`);
       source.empty();
       source.append(`<a href="${link}" target='_blank'>Click here to view source.<a>`)
@@ -219,6 +219,7 @@ export default function CloudLayout() {
                       className="w-full h-full object-cover inset-0 cursor-pointer"
                       loading="lazy"
                       alt=""
+                      data-link={row.links[index]}
                     ></img>
                   </div>
                 ))}

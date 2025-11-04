@@ -52,18 +52,17 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
   const majorEventDates = [
     "2023-10-08", "2023-11-24", "2023-11-30",
-    "2024-05-01", "2024-09-17",
-    "2024-11-27"
+    "2024-10-01", "2024-11-27"
   ];
-
   const majorEventNames = [
     "Hezbollah launches rockets into Israel",
     "Ceasefire synchronized with Gaza Truce", "",
-    "Low-Intensity Cross-Border Strikes",
-    "Israel detonates communication devices across Lebanon",
+    "Ground Invasion of Southern Lebanon",
     "Ceasefire Agreement Signed",
   ];
 
+  const durationSpan = ["2023-12-10", "2024-09-30"]
+  const durationName = "Low-Intensity Cross-Border Strikes"
   // Memoized data processing
   const processedChartData = useMemo(() => {
     const minDate = new Date("2023-10-07");
@@ -352,7 +351,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
       cells
         .filter((d: CellData) => d.x === currentCol)
         .transition()
-        .duration(200)
+        .duration(100)
         .style("fill", (d: CellData) => {
           if (d.value === 0) return "#ffffff00";
 
@@ -361,18 +360,61 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
           return `rgba(255, ${Math.floor(85 + 10 * opacity)}, 66, ${opacity})`;
         });
 
-      // Add event annotations
+      //duration
+      const startIndex = xLabels.indexOf(durationSpan[0]);
+      const endIndex = xLabels.indexOf(durationSpan[1]);
+
+      // === DURATION ===
+      if (currentCol === startIndex) {
+        const startX = xScale(startIndex)!;
+        const endX = xScale(endIndex)! + xScale.bandwidth();
+        const barY = 0;
+        // Draw shaded bar for duration
+        // g.append("rect")
+        //   .attr("x", startX)
+        //   .attr("y", barY)
+        //   .attr("width", endX - startX)
+        //   .attr("height", availableHeight - 50)
+        //   .attr("fill", "#ff0000")
+        //   .attr("opacity", 0.05)
+        //   .lower();
+
+        //  top line 
+        g.append("line")
+          .attr("x1", startX)
+          .attr("x2", endX - 30)
+          .attr("y1", barY - 12)
+          .attr("y2", barY - 12)
+          .attr("stroke", "#660000")
+          .attr("stroke-width", 2)
+
+        //  label
+        const label = g.append("text")
+          .attr("x", startX + 90)
+          .attr("y", barY - 10)
+          .attr("text-anchor", "middle")
+          .style("fill", "#ccc")
+          .style("background-color", "#000")
+          .style("font-size", "0.8rem")
+          .text(durationName);
+
+        const bbox = (label.node() as SVGTextElement).getBBox();
+        g.insert("rect", () => label.node()!)
+          .attr("x", bbox.x - 4)
+          .attr("y", bbox.y - 5)
+          .attr("width", bbox.width + 8)
+          .attr("height", bbox.height + 4)
+          .attr("fill", "#000")
+
+      }
       const eventIndex = majorEventIndices.indexOf(currentCol);
       if (eventIndex !== -1) {
-        // console.log(eventIndex, majorEventIndices[eventIndex], majorEventNames[eventIndex], majorEventDates[eventIndex]);
         const xPos = xScale(currentCol)!;
         let yPos = -10;
         let labelxOffset = 0;
         if (eventIndex === 1) labelxOffset = -60;
-        // else if ([1].includes(eventIndex)) yPos = -40;
-        // else if ([2, 4].includes(eventIndex)) yPos = -25;
 
-        // Add event line
+        // == EVENT ==
         g.append("line")
           .attr("x1", xPos)
           .attr("x2", xPos)
@@ -397,6 +439,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
           .transition()
           .duration(200)
           .style("opacity", 1);
+
       }
 
       currentCol++;

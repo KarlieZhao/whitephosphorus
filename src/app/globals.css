@@ -412,35 +412,31 @@ ul {
 }
 
 .command_button {
-  width: 15vw;
+  width: 12vw;
   height: 40px;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   background-image: url("/assets/img/tab.png");
-  background-size: 13.5vw 42px;
+  background-size: 12.5vw 42px;
   background-repeat: no-repeat;
   background-position: left top;
   color: #dedede;
-  display: inline-block;
+  display: flex;
 }
 
 .tab1 {
-  margin-left: -1vw;
   z-index: 13;
 }
 
 .tab2 {
   z-index: 12;
-  margin-left: 11.5vw;
 }
 
 .tab3 {
   z-index: 11;
-  margin-left: 24vw;
 }
 
 .tab4 {
   z-index: 10;
-  margin-left: 36.5vw;
 }
 
 .command_button div {
@@ -461,19 +457,13 @@ ul {
 .command_button:hover {
   transition: 0.1s ease;
   transform: translateY(-5px);
-  /* background-color: #4d4d4d; */
 }
 
-.command_button:active {
-  color: #dedede;
-  height: 55px;
-}
 
 .tabIsActive {
-  z-index: 40;
+  z-index: 40 !important;
   background-image: url("/assets/img/tabActive2.png");
-  transition: 0.2s ease;
-  transform: translateY(0px) !important;
+  transform: translateY(-5px) !important;
 }
 
 /* Hide only visually, but have it available for screenreaders & for SEO purposes. See h5bp.com/v */
@@ -722,6 +712,9 @@ h2 {
 
 .command_button .label {
   margin-top: 0.5rem;
+  padding-right: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .dark-bg {
@@ -741,7 +734,7 @@ h2 {
 .chart-continue-label {
   font-size: 1.1rem;
   cursor: default;
-  top: 8rem;
+  top: 7.3rem;
   right: 1rem;
   display: flex;
   align-items: center;
