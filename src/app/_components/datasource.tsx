@@ -55,11 +55,9 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
     const [selectedDates, setSelectedDates] = useState<[string, string]>(["", ""]);
     const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
 
-    const [showMonth, setShowMonth] = useState(true);
-
     const [showSatelliteMap, setShowSatelliteMap] = useState<boolean>(false);
     const [details, updateDetails] = useState<any[]>([]);
-    const [showOverview, setshowOverview] = useState(true);
+    const [showOverview, setshowOverview] = useState(false);
     const [showPanels, setShowPanels] = useState(false);
 
     const [mapZoom, setMapZoom] = useState(11.2);
@@ -68,6 +66,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
     const [showOverlay, setShowOverlay] = useState<boolean>(false);
     const [overlayImage, setOverlayImage] = useState<String | null>(null);
+
 
     const landscape_map: landscape_mapping_prop = {
         "resident": "residential",
@@ -104,10 +103,15 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         return MONTHS_PRINT[parseInt(month) - 1] + " " + year;
     }
 
+    useEffect(() => {
+        if (TypewriterFinished) setshowOverview(true)
+    }, [TypewriterFinished])
+
     const getDetails = (pt?: any, arg?: any, clicked?: boolean) => {
         let readout1, readout2, readout3, readout4, readout5, readout6, readout7 = "";
         let thumbnails: string[] = [];
         let ext_link: string[] = [];
+        setshowOverview(false);
 
         if (!pt) {
             updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, thumbnails, ext_link]);
@@ -188,7 +192,8 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 readout4 = `Longitude: ${pt.lon}`;
                 readout5 = `Code: ${pt.code}`
                 if (pt.landscape) {
-                    readout6 = `${landscape_map[pt.landscape as keyof typeof landscape_map]} area`;
+                    const lands = landscape_map[pt.landscape as keyof typeof landscape_map];
+                    readout6 = `${lands.slice(0, 1).toUpperCase() + lands.slice(1)} area`;
                 } else readout6 = "Landscape type is not yet unidentified."
                 const geolocator = geoSource[pt.by as keyof typeof geoSource] ?? "unknown";
                 readout7 = `Geolocated by: ${geolocator}`
@@ -212,9 +217,9 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         <div className={`${showOverlay ? "" : "hidden"} map-overlay`}>
             <img src={`${overlayImage}`} alt="" className="max-w-[50vw] max-h-[70vh]" />
         </div>
-        {/* <div className="satellite-toggle-container mb-4 ml-12 z-50 absolute bottom-16 left-3">
+        <div className="satellite-toggle-container mb-4 ml-12 z-50 absolute bottom-16 left-3">
             <div className={`flex items-center space-x-3 ${TypewriterFinished ? "" : "hidden"}`}>
-                <span className={`text-sm font-medium ${!showSatelliteMap ? 'text-white' : 'text-gray-500'}`}>
+                <span className={`text-md font-medium ${!showSatelliteMap ? 'text-white' : 'text-gray-500'}`}>
                     Vector
                 </span>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -232,7 +237,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     Satellite
                 </span>
             </div>
-        </div> */}
+        </div>
 
         <div onClick={() => {
             if (selectedCity != "") {
@@ -276,16 +281,21 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 showSatellite={showSatelliteMap}
                 TypeWriterFinished={TypewriterFinished}
             />
-
-            {/* <SatelliteViewer /> */}
         </div >
-        <div className={`map-readout ${showOverview ? 'opacity-100' : "opacity-0"}`}>
-            {/* <p>Between Oct. 10, 2023 and Oct. 02, 2024, <br />
-          248 white phosphorus shells were deployed to south Lebanon.</p> */}
-
+        <div className={`map-readout opacity-100`}>
             <div className="dynamic-readout">
-                {details.slice(0, 7).map((line, idx) => (<div key={idx}>{line}</div>))}
+                {showOverview ? (
+                    <div>Click/drag on any chart to filter the dataset.<br />
+                        Click on the dots to view media footage.<br />
+                        Switch to satellite view to examine the landscape.<br />
+                    </div>
+                ) : (
+                    details.slice(0, 7).map((line, idx) => (
+                        <div key={idx}>{line}</div>
+                    ))
+                )}
             </div>
+
             <div className="dynamic-thumbnails overflow-y-auto">
                 <p className="flex gap-4 flex-wrap max-w-[30vw] h-auto">
                     {details[7]?.map((line: string, idx: number) =>

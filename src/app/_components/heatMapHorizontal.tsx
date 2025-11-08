@@ -390,7 +390,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
 
         //  label
         const label = g.append("text")
-          .attr("x", startX + 90)
+          .attr("x", (startX + endX) / 2 + 10)
           .attr("y", barY - 10)
           .attr("text-anchor", "middle")
           .style("fill", "#ccc")

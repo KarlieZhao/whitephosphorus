@@ -13,61 +13,26 @@ type VectorMapProps = geoDataProps & TypewriterProps & {
 };
 
 const GRADIENTS = {
-  residential: "residential",
-  residential_hover: "residential_hover",
-
-  cultivate: "cultivate",
-  cultivate_hover: "cultivate_hover",
-
-  nature: "nature",
-  nature_hover: "nature_hover",
-
+  hover: "hover",
+  clicked: "clicked",
+  static: "static",
   bg: "bgGradient"
 } as const;
 
+const CARTODB_TILES_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
+
 const GRADIENT_CONFIGS = [
-  // { id: GRADIENTS.residential, color: "#961E0699" },
-  // { id: GRADIENTS.residential_hover, color: "#c42100" },
-
-  // { id: GRADIENTS.cultivate, color: "#DFC6C266" },
-  // { id: GRADIENTS.cultivate_hover, color: "#DFC6C299" },
-
-  // { id: GRADIENTS.nature, color: "#4a4a4a99" },
-  // { id: GRADIENTS.nature_hover, color: "#8D948277" },
-
-  // { id: GRADIENTS.bg, color: "#444" }
-
-
-  { id: GRADIENTS.residential, color: "#7777" },
-  { id: GRADIENTS.residential_hover, color: "#7777" },
-
-  { id: GRADIENTS.cultivate, color: "#7777" },
-  { id: GRADIENTS.cultivate_hover, color: "#7777" },
-
-  { id: GRADIENTS.nature, color: "#7777" },
-  { id: GRADIENTS.nature_hover, color: "#7777" },
-
+  { id: GRADIENTS.static, color: "#7777" },
+  { id: GRADIENTS.hover, color: "#9997" },
+  { id: GRADIENTS.clicked, color: "#7777" },
   { id: GRADIENTS.bg, color: "#333" }
 ];
 
 const CENTER_FILL = {
-  // residential: "#9A1A01",
-  // residential_clicked: "#E6695B",
-
-  // cultivate: "#999",
-  // cultivate_clicked: "#DFC6C2",
-
-  // nature: "#4a4a4a",
-  // nature_clicked: "#8D9482"
-
-  residential: "#ccc",
-  residential_clicked: "#ff3333",
-
-  cultivate: "#ccc",
-  cultivate_clicked: "#ff3333",
-
-  nature: "#ccc",
-  nature_clicked: "#ff3333"
+  static: "#ccc",
+  clicked: "#ff3333",
+  hover: "#eee",
+  satellite: "#aaa"
 }
 
 export function VectorMap({
@@ -163,48 +128,32 @@ export function VectorMap({
     });
   }, []);
 
-  const getRingFill = useCallback((d: any) =>
-    d.landscape === "b_up" ? `url(#${GRADIENTS.residential})` : d.landscape === "cultivate" ? `url(#${GRADIENTS.cultivate})` : `url(#${GRADIENTS.nature})`, []);
-
-  const getRingFillHover = useCallback((d: any) =>
-    d.landscape === "b_up" ? `url(#${GRADIENTS.residential_hover})` : d.landscape === "cultivate" ? `url(#${GRADIENTS.cultivate_hover})` : `url(#${GRADIENTS.nature_hover})`, []);
-
-  const getCenterFill = useCallback((d: any) => {
-    return d.landscape === "b_up" ? CENTER_FILL.residential : d.landscape === "cultivate" ? CENTER_FILL.cultivate : CENTER_FILL.nature;
-  }, []);
-
-  const getCenterFillClicked = useCallback((d: any) => {
-    return d.landscape === "b_up" ? CENTER_FILL.residential_clicked : d.landscape === "cultivate" ? CENTER_FILL.cultivate_clicked : CENTER_FILL.nature_clicked;
-  }, []);
+  const getRingFill = useCallback((d: any) => `url(#${GRADIENTS.static})`, []);
+  const getRingFillHover = useCallback((d: any) => `url(#${GRADIENTS.hover})`, []);
+  const getCenterFill = useCallback((d: any) => showSatellite ? CENTER_FILL.satellite : CENTER_FILL.static, []);
+  const getCenterFillClicked = useCallback((d: any) => CENTER_FILL.clicked, []);
 
   // CartoDB layer
   useEffect(() => {
     if (!mapInstance) return;
 
-    const handleCartoDBLayer = () => {
-      if (!TypeWriterFinished || !mapInstance || !mapInstance.getPane) return;
+    if (!TypeWriterFinished || !mapInstance || !mapInstance.getPane) return;
 
-      // Remove existing CartoDB layer
-      if (cartodbLayerRef.current) {
-        mapInstance.removeLayer(cartodbLayerRef.current);
-        cartodbLayerRef.current = null;
+    // Remove existing CartoDB layer
+    if (cartodbLayerRef.current) {
+      mapInstance.removeLayer(cartodbLayerRef.current);
+      cartodbLayerRef.current = null;
+    }
+    cartodbLayerRef.current = (window as any).L.tileLayer(CARTODB_TILES_URL,
+      {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://carto.com/attribution">CartoDB</a> | Imagery ©️ Planet Labs PBC, 27 September 2025 &copy;',
+        minZoom: 0,
+        maxZoom: 18
       }
-
-      cartodbLayerRef.current = (window as any).L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CartoDB</a>',
-          minZoom: 0,
-          maxZoom: 18
-        }
-      );
-      if (mapInstance.getPane("tilePane")) {
-        cartodbLayerRef.current.addTo(mapInstance);
-      }
-
-    };
-
-    handleCartoDBLayer();
+    );
+    if (mapInstance.getPane("tilePane")) {
+      cartodbLayerRef.current.addTo(mapInstance);
+    }
 
     return () => {
       if (cartodbLayerRef.current && mapInstance.hasLayer(cartodbLayerRef.current)) {
@@ -212,6 +161,17 @@ export function VectorMap({
       }
     };
   }, [mapInstance]);
+
+  useEffect(() => {
+    if (!mapInstance) return
+    const tileEle = mapInstance.getPane('tilePane').children[0]
+    if (!tileEle) return;
+    if (showSatellite) {
+      cartodbLayerRef.current.setUrl('');
+    } else {
+      cartodbLayerRef.current.setUrl(CARTODB_TILES_URL);
+    }
+  }, [showSatellite])
 
   // Main map
   useEffect(() => {
@@ -328,8 +288,6 @@ export function VectorMap({
             d3.select(this)
               .attr("fill", d => getRingFillHover(d))
               .attr("r", 1.3 * dotsize);
-
-
             getMapDetails(d);
             mouseoverTimeout = null;
           }, HOVER_DELAY);
@@ -350,7 +308,7 @@ export function VectorMap({
             centerCircles
               .transition()
               .duration(200)
-              .attr("fill-opacity", 0.3)
+              .attr("fill-opacity", showSatellite ? 0.7 : 0.3)
               .attr("fill", d => getCenterFill(d))
               .attr("r", Math.max(2, mapZoom - 8.5));
 
@@ -379,7 +337,7 @@ export function VectorMap({
             d3.select(this)
               .transition()
               .duration(200)
-              .attr("fill", d => focusedPtRef.current === null ? getRingFill(d) : `url(#${GRADIENTS.bg})`)
+              .attr("fill", d => focusedPtRef.current === null ? getRingFill(d) : `url(#${GRADIENTS.static}`)
               .attr("r", dotsize);
           }
         });

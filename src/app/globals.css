@@ -1087,15 +1087,16 @@ ul li {
 footer {
   z-index: 1000;
   position: fixed;
-  bottom: 0;
-  left: 20px;
+  bottom: 5px;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  left: 10px;
   height: fit-content;
-  font-size: 13px;
+  font-size: 0.75rem;
   width: fit-content;
   text-align: left;
   backdrop-filter: blur(2px);
   background-color: #00000033;
-  color: #777;
+  color: #aaa;
 }
 
 footer a {
@@ -1173,7 +1174,7 @@ footer a {
   position: fixed;
   top: 4rem;
   left: 1rem;
-  color: #aaa;
+  color: #ccc;
   font-family: "PPSupplySans-Ultralight";
   letter-spacing: 0.5px;
   word-spacing: 0.6px;
@@ -1185,6 +1186,15 @@ footer a {
   pointer-events: none;
 }
 
+/* .dynamic-thumbnails, */
+/* .dynamic-readout {
+  background-color: #0006;
+  padding: 0.5rem;
+  backdrop-filter: blur(4px);
+  border-radius: 5px;
+}
+ */
+
 .dynamic-readout {
   margin-top: 11rem;
   font-family: "PPSupplySans-Ultralight";
@@ -1192,7 +1202,14 @@ footer a {
   /* font-size: calc(var(--height)*2.1); */
   /* line-height: calc(var(--height)*3); */
   font-size: 1rem;
+  pointer-events: none;
   line-height: 1.45rem;
+}
+
+.dynamic-readout div {
+  width: fit-content;
+  pointer-events: all !important;
+  cursor: text;
 }
 
 .dynamic-thumbnails {
@@ -1240,7 +1257,7 @@ footer a {
   /* border: 1px solid white; */
   padding: 1.3rem;
   filter: drop-shadow(-5px 0 7px #000);
-  height: 85vh;
+  height: 84vh;
   overflow: auto;
 }
 
@@ -1303,7 +1320,7 @@ footer a {
 }
 
 #map .leaflet-control-container .leaflet-bottom {
-  bottom: 1rem;
+  bottom: 1.5rem;
 }
 
 .leaflet-control-container .leaflet-bar a {

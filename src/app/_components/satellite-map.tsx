@@ -11,6 +11,9 @@ type SatelliteMapProps = {
     TypewriterFinished?: boolean
 };
 
+
+const SATELLITE_TILES_URL = "https://d30kdnzbsfnn0n.cloudfront.net/satellite/{z}/{x}/{y}.png";
+
 export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInstance, showSatellite = false, TypewriterFinished }: SatelliteMapProps) {
     const mapRef = useRef<HTMLDivElement>(null);
     const mapInstanceRef = useRef<any>(null);
@@ -55,9 +58,9 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
         }
 
         // tile layer
-        const tileLayer = L.tileLayer("/tiles/{z}/{x}/{y}.png", {
+        const tileLayer = L.tileLayer(SATELLITE_TILES_URL, {
             tms: true,
-            opacity: 0.65
+            opacity: 0.6
         }).addTo(map);
 
         tileLayerRef.current = tileLayer;
@@ -86,18 +89,22 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
     useEffect(() => {
         if (mapInstanceRef.current && tileLayerRef.current) {
             if (showSatellite) {
-                // add tile layer if not already added
-                if (!mapInstanceRef.current.hasLayer(tileLayerRef.current)) {
-                    tileLayerRef.current.addTo(mapInstanceRef.current);
-                }
+                tileLayerRef.current.setUrl(SATELLITE_TILES_URL);
             } else {
-
-
-                // remove tile layer if it exists
-                if (mapInstanceRef.current.hasLayer(tileLayerRef.current)) {
-                    mapInstanceRef.current.removeLayer(tileLayerRef.current);
-                }
+                tileLayerRef.current.setUrl('');
             }
+
+            // if (showSatellite) {
+            //     // add tile layer if not already added
+            //     if (!mapInstanceRef.current.hasLayer(tileLayerRef.current)) {
+            //         tileLayerRef.current.addTo(mapInstanceRef.current);
+            //     }
+            // } else {
+            //     // remove tile layer if it exists
+            //     if (mapInstanceRef.current.hasLayer(tileLayerRef.current)) {
+            //         mapInstanceRef.current.removeLayer(tileLayerRef.current);
+            //     }
+            // }
         }
     }, [showSatellite, TypewriterFinished]);
 
