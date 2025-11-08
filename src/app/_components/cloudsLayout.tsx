@@ -197,19 +197,24 @@ export default function CloudLayout() {
             <VideoPlayer src={row.video} name={row.name} />
 
             {/* Text Column */}
-            <div className={`${isMobile ? "absolute" : "dark-bg"} p-0 flex justify-center items-center max-h-[330px] overflow-hidden`}>
-              <div className="text-left plumes-description relative">
-                <section className={`absolute top-0 left-0 w-full transition-all ${lang === "en" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
-                  <h3 className="en mb-2 font-bold plume-name">{row.name === "White Phosphorus" ? row.name + " (WP)" : row.name === "Fighter Jets" ? row.name + " & UAVs" : row.name}</h3>
+            <div className={`${isMobile ? "absolute" : "dark-bg"} p-0 flex items-center max-h-[330px]`}>
+              <div className="text-left plumes-description relative overflow-y-auto">
+                <div className={`absolute transition-all ${lang === "en" ? "opacity-100 fadeIn" : "fadeOut opacity-0"}`}>
+                  <h3 className="en mb-2 font-bold plume-name">
+                    {row.name === "White Phosphorus" ? `${row.name} (WP)` :
+                      row.name === "Fighter Jets" ? `${row.name} & UAVs` :
+                        row.name}
+                  </h3>
                   <p className="en">{row.text}</p>
-                </section>
+                </div>
 
-                <section className={`transition-all ${lang === "ar" ? "opacity-1 fadeIn" : "fadeOut opacity-0"}`}>
+                <div className={`transition-all ${lang === "ar" ? "opacity-100 fadeIn" : "fadeOut opacity-0"}`}>
                   <h3 className="ar mb-2 font-bold plume-name">{row.name_ar}</h3>
-                  <p className="3 ar">{row.text_ar}</p>
-                </section>
+                  <p className="ar">{row.text_ar}</p>
+                </div>
               </div>
             </div>
+
             {/* Image Grid Column */}
             < div className={`${isMobile ? "hidden" : ""} dark-bg px-4 py-8 flex items-center max-h-[330px]`} >
               <div className={"grid grid-cols-5 grid-rows-1 gap-2 w-full h-full overflow-hidden"}>

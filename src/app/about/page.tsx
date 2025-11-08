@@ -73,7 +73,7 @@ export default function Index() {
                         <br /><br />Email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
                         <br />Website: <a href="https://baydoun.nl" target="_blank">baydoun.nl</a>
                     </div><br />
-                    Website designed and built by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>.<br />
+                    Website designed and built by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>. Karlie is a Beijing-born, Boston-based artist and creative technologist. <br />
                     <br />
                     <div className="contribution">
                         <span className="text-gray-100">Field Support: </span> <br />

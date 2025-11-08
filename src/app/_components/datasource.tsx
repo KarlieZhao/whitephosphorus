@@ -57,7 +57,6 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
     const [showSatelliteMap, setShowSatelliteMap] = useState<boolean>(false);
     const [details, updateDetails] = useState<any[]>([]);
-    const [showOverview, setshowOverview] = useState(false);
     const [showPanels, setShowPanels] = useState(false);
 
     const [mapZoom, setMapZoom] = useState(11.2);
@@ -103,15 +102,11 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         return MONTHS_PRINT[parseInt(month) - 1] + " " + year;
     }
 
-    useEffect(() => {
-        if (TypewriterFinished) setshowOverview(true)
-    }, [TypewriterFinished])
 
     const getDetails = (pt?: any, arg?: any, clicked?: boolean) => {
         let readout1, readout2, readout3, readout4, readout5, readout6, readout7 = "";
         let thumbnails: string[] = [];
         let ext_link: string[] = [];
-        setshowOverview(false);
 
         if (!pt) {
             updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, thumbnails, ext_link]);
@@ -217,27 +212,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         <div className={`${showOverlay ? "" : "hidden"} map-overlay`}>
             <img src={`${overlayImage}`} alt="" className="max-w-[50vw] max-h-[70vh]" />
         </div>
-        <div className="satellite-toggle-container mb-4 ml-12 z-50 absolute bottom-16 left-3">
-            <div className={`flex items-center space-x-3 ${TypewriterFinished ? "" : "hidden"}`}>
-                <span className={`text-md font-medium ${!showSatelliteMap ? 'text-white' : 'text-gray-500'}`}>
-                    Vector
-                </span>
-                <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                        type="checkbox"
-                        checked={showSatelliteMap}
-                        onChange={(e) => setShowSatelliteMap(e.target.checked)}
-                        className="sr-only"
-                    />
-                    <div className="w-8 h-3 bg-red-900 rounded-sm transition-colors relative">
-                        <span className={`absolute w-3 h-3 bg-gray-300 rounded-sm shadow transition-transform ${showSatelliteMap ? 'translate-x-5' : ''}`}></span>
-                    </div>
-                </label>
-                <span className={`text-sm font-medium ${showSatelliteMap ? 'text-white' : 'text-gray-500'}`}>
-                    Satellite
-                </span>
-            </div>
-        </div>
+
 
         <div onClick={() => {
             if (selectedCity != "") {
@@ -284,16 +259,9 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         </div >
         <div className={`map-readout opacity-100`}>
             <div className="dynamic-readout">
-                {showOverview ? (
-                    <div>Click/drag on any chart to filter the dataset.<br />
-                        Click on the dots to view media footage.<br />
-                        Switch to satellite view to examine the landscape.<br />
-                    </div>
-                ) : (
-                    details.slice(0, 7).map((line, idx) => (
-                        <div key={idx}>{line}</div>
-                    ))
-                )}
+                {details.slice(0, 7).map((line, idx) => (
+                    <div key={idx}>{line}</div>
+                ))}
             </div>
 
             <div className="dynamic-thumbnails overflow-y-auto">
@@ -317,7 +285,32 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
         <div
             className={`fixed right-3 top-28 z-50 side-bar transition-opacity duration-500 ease-in-out ${showPanels ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} >
-            <div className="mt-2">
+            <div className="toggle-titles panel-title">Explore Patterns of White Phosphorus Strikes</div>
+            <div className="satellite-toggle-container relative mt-4">
+                <div className={`flex justify-center space-x-2 ${TypewriterFinished ? "pointer-events-auto" : "pointer-events-none"}`}>
+                    {/* <span className="toggle-titles-color">Displaying:</span> */}
+                    <span className={`toggle-titles ${!showSatelliteMap ? 'text-white' : 'text-gray-500'}`}>
+                        Vector Map
+                    </span>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={showSatelliteMap}
+                            onChange={(e) => setShowSatelliteMap(e.target.checked)}
+                            className="sr-only"
+                        />
+                        <div className="w-8 h-3 bg-red-900 rounded-sm transition-colors relative">
+                            <span className={`absolute w-3 h-3 bg-gray-300 rounded-sm shadow transition-transform ${showSatelliteMap ? 'translate-x-5' : ''}`}></span>
+                        </div>
+                    </label>
+                    <span className={`toggle-titles  ${showSatelliteMap ? 'text-white ' : 'text-gray-500'}`}>
+                        Satellite Image
+                    </span>
+                </div>
+            </div>
+
+
+            <div className="mt-5">
                 <Timeline geoData={geoData}
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
@@ -337,7 +330,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             </div>
 
             <div className="mt-5">
-                <div className="chart-titles">Strikes by month</div>
+                <div className="chart-titles">Strikes by Month</div>
                 <LandscapeHisto geoData={geoData}
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
@@ -367,7 +360,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 />
             </div>
             <div className="mt-4 ">
-                <div className="chart-titles">Strikes by hour</div>
+                <div className="chart-titles">Strikes by Hour</div>
                 <Area geoData={geoData}
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
@@ -401,7 +394,6 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     }}
                 />
             </div>
-
             <div className={`mt-8`}>
                 <div className="chart-titles">Catogorized by Landscape</div>
                 <div className="flex gap-3 justify-center mt-3">
@@ -418,7 +410,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                             setSelectedDates(["", ""]);
                             setselectedDay(-1);
                             setSelectedMonth(null)
-                        }}>{landscape_map.resident}</div>
+                        }}>{landscape_map.resident.slice(0, 1).toUpperCase() + landscape_map.resident.slice(1)}</div>
                     <div className={`chart-titles area-type-legend 
                     ${selectedAreaType === "agri" ? "area-type-legend-active" : ""}`}
                         onClick={() => {
@@ -432,7 +424,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                             setSelectedDates(["", ""]);
                             setselectedDay(-1);
                             setSelectedMonth(null)
-                        }}>{landscape_map.agri}</div>
+                        }}>{landscape_map.agri.slice(0, 1).toUpperCase() + landscape_map.agri.slice(1)}</div>
                     <div className={`chart-titles area-type-legend 
                     ${selectedAreaType === "bare" ? "area-type-legend-active" : ""}`}
                         onClick={() => {
@@ -446,11 +438,13 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                             setSelectedDates(["", ""]);
                             setselectedDay(-1);
                             setSelectedMonth(null)
-                        }}>{landscape_map.bare}</div>
+                        }}>{landscape_map.bare.slice(0, 1).toUpperCase() + landscape_map.bare.slice(1)}</div>
                 </div>
             </div>
 
-            <div className="mt-6 histogram">
+
+
+            <div className="mt-4 histogram">
                 <Histogram
                     geoData={geoData}
                     selectedCity={selectedCity}

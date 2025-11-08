@@ -933,6 +933,7 @@ ul li {
   font-size: 0.95rem;
   color: #eee;
   overflow: hidden;
+  height: 70%;
 }
 
 .z-100 {
@@ -1252,12 +1253,32 @@ footer a {
   justify-content: center;
 }
 
+.toggle-titles,
+.toggle-titles-color {
+  font-family: "Inconsolata";
+  font-size: 0.8rem;
+  font-weight: 300;
+  display: flex;
+  word-wrap: 100%;
+}
+
+.toggle-titles-color {
+  color: #ccc;
+}
+
+.panel-title {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .side-bar {
   background-color: #000a;
   /* border: 1px solid white; */
   padding: 1.3rem;
   filter: drop-shadow(-5px 0 7px #000);
-  height: 84vh;
+  height: 83vh;
   overflow: auto;
 }
 
@@ -1319,8 +1340,17 @@ footer a {
   color: #bbb;
 }
 
-#map .leaflet-control-container .leaflet-bottom {
-  bottom: 1.5rem;
+#map .leaflet-bottom {
+  bottom: 20px
+}
+
+#map .leaflet-control-container .leaflet-bottom .leaflet-control-attribution {
+  width: max-content;
+  position: fixed !important;
+  right: 1px !important;
+  bottom: 5px;
+  text-align: end;
+  z-index: 1000 !important;
 }
 
 .leaflet-control-container .leaflet-bar a {
@@ -1369,7 +1399,6 @@ small {
   .plumes-description {
     width: inherit;
     font-size: 0.8rem;
-    overflow-y: hidden;
   }
 
   .plume-name {
