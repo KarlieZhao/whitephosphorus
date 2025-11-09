@@ -12,27 +12,20 @@ type VectorMapProps = geoDataProps & TypewriterProps & {
   TypeWriterFinished?: boolean;
 };
 
-const GRADIENTS = {
-  hover: "hover",
-  clicked: "clicked",
-  static: "static",
-  bg: "bgGradient"
-} as const;
-
 const CARTODB_TILES_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
 
 const GRADIENT_CONFIGS = [
-  { id: GRADIENTS.static, color: "#7777" },
-  { id: GRADIENTS.hover, color: "#9997" },
-  { id: GRADIENTS.clicked, color: "#7777" },
-  { id: GRADIENTS.bg, color: "#333" }
+  { id: "static", color: "#7777" },
+  { id: "hover", color: "#f997" },
+  { id: "clicked", color: "#7777" },
+  { id: "bg", color: "#333" },
 ];
 
 const CENTER_FILL = {
   static: "#ccc",
   clicked: "#ff3333",
   hover: "#eee",
-  satellite: "#aaa"
+  satellite: "#eee"
 }
 
 export function VectorMap({
@@ -57,12 +50,10 @@ export function VectorMap({
   const DOT_ANIMATION_DELAY = TypeWriterFinished ? 20 : 60;
   const BORDER_DELAY = 500;
   const focusedPtRef = useRef<number | null>(null);
-
   // mouse hover on circle debounce
   let mouseoverTimeout: NodeJS.Timeout | null = null;
   let mouseoutTimeout: NodeJS.Timeout | null = null;
   const HOVER_DELAY = 50;
-
   const projectPts = useCallback((lon: number, lat: number): [number, number] => {
     if (!mapInstance || !lat || !lon || isNaN(lat) || isNaN(lon)) {
       return [-1000, -1000];
@@ -101,37 +92,67 @@ export function VectorMap({
     animationTimeoutRef.current = [];
   }, []);
 
-  const createGradients = useCallback((defs: d3.Selection<SVGDefsElement, unknown, null, undefined>) => {
-    // Clear existing gradients
-    GRADIENT_CONFIGS.forEach(config => {
-      defs.select(`#${config.id}`).remove();
-    });
 
-    GRADIENT_CONFIGS.forEach(config => {
-      const gradient = defs.append("radialGradient")
-        .attr("id", config.id)
-        .attr("cx", "50%")
-        .attr("cy", "50%")
-        .attr("r", "50%")
-        .attr("fx", "50%")
-        .attr("fy", "50%");
+  const createGradients = useCallback(
+    (defs: d3.Selection<SVGDefsElement, unknown, null, undefined>) => {
+      // Clear existing gradients
+      GRADIENT_CONFIGS.forEach((config) => {
+        defs.select(`#${config.id}`).remove();
+      });
 
-      gradient.append("stop")
-        .attr("offset", "0%")
-        .attr("stop-color", config.color)
-        .attr("stop-opacity", 0.8);
+      // Create new gradients
+      GRADIENT_CONFIGS.forEach((config) => {
+        const gradient = defs
+          .append("radialGradient")
+          .attr("id", config.id)
+          .attr("cx", "50%")
+          .attr("cy", "50%")
+          .attr("r", "50%")
+          .attr("fx", "50%")
+          .attr("fy", "50%");
 
-      gradient.append("stop")
-        .attr("offset", "100%")
-        .attr("stop-color", config.color)
-        .attr("stop-opacity", 0);
-    });
-  }, []);
+        gradient
+          .append("stop")
+          .attr("offset", "0%")
+          .attr("stop-color", config.color)
+          .attr("stop-opacity", 0.8);
 
-  const getRingFill = useCallback((d: any) => `url(#${GRADIENTS.static})`, []);
-  const getRingFillHover = useCallback((d: any) => `url(#${GRADIENTS.hover})`, []);
-  const getCenterFill = useCallback((d: any) => showSatellite ? CENTER_FILL.satellite : CENTER_FILL.static, []);
-  const getCenterFillClicked = useCallback((d: any) => CENTER_FILL.clicked, []);
+        gradient
+          .append("stop")
+          .attr("offset", "100%")
+          .attr("stop-color", config.color)
+          .attr("stop-opacity", 0);
+      });
+    },
+    []
+  );
+  const getRingFill = useCallback((d: any) => {
+    if (focusedPtRef.current === null) return `url(#static)`;
+    if (visiblePoints.indexOf(d) === focusedPtRef.current) return `url(#clicked)`
+    else return `url(#static)`;
+  }, [focusedPtRef.current, visiblePoints]);
+
+  const getCenterFill = useCallback((d: any) => {
+    if (visiblePoints.indexOf(d) === focusedPtRef.current) return CENTER_FILL.clicked
+    else if (showSatellite) {
+      return CENTER_FILL.satellite
+    } else return CENTER_FILL.static;
+  }, [focusedPtRef.current, visiblePoints])
+
+  const getDotOpacity = useCallback((d: any) => {
+    if (focusedPtRef.current === null) return 1.0
+    if (focusedPtRef.current === visiblePoints.indexOf(d)) return 1.0
+    else if (showSatellite) return 0.6
+    return 0.5
+  }, [focusedPtRef.current, visiblePoints])
+
+  const getDotSize = useCallback((d: any) => {
+    const dotsize = Math.min(14, Math.max(10, 5 * (mapZoom - 8.5)));
+    if (focusedPtRef.current === null) return dotsize;
+    if (focusedPtRef.current === visiblePoints.indexOf(d)) return dotsize * 1.5
+    else if (showSatellite) return dotsize
+    return dotsize * 0.8
+  }, [focusedPtRef.current, visiblePoints])
 
   // CartoDB layer
   useEffect(() => {
@@ -209,7 +230,6 @@ export function VectorMap({
     };
 
     const geoPath = d3.geoPath().projection(leafletProjection as any);
-    const dotsize = Math.max(4, 4 * (mapZoom - 8.5)) ? 15 : 0;
 
     let background = g.select<SVGRectElement>("rect.background");
     if (background.empty()) {
@@ -223,23 +243,9 @@ export function VectorMap({
         .style("fill", "transparent")
         .style("pointer-events", "all")
         .on("click", () => {
+          //reset 
           focusedPtRef.current = null;
           getMapDetails(null)
-          //reset circles 
-          d3.selectAll("circle.interaction-layer")
-            .classed("active", false)
-            .transition()
-            .duration(200)
-            .attr("fill-opacity", 1.0)
-            .attr("fill", d => getRingFill(d))
-            .attr("r", dotsize);
-
-          d3.selectAll("circle.incident-point")
-            .attr("fill", d => getCenterFill(d))
-            .transition()
-            .duration(200)
-            .attr("fill-opacity", 1.0)
-            .attr("r", Math.max(2, mapZoom - 8.5));
         });
     }
 
@@ -252,7 +258,7 @@ export function VectorMap({
         .append("path")
         .attr("class", "border")
         .attr("d", geoPath as any)
-        .attr("stroke", "#9994") // showSatellite ? "#e60f0000" : "#e60f0077"
+        .attr("stroke", "#9994")
         .attr("stroke-width", TypeWriterFinished ? 0 : 2.3)
         .attr("fill", "none")
         .style("opacity", hasAnimated ? 1 : 0);
@@ -267,67 +273,32 @@ export function VectorMap({
         .attr("class", "map-data-points map-data-points-hover interaction-layer")
         .attr("cx", (d) => projectPts(d.lon, d.lat)[0])
         .attr("cy", (d) => projectPts(d.lon, d.lat)[1])
-        .attr("r", (d) => visiblePoints.indexOf(d) === focusedPtRef.current ? dotsize * 2 : dotsize)
+        .attr("r", (d) => getDotSize(d))
         .style("pointer-events", "all")
         .attr("fill", (d) => getRingFill(d))
-        .attr("fill-opacity", 1.0)
+        .attr("fill-opacity", d => getDotOpacity(d))
         .style("opacity", hasAnimated ? 1 : 0)
         .on("mouseover", function (event, d) {
-          if (!hasAnimated || focusedPtRef.current != null) return;
+          if (!hasAnimated) return;
           // mouse hover debounce
-          if (mouseoutTimeout) {
-            clearTimeout(mouseoutTimeout);
-            mouseoutTimeout = null;
-          }
-
-          if (mouseoverTimeout) {
-            clearTimeout(mouseoverTimeout);
-          }
+          // if (mouseoutTimeout) {
+          //   clearTimeout(mouseoutTimeout);
+          //   mouseoutTimeout = null;
+          // }
           // Debounce mouseover
-          mouseoverTimeout = setTimeout(() => {
-            d3.select(this)
-              .attr("fill", d => getRingFillHover(d))
-              .attr("r", 1.3 * dotsize);
-            getMapDetails(d);
-            mouseoverTimeout = null;
-          }, HOVER_DELAY);
+          // mouseoverTimeout = setTimeout(() => {
+          d3.select(this)
+            .attr("fill", "url(#hover)")
+            .attr("r", d => getDotSize(d) * 1.4);
+          if (focusedPtRef.current === null) getMapDetails(d);
+          mouseoverTimeout = null;
+          // }, HOVER_DELAY);
         })
         .on("click", function (e, d) {
           e.stopPropagation();
           if (hasAnimated) {
             const index = visiblePoints.indexOf(d);
-            focusedPtRef.current = index;
-            //push everything to the background
-            d3.selectAll("circle.interaction-layer")
-              .transition()
-              .duration(200)
-              .attr("fill-opacity", 0.5)
-              .attr("fill", d => getRingFill(d))
-              .attr("r", dotsize);
-
-            centerCircles
-              .transition()
-              .duration(200)
-              .attr("fill-opacity", showSatellite ? 0.7 : 0.3)
-              .attr("fill", d => getCenterFill(d))
-              .attr("r", Math.max(2, mapZoom - 8.5));
-
-            // lock in this point
-            d3.select(this).raise()
-              .transition()
-              .duration(200)
-              .attr("fill-opacity", 1.0)
-              .attr("fill", d => getRingFillHover(d))
-              .attr("r", 1.3 * dotsize);
-
-            centerCircles
-              .filter(cd => cd === d)
-              .transition()
-              .duration(200)
-              .attr("fill-opacity", 1.0)
-              .attr("fill", d => getCenterFillClicked(d))
-              .attr("r", Math.max(2, mapZoom - 8.5) * 1.5);
-
+            focusedPtRef.current = focusedPtRef.current === index ? null : index;
             getMapDetails(d, null, true);
           }
         })
@@ -337,8 +308,8 @@ export function VectorMap({
             d3.select(this)
               .transition()
               .duration(200)
-              .attr("fill", d => focusedPtRef.current === null ? getRingFill(d) : `url(#${GRADIENTS.static}`)
-              .attr("r", dotsize);
+              .attr("fill", d => focusedPtRef.current === null ? getRingFill(d) : `url(#static)`)
+              .attr("r", d => getDotSize(d));
           }
         });
 
@@ -349,9 +320,9 @@ export function VectorMap({
         .attr("class", "map-data-points incident-point")
         .attr("cx", (d) => projectPts(d.lon, d.lat)[0])
         .attr("cy", (d) => projectPts(d.lon, d.lat)[1])
-        .attr("r", hasAnimated ? Math.max(2, mapZoom - 8.5) : 0)
-        .attr("fill", getCenterFill)
-        .style("opacity", hasAnimated ? 1 : 0);
+        .attr("r", d => hasAnimated ? getDotSize(d) * 0.2 : 0)
+        .attr("fill", d => getCenterFill(d))
+        .style("opacity", (d) => hasAnimated ? getDotOpacity(d) : 0);
 
       // animate if we haven't animated before
       if (!hasAnimated) {
@@ -406,7 +377,8 @@ export function VectorMap({
     showSatellite,
     hasAnimated,
     visiblePoints,
-    TypeWriterFinished
+    TypeWriterFinished,
+    focusedPtRef.current
   ]);
 
   // Cleanup timeouts on unmount

@@ -215,6 +215,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
 
         <div onClick={() => {
+            //reset all
             if (selectedCity != "") {
                 setSelectedCity("");
             }
