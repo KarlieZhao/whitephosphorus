@@ -1163,7 +1163,6 @@ footer a {
   /* mix-blend-mode: soft-light; */
   cursor: pointer;
   z-index: 1;
-  /* filter: drop-shadow(0 0 18px #eee) drop-shadow(0 0 13px #eee) drop-shadow(0 0 8px #eee) drop-shadow(0 0 3px #eee); */
 }
 
 .map-data-points .map-data-points-hover {

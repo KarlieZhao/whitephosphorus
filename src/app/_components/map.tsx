@@ -194,7 +194,7 @@ export function VectorMap({
     }
   }, [showSatellite])
 
-  // Main map
+  //===== DOTS ======
   useEffect(() => {
     const svg = document.querySelector("#map .leaflet-overlay-pane svg") as SVGSVGElement;
     if (!svg) return;
@@ -228,10 +228,9 @@ export function VectorMap({
         polygonEnd: () => stream.polygonEnd?.(),
       }),
     };
-
     const geoPath = d3.geoPath().projection(leafletProjection as any);
-
     let background = g.select<SVGRectElement>("rect.background");
+
     if (background.empty()) {
       // reset dot selection, colors, opacty when clicked on background
       background = g.insert("rect", ":first-child")
@@ -276,8 +275,7 @@ export function VectorMap({
         .attr("r", (d) => getDotSize(d))
         .style("pointer-events", "all")
         .attr("fill", (d) => getRingFill(d))
-        .attr("fill-opacity", d => getDotOpacity(d))
-        .style("opacity", hasAnimated ? 1 : 0)
+        .style("opacity", d => hasAnimated ? getDotOpacity(d) : 0)
         .on("mouseover", function (event, d) {
           if (!hasAnimated) return;
           // mouse hover debounce
@@ -304,13 +302,11 @@ export function VectorMap({
         })
         .on("mouseout", function (event, d) {
           if (!hasAnimated) return;
-          if (focusedPtRef.current != visiblePoints.indexOf(d)) {
-            d3.select(this)
-              .transition()
-              .duration(200)
-              .attr("fill", d => focusedPtRef.current === null ? getRingFill(d) : `url(#static)`)
-              .attr("r", d => getDotSize(d));
-          }
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr("fill", getRingFill(d))
+            .attr("r", d => getDotSize(d));
         });
 
       const centerCircles = g.selectAll("circle.incident-point")
@@ -330,7 +326,7 @@ export function VectorMap({
           const timeout = setTimeout(() => {
             // interaction circle
             d3.select(interactionCircles.nodes()[index])
-              .attr("r", 15)
+              .attr("r", getDotSize(1))
               .transition()
               .duration(200)
               .style("opacity", 1);
