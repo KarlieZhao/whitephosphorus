@@ -69,7 +69,7 @@ export default function Index() {
 
                 <div className={`team-info`}>
                     <div>
-                        <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a> is an architect, researcher, and PhD candidate at TU Delft's Faculty of Architecture and the Built Environment. His work investigates the spatial and environmental consequences of warfare through open-source intelligence (OSINT), satellite imagery, and architectural mapping. His ongoing research, Weaponized Environments, examines the use of white phosphorus in South Lebanon, combining verified visual evidence with spatial analysis to expose patterns of systematic environmental destruction. Recent collaborations include forensic and geospatial analysis for BBC World Service, France 24, Amnesty International, PBS NewsHour, and Al Jazeera, focusing on the architecture of evidence and the politics of visibility in conflict zones.
+                        <a href="https://ahmadbeydoun.com" target="_blank">Ahmad Baydoun</a> is an architect and PhD researcher at TU Delft working on the spatial and environmental impacts of warfare. His research focuses on the use of white phosphorus in South Lebanon, combining open source intelligence, satellite imagery, and architectural analysis. He has contributed forensic and geospatial analysis to investigations with BBC World Service, France 24, Amnesty International, NRC, PBS NewsHour, and Al Jazeera.
                         <br /><br />Email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
                         <br />Website: <a href="https://baydoun.nl" target="_blank">baydoun.nl</a>
                     </div><br />
