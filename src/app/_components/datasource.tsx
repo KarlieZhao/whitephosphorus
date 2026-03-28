@@ -18,7 +18,7 @@ export const MONTHS_CONVERT = ["2023-9", "2023-10", "2023-11", "2024-0", "2024-1
     "2024-7", "2024-8", "2024-9", "2024-10"];
 const MONTHS_PRINT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-const geoSource = {
+const geoSource: { [key: string]: String } = {
     "AB": "Ahmad Baydoun",
     "AN": "X: AnnoNemo",
     "AUB": "American University of Beirut",
@@ -190,7 +190,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     const lands = landscape_map[pt.landscape as keyof typeof landscape_map];
                     readout6 = `${lands.slice(0, 1).toUpperCase() + lands.slice(1)} area`;
                 } else readout6 = "Landscape type is not yet unidentified."
-                const geolocator = geoSource[pt.by as keyof typeof geoSource] ?? "unknown";
+                const geolocator = pt.by.map((person: string) => geoSource[person] ?? "/").join(", ")
                 readout7 = `Geolocated by: ${geolocator}`
 
                 thumbnails = pt.filename.map((name: string) => `/media/${pt.code}/${name}.jpg`)
@@ -398,7 +398,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             <div className={`mt-8`}>
                 <div className="chart-titles">Catogorized by Landscape</div>
                 <div className="flex gap-3 justify-center mt-3">
-                    <div className={`chart-titles area-type-legend 
+                    <div className={`chart-titles area-type-legend
                     ${selectedAreaType === "resident" ? "area-type-legend-active" : ""}`}
                         onClick={() => {
                             const pts = geoData.filter((p: any) => {
@@ -412,7 +412,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                             setselectedDay(-1);
                             setSelectedMonth(null)
                         }}>{landscape_map.resident.slice(0, 1).toUpperCase() + landscape_map.resident.slice(1)}</div>
-                    <div className={`chart-titles area-type-legend 
+                    <div className={`chart-titles area-type-legend
                     ${selectedAreaType === "agri" ? "area-type-legend-active" : ""}`}
                         onClick={() => {
                             const pts = geoData.filter((p: any) => {
@@ -426,7 +426,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                             setselectedDay(-1);
                             setSelectedMonth(null)
                         }}>{landscape_map.agri.slice(0, 1).toUpperCase() + landscape_map.agri.slice(1)}</div>
-                    <div className={`chart-titles area-type-legend 
+                    <div className={`chart-titles area-type-legend
                     ${selectedAreaType === "bare" ? "area-type-legend-active" : ""}`}
                         onClick={() => {
                             const pts = geoData.filter((p: any) => {
