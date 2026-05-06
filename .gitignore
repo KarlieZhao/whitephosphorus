@@ -8,5 +8,6 @@ node_modules/
 .env.local
 preprocess
 package-lock.json
-/public/tiles
-/public/tiles_old
+public/tiles
+public/tiles_old
+*/tiles_251001
