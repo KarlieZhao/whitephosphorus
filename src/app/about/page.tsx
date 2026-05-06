@@ -76,11 +76,9 @@ export default function Index() {
                     Website designed and built by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>. Karlie is a Beijing-born, Boston-based artist and creative technologist. <br />
                     <br />
                     <div className="contribution">
-                        <span className="text-gray-100">Field Support: </span> <br />
-                        <a href="https://greensoutherners.org" target="_blank">Green Southerners</a> provided on-the-ground support, contributing footage and assisting with geolocation.
                         <br /> <br />
                         <span className="text-gray-100">Special thanks to:</span><br />
-                        Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Hisham Younes, Tarek Ali Ahmad, Khodor Joujou, Ali Slayman, Karlie Zhao, Abbas Baalbaki, Ramzi Kaiss, Justin Salhani, Cosette Molijn, Carmen Joukhadar, William Christou, Alex Spoerndli, X:@Easybakeovensz, X:@NemoAnno.
+                        Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Tarek Ali Ahmad, Khodor Joujou, Karlie Zhao, Abbas Baalbaki, Ramzi Kaiss, Justin Salhani, Cosette Molijn, Carmen Joukhadar, William Christou, Alex Spoerndli, X:@Easybakeovensz, X:@NemoAnno.
                         <div className="mt-8">Satellite imagery provided by Planet Labs PBC under an educational license.</div>
                         <div className="mt-10 mb-16">Follow us on <a href="https://x.com/Phosphor_Abyad" target="_blank">Twitter</a> and <a href="https://bsky.app/profile/whitephosphorus.info" target="_blank">BlueSky</a>.</div>
                     </div>

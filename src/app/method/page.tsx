@@ -127,15 +127,7 @@ export default function Index() {
                         <section className="mt-20">If you have additional footage you would like to share with us, please reach out to us at phosphorusfinder@gmail.com.</section>
                     </div>
 
-                    <div className={`ar absolute transition-opacity duration-200 ${language === "ar" ? "opacity-100 visible" : "opacity-0 invisible"}`}>
-                        <h2 className="mb-10">المنهجية</h2>
-                        <section>
-                            <h3>جمع البيانات</h3>
-                            <p>
-                                استراتجيتنا في جمع البيانات تمزج بين الأدوات الرقمية والعناصر البشرية على الأرض لبناء قاعدة بيانات شاملة حول استخدام الفوسفور الأبيض في جنوب لبنان. نستخدم تقنيات لمراقبة المنصات الإلكترونية بشكل مستمر، بما في ذلك وسائل التواصل الاجتماعي مثل تويتر، فيسبوك، إنستغرام، ووسائل الإعلام الإخبارية. لتعزيز هذه الطريقة الرقمية، نتعاون مع "الجنوبيون الخضر، الذين وفروا لنا اتصالات موسعة مع شبكة من المصادر المحلية في مختلف القرى. هذه المصادر المحلية هي ركيزة أساسية في عملية جمع البيانات، حيث توفر لقطات فيديو وتحديثات مباشرة ومن الميدان. يساهمون بنشاط من خلال مشاركة المعلومات عبر مجموعات مخصصة لكل قرية وقنوات تليغرام محددة. بالإضافة إلى ذلك، نعمل عن كثب مع الصحفيين الموجودين على الأرض.
-                            </p>
-                            <img src="/about/01_dataCollection.jpeg" alt="data collection" />
-                        </section>
+    
 
                         <section>
                             <h3>التحقق من البيانات</h3>
