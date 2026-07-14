@@ -127,7 +127,8 @@ export default function Index() {
                         <section className="mt-20">If you have additional footage you would like to share with us, please reach out to us at phosphorusfinder@gmail.com.</section>
                     </div>
 
-    
+                    <div className={`ar absolute transition-opacity duration-200 ${language === "ar" ? "opacity-100 visible" : "opacity-0 invisible"}`}>
+                        {/* <h2 className="mb-10">المنهجية</h2> */}
 
                         <section>
                             <h3>التحقق من البيانات</h3>

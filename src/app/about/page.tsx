@@ -43,9 +43,8 @@ export default function Index() {
     return (
         <div>
             <Header TypewriterFinished={false} />
-            <main className={`min-h-screen ${isMobileDevice() ? "block mt-20" : "flex"}`}>
-                <div className={` ${isMobileDevice() ? null : "inner-backdrop"}`}></div>
-                <div className={`project-info`}>
+            <main className={`h-[95vh] overflow-y-auto ${isMobileDevice() ? "block mt-20" : "flex"}`}>
+                <div className={`project-info h-max`}>
                     <div className="z-50 text-xl mb-6 cursor-pointer">
                         <span role="button"
                             className={`transition-colors ${language === "en" ? "text-white underline" : "text-gray-400 no-underline"}`}

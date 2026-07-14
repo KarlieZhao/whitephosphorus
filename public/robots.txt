@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://whitephosphorus.info/
+
+# Sitemaps
+Sitemap: https://whitephosphorus.info/sitemap.xml
