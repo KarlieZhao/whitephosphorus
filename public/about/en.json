@@ -76,13 +76,25 @@
       "question": "Media Coverage",
       "answer": [
         {
+          "New York Times - What Visual Evidence Tells Us About Israel’s Use of White Phosphorus in Lebanon": "https://www.nytimes.com/2026/06/06/world/middleeast/white-phosphorous-israel-lebanon.html"
+        },
+        {
           "France 24 - Study reveals 'persistent danger' from Israel's white phosphorus strikes in southern Lebanon": "https://www.france24.com/en/middle-east/20251203-study-reveals-persistent-danger-israeli-white-phosphorus-strikes-southern-lebanon"
         },
         {
           "France 24 - Israel used white phosphorus widely in southern Lebanon, study finds": "https://www.france24.com/en/tv-shows/the-observers/20260114-israel-used-white-phosphorus-widely-southern-lebanon-study"
         },
         {
+          "The Guardian - Israel used white phosphorus to scorch earth in south Lebanon, researcher says": "https://www.theguardian.com/world/2026/mar/25/israel-white-phosphorus-south-lebanon-researchers"
+        },
+        {
           "The Guardian - Israel accused of spraying cancer-linked herbicide on farms in southern Lebanon": "https://www.theguardian.com/world/2026/feb/05/israel-accused-of-spraying-cancer-linked-herbicide-on-farms-in-southern-lebanon"
+        },
+        {
+          "BFMTV - Lebanon: Israeli army accused again of using white phosphorus in populated areas": "https://www.youtube.com/shorts/DaPMdrwwMx0"
+        },
+        {
+          "El Pais - Tierra quemada por Israel en los campos del sur de Líbano": "https://elpais.com/internacional/2026-05-20/tierra-quemada-por-israel-en-los-campos-del-sur-de-libano.html"
         },
         {
           "Al Jazeera — Israel's buffer zone, created by bombing Lebanon with white phosphorous": "https://www.aljazeera.com/features/2024/12/5/israel-buffer-zone-created-by-bombing-lebanon-with-white-phosphorus"
@@ -116,10 +128,13 @@
         },
         {
           "American University of Beirut — The Socio-Environmental Impact of White Phosphorous Ammunition in South Lebanon Analysis and Risk Mitigation Strategies": "https://www.aub.edu.lb/natureconservation/Documents/Brief%20WP%20English.pdf"
+        },
+        {
+          "HUFFPOST — Israël accusé d’utiliser du phosphore blanc contre le Liban, voici pourquoi cette ONG s’inquiète": "https://www.huffingtonpost.fr/international/article/israel-accuse-d-utiliser-du-phosphore-blanc-contre-le-liban-voici-pourquoi-cette-ong-s-inquiete_261288.html"
         }
       ]
     }
   ],
-  "reachout": "If you have additional footage to share with us, please reach out to us at phosphorusfinder@gmail.com.<br/><br/> If you'd like to help us geolocating the remaining incidents, join our Discord channel <a href='https://discord.gg/YxZNEKWfQT' target='_blank'>here</a>.",
+  "reachout": "If you have additional footage to share with us, please reach out to us at ahmadbaydoun@pm.me.<br/><br/> If you'd like to help us geolocating the remaining incidents, join our Discord channel <a href='https://discord.gg/YxZNEKWfQT' target='_blank'>here</a>.",
   "method": "Click here to read more about our project's methodology. "
 }
