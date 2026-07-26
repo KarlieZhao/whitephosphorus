@@ -3096,25 +3096,6 @@
   },
   {
     "links": [
-      "https://www.flickr.com/photos/201797790@N02/54819643274/in/album-72177720329320350/",
-      "https://www.flickr.com/photos/201797790@N02/54819726135/in/album-72177720329320350/"
-    ],
-    "filename": ["wp119_media1", "wp119_media2"],
-    "by": ["AUB"],
-    "code": "WP119",
-    "date": "2024-10-02",
-    "time": "12:00:00",
-    "town": "Rashaf",
-    "country": "Lebanon",
-    "located": 1,
-    "shell_count": 1,
-    "lat": 33.146824,
-    "lon": 35.37048,
-    "landscape": "resident",
-    "source": "AUB Laboratory"
-  },
-  {
-    "links": [
       "https://www.reutersconnect.com/item/cross-border-hostilities-between-hezbollah-and-israel/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMjlDQUFTNkIxOA"
     ],
     "filename": ["wp173_media1"],
