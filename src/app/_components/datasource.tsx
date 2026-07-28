@@ -122,18 +122,18 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
 
     const getDetails = (pt?: any, arg?: any, clicked?: boolean) => {
-        let readout1, readout2, readout3, readout4, readout5, readout6, readout7 = "";
+        let readout1, readout2, readout3, readout4, readout5, readout6, readout7, readout8 = "";
         let thumbnails: string[] = [];
         let ext_link: string[] = [];
 
         if (!pt) {
-            updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, thumbnails, ext_link]);
+            updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, readout8, thumbnails, ext_link]);
             return;
         }
         if (arg != undefined) {
             //multi point array
             if (pt.length === 0 || !Array.isArray(pt)) {
-                updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, thumbnails, ext_link]);
+                updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, readout8, thumbnails, ext_link]);
                 return;
             }
             const shellCount = pt.reduce((sum, p) => sum + p.shell_count, 0)
@@ -220,6 +220,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 } else readout6 = "Landscape type is not yet unidentified."
                 const geolocator = pt.by.map((person: string) => geoSource[person] ?? "/").join(", ")
                 readout7 = `Geolocated by: ${geolocator}`
+                readout8 = pt.source ? `Photo credit: ${pt.source}` : "";
 
                 thumbnails = pt.filename.map((name: string) => `/media/${pt.code}/${/\.\w+$/.test(name) ? name : `${name}.jpg`}`)
                 ext_link = [...pt.links]
@@ -228,11 +229,12 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 readout4 = "";
                 readout5 = "";
                 readout6 = "";
+                readout8 = "";
                 thumbnails = []
                 ext_link = []
             }
         }
-        updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, thumbnails, ext_link]);
+        updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, readout8, thumbnails, ext_link]);
     }
 
 
@@ -292,15 +294,15 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         </div >
         <div className={`map-readout opacity-100`}>
             <div className="dynamic-readout">
-                {details.slice(0, 7).map((line, idx) => (
+                {details.slice(0, 8).map((line, idx) => (
                     <div key={idx}>{line}</div>
                 ))}
             </div>
 
             <div className="dynamic-thumbnails overflow-y-auto">
                 <p className="flex gap-4 flex-wrap max-w-[30vw] h-auto">
-                    {details[7]?.map((line: string, idx: number) =>
-                    (<a href={details[8][idx]} key={idx} target="_blank">
+                    {details[8]?.map((line: string, idx: number) =>
+                    (<a href={details[9][idx]} key={idx} target="_blank">
                         <img src={`${line}`} className="max-w-24 max-h-20" key={idx} alt=""
                             onMouseOver={() => {
                                 setOverlayImage(line);

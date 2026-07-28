@@ -309,7 +309,7 @@
     "lat": 33.1023702304824,
     "lon": 35.2247897651476,
     "landscape": "resident",
-    "source": "AS"
+    "source": "Alex Spoerndli"
   },
   {
     "links": [
@@ -527,7 +527,7 @@
     "lat": 33.286619,
     "lon": 35.585303,
     "landscape": "bare",
-    "source": "AA"
+    "source": "Anadolu Agency"
   },
   {
     "links": [
@@ -546,7 +546,7 @@
     "lat": 33.311381,
     "lon": 35.59845,
     "landscape": "agri",
-    "source": "AA"
+    "source": "Anadolu Agency"
   },
   {
     "links": [
@@ -773,7 +773,7 @@
     "lat": 33.064842,
     "lon": 35.402389,
     "landscape": "bare",
-    "source": ""
+    "source": "Reuters"
   },
   {
     "links": [
@@ -792,7 +792,7 @@
     "lat": 33.32613436727,
     "lon": 35.7038561644855,
     "landscape": "bare",
-    "source": "GS"
+    "source": "Green Southerners"
   },
   {
     "links": [
@@ -811,7 +811,7 @@
     "lat": 33.328569,
     "lon": 35.683108,
     "landscape": "bare",
-    "source": "AFP"
+    "source": "Agence France-Presse"
   },
   {
     "links": [
@@ -831,7 +831,7 @@
     "lat": 33.188419,
     "lon": 35.535343,
     "landscape": "resident",
-    "source": "GS"
+    "source": "Green Southerners"
   },
   {
     "links": [
@@ -849,7 +849,7 @@
     "lat": 33.2379634333847,
     "lon": 35.5369999057623,
     "landscape": "bare",
-    "source": ""
+    "source": "ANP"
   },
   {
     "links": ["https://www.flickr.com/gp/201797790@N02/gb8Lw3nCu0"],
@@ -865,7 +865,7 @@
     "lat": 33.2763333333333,
     "lon": 35.5634138888889,
     "landscape": "resident",
-    "source": "GS"
+    "source": "Green Southerners"
   },
   {
     "links": ["https://twitter.com/ALJADEEDNEWS/status/1726206522508669407"],
@@ -881,7 +881,7 @@
     "lat": 33.2764111111111,
     "lon": 35.5612,
     "landscape": "resident",
-    "source": ""
+    "source": "X"
   },
   {
     "links": [
@@ -901,7 +901,7 @@
     "lat": 33.2782963643717,
     "lon": 35.5625351252539,
     "landscape": "resident",
-    "source": ""
+    "source": "X"
   },
   {
     "links": [
@@ -993,7 +993,7 @@
     "lat": 33.297756,
     "lon": 35.565785,
     "landscape": "resident",
-    "source": ""
+    "source": "Getty Images"
   },
   {
     "links": [
@@ -1044,7 +1044,7 @@
     "lat": 33.155961,
     "lon": 35.521617,
     "landscape": "resident",
-    "source": "GS"
+    "source": "Green Southerners"
   },
   {
     "links": [
@@ -1084,7 +1084,7 @@
     "lat": 33.206318,
     "lon": 35.52322,
     "landscape": "resident",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -1104,7 +1104,7 @@
     "lat": 33.153128,
     "lon": 35.520719,
     "landscape": "agri",
-    "source": "GS, Jake Tacchi"
+    "source": "Green Southerners, Jake Tacchi"
   },
   {
     "links": [
@@ -1123,7 +1123,7 @@
     "lat": 33.1021767764889,
     "lon": 35.2259428848907,
     "landscape": "resident",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -1142,7 +1142,7 @@
     "lat": 33.180181,
     "lon": 35.535003,
     "landscape": "resident",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -1190,7 +1190,7 @@
     "lat": 33.1028816251563,
     "lon": 35.2193832449115,
     "landscape": "resident",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -1236,7 +1236,7 @@
     "lat": 33.101643,
     "lon": 35.2235051,
     "landscape": "resident",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": ["https://x.com/Timesofgaza/status/1731070072586699037"],
@@ -1252,7 +1252,7 @@
     "lat": 33.306583,
     "lon": 35.595639,
     "landscape": "agri",
-    "source": ""
+    "source": "X"
   },
   {
     "links": ["https://x.com/Timesofgaza/status/1731070072586699037"],
@@ -1268,7 +1268,7 @@
     "lat": 33.303803,
     "lon": 35.595872,
     "landscape": "bare",
-    "source": ""
+    "source": "X"
   },
   {
     "links": ["https://www.flickr.com/gp/201797790@N02/5n425r29nR"],
@@ -1284,7 +1284,7 @@
     "lat": 33.3101083333333,
     "lon": 35.5992583333333,
     "landscape": "bare",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -1302,7 +1302,7 @@
     "lat": 33.3043888888889,
     "lon": 35.5913861111111,
     "landscape": "agri",
-    "source": "AA"
+    "source": "Anadolu Agency"
   },
   {
     "links": ["https://www.flickr.com/gp/201797790@N02/K801u9ib14"],
@@ -1318,7 +1318,7 @@
     "lat": 33.1815777777778,
     "lon": 35.5205333333333,
     "landscape": "agri",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -1336,7 +1336,7 @@
     "lat": 33.312283,
     "lon": 35.599339,
     "landscape": "resident",
-    "source": ""
+    "source": "ANP"
   },
   {
     "links": [
@@ -1356,7 +1356,7 @@
     "lat": 33.063756,
     "lon": 35.361356,
     "landscape": "agri",
-    "source": ""
+    "source": "Facebook"
   },
   {
     "links": [
@@ -1388,7 +1388,7 @@
     "lat": 33.065125,
     "lon": 35.357928,
     "landscape": "agri",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -1407,7 +1407,7 @@
     "lat": 33.06563,
     "lon": 35.36588,
     "landscape": "bare",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -1426,7 +1426,7 @@
     "lat": 33.065942,
     "lon": 35.352667,
     "landscape": "bare",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -1445,7 +1445,7 @@
     "lat": 33.064833,
     "lon": 35.355044,
     "landscape": "bare",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": ["https://www.facebook.com/watch/?v=300266706326582"],
@@ -1461,7 +1461,7 @@
     "lat": 33.08045,
     "lon": 35.3624,
     "landscape": "resident",
-    "source": ""
+    "source": "Facebook"
   },
   {
     "links": ["https://www.facebook.com/watch/?v=300266706326582"],
@@ -1477,7 +1477,7 @@
     "lat": 33.083958,
     "lon": 35.407992,
     "landscape": "bare",
-    "source": ""
+    "source": "Facebook"
   },
   {
     "links": [
@@ -1496,7 +1496,7 @@
     "lat": 33.06528,
     "lon": 35.35081,
     "landscape": "bare",
-    "source": ""
+    "source": "Getty Images"
   },
   {
     "links": [
@@ -1516,7 +1516,7 @@
     "lat": null,
     "lon": null,
     "landscape": null,
-    "source": ""
+    "source": "ANP"
   },
   {
     "links": [
@@ -1535,7 +1535,7 @@
     "lat": 33.064728,
     "lon": 35.362714,
     "landscape": "resident",
-    "source": ""
+    "source": "Facebook"
   },
   {
     "links": [
@@ -1555,7 +1555,7 @@
     "lat": 33.3259388888889,
     "lon": 35.6291,
     "landscape": "agri",
-    "source": ""
+    "source": "Getty Images"
   },
   {
     "links": [
@@ -1647,7 +1647,7 @@
     "lat": 33.1887861111111,
     "lon": 35.53755,
     "landscape": "bare",
-    "source": ""
+    "source": "X"
   },
   {
     "links": [
@@ -1794,7 +1794,7 @@
     "lat": null,
     "lon": null,
     "landscape": null,
-    "source": ""
+    "source": "X"
   },
   {
     "links": [
@@ -1813,7 +1813,7 @@
     "lat": 33.263353,
     "lon": 35.554367,
     "landscape": "resident",
-    "source": ""
+    "source": "Getty Images"
   },
   {
     "links": [
@@ -1832,7 +1832,7 @@
     "lat": 33.2825615703858,
     "lon": 35.5574528983807,
     "landscape": "resident",
-    "source": ""
+    "source": "Getty Images"
   },
   {
     "links": ["https://x.com/galpalpheebs/status/1752701948250485173?s=20"],
@@ -1848,7 +1848,7 @@
     "lat": 33.2039111111111,
     "lon": 35.5211,
     "landscape": "resident",
-    "source": ""
+    "source": "X"
   },
   {
     "links": [
@@ -1866,7 +1866,7 @@
     "lat": 33.346099,
     "lon": 35.729794,
     "landscape": "bare",
-    "source": ""
+    "source": "TikTok"
   },
   {
     "links": [
@@ -1901,7 +1901,7 @@
     "lat": 33.2743777777778,
     "lon": 35.560375,
     "landscape": "resident",
-    "source": ""
+    "source": "X"
   },
   {
     "links": [
@@ -2239,7 +2239,7 @@
     "lat": 33.337736,
     "lon": 35.734703,
     "landscape": "bare",
-    "source": "GS"
+    "source": "Green Southerners"
   },
   {
     "links": ["https://twitter.com/fouadkhreiss/status/1792867060390707546"],
@@ -2293,7 +2293,7 @@
     "lat": 33.3248,
     "lon": 35.611,
     "landscape": "resident",
-    "source": "AA"
+    "source": "Anadolu Agency"
   },
   {
     "links": [
@@ -2311,7 +2311,7 @@
     "lat": 33.3324,
     "lon": 35.71035,
     "landscape": "bare",
-    "source": "AA"
+    "source": "Anadolu Agency"
   },
   {
     "links": ["https://www.flickr.com/gp/201797790@N02/9W4mE6Kp94"],
@@ -2327,7 +2327,7 @@
     "lat": 33.294319,
     "lon": 35.547844,
     "landscape": "bare",
-    "source": "GS"
+    "source": "Green Southerners"
   },
   {
     "links": ["https://x.com/QudsNen/status/1797760479894614515"],
@@ -2379,7 +2379,7 @@
     "lat": 33.227014,
     "lon": 35.52531,
     "landscape": "resident",
-    "source": "GS"
+    "source": "Green Southerners"
   },
   {
     "links": [
@@ -2482,7 +2482,7 @@
     "lat": 33.293264,
     "lon": 35.535911,
     "landscape": "bare",
-    "source": "AA"
+    "source": "Anadolu Agency"
   },
   {
     "links": ["https://x.com/idrisokuducu/status/1804527956544385253"],
@@ -2596,7 +2596,7 @@
     "lat": 33.100275,
     "lon": 35.224347,
     "landscape": "resident",
-    "source": "AFP"
+    "source": "Agence France-Presse"
   },
   {
     "links": ["https://x.com/galpalpheebs/status/1809307713144557596"],
@@ -2712,7 +2712,7 @@
     "lat": 33.329092,
     "lon": 35.611997,
     "landscape": "resident",
-    "source": ""
+    "source": "Getty Images"
   },
   {
     "links": [
@@ -2731,7 +2731,7 @@
     "lat": 33.329883,
     "lon": 35.61105,
     "landscape": "resident",
-    "source": ""
+    "source": "ANP"
   },
   {
     "links": [
@@ -2750,7 +2750,7 @@
     "lat": 33.295761,
     "lon": 35.642192,
     "landscape": "agri",
-    "source": ""
+    "source": "Getty Images"
   },
   {
     "links": [
@@ -2861,7 +2861,7 @@
     "lat": 33.247278,
     "lon": 35.529111,
     "landscape": "resident",
-    "source": ""
+    "source": "Flickr"
   },
   {
     "links": [
@@ -3073,7 +3073,7 @@
     "lat": 33.082728,
     "lon": 35.430856,
     "landscape": "resident",
-    "source": "AFP"
+    "source": "Agence France-Presse"
   },
   {
     "links": [
@@ -3092,7 +3092,7 @@
     "lat": 33.084389,
     "lon": 35.433872,
     "landscape": "agri",
-    "source": "AFP"
+    "source": "Agence France-Presse"
   },
   {
     "links": [
@@ -3220,7 +3220,7 @@
     "lat": 33.323197,
     "lon": 35.67575,
     "landscape": "bare",
-    "source": "AA"
+    "source": "Anadolu Agency"
   },
   {
     "links": [
@@ -3238,7 +3238,7 @@
     "lat": 33.325942,
     "lon": 35.676603,
     "landscape": "bare",
-    "source": "AA"
+    "source": "Anadolu Agency"
   },
   {
     "links": [
@@ -3299,7 +3299,7 @@
     "lat": 33.308487,
     "lon": 35.530343,
     "landscape": "resident",
-    "source": "AFP"
+    "source": "Agence France-Presse, Getty Images"
   },
   {
     "links": [
@@ -3320,7 +3320,7 @@
     "lat": 33.308329,
     "lon": 35.523333,
     "landscape": "resident",
-    "source": "AFP"
+    "source": "Agence France-Presse"
   },
   {
     "links": [
@@ -3345,7 +3345,7 @@
     "lat": 33.309319,
     "lon": 35.531638,
     "landscape": "resident",
-    "source": "AFP"
+    "source": "Agence France-Presse, Anadolu Agency, Getty Images"
   },
   {
     "links": [
@@ -3356,7 +3356,7 @@
     "code": "WP405",
     "date": "2026-05-04",
     "time": "00:00:00",
-    "town": "",
+    "town": "Taybeh",
     "country": "Lebanon",
     "located": 1,
     "shell_count": 1,
@@ -3376,14 +3376,14 @@
     "code": "WP406",
     "date": "2026-04-28",
     "time": "16:43:00",
-    "town": "",
+    "town": "Zawtar",
     "country": "Lebanon",
     "located": 1,
     "shell_count": 1,
     "lat": 33.321735,
     "lon": 35.480153,
     "landscape": "resident",
-    "source": "AFP"
+    "source": "Agence France-Presse"
   },
   {
     "links": [
@@ -3403,7 +3403,7 @@
     "lat": 33.327273,
     "lon": 35.622582,
     "landscape": "bare",
-    "source": "AFP"
+    "source": "Agence France-Presse"
   },
   {
     "links": [
@@ -3415,7 +3415,7 @@
     "code": "WP409",
     "date": "2026-04-28",
     "time": "16:43:35",
-    "town": "",
+    "town": "Yohmor",
     "country": "Lebanon",
     "located": 1,
     "shell_count": 1,
@@ -3476,7 +3476,7 @@
     "lat": 33.328396,
     "lon": 35.54761,
     "landscape": "bare",
-    "source": ""
+    "source": "Anadolu Agency"
   },
   {
     "links": [
@@ -3494,7 +3494,7 @@
     "lat": 33.308347,
     "lon": 35.652212,
     "landscape": "agri",
-    "source": ""
+    "source": "X"
   },
   {
     "links": [
@@ -3512,7 +3512,7 @@
     "lat": 33.327775,
     "lon": 35.530023,
     "landscape": "resident",
-    "source": "telegram"
+    "source": "Telegram"
   },
   {
     "links": [
@@ -3530,7 +3530,7 @@
     "lat": 33.346374,
     "lon": 35.521924,
     "landscape": "resident",
-    "source": ""
+    "source": "Al Jazeera"
   },
   {
     "links": [
@@ -3548,7 +3548,7 @@
     "lat": 33.193199,
     "lon": 35.233185,
     "landscape": "resident",
-    "source": ""
+    "source": "Associated Press"
   },
   {
     "links": [
@@ -3562,14 +3562,14 @@
     "code": "WP426",
     "date": "2026-03-27",
     "time": "23:09:00",
-    "town": "Arnoun",
+    "town": "Chamaa",
     "country": "Lebanon",
     "located": 1,
     "shell_count": 6,
     "lat": 33.153295,
     "lon": 35.191277,
     "landscape": "bare",
-    "source": "AP"
+    "source": "Associated Press"
   },
   {
     "links": [
@@ -3589,7 +3589,7 @@
     "lat": 33.221324,
     "lon": 35.535429,
     "landscape": "bare",
-    "source": ""
+    "source": "Reuters, PBS"
   },
   {
     "links": [
@@ -3607,7 +3607,7 @@
     "lat": 33.292248,
     "lon": 35.563046,
     "landscape": "resident",
-    "source": ""
+    "source": "Reuters"
   },
   {
     "links": [
@@ -3625,7 +3625,7 @@
     "lat": 33.3478,
     "lon": 35.514258,
     "landscape": "resident",
-    "source": ""
+    "source": "L'Orient-Le Jour"
   },
   {
     "links": [
@@ -3643,7 +3643,7 @@
     "lat": 33.218178,
     "lon": 35.533458,
     "landscape": "resident",
-    "source": ""
+    "source": "Reuters"
   },
   {
     "links": [
@@ -3661,7 +3661,7 @@
     "lat": 33.345872,
     "lon": 35.514822,
     "landscape": "resident",
-    "source": ""
+    "source": "Al Jazeera"
   }
 
 ]
