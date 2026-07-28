@@ -46,7 +46,7 @@ export function VectorMap({
   const borderDataRef = useRef<any>(null);
   const cartodbLayerRef = useRef<any>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout[]>([]);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(() => typeof window !== "undefined" && sessionStorage.getItem("mapDotsAnimated") === "true");
 
   const DOT_ANIMATION_DELAY = TypeWriterFinished ? 20 : 60;
   const BORDER_DELAY = 500;
@@ -371,6 +371,7 @@ export function VectorMap({
                 .style("opacity", 1);
               setTimeout(() => {
                 setHasAnimated(true);
+                sessionStorage.setItem("mapDotsAnimated", "true");
               }, BORDER_DELAY);
             }
           }, index * DOT_ANIMATION_DELAY);

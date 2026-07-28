@@ -344,14 +344,18 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
     // Animation
     const maxValue = d3.max(sortedProcessedData.flat()) ?? 0;
     let currentCol = 0;
+    const skipAnimation = typeof window !== "undefined" && sessionStorage.getItem("heatmapAnimated") === "true";
 
     const animateCol = () => {
-      if (currentCol >= numCols) return;
+      if (currentCol >= numCols) {
+        sessionStorage.setItem("heatmapAnimated", "true");
+        return;
+      }
 
       cells
         .filter((d: CellData) => d.x === currentCol)
         .transition()
-        .duration(100)
+        .duration(skipAnimation ? 0 : 100)
         .style("fill", (d: CellData) => {
           if (d.value === 0) return "#ffffff00";
 
@@ -424,7 +428,7 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
           .attr("stroke-width", 1.5)
           .style("opacity", 0)
           .transition()
-          .duration(200)
+          .duration(skipAnimation ? 0 : 200)
           .style("opacity", 1);
 
         // Add event label
@@ -437,13 +441,13 @@ const HeatMapAnimation: React.FC<HeatMapProps> = ({ data, onCellClick, scrollBut
           .style("opacity", 0)
           .text(majorEventNames[eventIndex])
           .transition()
-          .duration(200)
+          .duration(skipAnimation ? 0 : 200)
           .style("opacity", 1);
 
       }
 
       currentCol++;
-      animationRef.current = setTimeout(animateCol, 20);
+      animationRef.current = setTimeout(animateCol, skipAnimation ? 0 : 20);
     };
 
     animateCol();

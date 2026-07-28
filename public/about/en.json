@@ -1,6 +1,6 @@
 {
   "lang": "en",
-  "abstract": "<p>From <b>October 2023 to May 2026</b>, we verified 286 incidents of white phosphorus use — <b>285 in South Lebanon and one in northern Israel (friendly fire)</b> — identified from more than <b>650 verified images and videos</b>. The website visualizes this data through an interactive cartographic platform, organizing each incident chronologically and spatially to reveal both geographic and temporal patterns.</p><p>This work seeks to expose the systematic use of white phosphorus, an incendiary weapon whose deployment in populated areas is restricted under international law due to its devastating and often fatal effects. By geolocating, verifying, and mapping each incident, the project advances transparency and accountability in warfare. It also aims to inform returning residents whose lands have been contaminated, assisting municipalities in marking affected territories and coordinating with specialized teams to detoxify and rehabilitate these areas.</p>",
+  "abstract": "<p>From <b>October 2023 to May 2026</b>, we verified 286 incidents of white phosphorus use — <b>285 in South Lebanon and one in northern Israel (friendly fire)</b> — identified from more than <b>700 verified images and videos</b>. The website visualizes this data through an interactive cartographic platform, organizing each incident chronologically and spatially to reveal both geographic and temporal patterns.</p><p>This work seeks to expose the systematic use of white phosphorus, an incendiary weapon whose deployment in populated areas is restricted under international law due to its devastating and often fatal effects. By geolocating, verifying, and mapping each incident, the project advances transparency and accountability in warfare. It also aims to inform returning residents whose lands have been contaminated, assisting municipalities in marking affected territories and coordinating with specialized teams to detoxify and rehabilitate these areas.</p>",
   "qna": [
     {
       "question": "What is white phosphorus?",
@@ -35,7 +35,7 @@
         "land-formula": "<p>Each shell disperses phosphorus over 5,000 – 30,000 m² (≈ 0.5 – 3 ha)</p><p>We apply an average of 1.5 ha per shell as a conservative mid-range value.</p>",
         "land-p2": "Formula: Total Land Area (ha) = Total Shells × 1.5 ha",
         "air-p1": "<b>Felt Wedges:</b> <p>Each M825/M825A1 shell contains 116 white phosphorus–soaked felt wedges. Using the total number of estimated shells deployed across 286 incidents, we derive:</p> <p>Total Felt Wedges = Total Shells × 116 = 33,176 </p>",
-        "air-formula": "<b>Sources:</b><p>Forensic Architecture, The Use of White Phosphorus Munitions in Urban Environments: An Effects-Based Analysis (2018); <br/>Our verified dataset of 650+ geolocated images and videos (2023–2024)</p>",
+        "air-formula": "<b>Sources:</b><p>Forensic Architecture, The Use of White Phosphorus Munitions in Urban Environments: An Effects-Based Analysis (2018); <br/>Our verified dataset of 700+ geolocated images and videos (2023–2024)</p>",
         "notes": "<b>Limitations: </b> Dispersion varies with burst height (150–300 m), wind, and terrain. Actual ground impact may range from 0.5 – 3 ha per shell. Underreporting is likely in remote or unpopulated areas, especially during nighttime hours."
       }
     },

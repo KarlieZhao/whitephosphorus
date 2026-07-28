@@ -9,7 +9,7 @@ import Footer from "./_components/footer";
 
 
 export default function Index() {
-  const textToType = ["This public archive documents 286 white phosphorus strikes in South Lebanon between October 2023 and May 2026.", "Through spatial analysis and open-source investigation of over 650 images and videos, each strike was verified, geolocated, and chronolocated.", "Click anywhere to start."];
+  const textToType = ["This public archive documents 285 white phosphorus strikes in South Lebanon and one in northern Israel between October 2023 and May 2026.", "Through spatial analysis and open-source investigation of over 700 images and videos, each strike was verified, geolocated, and chronolocated.", "Click anywhere to start."];
   const [TypewriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [forceStop, setForceStop] = useState<boolean>(false);
