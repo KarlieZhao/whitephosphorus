@@ -123,7 +123,7 @@ export default function Index() {
                 <ContentWindow title="">
                     <FootageDisplay
                         srcLink={`${clickedCellData.links[index]}`}
-                        fileName={`/media/${clickedCellData.code}/${clickedCellData.filename[index]}.jpg`}
+                        fileName={`/media/${clickedCellData.code}/${/\.\w+$/.test(clickedCellData.filename[index]) ? clickedCellData.filename[index] : `${clickedCellData.filename[index]}.jpg`}`}
                         enlarge={true}
                     />
                 </ContentWindow>

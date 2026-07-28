@@ -24,7 +24,8 @@ const geoSource: { [key: string]: String } = {
     "AUB": "American University of Beirut",
     "GS": "Green Southerners",
     "AS": "Alex Spoerndli",
-    "MM": "Maria Molijn"
+    "MM": "Maria Molijn",
+    "HRW": "Human Rights Watch"
 }
 export const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 8);
 export const width = 350;
@@ -193,7 +194,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 const geolocator = pt.by.map((person: string) => geoSource[person] ?? "/").join(", ")
                 readout7 = `Geolocated by: ${geolocator}`
 
-                thumbnails = pt.filename.map((name: string) => `/media/${pt.code}/${name}.jpg`)
+                thumbnails = pt.filename.map((name: string) => `/media/${pt.code}/${/\.\w+$/.test(name) ? name : `${name}.jpg`}`)
                 ext_link = [...pt.links]
             } else {
                 readout3 = "";
