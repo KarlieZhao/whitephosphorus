@@ -18,29 +18,29 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
 
   const preciseData: ToxicityData = [{
     type: "Strikes",
-    number: "248",
+    number: "286",
     unit: " "
   }, {
     type: "Land Area",
-    number: "372",
+    number: "429",
     unit: "Hectares"
   }, {
     type: "Felt Wedges",
-    number: "28,768",
+    number: "33,176",
     unit: "",
   }]
   const altData: ToxicityData =
     [{
       type: "Strikes",
-      number: "248",
+      number: "286",
       unit: ""
     }, {
       type: "Land Area",
-      number: "531",
+      number: "613",
       unit: "soccer fields"
     }, {
       type: "Felt Wedges",
-      number: "28,768",
+      number: "33,176",
       unit: " "
     }];
 
@@ -111,7 +111,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
           <div className="toxicity-counter relative pl-2 flex flex-row fadeSlideIn">
             <div className="counter-label w-full flex-initial flex flex-col justify-center items-start">
               <div>TOXICITY<br />COUNTER</div>
-              <div className="last-update">Last update: Nov/02/2025</div>
+              <div className="last-update">Last update: Jul/28/2026</div>
             </div>
             {data.map((obj, index) => {
               return (
@@ -171,7 +171,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
               <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn [&>div:nth-child(2)]:basis-1/4">
                 <div className="flex-initial basis-1/3 flex flex-col justify-center items-start text-xl">
                   <div>Toxicity  Counter</div>
-                  <div className="last-update">Last update: Nov/02/2025</div>
+                  <div className="last-update">Last update: Jul/28/2026</div>
                 </div>
                 {data.map((obj, index) => {
                   return (

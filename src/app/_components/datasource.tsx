@@ -124,13 +124,13 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
                 if (arg.indexOf("-") > 0) {
                     //month
-                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strikes happened in <span className="text-2xl text-white">{monthParser(arg)}</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 248).toFixed(1)}%</span> of total strikes.</>
+                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strikes happened in <span className="text-2xl text-white">{monthParser(arg)}</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 286).toFixed(1)}%</span> of total strikes.</>
                     readout2 = <></>
                 } else if (Object.keys(landscape_map).includes(arg)) {
                     //landscape
                     const key = arg as keyof landscape_mapping_prop;
                     const subset = pt.filter(p => p.landscape === arg);
-                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus shells struck  <span className="text-2xl text-white">{landscape_map[key]}</span> areas.<br /><span className="text-2xl text-white">{(100 * shellCount / 224).toFixed(1)}%</span> of total strikes.</>
+                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus shells struck  <span className="text-2xl text-white">{landscape_map[key]}</span> areas.<br /><span className="text-2xl text-white">{(100 * shellCount / 286).toFixed(1)}%</span> of total strikes.</>
                     readout2 = <></>
                 }
                 else {
@@ -168,7 +168,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 let day = date.getDay();
                 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                 readout2 = <></>
-                readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strikes happened on <span className="text-2xl text-white">{days[day]}s</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 248).toFixed(1)}%</span> of total strikes.</>
+                readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strikes happened on <span className="text-2xl text-white">{days[day]}s</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 286).toFixed(1)}%</span> of total strikes.</>
             } else {
                 readout1 = <></>
                 readout2 = <></>
