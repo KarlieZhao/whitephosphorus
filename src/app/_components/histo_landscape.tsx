@@ -11,7 +11,7 @@ export default function LandscapeHisto({
     onMonthClick
 }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
-    const height = 80;
+    const height = 130;
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const parseDate = d3.timeParse("%Y-%m-%d");
 
@@ -21,7 +21,7 @@ export default function LandscapeHisto({
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        const margin = { top: 12, right: 5, bottom: 20, left: 5 };
+        const margin = { top: 12, right: 5, bottom: 32, left: 5 };
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
 
@@ -121,34 +121,35 @@ export default function LandscapeHisto({
             });
 
         // ========= DRAW AXIS / LABELS =========
-        let lastYear: number = 0;
-
         svg
             .selectAll(".month-label")
             .data(MONTHS_CONVERT)
             .join("text")
             .attr("class", "chart-labels")
             .attr("x", (key) => (xScale(key)! + xScale.bandwidth() / 2))
-            .attr("y", height - 10)
+            .attr("y", height - 24)
             .attr("text-anchor", "middle")
-            .attr("font-size", "0.75rem")
+            .attr("font-size", "0.65rem")
             .attr("fill", "#bbb")
             .each(function (key, i) {
                 const [year, monthIndex] = key.split("-").map(Number);
                 const text = d3.select(this);
                 text.selectAll("tspan").remove(); // clear previous tspans
 
-                // month
-                if (i % 3 === 0) {
+                if (i % 4 === 0) {
+                    const x = xScale(key)! + xScale.bandwidth() / 2;
                     text
                         .append("tspan")
-                        .attr("x", xScale(key)! + xScale.bandwidth() / 2)
+                        .attr("x", x)
                         .attr("dy", "0")
-                        .text((lastYear === year ? months[monthIndex] : (months[monthIndex] + "'" + year.toString().slice(2))
-                        ));
+                        .text(months[monthIndex]);
+                    text
+                        .append("tspan")
+                        .attr("x", x)
+                        .attr("dy", "1.2em")
+                        .attr("fill", "#888")
+                        .text(year);
                 }
-
-                if (lastYear != year) lastYear = year;
             });
 
     }, [geoData, selectedCity, selectedAreaType, selectedMonth]);

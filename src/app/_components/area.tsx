@@ -1,24 +1,11 @@
-import * as d3 from "d3";
-import React, { useRef, useEffect } from "react";
-import { geoDataProps, RED_GRADIENT } from "./datasource";
-import { width } from "./datasource";
+import React, { useMemo } from "react";
+import { geoDataProps } from "./datasource";
 import { parseDate } from "./histo";
 import { MONTHS } from "./datasource";
+
 export default function Area({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, selectedYear }: geoDataProps) {
-    const svgRef = useRef<SVGSVGElement | null>(null);
-    const height = 80;
-    // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
-
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    useEffect(() => {
-        if (!geoData || geoData.length === 0) return;
-
-        const svg = d3.select(svgRef.current);
-        svg.selectAll('*').remove(); // Clear previous content
-
-        const margin = { top: 10, right: 5, bottom: 20, left: 30 };
-        const innerWidth = width - margin.left - margin.right;
-        const innerHeight = height - margin.top - margin.bottom;
+    const { dayPct, nightPct } = useMemo(() => {
+        if (!geoData || geoData.length === 0) return { dayPct: 0, nightPct: 0 };
 
         let filteredData = geoData;
         if (selectedDates && selectedDates[0] && selectedDates[1]) {
@@ -53,80 +40,34 @@ export default function Area({ geoData, selectedCity, selectedDates, selectedDay
             })
         }
 
-        // ========= DATA AGGREGATION =========
-        let binnedCounts: { time: number; count: number }[] = [];
-        let monthLabels: string[] = [];
-
-        const hours = filteredData.map(d => [parseInt(d.time.slice(0, 2), 10), d.shell_count]);
-
-        const hourlyCounts = new Array(25).fill(0);
-        hours.forEach((hour: any[]) => {
-            if (hour[0] >= 0 && hour[0] < 25) hourlyCounts[hour[0]] += hour[1];
+        let dayCount = 0;
+        let nightCount = 0;
+        filteredData.forEach(d => {
+            const hour = parseInt(d.time.slice(0, 2), 10);
+            const isDaytime = hour >= 6 && hour < 18;
+            if (isDaytime) dayCount += d.shell_count;
+            else nightCount += d.shell_count;
         });
-        for (let i = 0; i <= 24; i += 2) {
-            const binCount = i === 24 ? hourlyCounts[0] + hourlyCounts[1] : hourlyCounts[i] + hourlyCounts[i + 1];
-            binnedCounts.push({ time: i, count: binCount });
-        }
 
-        const xDomain = [0, 24]
+        const total = dayCount + nightCount;
+        if (total === 0) return { dayPct: 0, nightPct: 0 };
 
-        const xScale = d3.scaleLinear()
-            .domain(xDomain)
-            .range([0, innerWidth]);
+        return {
+            dayPct: Math.round((dayCount / total) * 100),
+            nightPct: Math.round((nightCount / total) * 100),
+        };
+    }, [geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, selectedYear]);
 
-        const yMax = Math.max(...binnedCounts.map(d => d.count));
-        const yScale = d3.scaleLinear()
-            .domain([0, yMax])
-            .nice()
-            .range([innerHeight, 0]);
-
-        const area = d3.area<{ time: number; count: number }>()
-            .x(d => xScale(d.time))
-            .y0(innerHeight)
-            .y1(d => yScale(d.count))
-            .curve(d3.curveMonotoneX);
-
-        const g = svg.append('g')
-            .attr('transform', `translate(${margin.left},${margin.top})`);
-
-        // X Axis
-        const xAxis = d3.axisBottom(xScale)
-            .ticks(7)
-            .tickSize(5)
-            .tickFormat((d) => {
-                const h = +d;
-                const period = (h < 12 || h === 24) ? 'AM' : 'PM';
-                const hour = h % 12 === 0 ? 12 : h % 12;
-                return `${hour}${period}`;
-            })
-
-        g.append('g')
-            .attr('transform', `translate(0,${innerHeight})`)
-            .call(xAxis)
-
-        // Y Axis
-        const yAxis = d3.axisLeft(yScale).ticks(5).tickSize(4);
-        g.append('g').call(yAxis);
-
-        //style them
-        g.selectAll('.tick')
-            .select('line')
-            .attr("stroke", "#bbb");
-
-        g.selectAll('.tick')
-            .select('text')
-            .attr("fill", "#bbb")
-            .attr('class', "chart-labels");
-
-        // Area path
-        g.append('path')
-            .datum(binnedCounts)
-            // .attr('fill', '#842E1E')
-            .attr('fill', RED_GRADIENT[4])
-            .attr('d', area);
-
-    }, [geoData, width, height, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, selectedYear]);
-
-    return <>
-        <svg ref={svgRef} width={width} height={height} /></>;
+    return (
+        <div className="day-night-container">
+            <div className="day-night-bar">
+                <div className="day-night-segment day-segment" style={{ width: `${dayPct}%` }} />
+                <div className="day-night-segment night-segment" style={{ width: `${nightPct}%` }} />
+            </div>
+            <div className="day-night-labels chart-labels">
+                <span>☀ Day {dayPct}%</span>
+                <span>☾ Night {nightPct}%</span>
+            </div>
+        </div>
+    );
 }

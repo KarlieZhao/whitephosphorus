@@ -14,9 +14,8 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [animationClass, setAnimationClass] = useState("");
 
-  const preciseData: ToxicityData = [{
+  const data: ToxicityData = [{
     type: "Strikes",
     number: "286",
     unit: " "
@@ -29,36 +28,9 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
     number: "33,176",
     unit: "",
   }]
-  const altData: ToxicityData =
-    [{
-      type: "Strikes",
-      number: "286",
-      unit: ""
-    }, {
-      type: "Land Area",
-      number: "613",
-      unit: "soccer fields"
-    }, {
-      type: "Felt Wedges",
-      number: "33,176",
-      unit: " "
-    }];
-
-  const [data, setData] = useState<ToxicityData>(preciseData);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
-    if (TypewriterFinished) {
-      const interval = setInterval(() => {
-        setAnimationClass("fadeOut");
-        setTimeout(() => {
-          setData((prev) => (prev[1].unit === "Hectares" ? altData : preciseData));
-          setAnimationClass("fadeIn");
-        }, 600);
-      }, 8000);
-
-      return () => clearInterval(interval);
-    }
   })
 
   const isActive = (path: string) => pathname === path;
@@ -119,7 +91,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
                   key={obj.type || index} // Use a unique identifier (e.g., obj.type) or index as a fallback
                   className={`flex-initial ${obj.type === "Incidents" ? "w-[3.8rem]" : "w-[8rem]"} flex flex-col items-start`}
                 >
-                  <div className={`${obj.type === "Incidents" ? null : animationClass}`}>
+                  <div>
                     <span
                       className={`${obj.number === "1261 " || obj.number === "198"
                         ? "opacity-100 inline-block"
@@ -179,7 +151,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
                       key={obj.type || index} // Use a unique identifier (e.g., obj.type) or index as a fallback
                       className={`flex-initial ${obj.type === "Incidents" ? "basis-1/4" : "basis-1/3"} flex flex-col items-start`}
                     >
-                      <div className={`${obj.type === "Incidents" ? null : animationClass}`}>
+                      <div>
                         <span
                           className={`${obj.number === "1261 " || obj.number === "198"
                             ? "opacity-100 inline-block"

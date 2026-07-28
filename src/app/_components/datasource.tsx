@@ -4,18 +4,20 @@ import { VectorMap } from "./map";
 import { Histogram } from "./histo";
 import Timeline from "./timeline";
 import Area from "./area";
-import Segment from "./segment";
 import { TypewriterProps } from "./header";
 import SatelliteMap from "./satellite-map";
 import LandscapeHisto from "./histo_landscape";
+import LandscapeBar from "./landscape-bar";
 
 // export const RED_GRADIENT = ["#db2f0f", "#C03117", "#A5331E", "#8A3525", "#6E362C", "#7C3629", "#6E362C"]
 // export const RED_GRADIENT = ["#cfcfcf", "#aaa", "#909090", "#858585", "#777", "#666", "#606060"]
 
 export const MONTHS = ["2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06",
-    "2024-07", "2024-08", "2024-09", "2024-10", "2024-11"];
+    "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05",
+    "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05"];
 export const MONTHS_CONVERT = ["2023-9", "2023-10", "2023-11", "2024-0", "2024-1", "2024-2", "2024-3", "2024-4", "2024-5", "2024-6",
-    "2024-7", "2024-8", "2024-9", "2024-10"];
+    "2024-7", "2024-8", "2024-9", "2024-10", "2024-11", "2025-0", "2025-1", "2025-2", "2025-3", "2025-4",
+    "2025-5", "2025-6", "2025-7", "2025-8", "2025-9", "2025-10", "2025-11", "2026-0", "2026-1", "2026-2", "2026-3", "2026-4"];
 const MONTHS_PRINT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const TOTAL_STRIKES_BY_YEAR: { [year: string]: number } = {
@@ -316,27 +318,20 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
         <div
             className={`fixed right-3 top-28 z-50 side-bar transition-opacity duration-500 ease-in-out ${showPanels ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} >
-            <div className="toggle-titles panel-title">Explore Patterns of White Phosphorus Strikes</div>
-            <div className="satellite-toggle-container relative mt-4">
-                <div className={`flex justify-center space-x-2 ${TypewriterFinished ? "pointer-events-auto" : "pointer-events-none"}`}>
-                    {/* <span className="toggle-titles-color">Displaying:</span> */}
-                    <span className={`toggle-titles ${!showSatelliteMap ? 'text-white' : 'text-gray-500'}`}>
+            <div className="satellite-toggle-container relative mt-1">
+                <div className={`map-toggle-group ${TypewriterFinished ? "pointer-events-auto" : "pointer-events-none"}`}>
+                    <div
+                        className={`map-toggle-option ${!showSatelliteMap ? "map-toggle-option-active" : ""}`}
+                        onClick={() => setShowSatelliteMap(false)}
+                    >
                         Vector Map
-                    </span>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                            type="checkbox"
-                            checked={showSatelliteMap}
-                            onChange={(e) => setShowSatelliteMap(e.target.checked)}
-                            className="sr-only"
-                        />
-                        <div className="w-8 h-3 bg-red-900 rounded-sm transition-colors relative">
-                            <span className={`absolute w-3 h-3 bg-gray-300 rounded-sm shadow transition-transform ${showSatelliteMap ? 'translate-x-5' : ''}`}></span>
-                        </div>
-                    </label>
-                    <span className={`toggle-titles  ${showSatelliteMap ? 'text-white ' : 'text-gray-500'}`}>
+                    </div>
+                    <div
+                        className={`map-toggle-option ${showSatelliteMap ? "map-toggle-option-active" : ""}`}
+                        onClick={() => setShowSatelliteMap(true)}
+                    >
                         Satellite Image
-                    </span>
+                    </div>
                 </div>
             </div>
 
@@ -347,7 +342,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     {["All", "2023", "2024", "2025", "2026"].map((year) => (
                         <div
                             key={year}
-                            className={`chart-titles area-type-legend ${(year === "All" && selectedYear === null) || selectedYear === year ? "area-type-legend-active" : ""}`}
+                            className={`chart-titles area-type-legend year-filter-pill ${(year === "All" && selectedYear === null) || selectedYear === year ? "area-type-legend-active" : ""}`}
                             onClick={() => {
                                 //reset other params
                                 setSelectedCity("");
@@ -427,82 +422,32 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     selectedYear={selectedYear}
                 />
             </div>
-            <div className="mt-7">
-                <Segment geoData={geoData}
-                    selectedYear={selectedYear}
+            <div className={`mt-8`}>
+                <div className="chart-titles">Catogorized by Landscape</div>
+                <LandscapeBar
+                    geoData={geoData}
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
                     selectedDay={selectedDay}
-                    selectedAreaType={selectedAreaType}
                     selectedMonth={selectedMonth}
-                    onSegmentClick={(day) => {
-                        if (day === null) return;
-                        const newDay = selectedDay === day ? -1 : day; //if clicked again, reset
-                        setselectedDay(newDay);
-
-                        const pts = geoData.filter((p: any) => {
-                            const date = new Date(p.date);
-                            return date.getDay() === newDay
-                        });
-                        getDetails(pts, newDay);
+                    selectedYear={selectedYear}
+                    selectedAreaType={selectedAreaType}
+                    onAreaTypeClicked={(type) => {
+                        setSelectedAreaType(type);
+                        if (type) {
+                            const pts = geoData.filter((p: any) => p.landscape === type);
+                            getDetails(pts, type);
+                        } else {
+                            getDetails(null);
+                        }
                         //reset other params
                         setSelectedCity("");
                         setSelectedDates(["", ""]);
-                        setSelectedAreaType(null);
-                        setSelectedMonth(null)
-                        setSelectedYear(null)
+                        setselectedDay(-1);
+                        setSelectedMonth(null);
+                        setSelectedYear(null);
                     }}
                 />
-            </div>
-            <div className={`mt-8`}>
-                <div className="chart-titles">Catogorized by Landscape</div>
-                <div className="flex gap-3 justify-center mt-3">
-                    <div className={`chart-titles area-type-legend
-                    ${selectedAreaType === "resident" ? "area-type-legend-active" : ""}`}
-                        onClick={() => {
-                            const pts = geoData.filter((p: any) => {
-                                return p.landscape === "resident"
-                            });
-                            setSelectedAreaType("resident");
-                            getDetails(pts, "resident");
-                            //reset other params
-                            setSelectedCity("");
-                            setSelectedDates(["", ""]);
-                            setselectedDay(-1);
-                            setSelectedMonth(null)
-                            setSelectedYear(null)
-                        }}>{landscape_map.resident.slice(0, 1).toUpperCase() + landscape_map.resident.slice(1)}</div>
-                    <div className={`chart-titles area-type-legend
-                    ${selectedAreaType === "agri" ? "area-type-legend-active" : ""}`}
-                        onClick={() => {
-                            const pts = geoData.filter((p: any) => {
-                                return p.landscape === "agri"
-                            });
-                            setSelectedAreaType("agri");
-                            getDetails(pts, "agri");
-                            //reset other params
-                            setSelectedCity("");
-                            setSelectedDates(["", ""]);
-                            setselectedDay(-1);
-                            setSelectedMonth(null)
-                            setSelectedYear(null)
-                        }}>{landscape_map.agri.slice(0, 1).toUpperCase() + landscape_map.agri.slice(1)}</div>
-                    <div className={`chart-titles area-type-legend
-                    ${selectedAreaType === "bare" ? "area-type-legend-active" : ""}`}
-                        onClick={() => {
-                            const pts = geoData.filter((p: any) => {
-                                return p.landscape === "bare"
-                            });
-                            setSelectedAreaType("bare");
-                            getDetails(pts, "bare");
-                            //reset other params
-                            setSelectedCity("");
-                            setSelectedDates(["", ""]);
-                            setselectedDay(-1);
-                            setSelectedMonth(null)
-                            setSelectedYear(null)
-                        }}>{landscape_map.bare.slice(0, 1).toUpperCase() + landscape_map.bare.slice(1)}</div>
-                </div>
             </div>
 
 
