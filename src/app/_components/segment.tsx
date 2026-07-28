@@ -5,7 +5,7 @@ import { width } from "./datasource";
 import { MONTHS } from "./datasource";
 const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 7);
 
-export default function Segment({ geoData, selectedCity, selectedDay, selectedDates, selectedAreaType, selectedMonth, onSegmentClick }: geoDataProps) {
+export default function Segment({ geoData, selectedCity, selectedDay, selectedDates, selectedAreaType, selectedMonth, selectedYear, onSegmentClick }: geoDataProps) {
     const height = 120;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
     const [counts, setCounts] = useState<number[]>([]);
@@ -34,6 +34,10 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
             filteredData = filteredData.filter(d => {
                 return d.date.slice(0, 7) === MONTHS[selectedMonth];
             })
+        } else if (selectedYear) {
+            filteredData = filteredData.filter(d => {
+                return d.date.slice(0, 4) === selectedYear;
+            })
         }
         filteredData.forEach(data => {
             const date = new Date(data.date);
@@ -42,7 +46,7 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
         })
         const widthFactor = (width - 20) / filteredData.length;
         setCounts(dayCount.map(count => count *= widthFactor));
-    }, [geoData, selectedCity, selectedDates, selectedAreaType, selectedMonth])
+    }, [geoData, selectedCity, selectedDates, selectedAreaType, selectedMonth, selectedYear])
 
     return (<>
         <div className="chart-titles mb-3">By Days of Week</div>

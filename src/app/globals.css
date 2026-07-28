@@ -1226,7 +1226,7 @@ footer a {
 .dynamic-readout div:nth-child(1),
 .dynamic-readout div:nth-child(2) {
   font-size: 1.1rem;
-  height: 1.7rem;
+  min-height: 1.7rem;
   /* font-size: 1.7rem; */
   /* line-height: 2.3rem; */
   /* font-family: "PPSupplySans-Regular"; */
@@ -1384,6 +1384,29 @@ footer a {
 .area-type-legend-active {
   color: #eee;
   background-color: #831713;
+}
+
+.date-range-input {
+  background-color: #561a188e;
+  color: #eee;
+  border: none;
+  border-radius: 0.2rem;
+  padding: 0.25rem 0.4rem;
+  font-family: "Inconsolata";
+  font-size: 0.8rem;
+  color-scheme: dark;
+}
+
+.date-range-input:hover,
+.date-range-input:focus {
+  background-color: #831713;
+  outline: none;
+}
+
+.dimmed-point {
+  fill: #ccc;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
 }
 
 small {

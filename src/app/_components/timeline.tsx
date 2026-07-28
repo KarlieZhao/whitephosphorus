@@ -1,178 +1,62 @@
-import * as d3 from "d3";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { geoDataProps } from "./datasource";
-import { width } from "./datasource";
-import { MONTHS } from "./datasource";
-export default function Timeline({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, onTimelineDragged }: geoDataProps) {
-    const svgRef = useRef<SVGSVGElement | null>(null);
-    const startDateRef = useRef<Date | null>(null);
-    const [hoverInfo, setHoverInfo] = useState<{ x: number; date: Date } | null>(null);
-    const margin = { top: 10, right: 10, bottom: 5, left: 10 };
-    const height = 45;
-    // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
 
-    const getTotalCounts = (data: typeof geoData) => {
-        const counts = new Map<string, number>();
-        data.forEach(d => {
-            counts.set(d.date, (counts.get(d.date) ?? 0) + 1);
-        });
-        return counts;
-    }
+export default function Timeline({ geoData, selectedDates, onTimelineDragged }: geoDataProps) {
+    const [startDate, setStartDate] = useState<string>(selectedDates?.[0] ?? "");
+    const [endDate, setEndDate] = useState<string>(selectedDates?.[1] ?? "");
 
-    function scaleColor(maxCount: number) {
-        return d3.scaleSequential()
-            .domain([0, maxCount])
-            .interpolator(d3.interpolateRgb("#2e1f1f", "#ff0000"));
-    }
-    const highlightSelection = (rangeStart: Date, rangeEnd: Date, d: Date) => {
-        return (d >= rangeStart && d <= rangeEnd) ? 1 : 0.5;
-    }
-
-    const parseDate = d3.timeParse('%Y-%m-%d'); //return Date 
-    const formatDate = d3.timeFormat("%Y-%m-%d"); // return string
-    const totalCounts = getTotalCounts(geoData);
-
-    // full date range (unfiltered)
-    const dates = Array.from(totalCounts.keys()).map(d => parseDate(d)!);
-    const minDate = d3.min(dates)!
-    const maxDate = d3.max(dates)!
-    const allDates: Date[] = d3.timeDay.range(minDate, d3.timeDay.offset(maxDate, 1));
-
-    const getFilteredCounts = (data: typeof geoData) => {
-        let filteredData = data;
-        if (selectedDates && selectedDates[0] && selectedDates[1]) {
-            filteredData = filteredData.filter(d => {
-                const date = parseDate(d.date);
-                const start = parseDate(selectedDates[0]);
-                const end = parseDate(selectedDates[1]);
-                if (!date || !start || !end) return true;
-                return date >= start && date <= end;
-            })
-        } else if (selectedDay !== undefined && selectedDay > -1) {
-            filteredData = filteredData.filter(d => {
-                const date = new Date(d.date);
-                const day = date.getDay();
-                return day === selectedDay
-            })
-        } else if (selectedAreaType) {
-            filteredData = filteredData.filter(d => {
-                return d.landscape === selectedAreaType;
-            })
-        } else if (selectedCity) {
-            filteredData = filteredData.filter(d => {
-                return d.town === selectedCity
-            })
-        }
-        const counts = new Map<string, number>();
-        filteredData.forEach(d => {
-            counts.set(d.date, (counts.get(d.date) ?? 0) + 1);
-        });
-        return counts;
-    }
-
+    // keep local inputs in sync when another filter resets selectedDates
     useEffect(() => {
-        if (!geoData || geoData.length === 0) return;
+        setStartDate(selectedDates?.[0] ?? "");
+        setEndDate(selectedDates?.[1] ?? "");
+    }, [selectedDates]);
 
-        const svg = d3.select(svgRef.current);
-        svg.selectAll('*').remove(); // Clear previous content
+    const { minDate, maxDate } = useMemo(() => {
+        const dates = geoData.map((d) => d.date).filter(Boolean).sort();
+        return { minDate: dates[0] ?? "", maxDate: dates[dates.length - 1] ?? "" };
+    }, [geoData]);
 
-        const innerWidth = width - margin.left - margin.right;
-        const innerHeight = height - margin.top - margin.bottom;
-
-        const filteredCounts = getFilteredCounts(geoData);
-        const maxCount = Math.max(...Array.from(filteredCounts.values()), 0);
-
-        const countsByDate = allDates.map(date => ({
-            date,
-            count: filteredCounts.get(formatDate(date)) ?? 0
-        }));
-
-        const g = svg.append('g')
-            .attr('transform', `translate(${margin.left},${margin.top})`);
-
-        // X Scale
-        const xScale = d3.scaleBand<Date>()
-            .domain(countsByDate.map(d => d.date))
-            .range([0, innerWidth])
-        // .padding(0.1);
-
-        const RED_GRADIENT = scaleColor(maxCount);
-
-        // Draw bars
-        g.selectAll('rect')
-            .data(countsByDate)
-            .enter()
-            .append('rect')
-            .attr('x', d => xScale(d.date)!)
-            .attr('y', 0)
-            .attr('width', xScale.bandwidth())
-            .attr('height', innerHeight)
-            .attr('fill', d => RED_GRADIENT(d.count))
-            .on('mouseover', function (e, d) {
-                const x = (xScale(d.date) ?? 0) + margin.left + xScale.bandwidth() / 2;
-                d3.select(this).attr("fill", "#ffaaaa");
-                setHoverInfo({ x, date: d.date });
-            })
-            .on('mouseout', function (e, d) {
-                setHoverInfo(null);
-                d3.select(this).attr('fill', (d: any) => RED_GRADIENT(d.count))
-            })
-            .on('mousedown', function (e, d) {
-                startDateRef.current = d.date;
-            })
-            .on('mousemove', function (e, d) {
-                if (!startDateRef.current) return;
-                const start = startDateRef.current;
-                const current = d.date;
-                const rangeStart = start < current ? start : current;
-                const rangeEnd = start > current ? start : current;
-
-                g.selectAll('rect')
-                    .attr('opacity', (rectData: any) => {
-                        if (!rectData || !rectData.date) { return 1; }
-                        else return (rectData.date >= rangeStart && rectData.date <= rangeEnd ? 1 : 0.4)
-                    });
-            })
-            .on('mouseup', function (e, d) {
-                if (startDateRef.current) {
-                    const start = startDateRef.current;
-                    const end = d.date;
-
-                    // normalize so start <= end
-                    const rangeStart = start < end ? start : end;
-                    const rangeEnd = start > end ? start : end;
-
-                    const theDates: [string, string] = [formatDate(rangeStart), formatDate(rangeEnd)];
-                    if (onTimelineDragged) onTimelineDragged(theDates);
-                }
-                // Reset startDateRef
-                startDateRef.current = null;
-            })
-
-        if (selectedDates && selectedDates[0] && selectedDates[1]) {
-            const start = parseDate(selectedDates[0])!;
-            const end = parseDate(selectedDates[1])!;
-            g.selectAll('rect')
-                .attr('opacity', (rectData: any) => highlightSelection(start, end, rectData.date));
-        } else {
-            g.selectAll('rect').attr('opacity', 1);
+    const fireChange = (start: string, end: string) => {
+        if (start && end && start <= end && onTimelineDragged) {
+            onTimelineDragged([start, end]);
         }
+    };
 
-
-    }, [geoData, width, height, selectedDates, selectedCity, selectedDay, selectedAreaType]);
-
-    return <> <div className="chart-titles items-baseline">Drag to Select Time Range</div>
-        <svg ref={svgRef} width={width} height={height} />
-        {hoverInfo && (
-            <div className="timeline-xaxis"
-                style={{
-                    position: 'absolute',
-                    left: hoverInfo.x,
-                    top: height + margin.top + margin.bottom + 40
-                }}
-            >
-                {d3.timeFormat('%b %d')(hoverInfo.date)}
+    return (
+        <>
+            <div className="chart-titles items-baseline">Select Date Range</div>
+            <div className="flex gap-3 items-end justify-center mt-3 date-range-inputs">
+                <div className="flex flex-col gap-1">
+                    <label className="chart-labels" style={{ color: "#bbb" }}>Start date</label>
+                    <input
+                        type="date"
+                        className="date-range-input"
+                        value={startDate}
+                        min={minDate}
+                        max={endDate || maxDate}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setStartDate(value);
+                            fireChange(value, endDate);
+                        }}
+                    />
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label className="chart-labels" style={{ color: "#bbb" }}>End date</label>
+                    <input
+                        type="date"
+                        className="date-range-input"
+                        value={endDate}
+                        min={startDate || minDate}
+                        max={maxDate}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setEndDate(value);
+                            fireChange(startDate, value);
+                        }}
+                    />
+                </div>
             </div>
-        )}</>
-
+        </>
+    );
 }

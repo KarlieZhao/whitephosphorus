@@ -35,6 +35,7 @@ export function VectorMap({
   selectedDates,
   selectedAreaType,
   selectedMonth,
+  selectedYear,
   TypeWriterFinished,
   getMapDetails,
   mapZoom,
@@ -80,12 +81,19 @@ export function VectorMap({
         const end = new Date(selectedDates[1]);
         withinDateRange = date >= start && date <= end;
       }
-      return matchesCity && matchesDay && matchesAreaType && mathcesMonth && withinDateRange;
+      const matchesYear = !selectedYear || pt.date.slice(0, 4) === selectedYear;
+      return matchesCity && matchesDay && matchesAreaType && mathcesMonth && withinDateRange && matchesYear;
     });
 
     // Sort by date chronologically for animation
     return filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [geoData, selectedCity, selectedDay, selectedDates, selectedAreaType, selectedMonth]);
+  }, [geoData, selectedCity, selectedDay, selectedDates, selectedAreaType, selectedMonth, selectedYear]);
+
+  // points excluded only by the year filter, shown as a faint backdrop instead of hidden
+  const dimmedPoints = useMemo(() => {
+    if (!selectedYear) return [];
+    return geoData.filter(pt => pt.date.slice(0, 4) !== selectedYear);
+  }, [geoData, selectedYear]);
 
   const clearAnimationTimeouts = useCallback(() => {
     animationTimeoutRef.current.forEach(timeout => clearTimeout(timeout));
@@ -262,6 +270,23 @@ export function VectorMap({
         .attr("fill", "none")
         .style("opacity", hasAnimated ? 1 : 0);
 
+      // faint backdrop for points excluded only by the year filter
+      // rendered as one group so overlapping dots don't compound their opacity
+      if (dimmedPoints.length > 0) {
+        const dimmedGroup = g.append("g")
+          .attr("class", "dimmed-group")
+          .style("opacity", hasAnimated ? 0.28 : 0);
+
+        dimmedGroup.selectAll("circle.dimmed-point")
+          .data(dimmedPoints)
+          .enter()
+          .append("circle")
+          .attr("class", "dimmed-point")
+          .attr("cx", (d) => projectPts(d.lon, d.lat)[0])
+          .attr("cy", (d) => projectPts(d.lon, d.lat)[1])
+          .attr("r", (d) => getDotSize(d) * 0.2);
+      }
+
       if (!visiblePoints || visiblePoints.length === 0) return;
 
       // Create all circles
@@ -373,6 +398,8 @@ export function VectorMap({
     showSatellite,
     hasAnimated,
     visiblePoints,
+    dimmedPoints,
+    selectedYear,
     TypeWriterFinished,
     focusedPtRef.current
   ]);

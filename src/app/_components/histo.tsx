@@ -7,7 +7,7 @@ const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 16);
 
 export const parseDate = d3.timeParse('%Y-%m-%d'); //return Date 
 
-export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, onBarClick }: geoDataProps) {
+export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, selectedYear, onBarClick }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const [dimensions, setDimensions] = useState({ width: width, height: 480 });
     const colorIndexRef = useRef<number[]>(Array(30).fill(0));
@@ -93,6 +93,10 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
         } else if (selectedMonth != null) {
             filteredData = filteredData.filter(d => {
                 return d.date.slice(0, 7) === MONTHS[selectedMonth];
+            })
+        } else if (selectedYear) {
+            filteredData = filteredData.filter(d => {
+                return d.date.slice(0, 4) === selectedYear;
             })
         }
         // only sort on initial load
@@ -181,7 +185,7 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
                 if (onBarClick) onBarClick([d.name, d.count]);
             })
 
-    }, [geoData, dimensions, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, allCityNames]);
+    }, [geoData, dimensions, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, selectedYear, allCityNames]);
 
     return <>
         <div className="chart-titles">By City</div>

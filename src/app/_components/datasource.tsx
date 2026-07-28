@@ -18,6 +18,19 @@ export const MONTHS_CONVERT = ["2023-9", "2023-10", "2023-11", "2024-0", "2024-1
     "2024-7", "2024-8", "2024-9", "2024-10"];
 const MONTHS_PRINT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+const TOTAL_STRIKES_BY_YEAR: { [year: string]: number } = {
+    "2023": 118,
+    "2024": 132,
+    "2025": 1,
+    "2026": 35,
+}
+const PENDING_GEOLOCATION_BY_YEAR: { [year: string]: number } = {
+    "2023": 7,
+    "2024": 20,
+    "2025": 0,
+    "2026": 7,
+}
+const DISCORD_INVITE_URL = "https://discord.gg/YxZNEKWfQT";
 const geoSource: { [key: string]: String } = {
     "AB": "Ahmad Baydoun",
     "AN": "X: AnnoNemo",
@@ -36,6 +49,7 @@ export type geoDataProps = {
     selectedDates?: [string, string];
     selectedAreaType?: string | null;
     selectedMonth?: number | null;
+    selectedYear?: string | null;
     onBarClick?: (data: [string, number] | null) => void;
     onMonthClick?: (data: [string, number] | null) => void;
     onSegmentClick?: (data: number | null) => void;
@@ -55,6 +69,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
     const [selectedAreaType, setSelectedAreaType] = useState<string | null>(null);
     const [selectedDates, setSelectedDates] = useState<[string, string]>(["", ""]);
     const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
+    const [selectedYear, setSelectedYear] = useState<string | null>(null)
 
     const [showSatelliteMap, setShowSatelliteMap] = useState<boolean>(false);
     const [details, updateDetails] = useState<any[]>([]);
@@ -124,7 +139,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
                 if (arg.indexOf("-") > 0) {
                     //month
-                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strikes happened in <span className="text-2xl text-white">{monthParser(arg)}</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 286).toFixed(1)}%</span> of total strikes.</>
+                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strike{shellCount > 1 ? "s" : ""} happened in <span className="text-2xl text-white">{monthParser(arg)}</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 286).toFixed(1)}%</span> of total strikes.</>
                     readout2 = <></>
                 } else if (Object.keys(landscape_map).includes(arg)) {
                     //landscape
@@ -132,6 +147,16 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     const subset = pt.filter(p => p.landscape === arg);
                     readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus shells struck  <span className="text-2xl text-white">{landscape_map[key]}</span> areas.<br /><span className="text-2xl text-white">{(100 * shellCount / 286).toFixed(1)}%</span> of total strikes.</>
                     readout2 = <></>
+                } else if (/^\d{4}$/.test(arg)) {
+                    //year
+                    const pendingCount = PENDING_GEOLOCATION_BY_YEAR[arg] ?? 0;
+                    const totalCount = TOTAL_STRIKES_BY_YEAR[arg] ?? shellCount;
+                    readout1 = <><span className="text-2xl text-white">{totalCount}</span> white phosphorus strike{totalCount > 1 ? "s" : ""} happened in <span className="text-2xl text-white">{arg}</span>
+                        {pendingCount > 0 && <>,<br /><span className="text-2xl text-white">{pendingCount}</span> of which {pendingCount > 1 ? "are" : "is"} verified but not yet geolocated</>}
+                        .</>
+                    readout2 = pendingCount > 0
+                        ? <div style={{ marginTop: "0.6rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>
+                        : <></>
                 }
                 else {
                     let shellCount = 0;
@@ -168,7 +193,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 let day = date.getDay();
                 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                 readout2 = <></>
-                readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strikes happened on <span className="text-2xl text-white">{days[day]}s</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 286).toFixed(1)}%</span> of total strikes.</>
+                readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strike{shellCount > 1 ? "s" : ""} happened on <span className="text-2xl text-white">{days[day]}s</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 286).toFixed(1)}%</span> of total strikes.</>
             } else {
                 readout1 = <></>
                 readout2 = <></>
@@ -232,6 +257,9 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             if (selectedMonth != null) {
                 setSelectedMonth(null)
             }
+            if (selectedYear != null) {
+                setSelectedYear(null)
+            }
             // getDetails([], "clear");
         }}>
 
@@ -250,6 +278,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 selectedDay={selectedDay}
                 selectedAreaType={selectedAreaType}
                 selectedMonth={selectedMonth}
+                selectedYear={selectedYear}
                 TypewriterFinished={TypewriterFinished}
                 getMapDetails={getDetails}
                 leafletCenter={leafletCenter}
@@ -313,12 +342,36 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
 
             <div className="mt-5">
+                <div className="chart-titles">Filter by Year</div>
+                <div className="flex gap-3 justify-center mt-3">
+                    {["All", "2023", "2024", "2025", "2026"].map((year) => (
+                        <div
+                            key={year}
+                            className={`chart-titles area-type-legend ${(year === "All" && selectedYear === null) || selectedYear === year ? "area-type-legend-active" : ""}`}
+                            onClick={() => {
+                                //reset other params
+                                setSelectedCity("");
+                                setSelectedDates(["", ""]);
+                                setselectedDay(-1);
+                                setSelectedAreaType(null);
+                                setSelectedMonth(null);
+
+                                if (year === "All") {
+                                    setSelectedYear(null);
+                                    getDetails(null);
+                                } else {
+                                    setSelectedYear(year);
+                                    const pts = geoData.filter((p: any) => p.date.slice(0, 4) === year);
+                                    getDetails(pts, year);
+                                }
+                            }}>{year}</div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="mt-5">
                 <Timeline geoData={geoData}
-                    selectedCity={selectedCity}
                     selectedDates={selectedDates}
-                    selectedDay={selectedDay}
-                    selectedAreaType={selectedAreaType}
-                    selectedMonth={selectedMonth}
                     onTimelineDragged={(data) => {
                         if (!data) return;
                         setSelectedDates([data[0], data[1]]);
@@ -326,6 +379,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                         setselectedDay(-1);
                         setSelectedAreaType(null);
                         setSelectedMonth(null)
+                        setSelectedYear(null)
                         const pts = geoData.filter((p: any) => { return p.date <= data[1] && p.date >= data[0] })
                         getDetails(pts, [data[0], data[1]])
                     }} />
@@ -358,6 +412,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                         setSelectedDates(["", ""]);
                         setSelectedAreaType(null);
                         setselectedDay(-1)
+                        setSelectedYear(null)
                     }}
                 />
             </div>
@@ -369,10 +424,12 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     selectedDay={selectedDay}
                     selectedAreaType={selectedAreaType}
                     selectedMonth={selectedMonth}
+                    selectedYear={selectedYear}
                 />
             </div>
             <div className="mt-7">
                 <Segment geoData={geoData}
+                    selectedYear={selectedYear}
                     selectedCity={selectedCity}
                     selectedDates={selectedDates}
                     selectedDay={selectedDay}
@@ -393,6 +450,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                         setSelectedDates(["", ""]);
                         setSelectedAreaType(null);
                         setSelectedMonth(null)
+                        setSelectedYear(null)
                     }}
                 />
             </div>
@@ -412,6 +470,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                             setSelectedDates(["", ""]);
                             setselectedDay(-1);
                             setSelectedMonth(null)
+                            setSelectedYear(null)
                         }}>{landscape_map.resident.slice(0, 1).toUpperCase() + landscape_map.resident.slice(1)}</div>
                     <div className={`chart-titles area-type-legend
                     ${selectedAreaType === "agri" ? "area-type-legend-active" : ""}`}
@@ -426,6 +485,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                             setSelectedDates(["", ""]);
                             setselectedDay(-1);
                             setSelectedMonth(null)
+                            setSelectedYear(null)
                         }}>{landscape_map.agri.slice(0, 1).toUpperCase() + landscape_map.agri.slice(1)}</div>
                     <div className={`chart-titles area-type-legend
                     ${selectedAreaType === "bare" ? "area-type-legend-active" : ""}`}
@@ -440,6 +500,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                             setSelectedDates(["", ""]);
                             setselectedDay(-1);
                             setSelectedMonth(null)
+                            setSelectedYear(null)
                         }}>{landscape_map.bare.slice(0, 1).toUpperCase() + landscape_map.bare.slice(1)}</div>
                 </div>
             </div>
@@ -454,6 +515,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     selectedDay={selectedDay}
                     selectedAreaType={selectedAreaType}
                     selectedMonth={selectedMonth}
+                    selectedYear={selectedYear}
                     onBarClick={(data) => {
                         if (!data) return;
                         const newCity = data[0] === selectedCity ? "" : data[0];
@@ -467,6 +529,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                         const pts = geoData.filter((p: any) => p.town === newCity);
                         getDetails(pts, newCity);
                         setSelectedMonth(null)
+                        setSelectedYear(null)
                     }} />
             </div>
         </div>

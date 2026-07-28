@@ -46,8 +46,9 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
         map.scrollWheelZoom.disable();
         map.doubleClickZoom.disable();
 
+        let zoomControlTimeout: ReturnType<typeof setTimeout> | null = null;
         if (TypewriterFinished) {
-            setTimeout(() => {
+            zoomControlTimeout = setTimeout(() => {
                 map.dragging.enable();
                 map.scrollWheelZoom.enable();
                 map.doubleClickZoom.enable();
@@ -82,6 +83,7 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
         });
 
         return () => {
+            if (zoomControlTimeout) clearTimeout(zoomControlTimeout);
             map.remove();
         };
     }, [onZoomChange, TypewriterFinished]);

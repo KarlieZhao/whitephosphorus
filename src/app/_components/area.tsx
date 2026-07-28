@@ -4,7 +4,7 @@ import { geoDataProps, RED_GRADIENT } from "./datasource";
 import { width } from "./datasource";
 import { parseDate } from "./histo";
 import { MONTHS } from "./datasource";
-export default function Area({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth }: geoDataProps) {
+export default function Area({ geoData, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, selectedYear }: geoDataProps) {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const height = 80;
     // const [dimensions, setDimensions] = useState({ width: 300, height: 440 });
@@ -46,6 +46,10 @@ export default function Area({ geoData, selectedCity, selectedDates, selectedDay
         } else if (selectedMonth != null) {
             filteredData = filteredData.filter(d => {
                 return d.date.slice(0, 7) === MONTHS[selectedMonth];
+            })
+        } else if (selectedYear) {
+            filteredData = filteredData.filter(d => {
+                return d.date.slice(0, 4) === selectedYear;
             })
         }
 
@@ -121,7 +125,7 @@ export default function Area({ geoData, selectedCity, selectedDates, selectedDay
             .attr('fill', RED_GRADIENT[4])
             .attr('d', area);
 
-    }, [geoData, width, height, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth]);
+    }, [geoData, width, height, selectedCity, selectedDates, selectedDay, selectedAreaType, selectedMonth, selectedYear]);
 
     return <>
         <svg ref={svgRef} width={width} height={height} /></>;
