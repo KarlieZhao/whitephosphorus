@@ -24,6 +24,8 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
             {/* abstract */}
             <p dangerouslySetInnerHTML={{ __html: data.abstract }} />
 
+            <p className="my-8"><a href="/method"><span dangerouslySetInnerHTML={{ __html: data.method }} /></a></p>
+
             {/* q & a */}
             <div className="Q-n-A">
                 {data.qna.map((item, index) => (
@@ -51,8 +53,6 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                 }
             </div >
             <div className="mb-20 mt-20">
-                <p><a href="/method"><span dangerouslySetInnerHTML={{ __html: data.method }} /></a></p>
-                <br />
                 <p dangerouslySetInnerHTML={{ __html: data.reachout }} />
             </div>
         </div >
