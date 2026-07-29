@@ -35,9 +35,22 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                                 <p dangerouslySetInnerHTML={{ __html: item.answer }} />
                             ) : Array.isArray(item.answer) ? (
                                 <ul className="en">
-                                    {item.answer.map((entry, idx) => (
-                                        <li key={idx}><a href={`${Object.values(entry)[0]}`} target="_blank">{Object.keys(entry)[0]}</a></li>
-                                    ))}
+                                    {item.answer.map((entry, idx) => {
+                                        const label = Object.keys(entry)[0];
+                                        const url = Object.values(entry)[0];
+                                        const match = label.match(/^(.+?)\s+([-–—])\s+(.+)$/);
+                                        return (
+                                            <li key={idx}>
+                                                <a href={`${url}`} target="_blank">
+                                                    {match ? (
+                                                        <>
+                                                            <span className="font-bold text-white">{match[1]}</span> {match[2]} {match[3]}
+                                                        </>
+                                                    ) : label}
+                                                </a>
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
                             ) : (
                                 <div>
