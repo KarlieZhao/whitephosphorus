@@ -32,6 +32,27 @@ const PENDING_GEOLOCATION_BY_YEAR: { [year: string]: number } = {
     "2025": 0,
     "2026": 7,
 }
+// verified but not-yet-geolocated incidents, used to compute pending counts for arbitrary date ranges
+// (per-year sums here match TOTAL_STRIKES_BY_YEAR / PENDING_GEOLOCATION_BY_YEAR above)
+export const PENDING_INCIDENTS: { date: string; bursts: number }[] = [
+    { date: "2023-10-15", bursts: 2 }, // WP10
+    { date: "2023-10-15", bursts: 2 }, // WP11
+    { date: "2023-12-08", bursts: 3 }, // WP48
+    { date: "2024-01-21", bursts: 6 }, // WP59
+    { date: "2024-03-17", bursts: 3 }, // WP69
+    { date: "2024-04-17", bursts: 2 }, // WP71
+    { date: "2024-06-04", bursts: 1 }, // WP79
+    { date: "2024-06-23", bursts: 1 }, // WP145
+    { date: "2024-07-13", bursts: 1 }, // WP87
+    { date: "2024-07-29", bursts: 1 }, // WP88
+    { date: "2024-09-19", bursts: 3 }, // WP500
+    { date: "2024-09-30", bursts: 2 }, // WP96
+    { date: "2026-03-03", bursts: 1 }, // WP419
+    { date: "2026-04-14", bursts: 1 }, // WP416
+    { date: "2026-04-30", bursts: 2 }, // WP428
+    { date: "2026-05-09", bursts: 2 }, // WP435
+    { date: "2026-05-09", bursts: 1 }, // WP401
+];
 const DISCORD_INVITE_URL = "https://discord.gg/YxZNEKWfQT";
 const geoSource: { [key: string]: String } = {
     "AB": "Ahmad Baydoun",
@@ -141,8 +162,19 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
                 if (arg.indexOf("-") > 0) {
                     //month
-                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strike{shellCount > 1 ? "s" : ""} happened in <span className="text-2xl text-white">{monthParser(arg)}</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 286).toFixed(1)}%</span> of total strikes.</>
-                    readout2 = <></>
+                    // exclude not-yet-geolocated entries (null coords) from the mapped count first,
+                    // so adding pendingInMonth back doesn't double-count them
+                    const mappedInMonth = pt.filter((p: any) => p.lat != null && p.lon != null).reduce((sum: number, p: any) => sum + p.shell_count, 0);
+                    const pendingInMonth = PENDING_INCIDENTS
+                        .filter(p => p.date.slice(0, 7) === arg)
+                        .reduce((sum, p) => sum + p.bursts, 0);
+                    const totalInMonth = mappedInMonth + pendingInMonth;
+                    readout1 = <><span className="text-2xl text-white">{totalInMonth}</span> white phosphorus strike{totalInMonth > 1 ? "s" : ""} happened in <span className="text-2xl text-white">{monthParser(arg)}</span>
+                        {pendingInMonth > 0 && <>,<br /><span className="text-2xl text-white">{pendingInMonth}</span> of which {pendingInMonth > 1 ? "are" : "is"} not yet geolocated</>}
+                        .</>
+                    readout2 = pendingInMonth > 0
+                        ? <div style={{ marginTop: "0.6rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>
+                        : <></>
                 } else if (Object.keys(landscape_map).includes(arg)) {
                     //landscape
                     const key = arg as keyof landscape_mapping_prop;
@@ -189,6 +221,14 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 const date_end = date2.toLocaleDateString("en-US", { month: "short", day: "numeric", year: 'numeric' });
                 readout1 = <>Between <span className="text-2xl text-white">{date_start}</span> and <span className="text-2xl text-white">{date_end}</span>,</>
                 readout2 = <><span className="text-2xl text-white">{shellCount} </span>white phosphorus shell{shellCount > 1 ? "s" : ""}  struck <span className="text-2xl text-white">{townCount.size}</span> cities/towns.</>
+
+                const pendingInRange = PENDING_INCIDENTS
+                    .filter(p => p.date >= arg[0] && p.date <= arg[1])
+                    .reduce((sum, p) => sum + p.bursts, 0);
+                if (pendingInRange > 0) {
+                    readout3 = <><span className="text-2xl text-white">{pendingInRange}</span> more strike{pendingInRange > 1 ? "s are" : " is"} verified but not yet geolocated.</>
+                    readout4 = <div style={{ marginTop: "0.6rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>
+                }
             }
             else if (typeof arg === 'number') { //filtered by day of week
                 const date = new Date(pt[0].date);

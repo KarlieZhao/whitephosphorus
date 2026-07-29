@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { geoDataProps, RED_GRADIENT } from "./datasource";
 import { width } from "./datasource";
 import { MONTHS_CONVERT } from "./datasource";
+import { PENDING_INCIDENTS } from "./datasource";
 export default function LandscapeHisto({
     geoData,
     selectedCity,
@@ -36,6 +37,7 @@ export default function LandscapeHisto({
         // ========= GROUP BY MONTH (with full month range) =========
         const monthCounts = new Map<string, number>();
         filteredData.forEach((d) => {
+            if (d.lat == null || d.lon == null) return; // not-yet-geolocated, counted separately below
             const dateObj = parseDate(d.date);
             if (dateObj) {
                 const year = dateObj.getFullYear();
@@ -44,6 +46,20 @@ export default function LandscapeHisto({
                 monthCounts.set(key, (monthCounts.get(key) ?? 0) + d.shell_count);
             }
         });
+
+        // add verified-but-not-yet-geolocated incidents to their month's count,
+        // but only when no landscape/city filter is active (we don't know their landscape/town)
+        if (!selectedAreaType && !selectedCity) {
+            PENDING_INCIDENTS.forEach((p) => {
+                const dateObj = parseDate(p.date);
+                if (dateObj) {
+                    const year = dateObj.getFullYear();
+                    const month = dateObj.getMonth();
+                    const key = `${year}-${month}`;
+                    monthCounts.set(key, (monthCounts.get(key) ?? 0) + p.bursts);
+                }
+            });
+        }
 
         const binnedCounts = MONTHS_CONVERT.map((key) => ({
             key,
