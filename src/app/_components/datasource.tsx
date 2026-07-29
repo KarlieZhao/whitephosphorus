@@ -170,7 +170,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                         .reduce((sum, p) => sum + p.bursts, 0);
                     const totalInMonth = mappedInMonth + pendingInMonth;
                     readout1 = <><span className="text-2xl text-white">{totalInMonth}</span> white phosphorus strike{totalInMonth > 1 ? "s" : ""} happened in <span className="text-2xl text-white">{monthParser(arg)}</span>
-                        {pendingInMonth > 0 && <>,<br /><span className="text-2xl text-white">{pendingInMonth}</span> of which {pendingInMonth > 1 ? "are" : "is"} not yet geolocated</>}
+                        {pendingInMonth > 0 && <>,<br /><span className="text-2xl text-white">{pendingInMonth}</span> of which {pendingInMonth > 1 ? "are" : "is"} verified but not yet geolocated</>}
                         .</>
                     readout2 = pendingInMonth > 0
                         ? <div style={{ marginTop: "0.6rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>
@@ -220,15 +220,20 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 const date2 = new Date(arg[1]);
                 const date_end = date2.toLocaleDateString("en-US", { month: "short", day: "numeric", year: 'numeric' });
                 readout1 = <>Between <span className="text-2xl text-white">{date_start}</span> and <span className="text-2xl text-white">{date_end}</span>,</>
-                readout2 = <><span className="text-2xl text-white">{shellCount} </span>white phosphorus shell{shellCount > 1 ? "s" : ""}  struck <span className="text-2xl text-white">{townCount.size}</span> cities/towns.</>
 
+                // exclude not-yet-geolocated entries (null coords) from the mapped count first,
+                // so adding pendingInRange back doesn't double-count them
+                const mappedInRange = pt.filter((p: any) => p.lat != null && p.lon != null).reduce((sum: number, p: any) => sum + p.shell_count, 0);
                 const pendingInRange = PENDING_INCIDENTS
                     .filter(p => p.date >= arg[0] && p.date <= arg[1])
                     .reduce((sum, p) => sum + p.bursts, 0);
-                if (pendingInRange > 0) {
-                    readout3 = <><span className="text-2xl text-white">{pendingInRange}</span> more strike{pendingInRange > 1 ? "s are" : " is"} verified but not yet geolocated.</>
-                    readout4 = <div style={{ marginTop: "0.6rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>
-                }
+                const totalInRange = mappedInRange + pendingInRange;
+                readout2 = <div style={{ marginTop: "0.5rem" }}><span className="text-2xl text-white">{totalInRange} </span>white phosphorus shell{totalInRange > 1 ? "s" : ""}  struck <span className="text-2xl text-white">{townCount.size}</span> cities/towns
+                    {pendingInRange > 0 && <>,<br /><span className="text-2xl text-white">{pendingInRange}</span> of which {pendingInRange > 1 ? "are" : "is"} verified but not yet geolocated</>}
+                    .</div>
+                readout3 = pendingInRange > 0
+                    ? <div style={{ marginTop: "0.6rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>
+                    : <></>
             }
             else if (typeof arg === 'number') { //filtered by day of week
                 const date = new Date(pt[0].date);
