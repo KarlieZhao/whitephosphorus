@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import { geoDataProps } from "./datasource";
 import { TypewriterProps } from "./header";
 import { MONTHS } from "./datasource";
+import { isMobileDevice } from "./mobile-detector";
 type VectorMapProps = geoDataProps & TypewriterProps & {
   getMapDetails: (point: any | null, arg?: any, clicked?: boolean) => void;
   mapZoom: number;
@@ -51,6 +52,10 @@ export function VectorMap({
   const DOT_ANIMATION_DELAY = TypeWriterFinished ? 20 : 60;
   const BORDER_DELAY = 500;
   const focusedPtRef = useRef<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
   // mouse hover on circle debounce
   let mouseoverTimeout: NodeJS.Timeout | null = null;
   let mouseoutTimeout: NodeJS.Timeout | null = null;
@@ -313,7 +318,10 @@ export function VectorMap({
           d3.select(this)
             .attr("fill", "url(#hover)")
             .attr("r", d => getDotSize(d) * 1.4);
-          if (focusedPtRef.current === null) getMapDetails(d);
+          // skip the hover preview on mobile: touch devices synthesize this event on tap,
+          // and it can race with (or replace) the click event, leaving the short preview
+          // stuck instead of the full card
+          if (!isMobile && focusedPtRef.current === null) getMapDetails(d);
           mouseoverTimeout = null;
           // }, HOVER_DELAY);
         })
@@ -402,7 +410,8 @@ export function VectorMap({
     dimmedPoints,
     selectedYear,
     TypeWriterFinished,
-    focusedPtRef.current
+    focusedPtRef.current,
+    isMobile
   ]);
 
   // Cleanup timeouts on unmount
