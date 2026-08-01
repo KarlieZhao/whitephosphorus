@@ -8,6 +8,7 @@ import { TypewriterProps } from "./header";
 import SatelliteMap from "./satellite-map";
 import LandscapeHisto from "./histo_landscape";
 import LandscapeBar from "./landscape-bar";
+import { isMobileDevice } from "./mobile-detector";
 
 // export const RED_GRADIENT = ["#db2f0f", "#C03117", "#A5331E", "#8A3525", "#6E362C", "#7C3629", "#6E362C"]
 // export const RED_GRADIENT = ["#cfcfcf", "#aaa", "#909090", "#858585", "#777", "#666", "#606060"]
@@ -97,6 +98,11 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
     const [showSatelliteMap, setShowSatelliteMap] = useState<boolean>(false);
     const [details, updateDetails] = useState<any[]>([]);
     const [showPanels, setShowPanels] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        setIsMobile(isMobileDevice());
+    }, []);
 
     const [mapZoom, setMapZoom] = useState(11.2);
     const [leafletCenter, setLeafletCenter] = useState<[number, number]>([35.57, 33.2]);
@@ -289,28 +295,32 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         </div>
 
 
-        <div onClick={() => {
-            //reset all
-            if (selectedCity != "") {
-                setSelectedCity("");
-            }
-            if (selectedDay != -1) {
-                setselectedDay(-1);
-            }
-            if (selectedAreaType) {
-                setSelectedAreaType(null);
-            }
-            if (selectedDates[0] != "" || selectedDates[1] != "") {
-                setSelectedDates(["", ""])
-            }
-            if (selectedMonth != null) {
-                setSelectedMonth(null)
-            }
-            if (selectedYear != null) {
-                setSelectedYear(null)
-            }
-            // getDetails([], "clear");
-        }}>
+        <div
+            className={isMobile && !TypewriterFinished ? "mobile-intro-dim" : ""}
+            onClick={() => {
+                //reset all
+                if (selectedCity != "") {
+                    setSelectedCity("");
+                }
+                if (selectedDay != -1) {
+                    setselectedDay(-1);
+                }
+                if (selectedAreaType) {
+                    setSelectedAreaType(null);
+                }
+                if (selectedDates[0] != "" || selectedDates[1] != "") {
+                    setSelectedDates(["", ""])
+                }
+                if (selectedMonth != null) {
+                    setSelectedMonth(null)
+                }
+                if (selectedYear != null) {
+                    setSelectedYear(null)
+                }
+                if (isMobile && details[0]) {
+                    getDetails();
+                }
+            }}>
 
             <SatelliteMap
                 onZoomChange={setMapZoom}
@@ -337,7 +347,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 TypeWriterFinished={TypewriterFinished}
             />
         </div >
-        <div className={`map-readout opacity-100`}>
+        <div className={`map-readout opacity-100 ${isMobile && details[0] ? "has-content" : ""}`}>
             <div className="dynamic-readout">
                 {details.slice(0, 8).map((line, idx) => (
                     <div key={idx}>{line}</div>
@@ -363,7 +373,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             </div>
         </div>
 
-        <div
+        {!isMobile && <div
             className={`fixed right-3 top-28 z-50 side-bar transition-opacity duration-500 ease-in-out ${showPanels ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} >
             <div className="satellite-toggle-container relative mt-1">
                 <div className={`map-toggle-group ${TypewriterFinished ? "pointer-events-auto" : "pointer-events-none"}`}>
@@ -524,6 +534,6 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                         setSelectedYear(null)
                     }} />
             </div>
-        </div>
+        </div>}
     </>);
 }

@@ -13,6 +13,7 @@ export default function Index() {
   const [TypewriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [forceStop, setForceStop] = useState<boolean>(false);
+  const [showMobileBanner, setShowMobileBanner] = useState(true);
 
   const onFinish = () => {
     setTypeWriterFinished(true);
@@ -35,28 +36,36 @@ export default function Index() {
           setForceStop(true)
         }}></div>
       <Header TypewriterFinished={TypewriterFinished} />
-      {isMobile ? (<div className="fixed top-48 m-3 text-white text-sm">
-        The map is optimized for desktop devices.<br /><br />
-        On a mobile device, you can view the white phosphorus strikes timeline, the plume catalog, and read more about this project. Use the navigation menu to start.
-      </div>) : (
-        <main className="relative">
-          <div className="w-[44vw] min-w-20 z-50 mt-48 fixed text-white ml-5">
-            <Typewriter textLines={textToType} period={500}
-              speed={45} //lower value = faster typing
-              onFinish={onFinish} // on finish, trigger the onFinish function
-              forceStopped={forceStop}
-            />
-          </div>
+      <main className="relative">
+        <div className={`${isMobile ? "w-[90vw] mt-24 ml-3" : "w-[44vw] mt-48 ml-5"} min-w-20 z-50 fixed text-white`}>
+          <Typewriter textLines={textToType} period={500}
+            speed={45} //lower value = faster typing
+            onFinish={onFinish} // on finish, trigger the onFinish function
+            forceStopped={forceStop}
+          />
+        </div>
 
-          <div className={"relative z-0 h-screen overflow-hidden"}>
-            <DataSource TypewriterFinished={TypewriterFinished} />
-            {/* <div className={`z-50 fixed left-2 ml-1 bottom-5 bg-red-900 bg-opacity-60 text-sm text-white transition-all 
+        <div className={"relative z-0 h-screen overflow-hidden"}>
+          <DataSource TypewriterFinished={TypewriterFinished} />
+          {/* <div className={`z-50 fixed left-2 ml-1 bottom-5 bg-red-900 bg-opacity-60 text-sm text-white transition-all
               ${isPromptVisible ? "opacity-100" : "opacity-0"}`}>
               Each red prism on the map represents a geolocated deployment of white phosphorus.</div> */}
-            {/* <Map /> */}
+          {/* <Map /> */}
+        </div>
+
+        {isMobile && TypewriterFinished && showMobileBanner && (
+          <div className="fixed z-40 top-36 left-1/2 -translate-x-1/2 w-[88vw] flex items-center justify-between gap-3 bg-red-950/90 border border-red-500/50 rounded-lg px-4 py-3 text-sm text-white shadow-lg backdrop-blur-sm">
+            <span>For the full experience, open this site on desktop.</span>
+            <button
+              aria-label="Dismiss"
+              className="shrink-0 text-white/70 text-lg leading-none px-1"
+              onClick={() => setShowMobileBanner(false)}
+            >
+              ✕
+            </button>
           </div>
-        </main>
-      )}
+        )}
+      </main>
       <Footer />
     </div>
   );

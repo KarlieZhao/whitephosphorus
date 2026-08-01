@@ -1,5 +1,6 @@
 
 import { useRef, useState, useCallback, useEffect } from 'react';
+import { isMobileDevice } from './mobile-detector';
 
 interface TypewriterProps {
     textLines: string[];
@@ -17,7 +18,27 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
     const [currentChar, setCurrentChar] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        setIsMobile(isMobileDevice());
+    }, []);
+
+    const HIGHLIGHT_PHRASES = ["285 white phosphorus strikes", "October", "May", "images and videos"];
+    const highlightPattern = new RegExp(
+        `(${HIGHLIGHT_PHRASES.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|")}|\\d[\\d,]*)`,
+        "g"
+    );
+
+    const highlightNumbers = (text: string) => {
+        if (!isMobile) return text;
+        const parts = text.split(highlightPattern);
+        return parts.map((part, i) =>
+            (HIGHLIGHT_PHRASES.includes(part) || /^\d[\d,]*$/.test(part))
+                ? <strong key={i} className="text-white font-bold">{part}</strong> : part
+        );
+    };
 
     const getRandomSpeed = useCallback(() => Math.random() * speed + 10, [speed]);
 
@@ -96,9 +117,9 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
 
     return (
         <div className="typewrite">
-            <p className="wrap">{p1}</p>
-            <p className="wrap">{p2}</p>
-            <p className="wrap text-sm text-gray-400">{p3}</p>
+            <p className="wrap">{highlightNumbers(p1)}</p>
+            <p className="wrap">{highlightNumbers(p2)}</p>
+            <p className="wrap text-sm text-gray-400">{highlightNumbers(p3)}</p>
         </div>
     );
 };

@@ -13,7 +13,6 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
 
   const data: ToxicityData = [{
     type: "Strikes",
@@ -43,70 +42,56 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
     </div>
   );
 
-  const toggleMenu = () => {
-    setIsOpen((prev) => !prev);
-  };
-
   if (isMobile === null) return null;
 
   return (
     isMobile ? (
       //mobile env
-      <header className="fixed top-0 t-50">
-        <button
-          className={`hamburger-menu ${isOpen ? "open" : ""}`}
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-        </button>
-
-        {isOpen && (
-          <div className="menu-bar">
-            <ul>
-              <li onClick={() => router.push("/")}>MAP</li>
-              <li onClick={() => router.push("/timeline")}>TIMELINE</li>
-              <li onClick={() => router.push("/plumes")}>PLUMES</li>
-              <li onClick={() => router.push("/about")}>ABOUT</li>
-            </ul>
-          </div>
-        )}
-
-        <div className="fixed left-0 command_button_unclickable">
-          <h3 className="mt-4 w-1/2 pl-4 text-xl">
+      <header className="fixed top-0 left-0 right-0 t-50 mobile-header">
+        <div className="mobile-header-content">
+          <h3 className="mobile-header-title" onClick={() => router.push("/")}>
             WhitePhosphorus.info
           </h3>
+          <button
+            className="info-button"
+            onClick={() => router.push("/about")}
+            aria-label="About"
+          >
+            i
+          </button>
         </div>
+
         {TypewriterFinished && (
-          <div className="toxicity-counter relative pl-2 flex flex-row fadeSlideIn">
-            <div className="counter-label w-full flex-initial flex flex-col justify-center items-start">
-              <div>TOXICITY<br />COUNTER</div>
-              <div className="last-update">Last update: Jul/28/2026</div>
-            </div>
-            {data.map((obj, index) => {
-              return (
-                <div
-                  key={obj.type || index} // Use a unique identifier (e.g., obj.type) or index as a fallback
-                  className={`flex-initial ${obj.type === "Incidents" ? "w-[3.8rem]" : "w-[8rem]"} flex flex-col items-start`}
-                >
-                  <div>
-                    <span
-                      className={`${obj.number === "1261 " || obj.number === "198"
-                        ? "opacity-100 inline-block"
-                        : "opacity-0 hidden"
-                        }`}
-                    >
-                      ≈
-                    </span>
-                    <span className="headerData">{obj.number}</span>
-                    <span className="text-xl"> {obj.unit}</span>
+          <div className="mobile-counter-bar">
+            <div className="toxicity-counter relative flex flex-row fadeSlideIn">
+              <div className="counter-label flex-initial flex flex-col justify-center items-start mr-3">
+                <div>TOXICITY COUNTER</div>
+              </div>
+              {data.map((obj, index) => {
+                return (
+                  <div
+                    key={obj.type || index} // Use a unique identifier (e.g., obj.type) or index as a fallback
+                    className={`flex-initial ${obj.type === "Incidents" ? "w-[3.8rem]" : "w-[8rem]"} flex flex-col items-start`}
+                  >
+                    <div>
+                      <span
+                        className={`${obj.number === "1261 " || obj.number === "198"
+                          ? "opacity-100 inline-block"
+                          : "opacity-0 hidden"
+                          }`}
+                      >
+                        ≈
+                      </span>
+                      <span className="headerData">{obj.number}</span>
+                      {obj.type !== "Land Area" && (
+                        <span className="text-xl"> {obj.unit}</span>
+                      )}
+                    </div>
+                    <div className="text-xl">{obj.type === "Land Area" ? obj.unit : obj.type}</div>
                   </div>
-                  <div className="text-xl">{obj.type}</div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         )}
       </header>

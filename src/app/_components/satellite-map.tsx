@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
+import { isMobileDevice } from "./mobile-detector";
 export const mapZoomLevel = 11
 
 type SatelliteMapProps = {
@@ -27,8 +28,9 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
 
     useEffect(() => {
         const L = require("leaflet");
+        const mobile = isMobileDevice();
         const map = L.map(mapRef.current!, {
-            minZoom: 11,
+            minZoom: mobile ? mapZoomLevel - 2 : 11,
             maxZoom: 15,
             maxBounds: L.latLngBounds(
                 [32.8, 34.7],  //  southwest

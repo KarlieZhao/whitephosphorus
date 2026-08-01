@@ -995,62 +995,27 @@ ul li {
 }
 
 /* ===== mobile ======= */
-.hamburger-menu {
+.info-button {
   color: #fff;
   position: absolute;
   right: 20px;
-  top: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #fff;
+  border-radius: 50%;
   background: transparent;
-  border: none;
+  font-family: "PPSupplySans-Regular", serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1;
   cursor: pointer;
   padding: 0;
-}
-
-.hamburger-menu .bar {
-  height: 4px;
-  width: 100%;
-  background-color: #c42100;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-.hamburger-menu.open .bar:nth-child(1) {
-  transform: translateY(10px) rotate(45deg);
-}
-
-.hamburger-menu.open .bar:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger-menu.open .bar:nth-child(3) {
-  transform: translateY(-10px) rotate(-45deg);
-}
-
-.menu-bar {
-  position: fixed;
-  width: 29vw;
-  top: 49px;
-  right: 0;
-  background-color: #000;
-  text-align: center;
-  color: #fff;
-  border: 1px solid #c42100;
-  box-shadow: 0px 4px 6px #c4210077;
-  border-radius: 3px;
-  transform: all 0.3 ease-in-out;
-  z-index: 1000;
-}
-
-.menu-bar li {
-  list-style-type: none;
-  padding: 0;
-  cursor: pointer;
-  margin: 15px 5px;
+  z-index: 501;
 }
 
 .method-page section {
@@ -1575,14 +1540,40 @@ small {
     bottom: 25px;
   }
 
-  header {
-    background-color: #000;
+  header.mobile-header {
     z-index: 500;
+  }
+
+  .mobile-header-content {
+    position: relative;
+    background-color: #c42100;
+    height: 3.4rem;
+    padding: 0 3.25rem 0 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-header-title {
+    margin: 0;
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+  }
+
+  .mobile-counter-bar {
+    background-color: #000;
+    height: 3.4rem;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
     border-bottom: 2px solid #c42100;
   }
 
   .toxicity-counter {
     width: 90vw;
+    min-width: 0;
+    top: 0;
+    text-shadow: none;
   }
 
   .toxicity-counter .text-xl {
@@ -1596,19 +1587,12 @@ small {
 
   .toxicity-counter .counter-label,
   .last-update {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
 
   header ul {
     padding: 10px;
     margin: 0;
-  }
-
-  .command_button_unclickable {
-    width: 71vw;
-    background-image: url("/assets/img/toxicityTab2.png");
-    background-size: 71vw 43px;
-    background-position: left bottom;
   }
 
   .methodology {
@@ -1671,4 +1655,55 @@ small {
   .text-sm {
     font-size: 1rem;
   }
+
+  .dynamic-thumbnails {
+    max-width: 80vw;
+    max-height: none;
+    overflow-y: visible !important;
+  }
+
+  footer {
+    font-size: 0.55rem;
+    width: calc(100vw - 20px);
+    left: 8px;
+    line-height: 1.3;
+  }
+
+  .map-readout {
+    top: 13rem;
+    max-width: 85vw;
+    max-height: 42vh;
+    overflow-y: auto;
+    pointer-events: none;
+  }
+
+  .map-readout.has-content {
+    pointer-events: auto;
+  }
+
+  .mobile-intro-dim {
+    opacity: 0.85;
+    transition: opacity 0.6s ease;
+  }
+
+  .dynamic-readout {
+    margin-top: 0;
+    font-size: 0.7rem;
+    line-height: 1.05rem;
+  }
+
+  .dynamic-readout .text-2xl {
+    font-size: 1rem;
+  }
+
+  .dynamic-readout div:nth-child(1),
+  .dynamic-readout div:nth-child(2) {
+    font-size: 0.85rem;
+    min-height: 0;
+  }
+
+  .typewrite {
+    font-size: 1.1rem;
+  }
+
 }
