@@ -10,6 +10,7 @@ import Footer from "./_components/footer";
 
 export default function Index() {
   const textToType = ["This public archive documents 285 white phosphorus strikes in South Lebanon and one in northern Israel between October 2023 and May 2026.", "Through open source tools, more than 700 images and videos were collected and verified as evidence of white phosphorus use, the majority of which were geolocated and chronolocated.", "Click anywhere to start."];
+  const textToTypeMobile = ["This archive documents 285 white phosphorus strikes in South Lebanon between October 2023 and May 2026.", "Over 700 images and videos were collected and geolocated as evidence.", "Tap anywhere to start."];
   const [TypewriterFinished, setTypeWriterFinished] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [forceStop, setForceStop] = useState<boolean>(false);
@@ -38,8 +39,8 @@ export default function Index() {
       <Header TypewriterFinished={TypewriterFinished} />
       <main className="relative">
         <div className={`${isMobile ? "w-[90vw] mt-24 ml-3" : "w-[44vw] mt-48 ml-5"} min-w-20 z-50 fixed text-white`}>
-          <Typewriter textLines={textToType} period={500}
-            speed={45} //lower value = faster typing
+          <Typewriter textLines={isMobile ? textToTypeMobile : textToType} period={isMobile ? 220 : 500}
+            speed={isMobile ? 18 : 45} //lower value = faster typing
             onFinish={onFinish} // on finish, trigger the onFinish function
             forceStopped={forceStop}
           />
