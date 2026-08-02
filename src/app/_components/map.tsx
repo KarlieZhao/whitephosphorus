@@ -49,10 +49,10 @@ export function VectorMap({
   const animationTimeoutRef = useRef<NodeJS.Timeout[]>([]);
   const [hasAnimated, setHasAnimated] = useState(() => typeof window !== "undefined" && sessionStorage.getItem("mapDotsAnimated") === "true");
 
-  const DOT_ANIMATION_DELAY = TypeWriterFinished ? 20 : 60;
   const BORDER_DELAY = 500;
   const focusedPtRef = useRef<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const DOT_ANIMATION_DELAY = TypeWriterFinished ? (isMobile ? 7 : 20) : (isMobile ? 25 : 60);
   useEffect(() => {
     setIsMobile(isMobileDevice());
   }, []);
