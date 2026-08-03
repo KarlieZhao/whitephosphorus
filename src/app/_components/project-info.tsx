@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Collapsible from "../_components/collapsible";
 import { isMobileDevice } from "./mobile-detector";
 
@@ -18,6 +19,12 @@ type ProjectInfoProps = {
 };
 
 const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    // Close whichever answer is open when switching language
+    useEffect(() => {
+        if (reset) setOpenIndex(null);
+    }, [reset]);
 
     return (
         <div className={`${data.lang}`}>
@@ -30,7 +37,11 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
             <div className="Q-n-A">
                 {data.qna.map((item, index) => (
                     <div key={index}>
-                        <Collapsible label={item.question} reset={reset}>
+                        <Collapsible
+                            label={item.question}
+                            isOpen={openIndex === index}
+                            onToggle={() => setOpenIndex(openIndex === index ? null : index)}
+                        >
                             {typeof item.answer === 'string' ? (
                                 <p dangerouslySetInnerHTML={{ __html: item.answer }} />
                             ) : Array.isArray(item.answer) ? (
