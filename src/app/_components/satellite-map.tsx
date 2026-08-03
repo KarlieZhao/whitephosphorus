@@ -26,7 +26,7 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
     useEffect(() => {
         const L = require("leaflet");
         const mobile = isMobileDevice();
-        const DOT_ANIMATION_DELAY = TypewriterFinished ? (mobile ? 7 : 20) : (mobile ? 25 : 60);
+        const DOT_ANIMATION_DELAY = TypewriterFinished ? (mobile ? 8 : 20) : (mobile ? 30 : 60);
         const controlEnabledTimeout = DOT_ANIMATION_DELAY * 111 + BORDER_DELAY;
         const map = L.map(mapRef.current!, {
             minZoom: mobile ? mapZoomLevel - 2 : 11,

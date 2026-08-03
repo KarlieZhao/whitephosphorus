@@ -15,6 +15,7 @@ export default function Index() {
   const [isMobile, setIsMobile] = useState(false);
   const [forceStop, setForceStop] = useState<boolean>(false);
   const [showMobileBanner, setShowMobileBanner] = useState(true);
+  const [showTypewriter, setShowTypewriter] = useState(false);
 
   const onFinish = () => {
     setTypeWriterFinished(true);
@@ -23,6 +24,16 @@ export default function Index() {
   useEffect(() => {
     setIsMobile(isMobileDevice());
   })
+
+  useEffect(() => {
+    const isFirstVisit = typeof window !== "undefined" && sessionStorage.getItem("visited") !== "true";
+    if (isMobileDevice() && isFirstVisit) {
+      // let the background dot animation get a head start before the intro text kicks in
+      const t = setTimeout(() => setShowTypewriter(true), 1000);
+      return () => clearTimeout(t);
+    }
+    setShowTypewriter(true);
+  }, [])
 
   if (isMobile === null) return null;
 
@@ -39,11 +50,13 @@ export default function Index() {
       <Header TypewriterFinished={TypewriterFinished} />
       <main className="relative">
         <div className={`${isMobile ? "w-[90vw] mt-24 ml-3" : "w-[44vw] mt-48 ml-5"} min-w-20 z-50 fixed text-white`}>
-          <Typewriter textLines={isMobile ? textToTypeMobile : textToType} period={isMobile ? 220 : 500}
-            speed={isMobile ? 18 : 45} //lower value = faster typing
-            onFinish={onFinish} // on finish, trigger the onFinish function
-            forceStopped={forceStop}
-          />
+          {showTypewriter && (
+            <Typewriter textLines={isMobile ? textToTypeMobile : textToType} period={isMobile ? 264 : 500}
+              speed={isMobile ? 22 : 45} //lower value = faster typing
+              onFinish={onFinish} // on finish, trigger the onFinish function
+              forceStopped={forceStop}
+            />
+          )}
         </div>
 
         <div className={"relative z-0 h-screen overflow-hidden"}>

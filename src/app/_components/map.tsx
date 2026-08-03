@@ -52,7 +52,7 @@ export function VectorMap({
   const BORDER_DELAY = 500;
   const focusedPtRef = useRef<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const DOT_ANIMATION_DELAY = TypeWriterFinished ? (isMobile ? 7 : 20) : (isMobile ? 25 : 60);
+  const DOT_ANIMATION_DELAY = TypeWriterFinished ? (isMobile ? 8 : 20) : (isMobile ? 30 : 60);
   useEffect(() => {
     setIsMobile(isMobileDevice());
   }, []);
