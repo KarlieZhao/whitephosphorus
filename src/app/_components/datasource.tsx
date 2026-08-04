@@ -28,7 +28,7 @@ const TOTAL_STRIKES_BY_YEAR: { [year: string]: number } = {
     "2026": 35,
 }
 const PENDING_GEOLOCATION_BY_YEAR: { [year: string]: number } = {
-    "2023": 7,
+    "2023": 8,
     "2024": 20,
     "2025": 0,
     "2026": 7,
@@ -38,6 +38,7 @@ const PENDING_GEOLOCATION_BY_YEAR: { [year: string]: number } = {
 export const PENDING_INCIDENTS: { date: string; bursts: number }[] = [
     { date: "2023-10-15", bursts: 2 }, // WP10
     { date: "2023-10-15", bursts: 2 }, // WP11
+    { date: "2023-10-17", bursts: 1 }, // WP427
     { date: "2023-12-08", bursts: 3 }, // WP48
     { date: "2024-01-21", bursts: 6 }, // WP59
     { date: "2024-03-17", bursts: 3 }, // WP69
