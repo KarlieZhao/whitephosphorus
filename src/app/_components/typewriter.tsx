@@ -19,7 +19,7 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
     const [hasMounted, setHasMounted] = useState(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    const HIGHLIGHT_PHRASES = ["285 white phosphorus strikes", "October", "May", "images and videos"];
+    const HIGHLIGHT_PHRASES = ["286 white phosphorus strikes", "October", "May", "images and videos"];
     const highlightPattern = new RegExp(
         `(${HIGHLIGHT_PHRASES.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|")}|\\d[\\d,]*)`,
         "g"
