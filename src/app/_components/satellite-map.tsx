@@ -30,7 +30,7 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
         const controlEnabledTimeout = DOT_ANIMATION_DELAY * 111 + BORDER_DELAY;
         const map = L.map(mapRef.current!, {
             minZoom: mobile ? mapZoomLevel - 2 : 11,
-            maxZoom: 15,
+            maxZoom: 16,
             maxBounds: L.latLngBounds(
                 [32.8, 34.7],  //  southwest
                 [33.6, 36.3]   //  northeast
@@ -62,7 +62,7 @@ export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInsta
         // tile layer
         const tileLayer = L.tileLayer(SATELLITE_TILES_URL, {
             tms: true,
-            opacity: 0.6
+            opacity: 1
         }).addTo(map);
 
         tileLayerRef.current = tileLayer;

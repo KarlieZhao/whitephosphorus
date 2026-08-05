@@ -1186,6 +1186,12 @@ footer a {
   pointer-events: all;
   padding: 1rem 0.5rem;
   border-radius: 20px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.dynamic-thumbnails::-webkit-scrollbar {
+  display: none;
 }
 
 .dynamic-readout div:nth-child(1),
