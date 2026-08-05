@@ -11,6 +11,9 @@ type VectorMapProps = geoDataProps & TypewriterProps & {
   mapInstance: any;
   showSatellite: boolean;
   TypeWriterFinished?: boolean;
+  // bumped by the parent's readout close button (mobile has no reachable background to
+  // tap for the usual reset) to clear this component's own focus state from outside
+  clearSelectionSignal?: number;
 };
 
 const CARTODB_TILES_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
@@ -85,6 +88,7 @@ export function VectorMap({
   leafletCenter,
   mapInstance,
   showSatellite,
+  clearSelectionSignal,
 }: VectorMapProps) {
   const borderDataRef = useRef<any>(null);
   const cartodbLayerRef = useRef<any>(null);
@@ -104,6 +108,9 @@ export function VectorMap({
   // deselect calls getMapDetails with the same point, which doesn't reliably cause that,
   // so the DOM was left stuck showing the old focused state
   const [focusedPt, setFocusedPt] = useState<number | null>(null);
+  useEffect(() => {
+    if (clearSelectionSignal) setFocusedPt(null);
+  }, [clearSelectionSignal]);
   const [isMobile, setIsMobile] = useState(false);
   const DOT_ANIMATION_DELAY = TypeWriterFinished ? (isMobile ? 8 : 20) : (isMobile ? 30 : 60);
   useEffect(() => {
@@ -670,27 +677,27 @@ export function VectorMap({
 
   return (
     <div
-      className={`fixed z-[1010] bottom-16 pointer-events-none transition-opacity duration-300 ${anyWedgesVisible ? "opacity-100" : "opacity-0"}`}
-      style={{ left: legendLeftBound !== null ? legendLeftBound / 2 : "50%", transform: "translateX(-50%)" }}
+      className={`fixed z-[1010] pointer-events-none transition-opacity duration-300 ${anyWedgesVisible ? "opacity-100" : "opacity-0"} ${isMobile ? "right-2 top-1/2 -translate-y-1/2" : "bottom-16"}`}
+      style={isMobile ? undefined : { left: legendLeftBound !== null ? legendLeftBound / 2 : "50%", transform: "translateX(-50%)" }}
     >
       <div
-        className="flex items-center gap-7 border-t border-b border-white/15 px-6 py-2 bg-black/70 rounded"
+        className={`flex border-white/15 bg-black/70 rounded ${isMobile ? "flex-col gap-3 border-l border-r px-2 py-3 max-w-[38vw]" : "items-center gap-7 border-t border-b px-6 py-2"}`}
         style={{ fontFamily: "Inconsolata, monospace" }}
       >
         <div className="flex items-center gap-2">
           <span className="inline-block w-3 h-3 rounded-full flex-shrink-0" style={{ background: "#ff5b3d" }} />
-          <span className="text-[0.7rem] text-white/70 whitespace-nowrap">incident marker</span>
+          <span className={`text-[0.7rem] text-white/70 ${isMobile ? "" : "whitespace-nowrap"}`}>incident marker</span>
         </div>
         <div className="flex items-center gap-2">
           <span
             className="inline-block w-3 h-3 rounded-full flex-shrink-0"
             style={{ border: "1.5px dashed #ff5b3d" }}
           />
-          <span className="text-[0.7rem] text-white/70 whitespace-nowrap">estimated coverage area — up to 190m across</span>
+          <span className={`text-[0.7rem] text-white/70 ${isMobile ? "" : "whitespace-nowrap"}`}>estimated coverage area — up to 190m across</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="inline-block w-[5px] h-[5px] rounded-full flex-shrink-0 bg-white" />
-          <span className="text-[0.7rem] text-white/70 whitespace-nowrap">one of 116 felt wedges (illustrative scatter)</span>
+          <span className={`text-[0.7rem] text-white/70 ${isMobile ? "" : "whitespace-nowrap"}`}>one of 116 felt wedges (illustrative scatter)</span>
         </div>
       </div>
     </div>

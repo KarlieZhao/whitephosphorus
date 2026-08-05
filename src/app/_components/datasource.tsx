@@ -111,6 +111,10 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
     const [showOverlay, setShowOverlay] = useState<boolean>(false);
     const [overlayImage, setOverlayImage] = useState<String | null>(null);
+    // on mobile the readout panel can cover the whole tappable map area, leaving no
+    // background to tap for the usual reset — bumping this tells VectorMap to clear its
+    // internal focus state alongside clearing the readout here
+    const [clearSelectionSignal, setClearSelectionSignal] = useState(0);
 
 
     const landscape_map: landscape_mapping_prop = {
@@ -148,6 +152,11 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
         return MONTHS_PRINT[parseInt(month) - 1] + " " + year;
     }
 
+
+    const closeReadout = () => {
+        getDetails();
+        setClearSelectionSignal(s => s + 1);
+    };
 
     const getDetails = (pt?: any, arg?: any, clicked?: boolean) => {
         let readout1, readout2, readout3, readout4, readout5, readout6, readout7, readout8 = "";
@@ -346,9 +355,20 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 mapInstance={mapInstance}
                 showSatellite={showSatelliteMap}
                 TypeWriterFinished={TypewriterFinished}
+                clearSelectionSignal={clearSelectionSignal}
             />
         </div >
         <div className={`map-readout opacity-100 ${isMobile && details[0] ? "has-content" : ""}`}>
+            {isMobile && details[0] && (
+                <button
+                    onClick={closeReadout}
+                    aria-label="Close"
+                    className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-white/10 text-white/80 text-lg leading-none z-10"
+                    style={{ pointerEvents: "all" }}
+                >
+                    ×
+                </button>
+            )}
             <div className="dynamic-readout">
                 {details.slice(0, 8).map((line, idx) => (
                     <div key={idx}>{line}</div>
