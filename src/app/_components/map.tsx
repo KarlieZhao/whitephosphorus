@@ -677,7 +677,7 @@ export function VectorMap({
 
   return (
     <div
-      className={`fixed z-[1010] pointer-events-none transition-opacity duration-300 ${anyWedgesVisible ? "opacity-100" : "opacity-0"} ${isMobile ? "right-2 top-1/2 -translate-y-1/2" : "bottom-16"}`}
+      className={`fixed z-[1010] pointer-events-none transition-opacity duration-300 ${anyWedgesVisible ? "opacity-100" : "opacity-0"} ${isMobile ? "right-2 bottom-24" : "bottom-16"}`}
       style={isMobile ? undefined : { left: legendLeftBound !== null ? legendLeftBound / 2 : "50%", transform: "translateX(-50%)" }}
     >
       <div
