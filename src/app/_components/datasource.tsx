@@ -359,7 +359,11 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             />
         </div >
         <div className={`map-readout opacity-100 ${isMobile && details[0] ? "has-content" : ""}`}>
-            {isMobile && details[0] && (
+            {details[0] && (
+                // dense clusters of incidents mean their (large, ~190m-radius) clickable
+                // bloom areas can cover most of what looks like "blank" map space, so a
+                // background click doesn't reliably land on true empty space to reset —
+                // this button is a guaranteed way out regardless of local incident density
                 <button
                     onClick={closeReadout}
                     aria-label="Close"
