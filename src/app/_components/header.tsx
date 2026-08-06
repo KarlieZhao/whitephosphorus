@@ -126,7 +126,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
             </table>
             {TypewriterFinished && (
               <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn">
-                <div className="flex-initial basis-1/3 flex flex-col justify-center items-start text-xl">
+                <div className="flex-initial basis-[190px] flex flex-col justify-center items-start text-xl">
                   <div>Contamination Index</div>
                   <div className="last-update">Last update: Jul/28/2026</div>
                 </div>
@@ -134,7 +134,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
                   return (
                     <div
                       key={obj.type || index} // Use a unique identifier (e.g., obj.type) or index as a fallback
-                      className={`flex-initial ${obj.type === "Incidents" ? "basis-1/4" : "basis-1/3"} flex flex-col items-start`}
+                      className={`flex-initial ${obj.type === "Incidents" ? "basis-1/4" : "basis-[140px]"} flex flex-col items-start`}
                     >
                       <div>
                         <span
