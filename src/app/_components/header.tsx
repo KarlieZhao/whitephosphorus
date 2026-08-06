@@ -65,7 +65,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
           <div className="mobile-counter-bar">
             <div className="toxicity-counter relative flex flex-row fadeSlideIn">
               <div className="counter-label flex-initial flex flex-col justify-center items-start mr-3">
-                <div>TOXICITY COUNTER</div>
+                <div>CONTAMINATION INDEX</div>
               </div>
               {data.map((obj, index) => {
                 return (
@@ -125,9 +125,9 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
               </tbody>
             </table>
             {TypewriterFinished && (
-              <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn [&>div:nth-child(2)]:basis-1/4">
+              <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn">
                 <div className="flex-initial basis-1/3 flex flex-col justify-center items-start text-xl">
-                  <div>Toxicity  Counter</div>
+                  <div>Contamination Index</div>
                   <div className="last-update">Last update: Jul/28/2026</div>
                 </div>
                 {data.map((obj, index) => {
