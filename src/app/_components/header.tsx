@@ -146,9 +146,11 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
                           ≈
                         </span>
                         <span className="headerData">{obj.number}</span>
-                        <span className="text-xl"> {obj.unit}</span>
+                        {obj.type !== "Land Area" && (
+                          <span className="text-xl"> {obj.unit}</span>
+                        )}
                       </div>
-                      <div className="text-xl">{obj.type}</div>
+                      <div className="text-xl">{obj.type === "Land Area" ? obj.unit : obj.type}</div>
                     </div>
                   );
                 })}
