@@ -303,6 +303,13 @@ export function VectorMap({
     const svg = document.querySelector("#map .leaflet-overlay-pane svg") as SVGSVGElement;
     if (!svg) return;
 
+    // mobile screens are smaller and zoomed further out on average, so the bloom feature
+    // (coverage circle + felt-wedge scatter) is tuned to appear one zoom level earlier
+    // there (14) than on desktop (15) — see BLOOM_PX_THRESHOLD's comment for how the
+    // px-radius-per-zoom values were derived
+    const bloomPxThreshold = isMobile ? 8 : BLOOM_PX_THRESHOLD;
+    const bloomTransitionPx = isMobile ? 3 : BLOOM_TRANSITION_PX;
+
     // Setup SVG groups
     let g: d3.Selection<SVGGElement, unknown, null, undefined> = d3.select(svg).select<SVGGElement>("g");
     const gExisted = !g.empty();
@@ -320,8 +327,8 @@ export function VectorMap({
           if (!d.lat || !d.lon || isNaN(d.lat) || isNaN(d.lon)) continue;
           if (!precheckBounds.contains([d.lat, d.lon])) continue;
           const r = metersToPixelRadius(d.lat, d.lon, MAX_BURST_M / 2);
-          if (r <= BLOOM_PX_THRESHOLD) continue;
-          const t = Math.min(1, (r - BLOOM_PX_THRESHOLD) / BLOOM_TRANSITION_PX);
+          if (r <= bloomPxThreshold) continue;
+          const t = Math.min(1, (r - bloomPxThreshold) / bloomTransitionPx);
           if (t > WEDGE_REVEAL_FRACTION) { willShowWedges = true; break; }
         }
       } catch {
@@ -456,9 +463,9 @@ export function VectorMap({
           if (!bounds.contains([d.lat, d.lon])) return;
 
           const burstRadiusPx = metersToPixelRadius(d.lat, d.lon, MAX_BURST_M / 2);
-          if (burstRadiusPx <= BLOOM_PX_THRESHOLD) return;
+          if (burstRadiusPx <= bloomPxThreshold) return;
 
-          const bloomT = Math.min(1, (burstRadiusPx - BLOOM_PX_THRESHOLD) / BLOOM_TRANSITION_PX);
+          const bloomT = Math.min(1, (burstRadiusPx - bloomPxThreshold) / bloomTransitionPx);
           // scale line/dot weight to bloomT (the same 0-1 bloom-in progress used for the
           // circle's own size), not to raw pixel radius — bloomT is already fully at 1 by
           // the second-to-last zoom, so tying weight to it keeps the last two zooms at
