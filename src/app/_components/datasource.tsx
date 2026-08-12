@@ -31,7 +31,7 @@ const PENDING_GEOLOCATION_BY_YEAR: { [year: string]: number } = {
     "2023": 8,
     "2024": 20,
     "2025": 0,
-    "2026": 7,
+    "2026": 6,
 }
 // verified but not-yet-geolocated incidents, used to compute pending counts for arbitrary date ranges
 // (per-year sums here match TOTAL_STRIKES_BY_YEAR / PENDING_GEOLOCATION_BY_YEAR above)
@@ -53,7 +53,6 @@ export const PENDING_INCIDENTS: { date: string; bursts: number }[] = [
     { date: "2026-04-14", bursts: 1 }, // WP416
     { date: "2026-04-30", bursts: 2 }, // WP428
     { date: "2026-05-09", bursts: 2 }, // WP435
-    { date: "2026-05-09", bursts: 1 }, // WP401
 ];
 const DISCORD_INVITE_URL = "https://discord.gg/YxZNEKWfQT";
 const geoSource: { [key: string]: String } = {

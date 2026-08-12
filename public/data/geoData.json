@@ -3662,6 +3662,24 @@
     "lon": 35.514822,
     "landscape": "resident",
     "source": "Al Jazeera"
+  },
+  {
+    "links": [
+      "https://www.afpforum.com/AFPForum/Search/Results.aspx?pn=1&smd=8&mui=3&q=10572423459208183637_0&SearchUN=True&fst=000_B2C22MR&fto=3&cck=a72a9d#pn=1&smd=8&q=4423209291344232034_0&SearchUN=True&fst=000_B2C22MR&fto=3&mui=3&t=2&cck=a72a9d"
+    ],
+    "filename": ["wp401_media1.png"],
+    "by": ["AB"],
+    "code": "WP401",
+    "date": "2026-05-09",
+    "time": "15:00:00",
+    "town": "Yohmor",
+    "country": "Lebanon",
+    "located": 1,
+    "shell_count": 1,
+    "lat": 33.319356,
+    "lon": 35.502576,
+    "landscape": "resident",
+    "source": "Agence France-Presse"
   }
 
 ]
