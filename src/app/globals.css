@@ -1177,25 +1177,10 @@ footer a {
   cursor: text;
 }
 
-.dynamic-thumbnails {
-  margin-top: 1rem;
-  max-width: 31vw;
-  min-width: 200px;
-  max-height: 50vh;
-  /* background-color: #0009; */
-  pointer-events: all;
-  padding: 1rem 0.5rem;
-  border-radius: 20px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.dynamic-thumbnails::-webkit-scrollbar {
-  display: none;
-}
-
-.dynamic-readout div:nth-child(1),
-.dynamic-readout div:nth-child(2) {
+/* direct children only — as a descendant selector this also matched nested divs
+   (e.g. the wrapped rows of the links list), sizing them up unintentionally */
+.dynamic-readout > div:nth-child(1),
+.dynamic-readout > div:nth-child(2) {
   font-size: 1.1rem;
   min-height: 1.7rem;
   /* font-size: 1.7rem; */
@@ -1203,7 +1188,7 @@ footer a {
   /* font-family: "PPSupplySans-Regular"; */
 }
 
-.dynamic-readout div:nth-child(3) {
+.dynamic-readout > div:nth-child(3) {
   margin-top: 2rem;
 }
 
@@ -1463,6 +1448,17 @@ footer a {
   text-decoration: underline;
 }
 
+/* source-media links: red underline tight to the text. Needs to out-specify the
+   `.dynamic-readout a` shorthand above, which otherwise resets colour/thickness. */
+.dynamic-readout a.media-link {
+  text-decoration-color: #ff5b3d;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  /* draw straight through descenders (p, _) — the default gaps around them read
+     as separate links rather than one continuous underline */
+  text-decoration-skip-ink: none;
+}
+
 .area-type-legend {
   background-color: #561a188e;
   padding: 0.05em 0.25em 0.25em 0.25em;
@@ -1662,12 +1658,6 @@ small {
     font-size: 1rem;
   }
 
-  .dynamic-thumbnails {
-    max-width: 80vw;
-    max-height: none;
-    overflow-y: visible !important;
-  }
-
   footer {
     font-size: 0.55rem;
     width: calc(100vw - 20px);
@@ -1702,8 +1692,8 @@ small {
     font-size: 1rem;
   }
 
-  .dynamic-readout div:nth-child(1),
-  .dynamic-readout div:nth-child(2) {
+  .dynamic-readout > div:nth-child(1),
+  .dynamic-readout > div:nth-child(2) {
     font-size: 0.85rem;
     min-height: 0;
   }

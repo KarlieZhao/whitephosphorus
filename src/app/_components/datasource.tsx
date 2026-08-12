@@ -55,6 +55,10 @@ export const PENDING_INCIDENTS: { date: string; bursts: number }[] = [
     { date: "2026-05-09", bursts: 2 }, // WP435
 ];
 const DISCORD_INVITE_URL = "https://discord.gg/YxZNEKWfQT";
+// 6 decimal places is ~0.11m at this latitude — well beyond the accuracy any of these
+// geolocations actually carry, so longer stored values just add visual noise. Number()
+// drops trailing zeros so shorter coordinates aren't padded with false precision.
+const trimCoord = (n: number) => (typeof n === "number" && !isNaN(n) ? Number(n.toFixed(6)) : n);
 const geoSource: { [key: string]: String } = {
     "AB": "Ahmad Baydoun",
     "AN": "X: AnnoNemo",
@@ -108,8 +112,6 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
     const [leafletCenter, setLeafletCenter] = useState<[number, number]>([35.57, 33.2]);
     const [mapInstance, setMapInstance] = useState<any | null>(null);
 
-    const [showOverlay, setShowOverlay] = useState<boolean>(false);
-    const [overlayImage, setOverlayImage] = useState<String | null>(null);
     // on mobile the readout panel can cover the whole tappable map area, leaving no
     // background to tap for the usual reset — bumping this tells VectorMap to clear its
     // internal focus state alongside clearing the readout here
@@ -271,24 +273,27 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             readout2 = <><span className="text-2xl text-white">{pt.shell_count}</span> white phosphorus shell{pt.shell_count > 1 ? "s" : ""} struck <span className="text-2xl text-white">{pt.town}</span>.</>
             //only on click
             if (clicked) {
-                readout3 = `Latitude: ${pt.lat}`;
-                readout4 = `Longitude: ${pt.lon}`;
-                readout5 = `Code: ${pt.code}`
+                readout3 = `Coordinates: ${trimCoord(pt.lat)}, ${trimCoord(pt.lon)}`;
+                readout4 = `Code: ${pt.code}`
                 if (pt.landscape) {
                     const lands = landscape_map[pt.landscape as keyof typeof landscape_map];
-                    readout6 = `${lands.slice(0, 1).toUpperCase() + lands.slice(1)} area`;
-                } else readout6 = "Landscape type is not yet unidentified."
+                    readout5 = `Landscape: ${lands.slice(0, 1).toUpperCase() + lands.slice(1)} area`;
+                } else readout5 = "Landscape type is not yet unidentified."
                 const geolocator = pt.by.map((person: string) => geoSource[person] ?? "/").join(", ")
-                readout7 = `Geolocated by: ${geolocator}`
-                readout8 = pt.source ? `Photo credit: ${pt.source}` : "";
+                readout6 = `Geolocated by: ${geolocator}`
+                readout7 = "";
+                readout8 = "";
 
-                thumbnails = pt.filename.map((name: string) => `/media/${pt.code}/${/\.\w+$/.test(name) ? name : `${name}.jpg`}`)
+                // display labels for the source-link list — the entry's own media names
+                // (e.g. "wp432_media1"), not the image files themselves
+                thumbnails = pt.filename.map((name: string) => name.replace(/\.\w+$/, ""))
                 ext_link = [...pt.links]
             } else {
                 readout3 = "";
                 readout4 = "";
                 readout5 = "";
                 readout6 = "";
+                readout7 = "";
                 readout8 = "";
                 thumbnails = []
                 ext_link = []
@@ -299,11 +304,6 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
 
 
     return (<>
-        <div className={`${showOverlay ? "" : "hidden"} map-overlay`}>
-            <img src={`${overlayImage}`} alt="" className="max-w-[50vw] max-h-[70vh]" />
-        </div>
-
-
         <div
             className={isMobile && !TypewriterFinished ? "mobile-intro-dim" : ""}
             onClick={() => {
@@ -376,24 +376,37 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 {details.slice(0, 8).map((line, idx) => (
                     <div key={idx}>{line}</div>
                 ))}
-            </div>
-
-            <div className="dynamic-thumbnails overflow-y-auto">
-                <p className="flex gap-4 flex-wrap max-w-[30vw] h-auto">
-                    {details[8]?.map((line: string, idx: number) =>
-                    (<a href={details[9][idx]} key={idx} target="_blank">
-                        <img src={`${line}`} className="max-w-24 max-h-20" key={idx} alt=""
-                            onMouseOver={() => {
-                                setOverlayImage(line);
-                                setShowOverlay(true);
-                            }}
-                            onMouseOut={() => {
-                                setShowOverlay(false);
-                            }}
-                        />
-                    </a>)
-                    )}
-                </p>
+                {/* links out to the source instead of hosting/displaying the media directly —
+                    several sources are watermarked agency preview images (AFP Forum, ANP,
+                    Getty), which aren't cleared for public reproduction */}
+                {details[9] && details[9].length > 0 && (
+                    <div className="flex gap-x-2 items-baseline">
+                        <span className="flex-shrink-0">Links:</span>
+                        {/* chunked into rows of 3 so overflow wraps onto its own line, aligned
+                            under the first link rather than under the "Links:" label */}
+                        <div className="flex flex-col gap-y-1">
+                            {Array.from({ length: Math.ceil(details[9].length / 3) }, (_, row) =>
+                                details[9].slice(row * 3, row * 3 + 3)
+                            ).map((chunk: string[], row: number) => (
+                                <div key={row} className="flex gap-x-2 items-baseline">
+                                    {chunk.map((link: string, i: number) => (
+                                        <React.Fragment key={i}>
+                                            {i > 0 && <span className="text-white text-lg leading-none">•</span>}
+                                            <a
+                                                href={link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="media-link text-white/80 hover:text-white"
+                                            >
+                                                {details[8]?.[row * 3 + i] ?? `Media ${row * 3 + i + 1}`}
+                                            </a>
+                                        </React.Fragment>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
 
