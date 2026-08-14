@@ -372,7 +372,19 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     ×
                 </button>
             )}
-            <div className="dynamic-readout">
+            <div
+                className="dynamic-readout"
+                // the readout's text lines carry `pointer-events: all` so they stay
+                // selectable, which means they also swallow map clicks that land on them —
+                // making it look like clicking blank space fails to deselect. Treat a plain
+                // click on the text as "dismiss", while leaving text selection and links alone.
+                onClick={(e) => {
+                    const t = e.target as HTMLElement;
+                    if (t.closest("a") || t.closest("button")) return;
+                    if ((window.getSelection()?.toString() ?? "").length > 0) return;
+                    closeReadout();
+                }}
+            >
                 {details.slice(0, 8).map((line, idx) => (
                     <div key={idx}>{line}</div>
                 ))}
