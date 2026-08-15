@@ -133,10 +133,24 @@ export default function Timeline() {
     return { cols, colIndex, towns, grid, maxStrikes, totalStrikes };
   }, [raw]);
 
-  const height = model ? ROW_H * model.towns.length + M_TOP + M_BOTTOM : 400;
-  const plotW = Math.max(320, width - M_LEFT - M_RIGHT);
-  const cellW = model ? plotW / model.cols.length : 0;
-  const xOf = (i: number) => M_LEFT + i * cellW;
+  /**
+   * On a phone the full span cannot fit: 32 months across ~390px leaves ~5px per month.
+   * So mobile keeps every town visible vertically (shorter rows, no vertical scroll) and
+   * scrolls sideways through time instead, with the town labels drawn in a separate,
+   * non-scrolling svg beside the grid — without that pinning you lose track of the rows.
+   */
+  const rowH = isMobile ? 14 : ROW_H;
+  const labelW = isMobile ? 84 : M_LEFT;
+  const LEFT = isMobile ? 0 : M_LEFT; // the grid svg's own left offset
+  const MOBILE_CELL_W = 28;
+
+  const height = model ? rowH * model.towns.length + M_TOP + M_BOTTOM : 400;
+  const plotW = isMobile
+    ? (model ? model.cols.length * MOBILE_CELL_W : 0)
+    : Math.max(320, width - M_LEFT - M_RIGHT);
+  const cellW = model ? (isMobile ? MOBILE_CELL_W : plotW / model.cols.length) : 0;
+  const gridSvgW = isMobile ? plotW + M_RIGHT : width;
+  const xOf = (i: number) => LEFT + i * cellW;
 
   /** exact-day x position, so short ceasefires don't snap to a whole month */
   const xAtDate = (isoDate: string): number | null => {
@@ -187,10 +201,24 @@ export default function Timeline() {
       <Header TypewriterFinished={true} />
 
       {/* breathing room between the counter bar and the chart */}
-      <div className="pt-40 px-6 overflow-x-auto">
-        <div ref={wrapRef}>
+      <div className={`px-6 ${isMobile ? "pt-28" : "pt-40"}`}>
+        <div ref={wrapRef} className={isMobile ? "flex items-start" : undefined}>
+          {/* town labels, pinned outside the scroll container on mobile */}
+          {isMobile && model && (
+            <svg width={labelW} height={height}
+              style={{ display: "block", flexShrink: 0 }}>
+              {model.towns.map((town, ti) => (
+                <text key={town} x={labelW - 5} y={M_TOP + ti * rowH + rowH / 2} dy="0.32em"
+                  textAnchor="end" fill="rgba(255,255,255,0.68)" fontSize="8">
+                  {town}
+                </text>
+              ))}
+            </svg>
+          )}
+
+          <div className={isMobile ? "overflow-x-auto flex-1 min-w-0" : undefined}>
           {model && (
-            <svg width={width} height={height} style={{ display: "block", maxWidth: "100%" }}
+            <svg width={gridSvgW} height={height} style={{ display: "block", maxWidth: isMobile ? "none" : "100%" }}
               onClick={() => setSel(null)}>
               <defs>
                 {/* The 2026 ceasefire is still running past the end of the data. Fading the
@@ -211,7 +239,7 @@ export default function Timeline() {
               {(() => {
                 const xi = xAtDate(INVASION.date);
                 if (xi === null) return null;
-                const right = M_LEFT + plotW;
+                const right = LEFT + plotW;
 
                 const spans = CEASEFIRES
                   .map((c) => {
@@ -243,7 +271,7 @@ export default function Timeline() {
                 if (x1 === null) return null;
                 // an open-ended ceasefire is still running at the end of the dataset,
                 // so its band runs to the edge of the chart
-                const x2 = cf.end ? xAtDate(cf.end) : M_LEFT + plotW;
+                const x2 = cf.end ? xAtDate(cf.end) : LEFT + plotW;
                 return (
                   <g key={cf.start}>
                     {x2 !== null && (
@@ -271,27 +299,30 @@ export default function Timeline() {
               {/* year labels — the divider lines are drawn later, on top of everything */}
               {yearMarks.map(({ i, year }) =>
                 i === 0 ? null : (
-                  <text key={year} x={xOf(i)} y={18} fill="#fff" fontSize="15" fontWeight="bold">{year}</text>
+                  <text key={year} x={xOf(i)} y={18} fill="#fff" fontSize={isMobile ? 11 : 15} fontWeight="bold">{year}</text>
                 )
               )}
 
               {/* months */}
               {model.cols.map((c, i) => (
                 <text key={i} x={xOf(i) + cellW / 2} y={M_TOP - 12} textAnchor="middle"
-                  fill="rgba(255,255,255,0.4)" fontSize="8.5">
+                  fill="rgba(255,255,255,0.4)" fontSize={isMobile ? 7.5 : 8.5}>
                   {fmtMon(c)}
                 </text>
               ))}
 
               {/* town rows */}
               {model.towns.map((town, ti) => {
-                const y = M_TOP + ti * ROW_H;
+                const y = M_TOP + ti * rowH;
                 return (
                   <g key={town}>
-                    <text x={M_LEFT - 6} y={y + ROW_H / 2} dy="0.32em" textAnchor="end"
-                      fill="rgba(255,255,255,0.68)" fontSize="9.5">
-                      {town}
-                    </text>
+                    {/* on mobile these live in the pinned svg instead */}
+                    {!isMobile && (
+                      <text x={LEFT - 6} y={y + rowH / 2} dy="0.32em" textAnchor="end"
+                        fill="rgba(255,255,255,0.68)" fontSize="9.5">
+                        {town}
+                      </text>
+                    )}
                     {model.cols.map((c, ci) => {
                       const b = model.grid.get(`${town}|${ci}`);
                       const label = fmtMonthYear(c);
@@ -299,7 +330,7 @@ export default function Timeline() {
                       return (
                         <rect key={ci}
                           x={xOf(ci) + 0.5} y={y + 0.5}
-                          width={Math.max(1, cellW - 1)} height={ROW_H - 1}
+                          width={Math.max(1, cellW - 1)} height={rowH - 1}
                           fill={b ? stepFill(b.strikes) : EMPTY}
                           stroke={isSel ? "#fff" : undefined} strokeWidth={isSel ? 1.2 : undefined}
                           style={{ cursor: b ? "pointer" : "default" }}
@@ -315,7 +346,7 @@ export default function Timeline() {
               })}
 
               {/* right-edge fade for the still-running ceasefire */}
-              <rect x={M_LEFT + plotW} y={M_TOP} width={M_RIGHT} height={plotBottom - M_TOP}
+              <rect x={LEFT + plotW} y={M_TOP} width={M_RIGHT} height={plotBottom - M_TOP}
                 fill="url(#edgeFade)" />
 
               {/* year dividers, drawn after the cells and tints so they sit above them */}
@@ -342,7 +373,7 @@ export default function Timeline() {
                       stroke={INVASION_COLOR} strokeWidth={1} strokeDasharray="4,3" />
                     <circle cx={x} cy={M_TOP - 2.5} r={2.5} fill={INVASION_COLOR} />
                     <circle cx={x} cy={plotBottom + 30} r={2.5} fill={INVASION_COLOR} />
-                    <text x={x + 9} y={plotBottom + 30} dy="0.35em" fill={INVASION_COLOR} fontSize="15" fontWeight="bold" textAnchor="start">
+                    <text x={x + 9} y={plotBottom + 30} dy="0.35em" fill={INVASION_COLOR} fontSize={isMobile ? 10 : 15} fontWeight="bold" textAnchor="start">
                       {INVASION.name}
                     </text>
                   </g>
@@ -353,20 +384,20 @@ export default function Timeline() {
               {CEASEFIRES.map((cf) => {
                 const x1 = xAtDate(cf.start);
                 if (x1 === null) return null;
-                const x2 = cf.end ? xAtDate(cf.end) : M_LEFT + plotW;
+                const x2 = cf.end ? xAtDate(cf.end) : LEFT + plotW;
                 // an open-ended ceasefire runs off the chart, so label it hard right
                 const openEnded = !cf.end;
-                const mid = openEnded ? M_LEFT + plotW : x2 !== null ? (x1 + x2) / 2 : x1;
-                const anchor = openEnded ? "middle" : mid > M_LEFT + plotW * 0.82 ? "end" : mid < M_LEFT + 70 ? "start" : "middle";
+                const mid = openEnded ? LEFT + plotW : x2 !== null ? (x1 + x2) / 2 : x1;
+                const anchor = openEnded ? "middle" : mid > LEFT + plotW * 0.82 ? "end" : mid < LEFT + 70 ? "start" : "middle";
                 const range = cf.end
                   ? `${fmtDay(new Date(cf.start + "T00:00:00Z")).trim()} – ${fmtDay(new Date(cf.end + "T00:00:00Z")).trim()}`
                   : `from ${fmtDay(new Date(cf.start + "T00:00:00Z")).trim()}, ongoing`;
                 return (
                   <g key={cf.start}>
-                    <text x={mid} y={plotBottom + 20} textAnchor={anchor} fill={CF_LINE} fontSize="10">
+                    <text x={mid} y={plotBottom + 20} textAnchor={anchor} fill={CF_LINE} fontSize={isMobile ? 8 : 10}>
                       {cf.name}
                     </text>
-                    <text x={mid} y={plotBottom + 32} textAnchor={anchor} fill={CF_LINE} fontSize="9" opacity={0.8}>
+                    <text x={mid} y={plotBottom + 32} textAnchor={anchor} fill={CF_LINE} fontSize={isMobile ? 7 : 9} opacity={0.8}>
                       {range}
                     </text>
                   </g>
@@ -375,6 +406,7 @@ export default function Timeline() {
             </svg>
           )}
           {!model && <div className="text-white/40 text-sm">loading…</div>}
+          </div>
         </div>
       </div>
 
