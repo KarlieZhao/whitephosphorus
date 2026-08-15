@@ -61,7 +61,7 @@
       ]
     },
     {
-      "question": "Media Coverage of This Research",
+      "question": "Media Coverage",
       "answer": [
         {
           "New York Times - What Visual Evidence Tells Us About Israel’s Use of White Phosphorus in Lebanon": "https://www.nytimes.com/2026/06/06/world/middleeast/white-phosphorous-israel-lebanon.html"
@@ -83,6 +83,9 @@
         },
         {
           "BFMTV - Lebanon: Israeli army accused again of using white phosphorus in populated areas": "https://www.youtube.com/shorts/DaPMdrwwMx0"
+        },
+        {
+          "Megaphone News - Israel marks its war with white phosphorus": "https://www.instagram.com/reels/Dbv00WZuZFN/"
         },
         {
           "El Pais - Tierra quemada por Israel en los campos del sur de Líbano": "https://elpais.com/internacional/2026-05-20/tierra-quemada-por-israel-en-los-campos-del-sur-de-libano.html"
@@ -124,10 +127,6 @@
           "HUFFPOST — Israël accusé d’utiliser du phosphore blanc contre le Liban, voici pourquoi cette ONG s’inquiète": "https://www.huffingtonpost.fr/international/article/israel-accuse-d-utiliser-du-phosphore-blanc-contre-le-liban-voici-pourquoi-cette-ong-s-inquiete_261288.html"
         }
       ]
-    },
-    {
-      "question": "Image & Video Rights",
-      "answer": "<p>Photographs and video stills embedded on this site are sourced from third-party news agencies and social media (AFP, Getty Images, ANP, Reuters, Anadolu Agency, and others, credited per incident) and remain the property of their original copyright holders. They are used here only as small, low-resolution thumbnails for documentation and accountability purposes, each linking directly to its original source.</p><p>All original research, data, and design on this site are separately licensed under <a href='https://creativecommons.org/licenses/by-nc/4.0/' target='_blank'>CC BY-NC 4.0</a> (Attribution: Ahmad Baydoun).</p>"
     }
   ],
   "reachout": "If you have additional footage to share with us, please reach out to us at ahmadbaydoun@pm.me.<br/><br/> If you'd like to help us geolocating the remaining incidents, join our Discord channel <a href='https://discord.gg/YxZNEKWfQT' target='_blank'>here</a>.",
