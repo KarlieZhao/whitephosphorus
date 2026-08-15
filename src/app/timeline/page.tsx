@@ -388,16 +388,24 @@ export default function Timeline() {
                 // an open-ended ceasefire runs off the chart, so label it hard right
                 const openEnded = !cf.end;
                 const mid = openEnded ? LEFT + plotW : x2 !== null ? (x1 + x2) / 2 : x1;
-                const anchor = openEnded ? "middle" : mid > LEFT + plotW * 0.82 ? "end" : mid < LEFT + 70 ? "start" : "middle";
+                /**
+                 * Desktop switches to start/end anchoring near the edges so labels don't
+                 * clip. On mobile the grid scrolls, so that just knocks the text off-centre
+                 * from its band — centre it instead and nudge it clear of the left edge.
+                 */
+                const anchor = isMobile
+                  ? "middle"
+                  : openEnded ? "middle" : mid > LEFT + plotW * 0.82 ? "end" : mid < LEFT + 70 ? "start" : "middle";
+                const labelX = isMobile ? Math.max(mid, 48) : mid;
                 const range = cf.end
                   ? `${fmtDay(new Date(cf.start + "T00:00:00Z")).trim()} – ${fmtDay(new Date(cf.end + "T00:00:00Z")).trim()}`
                   : `from ${fmtDay(new Date(cf.start + "T00:00:00Z")).trim()}, ongoing`;
                 return (
                   <g key={cf.start}>
-                    <text x={mid} y={plotBottom + 20} textAnchor={anchor} fill={CF_LINE} fontSize={isMobile ? 8 : 10}>
+                    <text x={labelX} y={plotBottom + 20} textAnchor={anchor} fill={CF_LINE} fontSize={isMobile ? 8 : 10}>
                       {cf.name}
                     </text>
-                    <text x={mid} y={plotBottom + 32} textAnchor={anchor} fill={CF_LINE} fontSize={isMobile ? 7 : 9} opacity={0.8}>
+                    <text x={labelX} y={plotBottom + 32} textAnchor={anchor} fill={CF_LINE} fontSize={isMobile ? 7 : 9} opacity={0.8}>
                       {range}
                     </text>
                   </g>
@@ -459,10 +467,20 @@ export default function Timeline() {
 
       {!isMobile && <Footer />}
 
-      {hover && (
+      {hover && (() => {
+        // keep the box on screen: cells near the right edge would otherwise push it
+        // past the viewport, and near the bottom it would run under the fold
+        const BOX_W = 280;
+        const BOX_H = 110;
+        const PAD = 8;
+        const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
+        const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+        const left = Math.max(PAD, Math.min(hover.x + 14, vw - BOX_W - PAD));
+        const top = Math.max(PAD, Math.min(hover.y + 14, vh - BOX_H - PAD));
+        return (
         <div className="fixed z-50 pointer-events-none rounded px-2.5 py-1.5 text-[0.7rem] max-w-[280px]"
           style={{
-            left: hover.x + 14, top: hover.y + 14,
+            left, top,
             background: "rgba(0,0,0,0.7)",
             backdropFilter: "blur(3px)",
             border: "1px solid rgba(255,255,255,0.3)",
@@ -476,7 +494,8 @@ export default function Timeline() {
             {hover.b.codes.join(" · ")}
           </div>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
