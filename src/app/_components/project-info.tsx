@@ -76,7 +76,9 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                 ))
                 }
             </div >
-            <div className="mb-20 mt-20">
+            {/* same 2rem step as the methodology link above it, so the run of blocks
+                keeps one rhythm instead of opening a gap before the last one */}
+            <div className="mb-20 mt-8">
                 <p dangerouslySetInnerHTML={{ __html: data.reachout }} />
             </div>
         </div >

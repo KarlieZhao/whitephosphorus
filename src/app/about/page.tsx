@@ -75,7 +75,6 @@ export default function Index() {
                     Website designed and built by <a href="https://portfolio.theunthoughts.com/" target="_blank">Karlie Zhao</a>. Karlie is a Beijing-born, Boston-based artist and creative technologist. <br />
                     <br />
                     <div className="contribution">
-                        <br /> <br />
                         <span className="text-gray-100">Special thanks to:</span><br />
                         Marc Schoonderbeek, Aleksandar Stancic, Chris Osieck, Wim Zwijnenburg, Tarek Ali Ahmad, Khodor Joujou, Karlie Zhao, Abbas Baalbaki, Ramzi Kaiss, Justin Salhani, Ali Slayman, Hisham Younes, Cosette Molijn, Carmen Joukhadar, William Christou, Alex Spoerndli, X:@Easybakeovensz, X:@NemoAnno.
                         <div className="mt-8">Satellite imagery provided by Planet Labs PBC under an educational license.</div>
