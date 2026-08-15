@@ -82,7 +82,7 @@ export default function Timeline() {
     () => typeof window !== "undefined" && sessionStorage.getItem("timelineAnimated") === "true"
   );
   const [revealCol, setRevealCol] = useState(-1);
-  const [showBands, setShowBands] = useState(false);
+  const [bandCol, setBandCol] = useState(-1);
   const [showMarks, setShowMarks] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -160,21 +160,32 @@ export default function Timeline() {
     if (!model) return;
     if (hasAnimated) {
       setRevealCol(model.cols.length);
-      setShowBands(true);
+      setBandCol(model.cols.length);
       setShowMarks(true);
       return;
     }
-    const STEP = 42; // per month column
+    const STEP = 42;      // strikes, per month column
+    const BAND_STEP = 26; // regions wipe through faster, chasing the strikes
+    const n = model.cols.length;
     const timers: ReturnType<typeof setTimeout>[] = [];
+
     model.cols.forEach((_, i) => timers.push(setTimeout(() => setRevealCol(i), i * STEP)));
-    const sweep = model.cols.length * STEP;
-    timers.push(setTimeout(() => setShowBands(true), sweep + 180));
-    timers.push(setTimeout(() => setShowMarks(true), sweep + 520));
+    const sweep = n * STEP;
+
+    // regions roll in chronologically too, rather than fading up all at once
+    const bandStart = sweep + 150;
+    model.cols.forEach((_, i) =>
+      timers.push(setTimeout(() => setBandCol(i), bandStart + i * BAND_STEP))
+    );
+    const bandEnd = bandStart + n * BAND_STEP;
+    timers.push(setTimeout(() => setBandCol(n), bandEnd));
+
+    timers.push(setTimeout(() => setShowMarks(true), bandEnd + 180));
     timers.push(
       setTimeout(() => {
         setHasAnimated(true);
         sessionStorage.setItem("timelineAnimated", "true");
-      }, sweep + 1200)
+      }, bandEnd + 900)
     );
     return () => timers.forEach(clearTimeout);
   }, [model, hasAnimated]);
@@ -258,6 +269,13 @@ export default function Timeline() {
             <svg width={gridSvgW} height={height} style={{ display: "block", maxWidth: isMobile ? "none" : "100%" }}
               onClick={() => setSel(null)}>
               <defs>
+                {/* the regions are revealed by a left-to-right wipe rather than a fade,
+                    so they arrive in the same chronological order as the strikes */}
+                <clipPath id="bandsWipe">
+                  <rect x={0} y={0}
+                    width={bandCol < 0 ? 0 : bandCol >= model.cols.length ? gridSvgW : xOf(bandCol) + cellW}
+                    height={height} />
+                </clipPath>
                 {/* The 2026 ceasefire is still running past the end of the data. Fading the
                     tint alone left a seam, because the empty-cell wash also stops at the plot
                     edge — so this fades the COMPOSITE tone (black + cell wash + ceasefire
@@ -271,7 +289,7 @@ export default function Timeline() {
                 </linearGradient>
               </defs>
               {/* phase 2 of the intro: the regions fade up once the strikes have swept in */}
-              <g style={{ opacity: showBands ? 1 : 0, transition: "opacity 700ms ease" }}>
+              <g clipPath="url(#bandsWipe)">
               {/* Post-invasion tint, drawn only OUTSIDE ceasefire periods. Painting it under
                   the blue bands would stack two translucent fills into a third colour, and a
                   ceasefire is not "invasion ongoing" anyway — so the two are kept exclusive. */}
