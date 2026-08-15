@@ -72,6 +72,18 @@ export default function Timeline() {
   const [width, setWidth] = useState(1100);
   const [hover, setHover] = useState<{ x: number; y: number; town: string; label: string; b: Bucket } | null>(null);
   const [sel, setSel] = useState<{ town: string; label: string; b: Bucket } | null>(null);
+
+  /**
+   * Intro: strikes sweep in chronologically, then the ceasefire/invasion regions fade
+   * up behind them, then the markers and labels. Plays once per session, matching the
+   * map's `mapDotsAnimated` behaviour, so navigating back doesn't replay it.
+   */
+  const [hasAnimated, setHasAnimated] = useState(
+    () => typeof window !== "undefined" && sessionStorage.getItem("timelineAnimated") === "true"
+  );
+  const [revealCol, setRevealCol] = useState(-1);
+  const [showBands, setShowBands] = useState(false);
+  const [showMarks, setShowMarks] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -143,6 +155,31 @@ export default function Timeline() {
   const labelW = isMobile ? 84 : M_LEFT;
   const LEFT = isMobile ? 0 : M_LEFT; // the grid svg's own left offset
   const MOBILE_CELL_W = 28;
+
+  useEffect(() => {
+    if (!model) return;
+    if (hasAnimated) {
+      setRevealCol(model.cols.length);
+      setShowBands(true);
+      setShowMarks(true);
+      return;
+    }
+    const STEP = 42; // per month column
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    model.cols.forEach((_, i) => timers.push(setTimeout(() => setRevealCol(i), i * STEP)));
+    const sweep = model.cols.length * STEP;
+    timers.push(setTimeout(() => setShowBands(true), sweep + 180));
+    timers.push(setTimeout(() => setShowMarks(true), sweep + 520));
+    timers.push(
+      setTimeout(() => {
+        setHasAnimated(true);
+        sessionStorage.setItem("timelineAnimated", "true");
+      }, sweep + 1200)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [model, hasAnimated]);
+
+  const colIn = (ci: number) => hasAnimated || ci <= revealCol;
 
   const height = model ? rowH * model.towns.length + M_TOP + M_BOTTOM : 400;
   const plotW = isMobile
@@ -233,6 +270,8 @@ export default function Timeline() {
                   <stop offset="100%" stopColor="#252a2e" stopOpacity={0} />
                 </linearGradient>
               </defs>
+              {/* phase 2 of the intro: the regions fade up once the strikes have swept in */}
+              <g style={{ opacity: showBands ? 1 : 0, transition: "opacity 700ms ease" }}>
               {/* Post-invasion tint, drawn only OUTSIDE ceasefire periods. Painting it under
                   the blue bands would stack two translucent fills into a third colour, and a
                   ceasefire is not "invasion ongoing" anyway — so the two are kept exclusive. */}
@@ -296,6 +335,8 @@ export default function Timeline() {
                 );
               })}
 
+              </g>
+
               {/* year labels — the divider lines are drawn later, on top of everything */}
               {yearMarks.map(({ i, year }) =>
                 i === 0 ? null : (
@@ -333,7 +374,12 @@ export default function Timeline() {
                           width={Math.max(1, cellW - 1)} height={rowH - 1}
                           fill={b ? stepFill(b.strikes) : EMPTY}
                           stroke={isSel ? "#fff" : undefined} strokeWidth={isSel ? 1.2 : undefined}
-                          style={{ cursor: b ? "pointer" : "default" }}
+                          style={{
+                            cursor: b ? "pointer" : "default",
+                            // only the filled cells animate; the empty wash is already faint
+                            opacity: b && !colIn(ci) ? 0 : 1,
+                            transition: "opacity 300ms ease",
+                          }}
                           onMouseEnter={(e) => b && setHover({ x: e.clientX, y: e.clientY, town, label, b })}
                           onMouseMove={(e) => b && setHover({ x: e.clientX, y: e.clientY, town, label, b })}
                           onMouseLeave={() => setHover(null)}
@@ -345,6 +391,8 @@ export default function Timeline() {
                 );
               })}
 
+              {/* phase 3: markers and labels last */}
+              <g style={{ opacity: showMarks ? 1 : 0, transition: "opacity 550ms ease" }}>
               {/* right-edge fade for the still-running ceasefire */}
               <rect x={LEFT + plotW} y={M_TOP} width={M_RIGHT} height={plotBottom - M_TOP}
                 fill="url(#edgeFade)" />
@@ -411,6 +459,7 @@ export default function Timeline() {
                   </g>
                 );
               })}
+              </g>
             </svg>
           )}
           {!model && <div className="text-white/40 text-sm">loading…</div>}
