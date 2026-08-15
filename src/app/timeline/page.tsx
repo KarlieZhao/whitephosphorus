@@ -82,7 +82,7 @@ export default function Timeline() {
     () => typeof window !== "undefined" && sessionStorage.getItem("timelineAnimated") === "true"
   );
   const [revealCol, setRevealCol] = useState(-1);
-  const [regionsIn, setRegionsIn] = useState(0);
+  const [showBands, setShowBands] = useState(false);
   const [showMarks, setShowMarks] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -264,27 +264,22 @@ export default function Timeline() {
     return out.sort((p, q) => p.at - q.at);
   })();
 
-  const regionTotal = regions.length;
-  const regionIn = (i: number) => hasAnimated || i < regionsIn;
-  /* the invasion's own dashed edge is drawn on top of the cells rather than under them,
-     so it lives outside the region groups — but it fades on the same beat as its tint */
-  const invasionRegion = regions.findIndex((r) => r.key === "inv-0");
+  const bandsIn = hasAnimated || showBands;
 
   /**
-   * Intro sequence: strikes sweep in month by month, then each tinted period fades up in
-   * turn, then the markers and labels. Placed after `regions` because it is paced by how
-   * many of them there are.
+   * Intro sequence: the strikes sweep in month by month, then every tinted period fades
+   * up together with the dashed lines marking its edges, then the markers and labels.
    */
   useEffect(() => {
     if (!model) return;
     if (hasAnimated) {
       setRevealCol(model.cols.length);
-      setRegionsIn(regionTotal);
+      setShowBands(true);
       setShowMarks(true);
       return;
     }
-    const STEP = 42;         // strikes, per month column
-    const REGION_STEP = 260; // one tinted period after another
+    const STEP = 42;      // strikes, per month column
+    const BAND_FADE = 700; // how long the tints take to come up
     const n = model.cols.length;
     const timers: ReturnType<typeof setTimeout>[] = [];
 
@@ -292,10 +287,8 @@ export default function Timeline() {
     const sweep = n * STEP;
 
     const bandStart = sweep + 150;
-    for (let i = 0; i < regionTotal; i++) {
-      timers.push(setTimeout(() => setRegionsIn(i + 1), bandStart + i * REGION_STEP));
-    }
-    const bandEnd = bandStart + regionTotal * REGION_STEP;
+    timers.push(setTimeout(() => setShowBands(true), bandStart));
+    const bandEnd = bandStart + BAND_FADE;
 
     timers.push(setTimeout(() => setShowMarks(true), bandEnd + 180));
     timers.push(
@@ -305,7 +298,7 @@ export default function Timeline() {
       }, bandEnd + 900)
     );
     return () => timers.forEach(clearTimeout);
-  }, [model, hasAnimated, regionTotal]);
+  }, [model, hasAnimated]);
 
   return (
     <div className="min-h-screen bg-black text-white" style={{ fontFamily: "Inconsolata, monospace" }}>
@@ -369,13 +362,13 @@ export default function Timeline() {
                   <stop offset="100%" stopColor="#252a2e" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              {/* phase 2 of the intro: each tinted period fades up in turn, in the order
-                  it happened, with the dashed lines marking its edges */}
-              {regions.map((r, i) => (
-                <g key={r.key} style={{ opacity: regionIn(i) ? 1 : 0, transition: "opacity 420ms ease" }}>
-                  {r.node}
-                </g>
-              ))}
+              {/* phase 2 of the intro: the tinted periods fade up together, each with the
+                  dashed lines marking its edges, once the strikes have swept in */}
+              <g style={{ opacity: bandsIn ? 1 : 0, transition: "opacity 700ms ease" }}>
+                {regions.map((r) => (
+                  <g key={r.key}>{r.node}</g>
+                ))}
+              </g>
 
               {/* year labels — the divider lines are drawn later, on top of everything */}
               {yearMarks.map(({ i, year }) =>
@@ -435,9 +428,9 @@ export default function Timeline() {
                   edges, so it is drawn here — but timed with the tint it opens */}
               {(() => {
                 const x = xAtDate(INVASION.date);
-                if (x === null || invasionRegion < 0) return null;
+                if (x === null) return null;
                 return (
-                  <g style={{ opacity: regionIn(invasionRegion) ? 1 : 0, transition: "opacity 420ms ease" }}>
+                  <g style={{ opacity: bandsIn ? 1 : 0, transition: "opacity 700ms ease" }}>
                     <line x1={x} x2={x} y1={M_TOP} y2={plotBottom + 27.5}
                       stroke={INVASION_COLOR} strokeWidth={1} strokeDasharray="4,3" />
                     <circle cx={x} cy={M_TOP - 2.5} r={2.5} fill={INVASION_COLOR} />
