@@ -201,7 +201,7 @@ export default function Timeline() {
       <Header TypewriterFinished={true} />
 
       {/* breathing room between the counter bar and the chart */}
-      <div className={`px-6 ${isMobile ? "pt-28" : "pt-40"}`}>
+      <div className={isMobile ? "pl-1 pr-2 pt-28" : "px-6 pt-40"}>
         <div ref={wrapRef} className={isMobile ? "flex items-start" : undefined}>
           {/* town labels, pinned outside the scroll container on mobile */}
           {isMobile && model && (

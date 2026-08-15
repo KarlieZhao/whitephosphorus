@@ -995,6 +995,30 @@ ul li {
 }
 
 /* ===== mobile ======= */
+.timeline-button {
+  color: #fff;
+  position: absolute;
+  right: 58px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #fff;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  z-index: 501;
+}
+
+.timeline-button-active {
+  background: #fff;
+  color: #c42100;
+}
+
 .info-button {
   color: #fff;
   position: absolute;
@@ -1550,7 +1574,7 @@ small {
     position: relative;
     background-color: #c42100;
     height: 3.4rem;
-    padding: 0 3.25rem 0 1rem;
+    padding: 0 5.6rem 0 1rem;
     display: flex;
     align-items: center;
   }

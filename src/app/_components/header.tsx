@@ -52,6 +52,18 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
           <h3 className="mobile-header-title" onClick={() => router.push("/")}>
             WhitePhosphorus.info
           </h3>
+          {/* mobile has no nav tabs, so the timeline gets a direct shortcut here */}
+          <button
+            className={`timeline-button ${isActive("/timeline") ? "timeline-button-active" : ""}`}
+            onClick={() => router.push("/timeline")}
+            aria-label="Timeline"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
+              <rect x="1" y="2" width="7.5" height="2" rx="0.6" fill="currentColor" />
+              <rect x="1" y="6" width="12" height="2" rx="0.6" fill="currentColor" />
+              <rect x="1" y="10" width="4.5" height="2" rx="0.6" fill="currentColor" />
+            </svg>
+          </button>
           <button
             className="info-button"
             onClick={() => router.push("/about")}
