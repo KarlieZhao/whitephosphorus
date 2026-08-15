@@ -65,7 +65,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
             </svg>
           </button>
           <button
-            className="info-button"
+            className={`info-button ${isActive("/about") ? "info-button-active" : ""}`}
             onClick={() => router.push("/about")}
             aria-label="About"
           >

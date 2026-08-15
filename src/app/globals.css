@@ -1042,6 +1042,12 @@ ul li {
   z-index: 501;
 }
 
+/* matches .timeline-button-active — the icon inverts on the page it leads to */
+.info-button-active {
+  background: #fff;
+  color: #c42100;
+}
+
 .method-page section {
   margin-bottom: 5rem;
 }

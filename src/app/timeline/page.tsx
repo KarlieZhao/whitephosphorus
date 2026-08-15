@@ -82,7 +82,7 @@ export default function Timeline() {
     () => typeof window !== "undefined" && sessionStorage.getItem("timelineAnimated") === "true"
   );
   const [revealCol, setRevealCol] = useState(-1);
-  const [bandCol, setBandCol] = useState(-1);
+  const [regionsIn, setRegionsIn] = useState(0);
   const [showMarks, setShowMarks] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -156,40 +156,6 @@ export default function Timeline() {
   const LEFT = isMobile ? 0 : M_LEFT; // the grid svg's own left offset
   const MOBILE_CELL_W = 28;
 
-  useEffect(() => {
-    if (!model) return;
-    if (hasAnimated) {
-      setRevealCol(model.cols.length);
-      setBandCol(model.cols.length);
-      setShowMarks(true);
-      return;
-    }
-    const STEP = 42;      // strikes, per month column
-    const BAND_STEP = 26; // regions wipe through faster, chasing the strikes
-    const n = model.cols.length;
-    const timers: ReturnType<typeof setTimeout>[] = [];
-
-    model.cols.forEach((_, i) => timers.push(setTimeout(() => setRevealCol(i), i * STEP)));
-    const sweep = n * STEP;
-
-    // regions roll in chronologically too, rather than fading up all at once
-    const bandStart = sweep + 150;
-    model.cols.forEach((_, i) =>
-      timers.push(setTimeout(() => setBandCol(i), bandStart + i * BAND_STEP))
-    );
-    const bandEnd = bandStart + n * BAND_STEP;
-    timers.push(setTimeout(() => setBandCol(n), bandEnd));
-
-    timers.push(setTimeout(() => setShowMarks(true), bandEnd + 180));
-    timers.push(
-      setTimeout(() => {
-        setHasAnimated(true);
-        sessionStorage.setItem("timelineAnimated", "true");
-      }, bandEnd + 900)
-    );
-    return () => timers.forEach(clearTimeout);
-  }, [model, hasAnimated]);
-
   const colIn = (ci: number) => hasAnimated || ci <= revealCol;
 
   const height = model ? rowH * model.towns.length + M_TOP + M_BOTTOM : 400;
@@ -218,6 +184,128 @@ export default function Timeline() {
   });
 
   const plotBottom = height - M_BOTTOM;
+
+  /**
+   * The tinted periods fade in one at a time, in the order they happened, each together
+   * with the dashed lines marking its edges. The post-invasion tint is broken around the
+   * ceasefires, and every piece of it takes its own place in that sequence.
+   */
+  const regions: { key: string; at: number; node: React.ReactNode }[] = (() => {
+    if (!model) return [];
+    const out: { key: string; at: number; node: React.ReactNode }[] = [];
+    const right = LEFT + plotW;
+
+    CEASEFIRES.forEach((cf) => {
+      const x1 = xAtDate(cf.start);
+      if (x1 === null) return;
+      // an open-ended ceasefire is still running at the end of the dataset,
+      // so its band runs to the edge of the chart
+      const x2 = cf.end ? xAtDate(cf.end) : right;
+      out.push({
+        key: `cf-${cf.start}`,
+        at: x1,
+        node: (
+          <>
+            {x2 !== null && (
+              <rect x={x1} y={M_TOP} width={Math.max(1.5, x2 - x1)} height={plotBottom - M_TOP}
+                fill={CF_BAND} />
+            )}
+            <line x1={x1} x2={x1} y1={M_TOP} y2={plotBottom}
+              stroke={CF_LINE} strokeWidth={1} strokeDasharray="2,2" />
+            <circle cx={x1} cy={M_TOP - 2.5} r={2.5} fill={CF_LINE} />
+            <circle cx={x1} cy={plotBottom + 2.5} r={2.5} fill={CF_LINE} />
+            {/* only draw a closing edge where the ceasefire actually ended —
+                an open-ended one must not look like it stopped at the chart edge */}
+            {cf.end && x2 !== null && (
+              <>
+                <line x1={x2} x2={x2} y1={M_TOP} y2={plotBottom}
+                  stroke={CF_LINE} strokeWidth={1} strokeDasharray="2,2" />
+                <circle cx={x2} cy={M_TOP - 2.5} r={2.5} fill={CF_LINE} />
+                <circle cx={x2} cy={plotBottom + 2.5} r={2.5} fill={CF_LINE} />
+              </>
+            )}
+          </>
+        ),
+      });
+    });
+
+    /* Post-invasion tint, drawn only OUTSIDE ceasefire periods. Painting it under the
+       blue bands would stack two translucent fills into a third colour, and a ceasefire
+       is not "invasion ongoing" anyway — so the two are kept exclusive. */
+    const xi = xAtDate(INVASION.date);
+    if (xi !== null) {
+      const spans = CEASEFIRES
+        .map((c) => {
+          const a = xAtDate(c.start);
+          const b = c.end ? xAtDate(c.end) : right;
+          if (a === null || b === null) return null;
+          return [Math.max(xi, a), Math.min(right, b)] as [number, number];
+        })
+        .filter((v): v is [number, number] => !!v && v[1] > v[0])
+        .sort((p, q) => p[0] - q[0]);
+
+      const gaps: [number, number][] = [];
+      let cursor = xi;
+      spans.forEach(([a, b]) => {
+        if (a > cursor) gaps.push([cursor, a]);
+        cursor = Math.max(cursor, b);
+      });
+      if (cursor < right) gaps.push([cursor, right]);
+
+      gaps.forEach(([a, b], i) => {
+        out.push({
+          key: `inv-${i}`,
+          at: a,
+          node: <rect x={a} y={M_TOP} width={b - a} height={plotBottom - M_TOP} fill={INVASION_TINT} />,
+        });
+      });
+    }
+
+    return out.sort((p, q) => p.at - q.at);
+  })();
+
+  const regionTotal = regions.length;
+  const regionIn = (i: number) => hasAnimated || i < regionsIn;
+  /* the invasion's own dashed edge is drawn on top of the cells rather than under them,
+     so it lives outside the region groups — but it fades on the same beat as its tint */
+  const invasionRegion = regions.findIndex((r) => r.key === "inv-0");
+
+  /**
+   * Intro sequence: strikes sweep in month by month, then each tinted period fades up in
+   * turn, then the markers and labels. Placed after `regions` because it is paced by how
+   * many of them there are.
+   */
+  useEffect(() => {
+    if (!model) return;
+    if (hasAnimated) {
+      setRevealCol(model.cols.length);
+      setRegionsIn(regionTotal);
+      setShowMarks(true);
+      return;
+    }
+    const STEP = 42;         // strikes, per month column
+    const REGION_STEP = 260; // one tinted period after another
+    const n = model.cols.length;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    model.cols.forEach((_, i) => timers.push(setTimeout(() => setRevealCol(i), i * STEP)));
+    const sweep = n * STEP;
+
+    const bandStart = sweep + 150;
+    for (let i = 0; i < regionTotal; i++) {
+      timers.push(setTimeout(() => setRegionsIn(i + 1), bandStart + i * REGION_STEP));
+    }
+    const bandEnd = bandStart + regionTotal * REGION_STEP;
+
+    timers.push(setTimeout(() => setShowMarks(true), bandEnd + 180));
+    timers.push(
+      setTimeout(() => {
+        setHasAnimated(true);
+        sessionStorage.setItem("timelineAnimated", "true");
+      }, bandEnd + 900)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [model, hasAnimated, regionTotal]);
 
   return (
     <div className="min-h-screen bg-black text-white" style={{ fontFamily: "Inconsolata, monospace" }}>
@@ -269,13 +357,6 @@ export default function Timeline() {
             <svg width={gridSvgW} height={height} style={{ display: "block", maxWidth: isMobile ? "none" : "100%" }}
               onClick={() => setSel(null)}>
               <defs>
-                {/* the regions are revealed by a left-to-right wipe rather than a fade,
-                    so they arrive in the same chronological order as the strikes */}
-                <clipPath id="bandsWipe">
-                  <rect x={0} y={0}
-                    width={bandCol < 0 ? 0 : bandCol >= model.cols.length ? gridSvgW : xOf(bandCol) + cellW}
-                    height={height} />
-                </clipPath>
                 {/* The 2026 ceasefire is still running past the end of the data. Fading the
                     tint alone left a seam, because the empty-cell wash also stops at the plot
                     edge — so this fades the COMPOSITE tone (black + cell wash + ceasefire
@@ -288,72 +369,13 @@ export default function Timeline() {
                   <stop offset="100%" stopColor="#252a2e" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              {/* phase 2 of the intro: the regions fade up once the strikes have swept in */}
-              <g clipPath="url(#bandsWipe)">
-              {/* Post-invasion tint, drawn only OUTSIDE ceasefire periods. Painting it under
-                  the blue bands would stack two translucent fills into a third colour, and a
-                  ceasefire is not "invasion ongoing" anyway — so the two are kept exclusive. */}
-              {(() => {
-                const xi = xAtDate(INVASION.date);
-                if (xi === null) return null;
-                const right = LEFT + plotW;
-
-                const spans = CEASEFIRES
-                  .map((c) => {
-                    const a = xAtDate(c.start);
-                    const b = c.end ? xAtDate(c.end) : right;
-                    if (a === null || b === null) return null;
-                    return [Math.max(xi, a), Math.min(right, b)] as [number, number];
-                  })
-                  .filter((v): v is [number, number] => !!v && v[1] > v[0])
-                  .sort((p, q) => p[0] - q[0]);
-
-                const gaps: [number, number][] = [];
-                let cursor = xi;
-                spans.forEach(([a, b]) => {
-                  if (a > cursor) gaps.push([cursor, a]);
-                  cursor = Math.max(cursor, b);
-                });
-                if (cursor < right) gaps.push([cursor, right]);
-
-                return gaps.map(([a, b], i) => (
-                  <rect key={i} x={a} y={M_TOP} width={b - a}
-                    height={plotBottom - M_TOP} fill={INVASION_TINT} />
-                ));
-              })()}
-
-              {/* ceasefire spans, drawn under the cells */}
-              {CEASEFIRES.map((cf) => {
-                const x1 = xAtDate(cf.start);
-                if (x1 === null) return null;
-                // an open-ended ceasefire is still running at the end of the dataset,
-                // so its band runs to the edge of the chart
-                const x2 = cf.end ? xAtDate(cf.end) : LEFT + plotW;
-                return (
-                  <g key={cf.start}>
-                    {x2 !== null && (
-                      <rect x={x1} y={M_TOP} width={Math.max(1.5, x2 - x1)} height={plotBottom - M_TOP}
-                        fill={CF_BAND} />
-                    )}
-                    <line x1={x1} x2={x1} y1={M_TOP} y2={plotBottom}
-                      stroke={CF_LINE} strokeWidth={1} strokeDasharray="2,2" />
-                    <circle cx={x1} cy={M_TOP - 2.5} r={2.5} fill={CF_LINE} />
-                    <circle cx={x1} cy={plotBottom + 2.5} r={2.5} fill={CF_LINE} />
-                    {/* only draw a closing edge where the ceasefire actually ended —
-                        an open-ended one must not look like it stopped at the chart edge */}
-                    {cf.end && x2 !== null && (
-                      <>
-                        <line x1={x2} x2={x2} y1={M_TOP} y2={plotBottom}
-                          stroke={CF_LINE} strokeWidth={1} strokeDasharray="2,2" />
-                        <circle cx={x2} cy={M_TOP - 2.5} r={2.5} fill={CF_LINE} />
-                        <circle cx={x2} cy={plotBottom + 2.5} r={2.5} fill={CF_LINE} />
-                      </>
-                    )}
-                  </g>
-                );
-              })}
-
-              </g>
+              {/* phase 2 of the intro: each tinted period fades up in turn, in the order
+                  it happened, with the dashed lines marking its edges */}
+              {regions.map((r, i) => (
+                <g key={r.key} style={{ opacity: regionIn(i) ? 1 : 0, transition: "opacity 420ms ease" }}>
+                  {r.node}
+                </g>
+              ))}
 
               {/* year labels — the divider lines are drawn later, on top of everything */}
               {yearMarks.map(({ i, year }) =>
@@ -409,6 +431,21 @@ export default function Timeline() {
                 );
               })}
 
+              {/* the invasion's dashed edge sits above the cells, unlike the ceasefire
+                  edges, so it is drawn here — but timed with the tint it opens */}
+              {(() => {
+                const x = xAtDate(INVASION.date);
+                if (x === null || invasionRegion < 0) return null;
+                return (
+                  <g style={{ opacity: regionIn(invasionRegion) ? 1 : 0, transition: "opacity 420ms ease" }}>
+                    <line x1={x} x2={x} y1={M_TOP} y2={plotBottom + 27.5}
+                      stroke={INVASION_COLOR} strokeWidth={1} strokeDasharray="4,3" />
+                    <circle cx={x} cy={M_TOP - 2.5} r={2.5} fill={INVASION_COLOR} />
+                    <circle cx={x} cy={plotBottom + 30} r={2.5} fill={INVASION_COLOR} />
+                  </g>
+                );
+              })()}
+
               {/* phase 3: markers and labels last */}
               <g style={{ opacity: showMarks ? 1 : 0, transition: "opacity 550ms ease" }}>
               {/* right-edge fade for the still-running ceasefire */}
@@ -429,20 +466,15 @@ export default function Timeline() {
                 ) : null
               )}
 
-              {/* ground invasion */}
+              {/* ground invasion label — its dashed edge is drawn separately, below, so it
+                  can fade in with the tint it opens rather than with the other markers */}
               {(() => {
                 const x = xAtDate(INVASION.date);
                 if (x === null) return null;
                 return (
-                  <g>
-                    <line x1={x} x2={x} y1={M_TOP} y2={plotBottom + 27.5}
-                      stroke={INVASION_COLOR} strokeWidth={1} strokeDasharray="4,3" />
-                    <circle cx={x} cy={M_TOP - 2.5} r={2.5} fill={INVASION_COLOR} />
-                    <circle cx={x} cy={plotBottom + 30} r={2.5} fill={INVASION_COLOR} />
-                    <text x={x + 9} y={plotBottom + 30} dy="0.35em" fill={INVASION_COLOR} fontSize={isMobile ? 10 : 15} fontWeight="bold" textAnchor="start">
-                      {INVASION.name}
-                    </text>
-                  </g>
+                  <text x={x + 9} y={plotBottom + 30} dy="0.35em" fill={INVASION_COLOR} fontSize={isMobile ? 10 : 15} fontWeight="bold" textAnchor="start">
+                    {INVASION.name}
+                  </text>
                 );
               })()}
 
