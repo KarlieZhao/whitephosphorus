@@ -3680,6 +3680,132 @@
     "lon": 35.502576,
     "landscape": "resident",
     "source": "Agence France-Presse"
+  },
+  {
+    "links": [
+      "https://newsroom.ap.org/editorial-photos-videos/search?query=4458958&mediaType=video&st=keyword"
+    ],
+    "filename": ["wp427_media1"],
+    "by": [],
+    "code": "WP427",
+    "date": "2023-10-17",
+    "time": "15:32:00",
+    "town": "Dhaira",
+    "country": "Lebanon",
+    "located": 0,
+    "shell_count": 1,
+    "lat": null,
+    "lon": null,
+    "landscape": null,
+    "source": "AP"
+  },
+  {
+    "links": [
+      "https://www.facebook.com/watch/?v=1435787770470769"
+    ],
+    "filename": ["wp440_media1"],
+    "by": [],
+    "code": "WP440",
+    "date": "2024-07-05",
+    "time": "15:00:00",
+    "town": "Nabatieh",
+    "country": "Lebanon",
+    "located": 0,
+    "shell_count": 1,
+    "lat": null,
+    "lon": null,
+    "landscape": null,
+    "source": null
+  },
+  {
+    "links": [
+      "https://www.gettyimages.nl/detail/video/israeli-incendiary-ammunition-hitting-lebanese-nieuwsfootage/2174768197"
+    ],
+    "filename": ["wp500_media1"],
+    "by": [],
+    "code": "WP500",
+    "date": "2024-09-19",
+    "time": "00:00:00",
+    "town": "Kfar Kila",
+    "country": "Lebanon",
+    "located": 0,
+    "shell_count": 3,
+    "lat": null,
+    "lon": null,
+    "landscape": null,
+    "source": "Getty Images"
+  },
+  {
+    "links": [
+      "https://x.com/Mulhak/status/2028791067051503877/photo/1"
+    ],
+    "filename": ["wp419_media1"],
+    "by": [],
+    "code": "WP419",
+    "date": "2026-03-03",
+    "time": "12:00:00",
+    "town": "Yohmor",
+    "country": "Lebanon",
+    "located": 0,
+    "shell_count": 1,
+    "lat": null,
+    "lon": null,
+    "landscape": null,
+    "source": "X"
+  },
+  {
+    "links": [
+      "https://www.reutersconnect.com/item/israel-strikes-lebanon-as-cross-border-fire-with-hezbollah-continues/dGFnOnJldXRlcnMuY29tLDIwMjY6bmV3c21sX1ZBMjQ3ODE0MDQyMDI2UlAx"
+    ],
+    "filename": ["wp416_media1"],
+    "by": [],
+    "code": "WP416",
+    "date": "2026-04-14",
+    "time": "18:31:00",
+    "town": null,
+    "country": "Lebanon",
+    "located": 0,
+    "shell_count": 1,
+    "lat": null,
+    "lon": null,
+    "landscape": null,
+    "source": "Reuters"
+  },
+  {
+    "links": [
+      "https://www.reuters.com/pictures/photos-week-2026-05-07/6Y5KY3EOKBIEZIY3ACQCJGRSWI/",
+      "https://www.trtworld.com/article/2bc2a7861a6e"
+    ],
+    "filename": ["wp428_media1", "wp428_media2"],
+    "by": [],
+    "code": "WP428",
+    "date": "2026-04-30",
+    "time": "15:00:00",
+    "town": null,
+    "country": "Lebanon",
+    "located": 0,
+    "shell_count": 2,
+    "lat": null,
+    "lon": null,
+    "landscape": null,
+    "source": "Reuters, TRT"
+  },
+  {
+    "links": [
+      "https://www.reutersconnect.com/item/israeli-strikes-hit-southern-lebanon/dGFnOnJldXRlcnMuY29tLDIwMjY6bmV3c21sX1ZBOTExMjA5MDUyMDI2UlAx"
+    ],
+    "filename": ["wp435_media1"],
+    "by": [],
+    "code": "WP435",
+    "date": "2026-05-09",
+    "time": "09:28:00",
+    "town": null,
+    "country": "Lebanon",
+    "located": 0,
+    "shell_count": 2,
+    "lat": null,
+    "lon": null,
+    "landscape": null,
+    "source": "Reuters"
   }
-
 ]

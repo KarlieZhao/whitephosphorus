@@ -1,5 +1,12 @@
 "use client";
 /**
+ * PROTOTYPE — standalone experiment at /timeline-hover, not linked from the nav.
+ * Same chart as /timeline, with two changes under trial:
+ *   1. a scan line follows the cursor across the plot and reports the exact day plus the
+ *      running total of strikes recorded up to it, after the NYT poll-average charts
+ *   2. the year labels move from above the chart to below it, freeing the top strip for
+ *      that readout
+ *
  * Timeline: towns alphabetical down the y-axis, time across the x-axis binned by month
  * so the full span always fits the width — the page scrolls down through towns rather
  * than sideways through time.
@@ -14,10 +21,6 @@
  * Every incident for a town/month is summed. That matters: 29 of the filled town/day
  * cells hold more than one incident, and the previous heatMapHorizontal implementation
  * kept only the last one per date+town.
- *
- * On a pointer device a scan line follows the cursor, reporting the exact day and the
- * running strike total up to it, and snapping onto the marked dates. It is a hover
- * interaction, so it is left off on touch — see `scanEnabled`.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
@@ -186,7 +189,7 @@ export default function Timeline() {
    * scrolls sideways through time instead, with the town labels drawn in a separate,
    * non-scrolling svg beside the grid — without that pinning you lose track of the rows.
    */
-  const rowH = isMobile ? 13 : ROW_H; // the taller margins would otherwise cost a scroll
+  const rowH = isMobile ? 14 : ROW_H;
   const labelW = isMobile ? 84 : M_LEFT;
   const LEFT = isMobile ? 0 : M_LEFT; // the grid svg's own left offset
   const MOBILE_CELL_W = 28;
@@ -369,14 +372,8 @@ export default function Timeline() {
   })();
 
   const bandsIn = hasAnimated || showBands;
-  /**
-   * The scan line is driven by hovering, which touch does not have: a phone would get a
-   * line it could park by tapping but never move or dismiss. So it stays desktop-only,
-   * and mobile keeps the plain chart it had before.
-   */
-  const scanEnabled = !isMobile;
   /** what the scan line shows: the live cursor, falling back to a parked marker */
-  const view = scanEnabled ? scan ?? pinned : null;
+  const view = scan ?? pinned;
 
   /**
    * Intro sequence: the strikes sweep in month by month, then every tinted period fades
@@ -468,7 +465,6 @@ export default function Timeline() {
                  * preceded the click may not have re-rendered yet — reading the state here
                  * saw a stale value and the click missed the marker.
                  */
-                if (!scanEnabled) { setSel(null); return; }
                 const r = e.currentTarget.getBoundingClientRect();
                 const at = scanAt(e.clientX - r.left);
                 if (at?.snap) {
@@ -479,7 +475,6 @@ export default function Timeline() {
                 }
               }}
               onMouseMove={(e) => {
-                if (!scanEnabled) return;
                 const r = e.currentTarget.getBoundingClientRect();
                 setScan(scanAt(e.clientX - r.left));
               }}
@@ -545,8 +540,7 @@ export default function Timeline() {
                             // on a marked date the click belongs to the scan line, so let it
                             // through to the svg — again computed from the event, not state
                             const svgEl = e.currentTarget.ownerSVGElement;
-                            if (scanEnabled && svgEl &&
-                                scanAt(e.clientX - svgEl.getBoundingClientRect().left)?.snap) return;
+                            if (svgEl && scanAt(e.clientX - svgEl.getBoundingClientRect().left)?.snap) return;
                             e.stopPropagation();
                             setSel({ town, label, b });
                           }}

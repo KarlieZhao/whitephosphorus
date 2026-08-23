@@ -23,13 +23,13 @@ const MONTHS_PRINT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "S
 
 const TOTAL_STRIKES_BY_YEAR: { [year: string]: number } = {
     "2023": 119,
-    "2024": 132,
+    "2024": 133,
     "2025": 1,
     "2026": 35,
 }
 const PENDING_GEOLOCATION_BY_YEAR: { [year: string]: number } = {
     "2023": 8,
-    "2024": 20,
+    "2024": 21,
     "2025": 0,
     "2026": 6,
 }
@@ -45,6 +45,7 @@ export const PENDING_INCIDENTS: { date: string; bursts: number }[] = [
     { date: "2024-04-17", bursts: 2 }, // WP71
     { date: "2024-06-04", bursts: 1 }, // WP79
     { date: "2024-06-23", bursts: 1 }, // WP145
+    { date: "2024-07-05", bursts: 1 }, // WP440
     { date: "2024-07-13", bursts: 1 }, // WP87
     { date: "2024-07-29", bursts: 1 }, // WP88
     { date: "2024-09-19", bursts: 3 }, // WP500
