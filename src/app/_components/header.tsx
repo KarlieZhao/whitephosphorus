@@ -140,7 +140,7 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
               <div className="toxicity-counter relative pl-4 flex flex-row fadeSlideIn">
                 <div className="flex-initial basis-[190px] flex flex-col justify-center items-start text-xl">
                   <div>Contamination Index</div>
-                  <div className="last-update">Last update: Jul/28/2026</div>
+                  <div className="last-update">Last update: Aug/23/2026</div>
                 </div>
                 {data.map((obj, index) => {
                   return (

@@ -200,7 +200,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     //landscape
                     const key = arg as keyof landscape_mapping_prop;
                     const subset = pt.filter(p => p.landscape === arg);
-                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus shells struck  <span className="text-2xl text-white">{landscape_map[key]}</span> areas.<br /><span className="text-2xl text-white">{(100 * shellCount / TOTAL_STRIKES).toFixed(1)}%</span> of total strikes.</>
+                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strike{shellCount > 1 ? "s" : ""} in <span className="text-2xl text-white">{landscape_map[key]}</span> areas.<br /><span className="text-2xl text-white">{(100 * shellCount / TOTAL_STRIKES).toFixed(1)}%</span> of total strikes.</>
                     readout2 = <></>
                 } else if (/^\d{4}$/.test(arg)) {
                     //year
@@ -226,11 +226,11 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     if (pt.length > 1) {
                         // city/town
                         readout1 = <>Between <span className="text-2xl text-white">{dates[0]}</span> and  <span className="text-2xl text-white">{dates[dates.length - 1]}</span>,</>
-                        readout2 = <><span className="text-2xl text-white">{shellCount} </span>white phosphorus shell{shellCount > 1 ? "s" : ""} struck
+                        readout2 = <><span className="text-2xl text-white">{shellCount} </span>white phosphorus strike{shellCount > 1 ? "s" : ""} in
                             <span className="text-2xl text-white"> {pt[0].town}</span>.</>
                     } else {
                         readout1 = <>On <span className="text-2xl text-white">{dates[0]}</span>,</>
-                        readout2 = <>{shellCount} white phosphorus shell{shellCount > 1 ? "s" : ""} struck <span className="text-2xl text-white">{pt[0].town}</span>.</>
+                        readout2 = <>{shellCount} white phosphorus strike{shellCount > 1 ? "s" : ""} in <span className="text-2xl text-white">{pt[0].town}</span>.</>
                     }
                 }
             } else if (Array.isArray(arg)) {
@@ -249,7 +249,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     .filter(p => p.date >= arg[0] && p.date <= arg[1])
                     .reduce((sum, p) => sum + p.bursts, 0);
                 const totalInRange = mappedInRange + pendingInRange;
-                readout2 = <div style={{ marginTop: "0.5rem" }}><span className="text-2xl text-white">{totalInRange} </span>white phosphorus shell{totalInRange > 1 ? "s" : ""}  struck <span className="text-2xl text-white">{townCount.size}</span> cities/towns
+                readout2 = <div style={{ marginTop: "0.5rem" }}><span className="text-2xl text-white">{totalInRange} </span>white phosphorus strike{totalInRange > 1 ? "s" : ""} across <span className="text-2xl text-white">{townCount.size}</span> cities/towns
                     {pendingInRange > 0 && <>,<br /><span className="text-2xl text-white">{pendingInRange}</span> of which {pendingInRange > 1 ? "are" : "is"} verified but not yet geolocated</>}
                     .</div>
                 readout3 = pendingInRange > 0
@@ -274,7 +274,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
             const formattedDate = date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: 'numeric' });
             const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/\s(am|pm)/, (match) => match.toUpperCase());;
             readout1 = <>On <span className="text-2xl text-white">{formattedDate}</span>, at <span className="text-2xl text-white">{formattedTime}</span>,</>;
-            readout2 = <><span className="text-2xl text-white">{pt.shell_count}</span> white phosphorus shell{pt.shell_count > 1 ? "s" : ""} struck <span className="text-2xl text-white">{pt.town}</span>.</>
+            readout2 = <><span className="text-2xl text-white">{pt.shell_count}</span> white phosphorus strike{pt.shell_count > 1 ? "s" : ""} in <span className="text-2xl text-white">{pt.town}</span>.</>
             //only on click
             if (clicked) {
                 readout3 = `Coordinates: ${trimCoord(pt.lat)}, ${trimCoord(pt.lon)}`;
