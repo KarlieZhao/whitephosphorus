@@ -27,6 +27,9 @@ const TOTAL_STRIKES_BY_YEAR: { [year: string]: number } = {
     "2025": 1,
     "2026": 35,
 }
+// derived rather than written out, so the "% of total strikes" readouts below can never
+// drift from the year table the way a hard-coded total did
+const TOTAL_STRIKES = Object.values(TOTAL_STRIKES_BY_YEAR).reduce((a, b) => a + b, 0);
 const PENDING_GEOLOCATION_BY_YEAR: { [year: string]: number } = {
     "2023": 8,
     "2024": 21,
@@ -197,7 +200,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                     //landscape
                     const key = arg as keyof landscape_mapping_prop;
                     const subset = pt.filter(p => p.landscape === arg);
-                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus shells struck  <span className="text-2xl text-white">{landscape_map[key]}</span> areas.<br /><span className="text-2xl text-white">{(100 * shellCount / 287).toFixed(1)}%</span> of total strikes.</>
+                    readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus shells struck  <span className="text-2xl text-white">{landscape_map[key]}</span> areas.<br /><span className="text-2xl text-white">{(100 * shellCount / TOTAL_STRIKES).toFixed(1)}%</span> of total strikes.</>
                     readout2 = <></>
                 } else if (/^\d{4}$/.test(arg)) {
                     //year
@@ -258,7 +261,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 let day = date.getDay();
                 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                 readout2 = <></>
-                readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strike{shellCount > 1 ? "s" : ""} happened on <span className="text-2xl text-white">{days[day]}s</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / 287).toFixed(1)}%</span> of total strikes.</>
+                readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strike{shellCount > 1 ? "s" : ""} happened on <span className="text-2xl text-white">{days[day]}s</span>.<br /><span className="text-2xl text-white">{(100 * shellCount / TOTAL_STRIKES).toFixed(1)}%</span> of total strikes.</>
             } else {
                 readout1 = <></>
                 readout2 = <></>
