@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import React, { useEffect, useState } from "react";
-import { VectorMap } from "./map";
+import { VectorMap, type BasemapId } from "./map";
 import { Histogram } from "./histo";
 import Timeline from "./timeline";
 import Area from "./area";
@@ -94,7 +94,8 @@ interface landscape_mapping_prop {
     agri: string
 }
 
-export default function DataSource({ TypewriterFinished = false }: TypewriterProps) {
+/** `basemap` is passed straight through to the map; the live map uses OpenFreeMap. */
+export default function DataSource({ TypewriterFinished = false, basemap = "openfreemap" }: TypewriterProps & { basemap?: BasemapId }) {
     const [geoData, setGeoData] = useState<any[]>([]);
     const [selectedCity, setSelectedCity] = useState<string>("");
     const [selectedDay, setselectedDay] = useState<number>(-1);
@@ -359,6 +360,7 @@ export default function DataSource({ TypewriterFinished = false }: TypewriterPro
                 showSatellite={showSatelliteMap}
                 TypeWriterFinished={TypewriterFinished}
                 clearSelectionSignal={clearSelectionSignal}
+                basemap={basemap}
             />
         </div >
         <div className={`map-readout opacity-100 ${isMobile && details[0] ? "has-content" : ""}`}>

@@ -4,6 +4,9 @@ import { geoDataProps } from "./datasource";
 import { TypewriterProps } from "./header";
 import { MONTHS } from "./datasource";
 import { isMobileDevice } from "./mobile-detector";
+// MapLibre needs its own stylesheet to position the canvas; imported here rather than
+// per page so it travels with the component that actually renders the basemap
+import "maplibre-gl/dist/maplibre-gl.css";
 type VectorMapProps = geoDataProps & TypewriterProps & {
   getMapDetails: (point: any | null, arg?: any, clicked?: boolean) => void;
   mapZoom: number;
@@ -14,9 +17,303 @@ type VectorMapProps = geoDataProps & TypewriterProps & {
   // bumped by the parent's readout close button (mobile has no reachable background to
   // tap for the usual reset) to clear this component's own focus state from outside
   clearSelectionSignal?: number;
+  /**
+   * Which basemap to draw under the dots. Defaults to OpenFreeMap's vector dark style,
+   * rendered by MapLibre and handed to Leaflet as an ordinary tilePane layer, restyled
+   * below for this map. The "carto" path is the raster basemap the site used until CARTO
+   * began stamping "API KEY REQUIRED" across its free tiles; it is kept only as a
+   * fallback and will show that watermark if used.
+   */
+  basemap?: BasemapId;
 };
 
+export type BasemapId = "carto" | "openfreemap";
+
 const CARTODB_TILES_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
+const OPENFREEMAP_STYLE_URL = "https://tiles.openfreemap.org/styles/dark"
+const ENGLISH_LABEL: any = [
+  "coalesce",
+  ["get", "name:en"],
+  ["get", "name:latin"],
+  ["get", "name_en"],
+  ["get", "name"],
+];
+
+/**
+ * The road web and the regional boundaries fade in with zoom instead of sitting at full
+ * strength everywhere. Wide out they are barely-there texture — enough that the dashed
+ * district lines are not left hanging in empty space, but not enough to compete with the
+ * strike markers — and they come up to full weight as the reader goes closer.
+ *
+ * This is a separate property from line-width, so it may carry its own zoom interpolate:
+ * MapLibre's one-interpolate rule applies per expression, not per layer.
+ *
+ * The national border is deliberately left out of this — it is the one line that should
+ * be legible at every zoom.
+ */
+const LINE_FADE_IN: any = ["interpolate", ["linear"], ["zoom"], 10, 0.6, 13, 0.85, 15, 1];
+const FADES_IN = (id: string) =>
+  id.startsWith("highway_") || id.startsWith("railway") || id === "boundary_state";
+
+/**
+ * Layers added on top of the upstream style.
+ *
+ * The boundary source carries admin_level 2 through 8 here. 2 is the national border,
+ * already drawn; 4 covers the governorates (South, Nabatieh) and 5-7 the districts —
+ * Sour, Bint Jbeil, Marjaayoun, Nabatieh, Hasbaya. 8 is municipality level, too fine to
+ * be anything but noise at these zooms, so it is left out. Note the tiles carry no names
+ * on boundary features, so these are lines only; the districts cannot be labelled from
+ * this source.
+ */
+const EXTRA_LAYERS: any[] = [
+  {
+    // the Israel/Syria line across the Golan is tagged disputed=1 in the tiles; it is
+    // drawn finely dotted to read as what it is rather than as a settled border
+    id: "boundary_disputed",
+    type: "line",
+    source: "openmaptiles",
+    "source-layer": "boundary",
+    filter: [
+      "all",
+      ["==", ["get", "admin_level"], 2],
+      ["==", ["get", "disputed"], 1],
+      ["!=", ["get", "maritime"], 1],
+    ],
+    layout: { "line-cap": "round", "line-join": "round" },
+    paint: {
+      /**
+       * Kept close to the district lines rather than to the national border. Matching the
+       * national border's value made this the loudest thing on the map: the same grey
+       * reads far stronger dashed than solid, because each dash has two bright ends
+       * against the background instead of one continuous stroke. So it sits just above
+       * the districts (17%) and well under the national border (29%), at about 60% of the
+       * national border's width.
+       */
+      "line-color": "hsl(0,0%,19%)",
+      "line-width": ["interpolate", ["exponential", 1.1], ["zoom"], 3, 0.36, 22, 3.4],
+      "line-dasharray": [1, 2.5],
+      "line-opacity": LINE_FADE_IN,
+    },
+  },
+  {
+    id: "boundary_district",
+    type: "line",
+    source: "openmaptiles",
+    "source-layer": "boundary",
+    filter: [
+      "all",
+      [">=", ["get", "admin_level"], 5],
+      ["<=", ["get", "admin_level"], 7],
+      ["!=", ["get", "maritime"], 1],
+    ],
+    layout: { "line-cap": "round", "line-join": "round" },
+    paint: {
+      "line-color": "hsl(0,0%,17%)",
+      "line-width": 0.9,
+      "line-dasharray": [2, 3],
+      "line-opacity": LINE_FADE_IN,
+    },
+  },
+];
+
+/**
+ * Per-layer corrections applied on top of the kept set.
+ *
+ * The zoom thresholds thin the labels out when the whole front is in view and let them
+ * back in as you go closer, so the far view is not a wall of village names. Note these
+ * are MapLibre zooms, which the Leaflet plugin runs one level below Leaflet's own — the
+ * map spans Leaflet 11-16, i.e. MapLibre 10-15.
+ *
+ * `dropMaxzoom` removes the style's upper cut-off on the label layers. Upstream it exists
+ * because denser layers take over when you zoom in; we removed those, so without this a
+ * name would vanish just as you zoomed close enough to want it.
+ */
+const BASEMAP_LAYER_TWEAKS: Record<string, {
+  minzoom?: number;
+  dropMaxzoom?: boolean;
+  dropDisputed?: boolean;
+  paint?: Record<string, any>;
+}> = {
+  // dashed rather than solid, and the disputed stretches — the Israel/Syria line across
+  // the Golan, which the tiles flag with disputed=1 — get a finer dotted pattern
+  /**
+   * Solid. Checked against the tiles: the Lebanon/Israel line and the Lebanon/Syria line
+   * both carry disputed=0, while the Israel/Syria line across the Golan carries
+   * disputed=1 — so excluding disputed here leaves exactly the settled borders solid,
+   * and the dashed treatment falls to the boundary_disputed layer alone.
+   */
+  /**
+   * The one line that should carry at every zoom, and especially wide out — it is the
+   * frame the whole dataset sits against. Both colour and width are pushed at low zoom
+   * and ease back to the close-in values by z15, so the view you already have when
+   * zoomed in is unchanged; only the wide view gains weight.
+   *
+   * Set here rather than upstream because tweak.paint is merged after the global width
+   * scaling, so these values win outright.
+   */
+  "boundary_country_z5-": {
+    dropDisputed: true,
+    paint: {
+      "line-color": [
+        "interpolate", ["linear"], ["zoom"],
+        10, "hsl(0,0%,40%)",
+        13, "hsl(0,0%,33%)",
+        15, "hsl(0,0%,29%)",
+      ],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.15, 13, 2.5, 15, 2.7],
+    },
+  },
+  /**
+   * The casings are what the eye actually picks up — the inner fills are already near
+   * black, so it is the pale outline either side that draws the road web. Dropped from
+   * rgba(60,60,60,.8) to roughly half that.
+   */
+  highway_major_casing: { paint: { "line-color": "rgba(34,34,34,0.7)" } },
+  highway_motorway_casing: { paint: { "line-color": "rgba(38,38,38,0.7)" } },
+  highway_major_subtle: { paint: { "line-color": "#1c1c1c" } },
+  highway_motorway_subtle: { paint: { "line-color": "#1c1c1c" } },
+  highway_minor: { paint: { "line-color": "#141414" } },
+  // governorate boundaries, a shade under the districts
+  boundary_state: { paint: { "line-color": "hsl(0,0%,15%)" } },
+  place_city: { dropMaxzoom: true },
+  place_town: { minzoom: 11, dropMaxzoom: true },
+  place_village: { minzoom: 12, dropMaxzoom: true },
+};
+
+/**
+ * Everything upstream draws is kept; what changes is WHEN it appears. Zoomed out the
+ * front should read as border, water and a few city names, with roads, villages and land
+ * cover arriving as the reader goes closer — rather than the whole road network competing
+ * with the strike markers at every zoom.
+ *
+ * These are MapLibre zooms, which the Leaflet plugin runs one level below Leaflet's own:
+ * the map spans Leaflet 11-16, i.e. MapLibre 10-15. So 10 is "always visible here" and 14
+ * is "only right at the end". A layer's own minzoom is respected — these only ever push a
+ * layer later, never earlier.
+ */
+const LAYER_MIN_ZOOM: Record<string, number> = {
+  /**
+   * The road network and the town names stay on at every zoom. They are drawn nearly
+   * black upstream (#181818 on a rgb(12,12,12) ground), so they read as texture rather
+   * than detail — and without them the dashed district boundaries hang in empty space
+   * looking like broken fragments, which is what the wide view suffered from.
+   *
+   * What actually crowded the close-in view was the finer stuff below, so that is what
+   * gets deferred.
+   */
+  place_village: 12,
+  landcover_wood: 13,
+  landuse_park: 13,
+  landuse_residential: 13,
+  water_name: 13,
+  // only once you are down on a single place
+  highway_path: 14,
+  building: 14,
+  railway: 14,
+  railway_dashline: 14,
+  railway_minor: 14,
+  railway_minor_dashline: 14,
+  railway_transit: 14,
+  railway_transit_dashline: 14,
+  highway_name_other: 14,
+  highway_name_motorway: 14,
+  road_oneway: 14,
+  road_oneway_opposite: 14,
+  place_suburb: 14,
+  place_other: 14,
+};
+
+/**
+ * Dropped outright rather than deferred: no airports or piers in this frame, no ice, and
+ * the state labels only restate what the boundaries already show.
+ */
+/**
+ * Every line from the upstream style is drawn at a fraction of its designed width. The
+ * style's widths are tuned for a map that is the whole point of the page; here the
+ * basemap sits under the strike markers, so at full width the roads and borders compete
+ * with them.
+ *
+ * The fraction shrinks as you zoom in, because the underlying curves climb steeply toward
+ * zoom 20 — the country border alone reaches ~9px at our maximum zoom, and a flat
+ * multiplier left it heavy exactly where it was worst. Tapering the scale holds every
+ * line at roughly two to three pixels across the whole range, while still scaling the
+ * expression rather than replacing it, so each layer keeps its relative weighting.
+ */
+/**
+ * Line widths, set per zoom rather than by scaling the style's own curve.
+ *
+ * The curves upstream are pinned at stops like z3 and z20, far outside the range this map
+ * uses (Leaflet 11-16, i.e. MapLibre 10-15), so adjusting their stop values gave almost
+ * no control over what actually appears on screen. These are evaluated at each zoom the
+ * map can be at, scaled there, and re-emitted as one linear interpolate — which also
+ * keeps it to the single zoom-based interpolate MapLibre permits per expression.
+ *
+ * The scale climbs with zoom: wide out, the whole road web is in view at once and needs
+ * to stay faint; zoomed in only a few roads are visible and can hold their weight.
+ */
+const MAP_ZOOMS = [10, 11, 12, 13, 14, 15];
+const widthScaleAt = (z: number) => {
+  const t = Math.max(0, Math.min(1, (z - 10) / 5));
+  return 0.22 + (0.34 - 0.22) * t;
+};
+
+/** evaluate a zoom "interpolate" width expression at one zoom, or null if unreadable */
+const evalWidthAt = (w: any, z: number): number | null => {
+  if (typeof w === "number") return w;
+  if (!Array.isArray(w) || w[0] !== "interpolate") return null;
+  const interp = w[1];
+  const base = Array.isArray(interp) && interp[0] === "exponential" ? Number(interp[1]) : 1;
+  const stops: [number, number][] = [];
+  for (let i = 3; i < w.length; i += 2) {
+    if (typeof w[i] !== "number" || typeof w[i + 1] !== "number") return null;
+    stops.push([w[i], w[i + 1]]);
+  }
+  if (!stops.length) return null;
+  if (z <= stops[0][0]) return stops[0][1];
+  if (z >= stops[stops.length - 1][0]) return stops[stops.length - 1][1];
+  for (let i = 0; i < stops.length - 1; i++) {
+    const [z0, v0] = stops[i];
+    const [z1, v1] = stops[i + 1];
+    if (z >= z0 && z <= z1) {
+      const t =
+        base === 1
+          ? (z - z0) / (z1 - z0)
+          : (Math.pow(base, z - z0) - 1) / (Math.pow(base, z1 - z0) - 1);
+      return v0 + (v1 - v0) * t;
+    }
+  }
+  return null;
+};
+
+const scaleLineWidth = (w: any): any => {
+  const stops: number[] = [];
+  for (const z of MAP_ZOOMS) {
+    const v = evalWidthAt(w, z);
+    // anything whose curve cannot be read is left exactly as the style had it
+    if (v === null) return w;
+    stops.push(z, Number((v * widthScaleAt(z)).toFixed(3)));
+  }
+  return ["interpolate", ["linear"], ["zoom"], ...stops];
+};
+
+const HIDDEN_LAYERS = new Set([
+  // rivers are off for now — worth revisiting as a toggle in the control panel rather
+  // than as something always on
+  "waterway",
+  "aeroway-taxiway",
+  "aeroway-runway-casing",
+  "aeroway-runway",
+  "aeroway-area",
+  "road_pier",
+  "road_area_pier",
+  "landcover_ice_shelf",
+  "landcover_glacier",
+  "place_state",
+]);
+const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://carto.com/attribution">CartoDB</a> | Imagery ©️ Planet Labs PBC, 27 September 2025 &copy;'
+// OpenFreeMap asks for OpenMapTiles and OpenStreetMap; its own credit is optional but encouraged
+const OPENFREEMAP_ATTRIBUTION = '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> | Imagery ©️ Planet Labs PBC, 27 September 2025 &copy;'
+
 
 const GRADIENT_CONFIGS = [
   { id: "static", color: "#7777", opacity: 0.8 },
@@ -89,9 +386,11 @@ export function VectorMap({
   mapInstance,
   showSatellite,
   clearSelectionSignal,
+  basemap = "openfreemap",
 }: VectorMapProps) {
   const borderDataRef = useRef<any>(null);
   const cartodbLayerRef = useRef<any>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout[]>([]);
   const [hasAnimated, setHasAnimated] = useState(() => typeof window !== "undefined" && sessionStorage.getItem("mapDotsAnimated") === "true");
   const [anyWedgesVisible, setAnyWedgesVisible] = useState(false);
@@ -258,24 +557,179 @@ export function VectorMap({
     return dotsize * 0.8
   }, [focusedPt, visiblePoints, showSatellite])
 
-  // CartoDB layer
+  // Basemap layer, drawn under the dots
   useEffect(() => {
     if (!mapInstance) return;
 
     if (!TypeWriterFinished || !mapInstance || !mapInstance.getPane) return;
 
-    // Remove existing CartoDB layer
+    // Remove existing basemap layer
     if (cartodbLayerRef.current) {
       mapInstance.removeLayer(cartodbLayerRef.current);
       cartodbLayerRef.current = null;
     }
-    cartodbLayerRef.current = (window as any).L.tileLayer(CARTODB_TILES_URL,
-      {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://carto.com/attribution">CartoDB</a> | Imagery ©️ Planet Labs PBC, 27 September 2025 &copy;',
+
+    let cancelled = false;
+
+    if (basemap === "openfreemap") {
+      /**
+       * Loaded dynamically for two reasons: maplibre-gl v6 ships ESM only, so the
+       * plugin's CommonJS build cannot require it; and this keeps the whole vector
+       * renderer out of the bundle for any page still on the raster basemap.
+       */
+      Promise.all([
+        import("maplibre-gl"),
+        import("@maplibre/maplibre-gl-leaflet"),
+        fetch(OPENFREEMAP_STYLE_URL)
+          .then((r) => r.json())
+          .then((style) => {
+            const kept = style.layers
+              .filter((l: any) => !HIDDEN_LAYERS.has(l.id))
+              .map((l: any) => {
+                const deferTo = LAYER_MIN_ZOOM[l.id];
+                const tweak = BASEMAP_LAYER_TWEAKS[l.id];
+                const out = { ...l };
+                // every label in English, whatever the upstream style asked for
+                if (out.layout && out.layout["text-field"]) {
+                  out.layout = { ...out.layout, "text-field": ENGLISH_LABEL };
+                }
+                /**
+                 * No boundary layer draws its offshore half. Every admin level carries a
+                 * maritime extent — the country lines, but the governorates too — and out
+                 * at sea they read as a dotted line floating with nothing attached to it.
+                 * Done here for the whole source rather than layer by layer, because
+                 * doing it per layer is exactly how boundary_state was missed.
+                 */
+                if (out["source-layer"] === "boundary") {
+                  out.filter = ["all", out.filter, ["!=", ["get", "maritime"], 1]];
+                }
+                // only ever push a layer later than the style already had it
+                if (deferTo !== undefined) out.minzoom = Math.max(out.minzoom ?? 0, deferTo);
+                if (out.type === "line" && out.paint && out.paint["line-width"] !== undefined) {
+                  out.paint = {
+                    ...out.paint,
+                    "line-width": scaleLineWidth(out.paint["line-width"]),
+                  };
+                }
+                if (out.type === "line" && FADES_IN(out.id)) {
+                  out.paint = { ...out.paint, "line-opacity": LINE_FADE_IN };
+                }
+                if (!tweak) return out;
+                if (tweak.minzoom !== undefined) out.minzoom = Math.max(out.minzoom ?? 0, tweak.minzoom);
+                if (tweak.dropMaxzoom) delete out.maxzoom;
+                if (tweak.dropDisputed) {
+                  out.filter = ["all", out.filter, ["!=", ["get", "disputed"], 1]];
+                }
+                if (tweak.paint) out.paint = { ...out.paint, ...tweak.paint };
+                return out;
+              });
+
+            /**
+             * Draw order matters: the added lines and river names go in ahead of the
+             * place labels, so a settlement name is never overdrawn by a boundary.
+             */
+            const firstLabel = kept.findIndex((l: any) => l.id.startsWith("place_"));
+            const at = firstLabel === -1 ? kept.length : firstLabel;
+            return {
+              ...style,
+              layers: [...kept.slice(0, at), ...EXTRA_LAYERS, ...kept.slice(at)],
+            };
+          })
+          // if the style cannot be fetched, fall back to the full one by url
+          .catch(() => OPENFREEMAP_STYLE_URL),
+      ])
+        .then(([maplibre, mod, styleSpec]) => {
+          if (cancelled || !mapInstance.getPane || !mapInstance.getPane("tilePane")) return;
+          /**
+           * MapLibre finds its web worker from `import.meta.url`. Inside a Next bundle
+           * that is not an http(s) url, so its locator returns an empty string and
+           * `new Worker("")` resolves to the page itself — the browser then refuses it
+           * ("disallowed MIME type text/html") and, since the worker does all vector-tile
+           * parsing, the map renders nothing at all. Pointing it at a copy served from
+           * /public fixes it; package.json refreshes that copy on dev and build so it
+           * cannot drift from the installed version.
+           */
+          if (typeof (maplibre as any).setWorkerUrl === "function") {
+            (maplibre as any).setWorkerUrl("/maplibre-gl-worker.mjs");
+          }
+          const maplibreGL = (mod as any).default ?? (mod as any).maplibreGL;
+          const layer = maplibreGL({
+            style: styleSpec,
+            attribution: OPENFREEMAP_ATTRIBUTION,
+            // the dots are drawn by d3 into Leaflet's overlay pane, so the basemap has to
+            // stay in the tile pane beneath them
+            pane: "tilePane",
+            interactive: false,
+          });
+          cartodbLayerRef.current = layer;
+          layer.addTo(mapInstance);
+          /**
+           * The plugin overrides getAttribution() and reads only
+           * options.attributionControl.customAttribution, so a plain `attribution` on the
+           * layer is silently dropped — which is why the credit line had shrunk to just
+           * "Leaflet". Registered straight with Leaflet's control instead, which does not
+           * depend on the plugin honouring anything.
+           */
+          if (mapInstance.attributionControl) {
+            mapInstance.attributionControl.addAttribution(OPENFREEMAP_ATTRIBUTION);
+          }
+          /**
+           * The plugin sizes its container exactly once, in _initContainer, from Leaflet's
+           * map size — and thereafter only on Leaflet "resize"/"zoomend" events. If the
+           * page has not laid out when the layer is added, that first measurement is 0x0
+           * and the container stays collapsed forever, so MapLibre renders into nothing
+           * and the map is simply black. Raster tiles never hit this: they position
+           * themselves per-tile and never consult the map size.
+           *
+           * invalidateSize() alone is not enough — it is a no-op when Leaflet's cached
+           * size already matches the container — so a collapsed layer is re-measured
+           * directly. A ResizeObserver drives it because the collapse is a race: the
+           * container can read zero one frame and be correct the next.
+           */
+          const syncLayerSize = () => {
+            const el = mapInstance.getContainer ? mapInstance.getContainer() : null;
+            if (!el || !el.clientWidth || !el.clientHeight) return false;
+            mapInstance.invalidateSize({ animate: false, pan: false });
+            const lyr: any = cartodbLayerRef.current;
+            if (lyr && lyr._container && parseInt(lyr._container.style.width || "0", 10) <= 0) {
+              if (typeof lyr._resizeContainer === "function") lyr._resizeContainer();
+              if (typeof lyr._update === "function") lyr._update();
+            }
+            return true;
+          };
+
+          syncLayerSize();
+          const el = mapInstance.getContainer ? mapInstance.getContainer() : null;
+          if (el && typeof ResizeObserver !== "undefined") {
+            const ro = new ResizeObserver(() => syncLayerSize());
+            ro.observe(el);
+            resizeObserverRef.current = ro;
+          }
+        })
+        .catch((e) => console.error("[map] vector basemap failed to load", e));
+      return () => {
+        cancelled = true;
+        if (mapInstance.attributionControl) {
+          mapInstance.attributionControl.removeAttribution(OPENFREEMAP_ATTRIBUTION);
+        }
+        if (resizeObserverRef.current) {
+          resizeObserverRef.current.disconnect();
+          resizeObserverRef.current = null;
+        }
+        if (cartodbLayerRef.current && mapInstance.hasLayer(cartodbLayerRef.current)) {
+          mapInstance.removeLayer(cartodbLayerRef.current);
+        }
+      };
+    }
+
+    {
+      cartodbLayerRef.current = (window as any).L.tileLayer(CARTODB_TILES_URL, {
+        attribution: CARTO_ATTRIBUTION,
         minZoom: 0,
-        maxZoom: 18
-      }
-    );
+        maxZoom: 18,
+      });
+    }
+
     if (mapInstance.getPane("tilePane")) {
       cartodbLayerRef.current.addTo(mapInstance);
     }
@@ -285,18 +739,25 @@ export function VectorMap({
         mapInstance.removeLayer(cartodbLayerRef.current);
       }
     };
-  }, [mapInstance]);
+  }, [mapInstance, basemap]);
 
   useEffect(() => {
     if (!mapInstance) return
     const tileEle = mapInstance.getPane('tilePane').children[0]
     if (!tileEle) return;
-    if (showSatellite) {
-      cartodbLayerRef.current.setUrl('');
+    const layer = cartodbLayerRef.current;
+    if (!layer) return;
+    if (basemap === "openfreemap") {
+      // blanking the url is a raster trick and has no equivalent here, so the whole
+      // canvas is hidden instead while the satellite imagery shows through
+      const el = typeof layer.getContainer === "function" ? layer.getContainer() : null;
+      if (el) el.style.display = showSatellite ? "none" : "";
+    } else if (showSatellite) {
+      layer.setUrl('');
     } else {
-      cartodbLayerRef.current.setUrl(CARTODB_TILES_URL);
+      layer.setUrl(CARTODB_TILES_URL);
     }
-  }, [showSatellite])
+  }, [showSatellite, basemap])
 
   //===== DOTS ======
   useEffect(() => {

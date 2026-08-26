@@ -1,18 +1,21 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next",
-    "build": "next build",
+    "copy:maplibre-worker": "node -e \"const f=require('fs');for(const n of ['maplibre-gl-worker.mjs','maplibre-gl-shared.mjs'])f.copyFileSync(require.resolve('maplibre-gl/dist/'+n),'public/'+n)\"",
+    "dev": "npm run copy:maplibre-worker && next",
+    "build": "npm run copy:maplibre-worker && next build",
     "start": "next start",
     "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@maplibre/maplibre-gl-leaflet": "^0.1.4",
     "@next/third-parties": "^15.0.3",
     "@types/leaflet": "^1.9.18",
     "d3": "^7.9.0",
     "gray-matter": "^4.0.3",
     "jquery": "^3.7.1",
     "leaflet": "^1.9.4",
+    "maplibre-gl": "^6.6.0",
     "next": "^15.5.18",
     "next-sitemap": "^4.2.3",
     "react": "^18.2.0",
