@@ -311,8 +311,17 @@ const HIDDEN_LAYERS = new Set([
   "place_state",
 ]);
 const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://carto.com/attribution">CartoDB</a> | Imagery ©️ Planet Labs PBC, 27 September 2025 &copy;'
-// OpenFreeMap asks for OpenMapTiles and OpenStreetMap; its own credit is optional but encouraged
-const OPENFREEMAP_ATTRIBUTION = '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> | Imagery ©️ Planet Labs PBC, 27 September 2025 &copy;'
+/**
+ * The full credit, registered by hand.
+ *
+ * The plugin will also volunteer the basemap's own attribution, but only if the style
+ * happens to have loaded by the time Leaflet asks — so it appeared sometimes and not
+ * others, and printed twice when it did. The layer is therefore created with
+ * attributionControl:false, which silences the plugin entirely, and this single string
+ * carries everything: OpenMapTiles and OpenStreetMap are required, the OpenFreeMap credit
+ * is requested, and Planet Labs covers the satellite imagery no source knows about.
+ */
+const MAP_ATTRIBUTION = '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> | Imagery ©️ Planet Labs PBC, 27 September 2025 &copy;'
 
 
 const GRADIENT_CONFIGS = [
@@ -655,23 +664,21 @@ export function VectorMap({
           const maplibreGL = (mod as any).default ?? (mod as any).maplibreGL;
           const layer = maplibreGL({
             style: styleSpec,
-            attribution: OPENFREEMAP_ATTRIBUTION,
             // the dots are drawn by d3 into Leaflet's overlay pane, so the basemap has to
             // stay in the tile pane beneath them
             pane: "tilePane",
             interactive: false,
+            // silences the plugin's own, race-dependent attribution; see MAP_ATTRIBUTION
+            attributionControl: false,
           });
           cartodbLayerRef.current = layer;
           layer.addTo(mapInstance);
           /**
-           * The plugin overrides getAttribution() and reads only
-           * options.attributionControl.customAttribution, so a plain `attribution` on the
-           * layer is silently dropped — which is why the credit line had shrunk to just
-           * "Leaflet". Registered straight with Leaflet's control instead, which does not
-           * depend on the plugin honouring anything.
+           * Registered straight with Leaflet's control, which does not depend on the
+           * plugin honouring anything or on the style having loaded yet.
            */
           if (mapInstance.attributionControl) {
-            mapInstance.attributionControl.addAttribution(OPENFREEMAP_ATTRIBUTION);
+            mapInstance.attributionControl.addAttribution(MAP_ATTRIBUTION);
           }
           /**
            * The plugin sizes its container exactly once, in _initContainer, from Leaflet's
@@ -710,7 +717,7 @@ export function VectorMap({
       return () => {
         cancelled = true;
         if (mapInstance.attributionControl) {
-          mapInstance.attributionControl.removeAttribution(OPENFREEMAP_ATTRIBUTION);
+          mapInstance.attributionControl.removeAttribution(MAP_ATTRIBUTION);
         }
         if (resizeObserverRef.current) {
           resizeObserverRef.current.disconnect();
