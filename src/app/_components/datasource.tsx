@@ -253,7 +253,7 @@ export default function DataSource({
      */
     useEffect(() => {
         if (!combineFilters) return;
-        if (narrowingFilters.length === 0) {
+        if (narrowingFilters.length === 0 && selectedAreaType.length !== ALL_LANDSCAPES) {
             setFilterReadout([]);
             return;
         }
@@ -296,6 +296,75 @@ export default function DataSource({
         // selection — otherwise one empty category drags every town into "none" with it
         const cityHit = selectedCity.filter((c: string) => strikesIn({ city: [c], area: landscapeHit }) > 0);
         const cityNone = selectedCity.filter((c: string) => strikesIn({ city: [c], area: landscapeHit }) === 0);
+
+        /**
+         * With every landscape ticked the selection excludes nothing, so instead of falling
+         * silent the readout turns into a breakdown: how the strikes on screen divide
+         * between the three, with any empty category named rather than quietly dropped.
+         * Counts come from pointsMatching, so they respect whatever period and towns are
+         * also selected.
+         */
+        const allLandscapesPicked = selectedAreaType.length === ALL_LANDSCAPES;
+        const breakdown = (() => {
+            if (!allLandscapesPicked) return null;
+            const counts = Object.keys(landscape_map).map((a) => ({
+                label: labelFor(a),
+                n: strikesIn({ area: [a] }),
+            }));
+            const hit = counts.filter((c) => c.n > 0);
+            const none = counts.filter((c) => c.n === 0);
+            return (
+                <>
+                    {hit.length > 0 && (
+                        <>
+                            {hit.map((c, i) => (
+                                <React.Fragment key={c.label}>
+                                    {i === 0 ? "" : i === hit.length - 1 ? " and " : ", "}
+                                    <span className="text-2xl text-white">{c.n}</span>
+                                    {i === 0 ? " landed in " : " in "}
+                                    {/* one strike is "a residential area", not "residential areas" */}
+                                    {c.n === 1 ? (/^[aeiou]/i.test(c.label) ? "an " : "a ") : ""}
+                                    <span className="text-2xl text-white">{c.label}</span>
+                                    {c.n === 1 ? " area" : " areas"}
+                                </React.Fragment>
+                            ))}
+                            .
+                        </>
+                    )}
+                    {none.length > 0 && (
+                        <>
+                            {hit.length > 0 ? " " : ""}None landed in{" "}
+                            <span className="text-2xl text-white">
+                                {none.map((c) => c.label).join(" or ")}
+                            </span>{" "}
+                            areas.
+                        </>
+                    )}
+                </>
+            );
+        })();
+
+        // nothing selected but the three landscapes: the breakdown is the whole readout, so
+        // it needs a total of its own to sit under
+        if (narrowingFilters.length === 0) {
+            const pending = Object.values(PENDING_GEOLOCATION_BY_YEAR).reduce((a, b) => a + b, 0);
+            setFilterReadout([
+                <>
+                    <span className="text-2xl text-white">{TOTAL_STRIKES}</span> white phosphorus
+                    strikes landed across <span className="text-2xl text-white">South Lebanon</span>
+                    {" "}and <span className="text-2xl text-white">northern Israel</span>,<br />
+                    <span className="text-2xl text-white">{pending}</span> of which are verified but
+                    not yet geolocated.
+                </>,
+                <div style={{ marginTop: "0.6rem" }}>
+                    Want to help?{" "}
+                    <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.
+                </div>,
+                <div style={{ marginTop: "2rem" }}>{breakdown}</div>,
+            ]);
+            updateDetails([]);
+            return;
+        }
 
         if (timeKey) {
             // the period block counts the period, not the narrowed subset
@@ -347,11 +416,11 @@ export default function DataSource({
             const nothingMatched = filteredStrikes.count === 0;
             const allLandscape = landscapeTerms.length ? areaPhrase(landscapeTerms, false) : null;
             const allCity = selectedCity.length ? townPhrase(selectedCity) : null;
-            const narrowRow = narrowing.length ? (
+            const narrowRow = (narrowing.length || breakdown) ? (
                 // 2rem matches .dynamic-readout > div:nth-child(3) in globals.css, which is
                 // what sets the gap above the line this one sits under
                 <div style={{ marginTop: "2rem" }}>
-                    {nothingMatched ? (
+                    {!narrowing.length ? null : nothingMatched ? (
                         <>
                             None of the <span className="text-2xl text-white">{periodTotal}</span> landed in{" "}
                             {allLandscape}
@@ -380,6 +449,7 @@ export default function DataSource({
                             )}
                         </>
                     )}
+                    {breakdown && <>{narrowing.length ? " " : ""}{breakdown}</>}
                 </div>
             ) : null;
             getDetails(periodPts, argFor[timeKey], false, null, narrowRow);
@@ -390,7 +460,8 @@ export default function DataSource({
             lastFilterKey && narrowingFilters.some((f: { key: string }) => dimensionOf(f.key) === lastFilterKey)
                 ? lastFilterKey
                 : dimensionOf(narrowingFilters[0].key);
-        getDetails(filteredStrikes.pts, argFor[key], false, readoutContext(key));
+        getDetails(filteredStrikes.pts, argFor[key], false, readoutContext(key),
+            breakdown ? <div style={{ marginTop: "2rem" }}>{breakdown}</div> : undefined);
     }, [combineFilters, narrowingFilters, filteredStrikes.pts, lastFilterKey]);
 
     const clearAllFilters = () => {
