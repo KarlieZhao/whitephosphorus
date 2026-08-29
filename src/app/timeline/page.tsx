@@ -734,6 +734,33 @@ export default function Timeline() {
       {/* legend — kept deliberately short */}
       {model && (
         <div className="px-6 pt-2 pb-24 border-t border-white/10">
+          {/*
+            * The selected cell, said once on a single line. It carries exactly what the
+            * hover card carries, so a click leaves the same information on screen after
+            * the pointer moves away. The row keeps its height when nothing is selected,
+            * so selecting and clearing never nudges the legend under it.
+            */}
+          {/* a block, not a flex row: only then does a long list of codes end in an
+              ellipsis rather than being cut mid-character */}
+          <div className="mb-2 h-[1.2rem] text-[0.72rem] overflow-hidden whitespace-nowrap text-ellipsis">
+            {sel && (
+              <>
+                <span className="text-white">{sel.town}</span>
+                <span className="text-white/25"> · </span>
+                <span className="text-white/65">{sel.label}</span>
+                <span className="text-white/25"> · </span>
+                <span className="text-white">
+                  {sel.b.strikes} strike{sel.b.strikes > 1 ? "s" : ""}
+                </span>
+                <span className="text-white/25"> · </span>
+                <span className="text-white/55">
+                  {(sel.b.strikes * WEDGES_PER_STRIKE).toLocaleString()} wedges
+                </span>
+                <span className="text-white/25"> · </span>
+                <span style={{ color: "#ff8a5c" }}>{sel.b.codes.join(" · ")}</span>
+              </>
+            )}
+          </div>
           <div className="flex items-center gap-3 flex-wrap text-[0.7rem] text-white/50">
             <span>strikes per month</span>
             <span className="flex items-center gap-1.5">
