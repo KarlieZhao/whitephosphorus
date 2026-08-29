@@ -29,10 +29,11 @@ export default function LandscapeHisto({
 
         // ========= DATA FILTERING =========
         let filteredData = geoData;
-        if (selectedAreaType) {
-            filteredData = filteredData.filter((d) => d.landscape === selectedAreaType);
-        } else if (selectedCity) {
-            filteredData = filteredData.filter((d) => d.town === selectedCity);
+        if (selectedAreaType?.length) {
+            filteredData = filteredData.filter((d) => selectedAreaType!.includes(d.landscape));
+        }
+        if (selectedCity?.length) {
+            filteredData = filteredData.filter((d) => selectedCity!.includes(d.town));
         }
         // ========= GROUP BY MONTH (with full month range) =========
         const monthCounts = new Map<string, number>();
@@ -49,7 +50,7 @@ export default function LandscapeHisto({
 
         // add verified-but-not-yet-geolocated incidents to their month's count,
         // but only when no landscape/city filter is active (we don't know their landscape/town)
-        if (!selectedAreaType && !selectedCity) {
+        if (!selectedAreaType?.length && !selectedCity?.length) {
             PENDING_INCIDENTS.forEach((p) => {
                 const dateObj = parseDate(p.date);
                 if (dateObj) {

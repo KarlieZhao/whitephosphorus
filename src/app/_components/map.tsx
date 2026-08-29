@@ -52,6 +52,12 @@ const ENGLISH_LABEL: any = [
  * be legible at every zoom.
  */
 const LINE_FADE_IN: any = ["interpolate", ["linear"], ["zoom"], 10, 0.6, 13, 0.85, 15, 1];
+/**
+ * Administrative lines get their own, much shallower fade. They are the only thing giving
+ * the wide view any structure — roads and villages are deliberately held back until you
+ * zoom in — so dimming them to 0.6 alongside the roads left the far view nearly empty.
+ */
+const BOUNDARY_FADE_IN: any = ["interpolate", ["linear"], ["zoom"], 10, 0.92, 13, 0.97, 15, 1];
 const FADES_IN = (id: string) =>
   id.startsWith("highway_") || id.startsWith("railway") || id === "boundary_state";
 
@@ -89,10 +95,15 @@ const EXTRA_LAYERS: any[] = [
        * the districts (17%) and well under the national border (29%), at about 60% of the
        * national border's width.
        */
-      "line-color": "hsl(0,0%,19%)",
+      "line-color": [
+        "interpolate", ["linear"], ["zoom"],
+        10, "hsl(0,0%,26%)",
+        13, "hsl(0,0%,21%)",
+        15, "hsl(0,0%,19%)",
+      ],
       "line-width": ["interpolate", ["exponential", 1.1], ["zoom"], 3, 0.36, 22, 3.4],
       "line-dasharray": [1, 2.5],
-      "line-opacity": LINE_FADE_IN,
+      "line-opacity": BOUNDARY_FADE_IN,
     },
   },
   {
@@ -108,10 +119,20 @@ const EXTRA_LAYERS: any[] = [
     ],
     layout: { "line-cap": "round", "line-join": "round" },
     paint: {
-      "line-color": "hsl(0,0%,17%)",
-      "line-width": 0.9,
+      /**
+       * Lifted at the wide view only and eased back to the close-in values by z15, the same
+       * shape as the national border above — zoomed in the districts are already legible
+       * against everything else on screen, and only the empty far view needed the help.
+       */
+      "line-color": [
+        "interpolate", ["linear"], ["zoom"],
+        10, "hsl(0,0%,24%)",
+        13, "hsl(0,0%,19%)",
+        15, "hsl(0,0%,17%)",
+      ],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.05, 15, 0.9],
       "line-dasharray": [2, 3],
-      "line-opacity": LINE_FADE_IN,
+      "line-opacity": BOUNDARY_FADE_IN,
     },
   },
 ];
@@ -173,8 +194,29 @@ const BASEMAP_LAYER_TWEAKS: Record<string, {
   highway_major_subtle: { paint: { "line-color": "#1c1c1c" } },
   highway_motorway_subtle: { paint: { "line-color": "#1c1c1c" } },
   highway_minor: { paint: { "line-color": "#141414" } },
-  // governorate boundaries, a shade under the districts
-  boundary_state: { paint: { "line-color": "hsl(0,0%,15%)" } },
+  /**
+   * Governorate boundaries, a step ABOVE the districts rather than below them.
+   *
+   * This is also why district outlines looked broken: where a district edge coincides with
+   * a governorate edge the tiles carry the segment at admin_level 4 only (verified by
+   * decoding the tiles — levels 4, 5 and 6 all appear side by side), so it is drawn here
+   * and not by boundary_district. With this layer the fainter of the two, those shared
+   * stretches dropped out and the district ring appeared to have gaps in it.
+   */
+  boundary_state: {
+    paint: {
+      "line-color": [
+        "interpolate", ["linear"], ["zoom"],
+        10, "hsl(0,0%,32%)",
+        13, "hsl(0,0%,25%)",
+        15, "hsl(0,0%,21%)",
+      ],
+      // 30% thinner than it was at the wide view; colour, not weight, is what puts this
+      // above the districts there
+      "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.88, 15, 1.05],
+      "line-opacity": BOUNDARY_FADE_IN,
+    },
+  },
   place_city: { dropMaxzoom: true },
   place_town: { minzoom: 11, dropMaxzoom: true },
   place_village: { minzoom: 12, dropMaxzoom: true },
@@ -471,8 +513,8 @@ export function VectorMap({
 
   const visiblePoints = useMemo(() => {
     const filtered = geoData.filter(pt => {
-      const matchesCity = selectedCity === "" || pt.town === selectedCity;
-      const matchesAreaType = !selectedAreaType || pt.landscape === selectedAreaType;
+      const matchesCity = !selectedCity?.length || selectedCity.includes(pt.town);
+      const matchesAreaType = !selectedAreaType?.length || selectedAreaType.includes(pt.landscape);
       const date = new Date(pt.date);
       const day = (date.getDay() + 6) % 7;
       const matchesDay = selectedDay === -1 || day === selectedDay;
@@ -493,11 +535,27 @@ export function VectorMap({
     return filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [geoData, selectedCity, selectedDay, selectedDates, selectedAreaType, selectedMonth, selectedYear]);
 
-  // points excluded only by the year filter, shown as a faint backdrop instead of hidden
+  /**
+   * Everything the current filters exclude, shown as a faint backdrop instead of vanishing.
+   *
+   * This used to key off the year alone, so filtering by year left the other years showing
+   * faintly while filtering by landscape or town made the excluded points disappear
+   * outright — the same action giving two different answers. It is now the complement of
+   * whatever the map is drawing, whichever filters produced it.
+   */
   const dimmedPoints = useMemo(() => {
-    if (!selectedYear) return [];
-    return geoData.filter(pt => pt.date.slice(0, 4) !== selectedYear);
-  }, [geoData, selectedYear]);
+    const anyFilter =
+      !!selectedYear ||
+      !!selectedCity?.length ||
+      !!selectedAreaType?.length ||
+      selectedMonth != null ||
+      selectedDay !== -1 ||
+      !!(selectedDates?.[0] && selectedDates?.[1]);
+    if (!anyFilter) return [];
+    const shown = new Set(visiblePoints);
+    // the not-yet-geolocated entries carry no coordinates and cannot be placed
+    return geoData.filter(pt => !shown.has(pt) && pt.lat != null && pt.lon != null);
+  }, [geoData, visiblePoints, selectedYear, selectedCity, selectedAreaType, selectedMonth, selectedDay, selectedDates]);
 
   const clearAnimationTimeouts = useCallback(() => {
     animationTimeoutRef.current.forEach(timeout => clearTimeout(timeout));

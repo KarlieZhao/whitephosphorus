@@ -16,9 +16,10 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
         if (!geoData || geoData.length === 0) return;
         const dayCount = Array(7).fill(0);
         let filteredData = geoData;
-        if (selectedCity != "") {
-            filteredData = filteredData.filter(item => item.town === selectedCity)
-        } else if (selectedDates && selectedDates[0] && selectedDates[1]) {
+        if (selectedCity?.length) {
+            filteredData = filteredData.filter(item => selectedCity!.includes(item.town))
+        }
+        if (selectedDates && selectedDates[0] && selectedDates[1]) {
             filteredData = filteredData.filter(d => {
                 const date = parseDate(d.date);
                 const start = parseDate(selectedDates[0]);
@@ -26,15 +27,18 @@ export default function Segment({ geoData, selectedCity, selectedDay, selectedDa
                 if (!date || !start || !end) return true;
                 return date >= start && date <= end;
             })
-        } else if (selectedAreaType) {
+        }
+        if (selectedAreaType?.length) {
             filteredData = filteredData.filter(d => {
-                return d.landscape === selectedAreaType;
+                return selectedAreaType!.includes(d.landscape);
             })
-        } else if (selectedMonth != null) {
+        }
+        if (selectedMonth != null) {
             filteredData = filteredData.filter(d => {
                 return d.date.slice(0, 7) === MONTHS[selectedMonth];
             })
-        } else if (selectedYear) {
+        }
+        if (selectedYear) {
             filteredData = filteredData.filter(d => {
                 return d.date.slice(0, 4) === selectedYear;
             })

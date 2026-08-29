@@ -16,25 +16,30 @@ export default function Area({ geoData, selectedCity, selectedDates, selectedDay
                 if (!date || !start || !end) return true;
                 return date >= start && date <= end;
             })
-        } else if (selectedDay !== undefined && selectedDay > -1) {
+        }
+        if (selectedDay !== undefined && selectedDay > -1) {
             filteredData = filteredData.filter(d => {
                 const date = new Date(d.date);
                 const day = date.getDay();
                 return day === selectedDay
             })
-        } else if (selectedAreaType) {
+        }
+        if (selectedAreaType?.length) {
             filteredData = filteredData.filter(d => {
-                return d.landscape === selectedAreaType;
+                return selectedAreaType!.includes(d.landscape);
             })
-        } else if (selectedCity) {
+        }
+        if (selectedCity?.length) {
             filteredData = filteredData.filter(d => {
-                return d.town === selectedCity
+                return selectedCity!.includes(d.town)
             })
-        } else if (selectedMonth != null) {
+        }
+        if (selectedMonth != null) {
             filteredData = filteredData.filter(d => {
                 return d.date.slice(0, 7) === MONTHS[selectedMonth];
             })
-        } else if (selectedYear) {
+        }
+        if (selectedYear) {
             filteredData = filteredData.filter(d => {
                 return d.date.slice(0, 4) === selectedYear;
             })

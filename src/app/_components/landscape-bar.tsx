@@ -32,13 +32,17 @@ export default function LandscapeBar({
         let filteredData = geoData;
         if (selectedDates && selectedDates[0] && selectedDates[1]) {
             filteredData = filteredData.filter(d => d.date >= selectedDates[0] && d.date <= selectedDates[1]);
-        } else if (selectedDay !== undefined && selectedDay > -1) {
+        }
+        if (selectedDay !== undefined && selectedDay > -1) {
             filteredData = filteredData.filter(d => new Date(d.date).getDay() === selectedDay);
-        } else if (selectedCity) {
-            filteredData = filteredData.filter(d => d.town === selectedCity);
-        } else if (selectedMonth != null) {
+        }
+        if (selectedCity?.length) {
+            filteredData = filteredData.filter(d => selectedCity!.includes(d.town));
+        }
+        if (selectedMonth != null) {
             filteredData = filteredData.filter(d => d.date.slice(0, 7) === MONTHS[selectedMonth]);
-        } else if (selectedYear) {
+        }
+        if (selectedYear) {
             filteredData = filteredData.filter(d => d.date.slice(0, 4) === selectedYear);
         }
 
@@ -59,7 +63,8 @@ export default function LandscapeBar({
     }, [geoData, selectedCity, selectedDates, selectedDay, selectedMonth, selectedYear]);
 
     const handleClick = (key: string) => {
-        if (onAreaTypeClicked) onAreaTypeClicked(selectedAreaType === key ? null : key);
+        // the parent decides whether this adds to the selection or replaces it
+        if (onAreaTypeClicked) onAreaTypeClicked(key);
     };
 
     return (
@@ -73,7 +78,7 @@ export default function LandscapeBar({
                             style={{
                                 width: `${(percentages as any)[key]}%`,
                                 backgroundColor: LANDSCAPE_COLORS[key],
-                                opacity: !selectedAreaType || selectedAreaType === key ? 1 : 0.35,
+                                opacity: !selectedAreaType?.length || selectedAreaType.includes(key) ? 1 : 0.35,
                             }}
                             onClick={() => handleClick(key)}
                         />
@@ -84,7 +89,7 @@ export default function LandscapeBar({
                 {ORDER.map(key => (
                     <span
                         key={key}
-                        className={`landscape-legend-item ${selectedAreaType === key ? "landscape-legend-item-active" : ""}`}
+                        className={`landscape-legend-item ${selectedAreaType?.includes(key) ? "landscape-legend-item-active" : ""}`}
                         onClick={() => handleClick(key)}
                     >
                         <span className="landscape-legend-swatch" style={{ backgroundColor: LANDSCAPE_COLORS[key] }}></span>

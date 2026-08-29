@@ -14,20 +14,34 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
     const hasSorted = useRef(false);
     const [allCityNames, setAllCityNames] = useState<string[]>([]);
 
-    const highlightHovered = (event: MouseEvent, d: { name: string, count: number }) => {
-        const target = event.currentTarget as SVGRectElement;
-        const index = d3.select(svgRef.current).selectAll("rect.interaction").nodes().indexOf(target);
-        d3.select(svgRef.current).selectAll("rect.render").filter((_, i) => i === index).attr("fill", "#cf705f");
+    /*
+     * Matched by town name, never by index. The bars are bound to the filtered subset while
+     * the labels are bound to the full town list, so once any filter is on the same index
+     * points at two different towns — which lit the wrong name on hover.
+     */
+    const highlightLabel = (name: string, fill: string) => {
         d3.select(svgRef.current).selectAll(".chart-labels")
-            .filter((_, i) => i === index).attr("fill", "#eee");
+            .each(function (n: any) {
+                if (String(n) === name) d3.select(this).attr("fill", fill);
+            });
+    }
+
+    const highlightHovered = (event: MouseEvent, d: { name: string, count: number }) => {
+        if (selectedCity!.includes(d.name)) return; // already lit by the selection styling
+        d3.select(svgRef.current).selectAll("rect.render")
+            .each(function (r: any) {
+                if (r.name === d.name) d3.select(this).attr("fill", "#cf705f");
+            });
+        highlightLabel(d.name, "#eee");
     }
 
     const removeHighlight = (event: MouseEvent, d: { name: string, count: number }) => {
-        if (d.name === selectedCity) return;
-        const target = event.currentTarget as SVGRectElement;
-        const index = d3.select(svgRef.current).selectAll("rect.interaction").nodes().indexOf(target);
-        d3.select(svgRef.current).selectAll("rect.render").filter((_, i) => i === index).attr("fill", RED_GRADIENT[colorIndexRef.current[index]]);
-        d3.select(svgRef.current).selectAll(".chart-labels").filter((_, i) => i === index).attr("fill", "#bbb");
+        if (selectedCity!.includes(d.name)) return;
+        d3.select(svgRef.current).selectAll("rect.render")
+            .each(function (r: any, i: number) {
+                if (r.name === d.name) d3.select(this).attr("fill", RED_GRADIENT[colorIndexRef.current[i] || 0]);
+            });
+        highlightLabel(d.name, "#bbb");
     }
 
 
@@ -80,21 +94,25 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
                 if (!date || !start || !end) return true;
                 return date >= start && date <= end;
             })
-        } else if (selectedDay !== undefined && selectedDay > -1) {
+        }
+        if (selectedDay !== undefined && selectedDay > -1) {
             filteredData = filteredData.filter(d => {
                 const date = new Date(d.date);
                 const day = date.getDay();
                 return day === selectedDay
             })
-        } else if (selectedAreaType) {
+        }
+        if (selectedAreaType?.length) {
             filteredData = filteredData.filter(d => {
-                return d.landscape === selectedAreaType;
+                return selectedAreaType!.includes(d.landscape);
             })
-        } else if (selectedMonth != null) {
+        }
+        if (selectedMonth != null) {
             filteredData = filteredData.filter(d => {
                 return d.date.slice(0, 7) === MONTHS[selectedMonth];
             })
-        } else if (selectedYear) {
+        }
+        if (selectedYear) {
             filteredData = filteredData.filter(d => {
                 return d.date.slice(0, 4) === selectedYear;
             })
@@ -149,7 +167,9 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
             .call(yAxis)
             .selectAll("text")
             .attr('class', 'chart-labels')
-            .attr('fill', "#bbb");
+            // a selected town stays lit, so several selections read at a glance
+            .attr('fill', (d: any) => (selectedCity!.includes(String(d)) ? "#fff" : "#bbb"))
+            .attr('font-weight', (d: any) => (selectedCity!.includes(String(d)) ? "bold" : "normal"));
 
         // color bars
         g.selectAll("rect.render")
@@ -161,7 +181,8 @@ export function Histogram({ geoData, selectedCity, selectedDates, selectedDay, s
             .attr("x", 0)
             .attr("height", y.bandwidth())
             .attr("width", (d) => x(d.count))
-            .attr("fill", (d, i) => RED_GRADIENT[colorIndexRef.current[i] || 0]);
+            .attr("fill", (d: any, i) =>
+                selectedCity!.includes(d.name) ? "#cf705f" : RED_GRADIENT[colorIndexRef.current[i] || 0]);
 
         //interaction bars
         g.selectAll("rect.interaction")
