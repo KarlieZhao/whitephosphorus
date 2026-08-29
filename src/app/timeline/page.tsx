@@ -528,13 +528,14 @@ export default function Timeline() {
                           x={xOf(ci) + 0.5} y={y + 0.5}
                           width={Math.max(1, cellW - 1)} height={rowH - 1}
                           fill={b ? stepFill(b.strikes) : EMPTY}
-                          stroke={isSel ? "#fff" : undefined} strokeWidth={isSel ? 1.2 : undefined}
                           style={{
                             cursor: b ? "pointer" : "default",
                             // only the filled cells animate; the empty wash is already faint.
                             // While a scan line is showing they all sit back, and the bright
-                            // copy clipped to the left of the line is drawn over them.
-                            opacity: b ? (!colIn(ci) ? 0 : view ? 0.32 : 1) : 1,
+                            // copy clipped to the left of the line is drawn over them — but
+                            // the selected cell stays lit, or picking one then moving the
+                            // pointer would fade the thing just chosen.
+                            opacity: b ? (!colIn(ci) ? 0 : view && !isSel ? 0.32 : 1) : 1,
                             transition: "opacity 300ms ease",
                           }}
                           onMouseEnter={(e) => b && setHover({ x: e.clientX, y: e.clientY, town, label, b })}
@@ -594,6 +595,31 @@ export default function Timeline() {
                 <line x1={LEFT} x2={LEFT + plotW} y1={plotBottom} y2={plotBottom}
                   stroke="rgba(255,255,255,0.07)" strokeWidth={1} />
               </g>
+
+              {/**
+                * The selection ring, drawn here rather than as a stroke on the cell: the
+                * cell is painted twice (dimmed, then a bright copy clipped to the left of
+                * the scan line), so a stroke on it was dimmed in one pass and hidden under
+                * the other. Above both, it reads the same either side of the line. The dark
+                * halo underneath keeps it legible where it borders a pale cell.
+                */}
+              {sel && (() => {
+                const ti = model.towns.indexOf(sel.town);
+                const ci = model.cols.findIndex((c) => fmtMonthYear(c) === sel.label);
+                if (ti < 0 || ci < 0) return null;
+                const x = xOf(ci) + 0.5;
+                const y = M_TOP + ti * rowH + 0.5;
+                const w = Math.max(1, cellW - 1);
+                const h = rowH - 1;
+                return (
+                  <g pointerEvents="none">
+                    <rect x={x - 1.5} y={y - 1.5} width={w + 3} height={h + 3}
+                      fill="none" stroke="rgba(0,0,0,0.85)" strokeWidth={2.6} />
+                    <rect x={x - 1.5} y={y - 1.5} width={w + 3} height={h + 3}
+                      fill="none" stroke="#fff" strokeWidth={1.4} />
+                  </g>
+                );
+              })()}
 
               {/* the invasion's dashed edge sits above the cells, unlike the ceasefire
                   edges, so it is drawn here — but timed with the tint it opens */}
@@ -733,16 +759,21 @@ export default function Timeline() {
 
       {/* legend — kept deliberately short */}
       {model && (
-        <div className="px-6 pt-2 pb-24 border-t border-white/10">
+        <div className="border-t border-white/10">
           {/*
             * The selected cell, said once on a single line. It carries exactly what the
             * hover card carries, so a click leaves the same information on screen after
             * the pointer moves away. The row keeps its height when nothing is selected,
             * so selecting and clearing never nudges the legend under it.
             */}
-          {/* a block, not a flex row: only then does a long list of codes end in an
-              ellipsis rather than being cut mid-character */}
-          <div className="mb-2 h-[1.2rem] text-[0.72rem] overflow-hidden whitespace-nowrap text-ellipsis">
+          {/*
+            * Its own full-width band, so the rule beneath it runs edge to edge like the
+            * one under the graph rather than stopping at the horizontal padding.
+            *
+            * A block, not a flex row: only then does a long list of codes end in an
+            * ellipsis rather than being cut mid-character.
+            */}
+          <div className="px-6 py-3 h-[2.7rem] text-[0.72rem] overflow-hidden whitespace-nowrap text-ellipsis border-b border-white/10">
             {sel && (
               <>
                 <span className="text-white">{sel.town}</span>
@@ -761,7 +792,7 @@ export default function Timeline() {
               </>
             )}
           </div>
-          <div className="flex items-center gap-3 flex-wrap text-[0.7rem] text-white/50">
+          <div className="px-6 pt-4 pb-24 flex items-center gap-3 flex-wrap text-[0.7rem] text-white/50">
             <span>strikes per month</span>
             <span className="flex items-center gap-1.5">
               <span style={{ width: 12, height: 12, background: EMPTY, display: "inline-block" }} />0
