@@ -1219,9 +1219,13 @@ footer a {
  * row so it falls outside the paint.
  */
 .map-readout.on-satellite .dynamic-readout > div:not(:empty):not(.readout-divider) {
-  background-color: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  /* 0.72, not 0.55: the imagery under the readout runs from dark scrub to near-white
+     built-up ground, and the lighter value that looked solid over the former washed out
+     to grey over the latter, taking the dimmer lines (coordinates, code, landscape) with
+     it. This holds against the brightest terrain in the frame. */
+  background-color: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   padding: 0.05rem 0.45rem;
   margin-left: -0.45rem;
   border-radius: 3px;
