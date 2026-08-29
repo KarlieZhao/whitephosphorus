@@ -315,25 +315,23 @@ export default function DataSource({
             const none = counts.filter((c) => c.n === 0);
             return (
                 <>
-                    {hit.length > 0 && (
-                        <>
-                            {hit.map((c, i) => (
-                                <React.Fragment key={c.label}>
-                                    {i === 0 ? "" : i === hit.length - 1 ? " and " : ", "}
-                                    <span className="text-2xl text-white">{c.n}</span>
-                                    {i === 0 ? " landed in " : " in "}
-                                    {/* one strike is "a residential area", not "residential areas" */}
-                                    {c.n === 1 ? (/^[aeiou]/i.test(c.label) ? "an " : "a ") : ""}
-                                    <span className="text-2xl text-white">{c.label}</span>
-                                    {c.n === 1 ? " area" : " areas"}
-                                </React.Fragment>
-                            ))}
-                            .
-                        </>
-                    )}
+                    {/* one category per line: the three run well past the column set wide */}
+                    {hit.map((c, i) => (
+                        <React.Fragment key={c.label}>
+                            <span className="text-2xl text-white">{c.n}</span>
+                            {i === 0 ? " landed in " : " in "}
+                            {/* one strike is "a residential area", not "residential areas" */}
+                            {c.n === 1 ? (/^[aeiou]/i.test(c.label) ? "an " : "a ") : ""}
+                            <span className="text-2xl text-white">{c.label}</span>
+                            {c.n === 1 ? " area" : " areas"}
+                            {i < hit.length - 1
+                                ? <>{i === hit.length - 2 ? " and" : ","}<br /></>
+                                : "."}
+                        </React.Fragment>
+                    ))}
                     {none.length > 0 && (
                         <>
-                            {hit.length > 0 ? " " : ""}None landed in{" "}
+                            {hit.length > 0 ? <br /> : null}None landed in{" "}
                             <span className="text-2xl text-white">
                                 {none.map((c) => c.label).join(" or ")}
                             </span>{" "}
