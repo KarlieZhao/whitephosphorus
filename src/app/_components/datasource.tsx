@@ -474,7 +474,18 @@ export default function DataSource({
                             )}
                         </>
                     )}
-                    {breakdown && <>{narrowing.length ? " " : ""}{breakdown}</>}
+                    {breakdown && (
+                        /**
+                         * A block span, not a nested div: the two sentences stay inside one
+                         * row, which on the satellite basemap means one backdrop around the
+                         * whole paragraph rather than a second box with the gap painted
+                         * above it. The margin only applies when a town sentence precedes
+                         * it — on its own the breakdown starts the row.
+                         */
+                        <span style={narrowing.length ? { display: "block", marginTop: "0.85rem" } : undefined}>
+                            {breakdown}
+                        </span>
+                    )}
                 </div>
             ) : null;
             getDetails(periodPts, argFor[timeKey], false, null, narrowRow, !!breakdown);
