@@ -323,12 +323,6 @@ export default function DataSource({
             const unplaced = strikesIn({ area: [] }) - placed;
             return (
                 <>
-                    {unplaced > 0 && (
-                        <>
-                            Of the <span className="text-2xl text-white">{placed}</span> geolocated
-                            so far:<br />
-                        </>
-                    )}
                     {/* one category per line: the three run well past the column set wide */}
                     {hit.map((c, i) => (
                         <React.Fragment key={c.label}>
@@ -352,6 +346,14 @@ export default function DataSource({
                             areas.
                         </>
                     )}
+                    {/* closes the arithmetic: these four numbers sum to the period total */}
+                    {unplaced > 0 && (
+                        <>
+                            <br />
+                            <span className="text-2xl text-white">{unplaced}</span>{" "}
+                            {unplaced > 1 ? "are" : "is"} verified but not yet geolocated.
+                        </>
+                    )}
                 </>
             );
         })();
@@ -360,19 +362,21 @@ export default function DataSource({
         // it needs a total of its own to sit under
         if (narrowingFilters.length === 0) {
             const pending = Object.values(PENDING_GEOLOCATION_BY_YEAR).reduce((a, b) => a + b, 0);
+            // same shape as the period readouts: total, then the breakdown that closes on
+            // the pending count, then the prompt that answers it
             setFilterReadout([
                 <>
                     <span className="text-2xl text-white">{TOTAL_STRIKES}</span> white phosphorus
                     strikes landed across <span className="text-2xl text-white">South Lebanon</span>
-                    {" "}and <span className="text-2xl text-white">northern Israel</span>,<br />
-                    <span className="text-2xl text-white">{pending}</span> of which are verified but
-                    not yet geolocated.
+                    {" "}and <span className="text-2xl text-white">northern Israel</span>,
                 </>,
-                <div style={{ marginTop: "0.6rem" }}>
-                    Want to help?{" "}
-                    <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.
-                </div>,
                 <div style={{ marginTop: "2rem" }}>{breakdown}</div>,
+                pending > 0 ? (
+                    <div style={{ marginTop: "2rem" }}>
+                        Want to help?{" "}
+                        <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.
+                    </div>
+                ) : null,
             ]);
             updateDetails([]);
             return;
@@ -464,7 +468,7 @@ export default function DataSource({
                     {breakdown && <>{narrowing.length ? " " : ""}{breakdown}</>}
                 </div>
             ) : null;
-            getDetails(periodPts, argFor[timeKey], false, null, narrowRow);
+            getDetails(periodPts, argFor[timeKey], false, null, narrowRow, !!breakdown);
             return;
         }
 
@@ -586,6 +590,13 @@ export default function DataSource({
         clicked?: boolean,
         context?: { total: number; label: string } | null,
         extraRow?: any,
+        /**
+         * The landscape breakdown ends with the not-yet-geolocated count, so that its four
+         * numbers add up to the period total in one list. When it does, the period line
+         * must not state that count as well, and the Discord prompt moves below the list —
+         * it is a response to the line naming those strikes, so it belongs after it.
+         */
+        deferPending?: boolean,
     ) => {
         let readout1, readout2, readout3, readout4, readout5, readout6, readout7, readout8 = "";
         let thumbnails: string[] = [];
@@ -655,9 +666,10 @@ export default function DataSource({
                         .reduce((sum, p) => sum + p.bursts, 0);
                     const totalInMonth = mappedInMonth + pendingInMonth;
                     readout1 = <><span className="text-2xl text-white">{totalInMonth}</span> white phosphorus strike{totalInMonth > 1 ? "s" : ""} happened in <span className="text-2xl text-white">{monthParser(arg)}</span>
-                        {pendingInMonth > 0 && <>,<br /><span className="text-2xl text-white">{pendingInMonth}</span> of which {pendingInMonth > 1 ? "are" : "is"} verified but not yet geolocated</>}
-                        .</>
-                    readout2 = pendingInMonth > 0
+                        {!deferPending && pendingInMonth > 0 && <>,<br /><span className="text-2xl text-white">{pendingInMonth}</span> of which {pendingInMonth > 1 ? "are" : "is"} verified but not yet geolocated</>}
+                        {deferPending && pendingInMonth > 0 ? "," : "."}</>
+                    if (deferPending) { if (pendingInMonth > 0) readout3 = <div style={{ marginTop: "2rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>; }
+                    else readout2 = pendingInMonth > 0
                         ? <div style={{ marginTop: "0.6rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>
                         : <></>
                 } else if (Object.keys(landscape_map).includes(arg)) {
@@ -671,9 +683,11 @@ export default function DataSource({
                     const pendingCount = PENDING_GEOLOCATION_BY_YEAR[arg] ?? 0;
                     const totalCount = TOTAL_STRIKES_BY_YEAR[arg] ?? shellCount;
                     readout1 = <><span className="text-2xl text-white">{totalCount}</span> white phosphorus strike{totalCount > 1 ? "s" : ""} happened in <span className="text-2xl text-white">{arg}</span>
-                        {pendingCount > 0 && <>,<br /><span className="text-2xl text-white">{pendingCount}</span> of which {pendingCount > 1 ? "are" : "is"} verified but not yet geolocated</>}
-                        .</>
-                    readout2 = pendingCount > 0
+                        {!deferPending && pendingCount > 0 && <>,<br /><span className="text-2xl text-white">{pendingCount}</span> of which {pendingCount > 1 ? "are" : "is"} verified but not yet geolocated</>}
+                        {deferPending && pendingCount > 0 ? "," : "."}</>
+                    // readout2 is left free for the breakdown; the prompt follows it
+                    if (deferPending) { if (pendingCount > 0) readout3 = <div style={{ marginTop: "2rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>; }
+                    else readout2 = pendingCount > 0
                         ? <div style={{ marginTop: "0.6rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>
                         : <></>
                 }
@@ -714,9 +728,10 @@ export default function DataSource({
                     .reduce((sum, p) => sum + p.bursts, 0);
                 const totalInRange = mappedInRange + pendingInRange;
                 readout2 = <div style={{ marginTop: "0.5rem" }}><span className="text-2xl text-white">{totalInRange} </span>white phosphorus strike{totalInRange > 1 ? "s" : ""} across <span className="text-2xl text-white">{townCount.size}</span> cities/towns
-                    {pendingInRange > 0 && <>,<br /><span className="text-2xl text-white">{pendingInRange}</span> of which {pendingInRange > 1 ? "are" : "is"} verified but not yet geolocated</>}
-                    .</div>
-                readout3 = pendingInRange > 0
+                    {!deferPending && pendingInRange > 0 && <>,<br /><span className="text-2xl text-white">{pendingInRange}</span> of which {pendingInRange > 1 ? "are" : "is"} verified but not yet geolocated</>}
+                    {deferPending && pendingInRange > 0 ? "," : "."}</div>
+                if (deferPending) { if (pendingInRange > 0) readout4 = <div style={{ marginTop: "2rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>; }
+                else readout3 = pendingInRange > 0
                     ? <div style={{ marginTop: "0.6rem" }}>Want to help? <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer" className="underline text-white">Join our Discord</a>.</div>
                     : <></>
             }
