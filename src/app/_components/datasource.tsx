@@ -722,10 +722,15 @@ export default function DataSource({
                     })
 
                     if (pt.length > 1) {
-                        // city/town
-                        readout1 = <>Between <span className="text-2xl text-white">{dates[0]}</span> and  <span className="text-2xl text-white">{dates[dates.length - 1]}</span>,</>
-                        readout2 = <><span className="text-2xl text-white">{shellCount} </span>white phosphorus strike{shellCount > 1 ? "s" : ""} in
-                            <span className="text-2xl text-white"> {pt[0].town}</span>.</>
+                        /**
+                         * City/town. The two dates are the town's own first and last strike
+                         * — geoData is sorted by date on load — not a filter. Leading with
+                         * "Between … and …," read as though a date range had been selected,
+                         * which was confusing on a selection that set no dates at all, so
+                         * the count comes first and the dates are named for what they are.
+                         */
+                        readout1 = <><span className="text-2xl text-white">{shellCount}</span> white phosphorus strike{shellCount > 1 ? "s" : ""} in <span className="text-2xl text-white">{pt[0].town}</span>,</>
+                        readout2 = <>the first on <span className="text-2xl text-white">{dates[0]}</span> and the last on <span className="text-2xl text-white">{dates[dates.length - 1]}</span>.</>
                     } else {
                         readout1 = <>On <span className="text-2xl text-white">{dates[0]}</span>,</>
                         readout2 = <>{shellCount} white phosphorus strike{shellCount > 1 ? "s" : ""} in <span className="text-2xl text-white">{pt[0].town}</span>.</>
