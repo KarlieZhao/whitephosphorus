@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { VectorMap, type BasemapId } from "./map";
+import { VectorMap, OVERLAYS, type BasemapId } from "./map";
 import { Histogram } from "./histo";
 import Timeline from "./timeline";
 import Area from "./area";
@@ -114,7 +114,8 @@ export default function DataSource({
     TypewriterFinished = false,
     basemap = "openfreemap",
     combineFilters = true,
-}: TypewriterProps & { basemap?: BasemapId; combineFilters?: boolean }) {
+    referenceLayers = false,
+}: TypewriterProps & { basemap?: BasemapId; combineFilters?: boolean; referenceLayers?: boolean }) {
     const [geoData, setGeoData] = useState<any[]>([]);
     /**
      * Landscape and city hold several values at once; a point matches if it is in any of
@@ -151,6 +152,14 @@ export default function DataSource({
     // background to tap for the usual reset — bumping this tells VectorMap to clear its
     // internal focus state alongside clearing the readout here
     const [clearSelectionSignal, setClearSelectionSignal] = useState(0);
+
+    /**
+     * Optional reference geometry drawn under the dots — the security zone, the Blue Line,
+     * the rivers. Held here rather than in the map so the panel can show what is on, and
+     * kept out of the filters entirely: these describe the ground, not the strikes, so
+     * they never change which incidents are shown.
+     */
+    const [activeLayers, setActiveLayers] = useState<string[]>([]);
 
 
     const landscape_map: landscape_mapping_prop = {
@@ -831,6 +840,7 @@ export default function DataSource({
                 selectedMonth={selectedMonth}
                 selectedYear={selectedYear}
                 TypewriterFinished={TypewriterFinished}
+                overlayLayers={referenceLayers ? activeLayers : undefined}
                 getMapDetails={getDetails}
                 leafletCenter={leafletCenter}
                 mapZoom={mapZoom}
@@ -929,6 +939,31 @@ export default function DataSource({
                 </div>
             </div>
 
+
+            {/*
+              * Reference geometry, kept visually apart from the filters below it: these
+              * describe the ground rather than the strikes, and toggling one never changes
+              * which incidents are on the map.
+              */}
+            {referenceLayers && (
+                <div className="map-layers">
+                    <div className="chart-titles">Map Layers</div>
+                    {OVERLAYS.map((o) => {
+                        const on = activeLayers.includes(o.id);
+                        return (
+                            <button key={o.id}
+                                className={`map-layer-toggle${on ? " map-layer-toggle-active" : ""}`}
+                                aria-pressed={on}
+                                onClick={() => setActiveLayers((prev) =>
+                                    prev.includes(o.id) ? prev.filter((x) => x !== o.id) : [...prev, o.id])}>
+                                <span className={`map-layer-swatch map-layer-swatch-${o.id}`} />
+                                <span className="map-layer-label">{o.label}</span>
+                                <span className="map-layer-note">{o.note}</span>
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
 
             {/*
               * Rendered whether or not anything is selected. An empty box holding its own

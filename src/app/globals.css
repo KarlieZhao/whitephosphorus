@@ -1865,3 +1865,72 @@ small {
   margin: 0.85rem 0 0.75rem;
   background: rgba(255, 255, 255, 0.25);
 }
+
+/* ===== reference map layers (control panel) ===== */
+.map-layers {
+  margin-top: 1.25rem;
+  padding: 0.6rem 0.7rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.map-layers .chart-titles {
+  margin-bottom: 0.5rem;
+}
+
+.map-layer-toggle {
+  display: grid;
+  /* swatch, then name and note sharing the rest — the note wraps under nothing, so a
+     long one truncates rather than pushing the panel wider */
+  grid-template-columns: 14px 1fr;
+  align-items: center;
+  column-gap: 0.5rem;
+  width: 100%;
+  padding: 0.28rem 0.1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.map-layer-swatch {
+  grid-row: 1 / span 2;
+  width: 14px;
+  height: 4px;
+  border-radius: 1px;
+  opacity: 0.35;
+  transition: opacity 0.15s ease;
+}
+
+.map-layer-toggle-active .map-layer-swatch {
+  opacity: 1;
+}
+
+/* each swatch carries its layer's own colour, so the panel reads as a legend too */
+.map-layer-swatch-security-zone { background: #e8563a; }
+.map-layer-swatch-blue-line { background: #4aa3ff; }
+.map-layer-swatch-rivers { background: #3f88ad; }
+
+.map-layer-label {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.15s ease;
+}
+
+.map-layer-toggle-active .map-layer-label {
+  color: #fff;
+}
+
+.map-layer-toggle:hover .map-layer-label {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.map-layer-note {
+  grid-column: 2;
+  font-size: 0.66rem;
+  color: rgba(255, 255, 255, 0.32);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

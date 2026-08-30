@@ -25,6 +25,8 @@ type VectorMapProps = geoDataProps & TypewriterProps & {
    * fallback and will show that watermark if used.
    */
   basemap?: BasemapId;
+  /** ids from OVERLAYS that should currently be drawn; everything else stays hidden */
+  overlayLayers?: string[];
 };
 
 export type BasemapId = "carto" | "openfreemap";
@@ -71,6 +73,70 @@ const FADES_IN = (id: string) =>
  * on boundary features, so these are lines only; the districts cannot be labelled from
  * this source.
  */
+/**
+ * Optional reference layers, off by default and toggled from the control panel.
+ *
+ * Drawn as Leaflet GeoJSON rather than as MapLibre style layers. Through the Leaflet
+ * plugin, maplibre-gl v6's introspection is unusable — getLayer() and getStyle() report
+ * nothing for layers that are demonstrably on screen, and style._loaded stays false on a
+ * map that is rendering — so there is no dependable way to add sources at the right moment
+ * or to confirm a visibility toggle landed. Leaflet owns the map object outright, and
+ * these are 55 features in total, so the cost of an SVG overlay is nil.
+ *
+ * Geometry is the project's own QGIS work, exported to GeoJSON under public/data/layers.
+ */
+export const OVERLAYS: {
+  id: string;
+  label: string;
+  note: string;
+  files: { url: string; style: (feature: any) => any }[];
+}[] = [
+  {
+    id: "security-zone",
+    label: "Security zone",
+    note: "Israeli-declared buffer zone inside southern Lebanon",
+    files: [{
+      url: "/data/layers/security-zone.geojson",
+      style: () => ({
+        // the zone covers most of the frame, so the fill has to stay far lighter than it
+        // would need to be on a smaller shape — at 0.13 it swallowed the basemap whole
+        color: "#e8563a", weight: 1, opacity: 0.8,
+        fillColor: "#db2f0f", fillOpacity: 0.07,
+      }),
+    }],
+  },
+  {
+    id: "blue-line",
+    label: "Blue Line",
+    note: "UN withdrawal line, 2000",
+    files: [{
+      url: "/data/layers/blue-line.geojson",
+      style: () => ({ color: "#4aa3ff", weight: 1.8, opacity: 0.9, fill: false }),
+    }],
+  },
+  {
+    id: "rivers",
+    label: "Rivers",
+    note: "watercourses and Lake Qaraoun",
+    files: [
+      {
+        url: "/data/layers/qaraoun.geojson",
+        style: () => ({ color: "#3f88ad", weight: 0.8, opacity: 0.8, fillColor: "#2c5f7d", fillOpacity: 0.75 }),
+      },
+      {
+        url: "/data/layers/rivers.geojson",
+        // streams are the finer half of the set, so they stay a step under the rivers
+        style: (f: any) => ({
+          color: "#3f88ad",
+          weight: f?.properties?.class === "stream" ? 0.8 : 1.5,
+          opacity: 0.85,
+          fill: false,
+        }),
+      },
+    ],
+  },
+];
+
 const EXTRA_LAYERS: any[] = [
   {
     // the Israel/Syria line across the Golan is tagged disputed=1 in the tiles; it is
@@ -438,9 +504,76 @@ export function VectorMap({
   showSatellite,
   clearSelectionSignal,
   basemap = "openfreemap",
+  overlayLayers,
 }: VectorMapProps) {
   const borderDataRef = useRef<any>(null);
   const cartodbLayerRef = useRef<any>(null);
+  // read inside the effect's async block, which may resolve after another toggle
+  const overlayLayersRef = useRef<string[] | undefined>(overlayLayers);
+  overlayLayersRef.current = overlayLayers;
+  /** GeoJSON already fetched, so toggling a layer off and on again costs nothing */
+  const overlayDataRef = useRef<Record<string, any>>({});
+  /** the Leaflet layers currently on the map, by overlay id */
+  const overlayLayerRef = useRef<Record<string, any[]>>({});
+
+  /**
+   * Reference overlays live in their own Leaflet pane between the basemap and the dots, so
+   * they never cover an incident and are never covered by the basemap's own labels.
+   */
+  useEffect(() => {
+    if (!mapInstance) return;
+    let cancelled = false;
+
+    (async () => {
+      const L = (await import("leaflet")).default as any;
+      if (cancelled || !mapInstance.getPane) return;
+      if (!mapInstance.getPane("wpOverlays")) {
+        const pane = mapInstance.createPane("wpOverlays");
+        // between tilePane (200) and overlayPane (400), where the incident dots are drawn
+        pane.style.zIndex = "250";
+        pane.style.pointerEvents = "none";
+      }
+
+      for (const o of OVERLAYS) {
+        const wanted = !!overlayLayers?.includes(o.id);
+        const present = !!overlayLayerRef.current[o.id];
+        if (wanted === present) continue;
+
+        if (!wanted) {
+          for (const lyr of overlayLayerRef.current[o.id]) mapInstance.removeLayer(lyr);
+          delete overlayLayerRef.current[o.id];
+          continue;
+        }
+
+        const added: any[] = [];
+        for (const file of o.files) {
+          if (!overlayDataRef.current[file.url]) {
+            overlayDataRef.current[file.url] = await fetch(file.url)
+              .then((r) => r.json())
+              .catch((e) => { console.error("[map] overlay failed to load", file.url, e); return null; });
+          }
+          const data = overlayDataRef.current[file.url];
+          if (cancelled || !data) continue;
+          const lyr = L.geoJSON(data, {
+            pane: "wpOverlays",
+            interactive: false,
+            style: file.style,
+          });
+          lyr.addTo(mapInstance);
+          added.push(lyr);
+        }
+        // a toggle-off during the await would otherwise leave the layer stranded on the map
+        if (cancelled || !overlayLayersRef.current?.includes(o.id)) {
+          for (const lyr of added) mapInstance.removeLayer(lyr);
+          continue;
+        }
+        overlayLayerRef.current[o.id] = added;
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [mapInstance, overlayLayers]);
+
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout[]>([]);
   const [hasAnimated, setHasAnimated] = useState(() => typeof window !== "undefined" && sessionStorage.getItem("mapDotsAnimated") === "true");
@@ -738,6 +871,7 @@ export function VectorMap({
           if (mapInstance.attributionControl) {
             mapInstance.attributionControl.addAttribution(MAP_ATTRIBUTION);
           }
+
           /**
            * The plugin sizes its container exactly once, in _initContainer, from Leaflet's
            * map size — and thereafter only on Leaflet "resize"/"zoomend" events. If the
