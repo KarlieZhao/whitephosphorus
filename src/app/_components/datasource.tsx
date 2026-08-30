@@ -313,8 +313,22 @@ export default function DataSource({
             }));
             const hit = counts.filter((c) => c.n > 0);
             const none = counts.filter((c) => c.n === 0);
+            /**
+             * The categories only ever cover the geolocated strikes — the pending ones have
+             * no landscape recorded — so the list stops short of the period total. Naming
+             * the subtotal it does divide is what stops that gap reading as an error: "35
+             * happened in 2026" over 19 + 1 + 9 left the reader to work out the missing 6.
+             */
+            const placed = counts.reduce((n, c) => n + c.n, 0);
+            const unplaced = strikesIn({ area: [] }) - placed;
             return (
                 <>
+                    {unplaced > 0 && (
+                        <>
+                            Of the <span className="text-2xl text-white">{placed}</span> geolocated
+                            so far:<br />
+                        </>
+                    )}
                     {/* one category per line: the three run well past the column set wide */}
                     {hit.map((c, i) => (
                         <React.Fragment key={c.label}>
