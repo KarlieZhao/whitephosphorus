@@ -1934,3 +1934,182 @@ small {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* methodology links and the tools list — the page had no link styling of its own, so
+   references were indistinguishable from body text */
+/* body text on this page is #ddd, so a link is picked out by weight and a full-white
+   fill as well as the underline — the references are the point of the page */
+.method-page a {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(255, 255, 255, 0.5);
+}
+
+.method-page a:hover {
+  text-decoration-color: #fff;
+}
+
+.method-page .intro {
+  color: #ddd;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  word-spacing: 0.6px;
+  line-height: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+/* the WP / HC comparison: two columns, HC on the top row and WP beneath, so the pair can
+   be read across (daylight vs night) as well as down (one munition vs the other) */
+.method-page .munition-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+.method-page .munition-grid figure {
+  margin: 0;
+}
+
+/* overrides the page-wide rule that centres section images and caps them at 50vw */
+.method-page .munition-grid img {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+/* tall frames centre-crop away the moment of detonation at the top, which is the thing
+   worth seeing; this pins the crop to the top edge instead */
+.method-page .munition-grid img.crop-top {
+  object-position: 50% 0%;
+}
+
+.method-page .munition-grid figcaption {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+  line-height: 1.25rem;
+  margin-top: 0.6rem;
+}
+
+.munition-tag {
+  display: inline-block;
+  margin-right: 0.45rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  color: #000;
+}
+
+.munition-tag-hc { background: #a3d9b1; }
+.munition-tag-wp { background: #e8563a; color: #fff; }
+
+@media (max-width: 768px) {
+  .method-page .munition-grid {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+  }
+}
+
+/* the burst-measurement diagram: wide, and it carries its own labels and dark ground, so
+   it runs full width and is never cropped the way the comparison frames are */
+.method-page .burst-figure {
+  /* space below as well as above: the caption ran straight into the paragraph after it */
+  margin: 2.5rem 0 2.5rem;
+}
+
+/*
+ * The source file is 3000x1875 with its own black margins — measured, the artwork occupies
+ * 7.9% to 87.3% of the height, so nearly a fifth of the frame was empty black. Cropping to
+ * 1.95:1 from 33% down trims most of that while leaving a thin border.
+ */
+.method-page .burst-figure img {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  display: block;
+  aspect-ratio: 1.95 / 1;
+  object-fit: cover;
+  object-position: 50% 33%;
+}
+
+.method-page .burst-figure figcaption {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+  line-height: 1.25rem;
+  margin-top: 0.6rem;
+}
+
+.method-page section h4 {
+  color: #fff;
+  font-weight: bold;
+  margin-top: 3rem;
+  margin-bottom: 0.8rem;
+}
+
+/* the closing tool list: a scannable index of everything linked inline above */
+.method-page .tool-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.5rem;
+}
+
+.method-page .tool-list li {
+  color: #ddd;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.9rem;
+  /* the note hangs under the name rather than beside it, so a long one never widens the
+     column on a phone */
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.method-page .tool-list .tool-note {
+  display: block;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+}
+
+/* the chronolocation gallery: the four frames arrive at different aspect ratios, so
+   without a common ratio the two rows end at different heights and the grid reads as
+   broken. A gap keeps them from fusing into one block. */
+.method-page .gallery {
+  gap: 0.75rem;
+}
+
+.method-page section .gallery img,
+.method-page section .gallery video {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  display: block;
+}
+
+/* the closing contact line, centred in the blank run below the last rule. Declared after
+   `.ar` so it also overrides that block's right alignment on the Arabic tab. */
+.method-page .method-contact {
+  text-align: center;
+  /*
+   * Optically centred, not numerically. Scrolled to the end, the fixed footer eats into
+   * the space below the line, so equal margins put it visibly low. Measured at the bottom
+   * of the page, 4rem above leaves the same visible gap as 8rem below.
+   *
+   * Set here rather than with utilities because `.method-page section` out-specifies a
+   * Tailwind margin class and was holding the bottom at 5rem.
+   */
+  margin-top: 4rem;
+  margin-bottom: 8rem;
+}
