@@ -92,7 +92,7 @@ export default function Index() {
                                 <a href="https://www.gettyimages.com/" target="_blank" rel="noopener noreferrer">Getty&nbsp;Images</a>,{" "}
                                 <a href="https://www.afpforum.com/" target="_blank" rel="noopener noreferrer">AFP&nbsp;Forum</a>,{" "}
                                 <a href="https://www.anpfoto.nl/" target="_blank" rel="noopener noreferrer">ANP</a> and{" "}
-                                <a href="https://www.aa.com.tr/en" target="_blank" rel="noopener noreferrer">Anadolu&nbsp;Agency</a>.
+                                <a href="https://www.anadoluimages.com/" target="_blank" rel="noopener noreferrer">Anadolu&nbsp;Images</a>.
                                 Those photographs are licensed, so I do not reproduce them here. Each
                                 incident links out to the source instead, as its publisher posted it.
                             </p>
@@ -110,12 +110,14 @@ export default function Index() {
                                 so it is the first thing I rule out.
                             </p>
                             <p>
-                                The difference is clearest in the first seconds. White phosphorus is
-                                carried in felt wedges soaked in phosphorus, which ignite on contact with
-                                air and fall as burning points trailing white smoke &mdash; the tentacular
-                                shape these plumes are known for. HC is ejected as canisters that come to
-                                rest and smoulder on the ground. A few minutes later the two clouds can
-                                look much the same, which is why I judge the burst and not the aftermath.
+                                The difference is clearest in the first seconds, and it comes down to a
+                                number. An M825 carries <strong>116</strong> felt wedges soaked in
+                                phosphorus, which ignite on contact with air and fall as burning points
+                                trailing white smoke &mdash; the tentacular shape these plumes are known
+                                for. An M150 ejects <strong>five</strong> HC canisters, which come to rest
+                                and smoulder on the ground. A few
+                                minutes later the two clouds can look much the same, which is why I judge
+                                the burst and not the aftermath.
                             </p>
                             <p>
                                 For the physical and marking differences between the two projectiles I
@@ -131,24 +133,25 @@ export default function Index() {
                             <div className="munition-grid">
                                 <figure>
                                     <img className="crop-top" src="/about/munition_hc_day.png" alt="HC smoke in daylight" />
-                                    <figcaption><span className="munition-tag munition-tag-hc">HC</span> Daylight. The canisters are already down; the smoke builds from the ground and drifts sideways as a bank along the ridge.</figcaption>
+                                    <figcaption><span className="munition-tag munition-tag-hc">HC</span> Five canisters. Few enough to count.</figcaption>
                                 </figure>
                                 <figure>
                                     <img src="/about/munition_hc_night.png" alt="HC smoke at night" />
-                                    <figcaption><span className="munition-tag munition-tag-hc">HC</span> At night. A few discrete canisters fall on steady trails and come to rest, burning in place.</figcaption>
+                                    <figcaption><span className="munition-tag munition-tag-hc">HC</span> The same five, falling on steady trails.</figcaption>
                                 </figure>
                                 <figure>
                                     <img className="crop-top" src="/about/munition_wp_day.png" alt="White phosphorus in daylight" />
-                                    <figcaption><span className="munition-tag munition-tag-wp">WP</span> Daylight. Dozens of wedges ignite in the air at once and fall together, each drawing its own white thread &mdash; the tentacular curtain.</figcaption>
+                                    <figcaption><span className="munition-tag munition-tag-wp">WP</span> 116 wedges from a single shell.</figcaption>
                                 </figure>
                                 <figure>
                                     <img src="/about/munition_wp_night.png" alt="White phosphorus at night" />
-                                    <figcaption><span className="munition-tag munition-tag-wp">WP</span> At night the same burst reads as a fan of burning points, spreading outward as they land and continuing to burn.</figcaption>
+                                    <figcaption><span className="munition-tag munition-tag-wp">WP</span> The same 116, burning where they land.</figcaption>
                                 </figure>
                             </div>
                             <p>
-                                The count is the quickest tell: HC arrives as a handful of canisters,
-                                white phosphorus as scores of separate burning points falling together.
+                                So the count settles it, and the two are nowhere near each other: if the
+                                trails can be counted on one hand it is HC, and if they cannot be counted
+                                at all it is white phosphorus.
                             </p>
 
                             <h4>Reading the burst</h4>
@@ -315,7 +318,7 @@ export default function Index() {
                                     <a href="https://www.gettyimages.com/" target="_blank" rel="noopener noreferrer">Getty Images</a>,{" "}
                                     <a href="https://www.afpforum.com/" target="_blank" rel="noopener noreferrer">AFP Forum</a>,{" "}
                                     <a href="https://www.anpfoto.nl/" target="_blank" rel="noopener noreferrer">ANP</a>,{" "}
-                                    <a href="https://www.aa.com.tr/en" target="_blank" rel="noopener noreferrer">Anadolu Agency</a>
+                                    <a href="https://www.anadoluimages.com/" target="_blank" rel="noopener noreferrer">Anadolu Images</a>
                                     <span className="tool-note">Wire photo archives, searched alongside the social platforms.</span>
                                 </li>
                             </ul>
@@ -347,7 +350,7 @@ export default function Index() {
                                 <a href="https://www.gettyimages.com/" target="_blank" rel="noopener noreferrer">Getty&nbsp;Images</a>،{" "}
                                 <a href="https://www.afpforum.com/" target="_blank" rel="noopener noreferrer">AFP&nbsp;Forum</a>،{" "}
                                 <a href="https://www.anpfoto.nl/" target="_blank" rel="noopener noreferrer">ANP</a>،{" "}
-                                <a href="https://www.aa.com.tr/ar" target="_blank" rel="noopener noreferrer">وكالة الأناضول</a>.
+                                <a href="https://www.anadoluimages.com/" target="_blank" rel="noopener noreferrer">Anadolu Images</a>.
                                 هذه الصور مرخّصة، لذلك لا أعيد نشرها هنا. بدلاً من ذلك تُحيل كل حادثة
                                 إلى المصدر كما نشره صاحبه.
                             </p>
@@ -364,11 +367,13 @@ export default function Index() {
                                 الضربات، ولهذا هو أوّل ما أستبعده.
                             </p>
                             <p>
-                                الفارق يظهر بأوضح صوره في الثواني الأولى. يُحمل الفوسفور الأبيض في إسفينات
-                                لبّاد مشبّعة به، تشتعل عند ملامستها الهواء وتتساقط كنقاط مشتعلة يجرّ كلّ
-                                منها خيطاً أبيض &mdash; الشكل الأخطبوطي المعروف لهذه الأعمدة. أمّا HC فيُقذف
-                                على شكل عبوات تستقرّ على الأرض وتظلّ تدخّن. بعد دقائق قد تبدو السحابتان
-                                متشابهتين، ولهذا أحكم على لحظة الانفجار لا على ما يليها.
+                                الفارق يظهر بأوضح صوره في الثواني الأولى، ويعود إلى رقم. تحمل قذيفة M825
+                                <strong>116</strong> إسفينة لبّاد مشبّعة بالفوسفور، تشتعل عند ملامستها
+                                الهواء وتتساقط كنقاط مشتعلة يجرّ كلّ منها خيطاً أبيض &mdash; الشكل
+                                الأخطبوطي المعروف لهذه الأعمدة. أمّا M150 فتقذف <strong>خمس</strong> عبوات
+                                HC تستقرّ على الأرض وتظلّ تدخّن.
+                                بعد دقائق قد تبدو السحابتان متشابهتين، ولهذا أحكم على لحظة الانفجار لا
+                                على ما يليها.
                             </p>
                             <p>
                                 للفروق الشكلية وعلامات الطلاء بين القذيفتين أعتمد على تريفور بول ون. ر.
@@ -384,24 +389,24 @@ export default function Index() {
                             <div className="munition-grid">
                                 <figure>
                                     <img className="crop-top" src="/about/munition_hc_day.png" alt="دخان HC نهاراً" />
-                                    <figcaption><span className="munition-tag munition-tag-hc">HC</span> نهاراً. العبوات على الأرض أصلاً؛ الدخان يتصاعد منها وينجرف جانبياً كشريط على طول التلّة.</figcaption>
+                                    <figcaption><span className="munition-tag munition-tag-hc">HC</span> خمس عبوات. قليلة بما يكفي لعدّها.</figcaption>
                                 </figure>
                                 <figure>
                                     <img src="/about/munition_hc_night.png" alt="دخان HC ليلاً" />
-                                    <figcaption><span className="munition-tag munition-tag-hc">HC</span> ليلاً. عدد قليل من العبوات يتساقط على مسارات ثابتة ثمّ يستقرّ مشتعلاً في مكانه.</figcaption>
+                                    <figcaption><span className="munition-tag munition-tag-hc">HC</span> الخمس نفسها، تتساقط على مسارات ثابتة.</figcaption>
                                 </figure>
                                 <figure>
                                     <img className="crop-top" src="/about/munition_wp_day.png" alt="فوسفور أبيض نهاراً" />
-                                    <figcaption><span className="munition-tag munition-tag-wp">WP</span> نهاراً. عشرات الإسفينات تشتعل في الهواء دفعة واحدة وتتساقط معاً، يرسم كلّ منها خيطه الأبيض &mdash; الستار الأخطبوطي.</figcaption>
+                                    <figcaption><span className="munition-tag munition-tag-wp">WP</span> 116 إسفينة من قذيفة واحدة.</figcaption>
                                 </figure>
                                 <figure>
                                     <img src="/about/munition_wp_night.png" alt="فوسفور أبيض ليلاً" />
-                                    <figcaption><span className="munition-tag munition-tag-wp">WP</span> ليلاً يبدو الانفجار نفسه مروحةً من النقاط المشتعلة، تتسع عند ارتطامها وتواصل الاحتراق.</figcaption>
+                                    <figcaption><span className="munition-tag munition-tag-wp">WP</span> الـ116 نفسها، مشتعلةً حيث تسقط.</figcaption>
                                 </figure>
                             </div>
                             <p>
-                                العدد هو أسرع دليل: HC يصل على شكل حفنة عبوات، بينما الفوسفور الأبيض
-                                عشرات النقاط المشتعلة المتساقطة معاً.
+                                العدد إذاً هو الفيصل، والرقمان بعيدان تماماً عن بعضهما: إن أمكن عدّ الخيوط
+                                على أصابع اليد فهي HC، وإن تعذّر عدّها أصلاً فهي فوسفور أبيض.
                             </p>
 
                             <h4>قراءة الانفجار</h4>
@@ -561,7 +566,7 @@ export default function Index() {
                                     <a href="https://www.gettyimages.com/" target="_blank" rel="noopener noreferrer">Getty Images</a>،{" "}
                                     <a href="https://www.afpforum.com/" target="_blank" rel="noopener noreferrer">AFP Forum</a>،{" "}
                                     <a href="https://www.anpfoto.nl/" target="_blank" rel="noopener noreferrer">ANP</a>،{" "}
-                                    <a href="https://www.aa.com.tr/ar" target="_blank" rel="noopener noreferrer">وكالة الأناضول</a>
+                                    <a href="https://www.anadoluimages.com/" target="_blank" rel="noopener noreferrer">Anadolu Images</a>
                                     <span className="tool-note">أرشيفات صور الوكالات، إلى جانب منصّات التواصل.</span>
                                 </li>
                             </ul>
