@@ -252,7 +252,9 @@ export default function Index() {
                                 <img className="object-cover  w-full" src="/about/Chronolocation1.jpeg" alt="chronolocation_img" />
                                 <img className="object-cover w-full " src="/about/Chronolocation2.jpeg" alt="chronolocation_img" />
                                 <img className="object-cover w-full" src="/about/Chronolocation3.jpeg" alt="chronolocation_img" />
-                                <video className="object-cover w-full h-full" controls={false} autoPlay loop muted>
+                                {/* playsInline is what keeps iOS from hijacking the page into
+                                    fullscreen every time this autoplays or loops */}
+                                <video className="object-cover w-full h-full" controls={false} autoPlay loop muted playsInline preload="metadata">
                                     <source src="/about/Chronolocation4.mp4" type="video/mp4" />
                                 </video>
                             </div>
@@ -501,7 +503,9 @@ export default function Index() {
                                 <img className="object-cover  w-full" src="/about/Chronolocation1.jpeg" alt="chronolocation_img" />
                                 <img className="object-cover w-full " src="/about/Chronolocation2.jpeg" alt="chronolocation_img" />
                                 <img className="object-cover w-full" src="/about/Chronolocation3.jpeg" alt="chronolocation_img" />
-                                <video className="object-cover w-full h-full" controls={false} autoPlay loop muted>
+                                {/* playsInline is what keeps iOS from hijacking the page into
+                                    fullscreen every time this autoplays or loops */}
+                                <video className="object-cover w-full h-full" controls={false} autoPlay loop muted playsInline preload="metadata">
                                     <source src="/about/Chronolocation4.mp4" type="video/mp4" />
                                 </video>
                             </div>
