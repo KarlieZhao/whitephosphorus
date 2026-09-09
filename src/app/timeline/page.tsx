@@ -27,7 +27,7 @@ import { isMobileDevice } from "@/app/_components/mobile-detector";
 import "@/app/globals.css";
 
 const WEDGES_PER_STRIKE = 116;
-const ROW_H = 13.6; // squeezed ~15% so the whole chart clears the fold
+const ROW_H = 12.2; // squeezed ~25% in total so the whole chart clears the fold
 const M_LEFT = 112;
 const M_RIGHT = 88; // also the run-out for the ongoing-ceasefire fade
 const M_TOP = 58; // headroom for the scan readout above the month labels
@@ -375,8 +375,24 @@ export default function Timeline() {
    * and mobile keeps the plain chart it had before.
    */
   const scanEnabled = !isMobile;
-  /** what the scan line shows: the live cursor, falling back to a parked marker */
+  /**
+   * What the scan line shows: the live cursor, falling back to a parked marker. The
+   * cursor outranks the parked line on purpose — holding the line against the pointer
+   * meant the chart stopped responding until you found the line again to release it.
+   */
   const view = scanEnabled ? scan ?? pinned : null;
+
+  // Escape releases a parked line and drops the cell selection, so there is a way out
+  // that does not depend on finding the line again with the pointer
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setPinned(null);
+      setSel(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   /**
    * Intro sequence: the strikes sweep in month by month, then every tinted period fades
@@ -462,11 +478,14 @@ export default function Timeline() {
             <svg width={gridSvgW} height={height} style={{ display: "block", maxWidth: isMobile ? "none" : "100%" }}
               onClick={(e) => {
                 /**
-                 * Clicking on a marked date parks the line there; clicking anywhere else
-                 * clears both the parked line and any pinned cell. The position is worked
-                 * out from this event rather than read off `scan`, because the move that
-                 * preceded the click may not have re-rendered yet — reading the state here
-                 * saw a stale value and the click missed the marker.
+                 * Clicking on a marked date parks the line there, so it survives the
+                 * cursor leaving; clicking it again, or anywhere off a marker, releases
+                 * it. The position is worked out from this event rather than read off
+                 * `scan`, because the move that preceded the click may not have
+                 * re-rendered yet — reading the state here saw a stale value and the click
+                 * missed the marker. A cell click reaches this handler too, so a selection
+                 * is only dropped when the click landed on blank chart — which is what the
+                 * data-strike tag on the filled cells distinguishes.
                  */
                 if (!scanEnabled) { setSel(null); return; }
                 const r = e.currentTarget.getBoundingClientRect();
@@ -475,8 +494,8 @@ export default function Timeline() {
                   setPinned((p) => (p?.snap?.iso === at.snap!.iso ? null : at));
                 } else {
                   setPinned(null);
-                  setSel(null);
                 }
+                if (!(e.target as Element)?.hasAttribute?.("data-strike")) setSel(null);
               }}
               onMouseMove={(e) => {
                 if (!scanEnabled) return;
@@ -528,6 +547,9 @@ export default function Timeline() {
                           x={xOf(ci) + 0.5} y={y + 0.5}
                           width={Math.max(1, cellW - 1)} height={rowH - 1}
                           fill={b ? stepFill(b.strikes) : EMPTY}
+                          // marks the cells that carry a selection, so the svg handler can
+                          // tell a click on one from a click on blank chart
+                          {...(b ? { "data-strike": "" } : {})}
                           style={{
                             cursor: b ? "pointer" : "default",
                             // only the filled cells animate; the empty wash is already faint.
@@ -541,15 +563,14 @@ export default function Timeline() {
                           onMouseEnter={(e) => b && setHover({ x: e.clientX, y: e.clientY, town, label, b })}
                           onMouseMove={(e) => b && setHover({ x: e.clientX, y: e.clientY, town, label, b })}
                           onMouseLeave={() => setHover(null)}
-                          onClick={(e) => {
+                          onClick={() => {
                             if (!b) return;
-                            // on a marked date the click belongs to the scan line, so let it
-                            // through to the svg — again computed from the event, not state
-                            const svgEl = e.currentTarget.ownerSVGElement;
-                            if (scanEnabled && svgEl &&
-                                scanAt(e.clientX - svgEl.getBoundingClientRect().left)?.snap) return;
-                            e.stopPropagation();
-                            setSel({ town, label, b });
+                            // the click is left to bubble on to the svg: on a marked date
+                            // that parks the scan line as well, which is two readings of
+                            // one click rather than a conflict, and it keeps the cells
+                            // sitting on those dates selectable
+                            setSel((s) =>
+                              s && s.town === town && s.label === label ? null : { town, label, b });
                           }}
                         />
                       );
@@ -792,7 +813,7 @@ export default function Timeline() {
               </>
             )}
           </div>
-          <div className="px-6 pt-4 pb-24 flex items-center gap-3 flex-wrap text-[0.7rem] text-white/50">
+          <div className="px-6 pt-4 pb-8 flex items-center gap-3 flex-wrap text-[0.7rem] text-white/50">
             <span>strikes per month</span>
             <span className="flex items-center gap-1.5">
               <span style={{ width: 12, height: 12, background: EMPTY, display: "inline-block" }} />0
