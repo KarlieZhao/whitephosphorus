@@ -49,6 +49,11 @@ const ProjectInfo: React.FC<ProjectInfoProps> = ({ data, reset }) => {
                                     {item.answer.map((entry, idx) => {
                                         const label = Object.keys(entry)[0];
                                         const url = Object.values(entry)[0];
+                                        // an entry with no url is a group heading, not a link:
+                                        // it is how the JSON separates legal / academic / news
+                                        if (!url) {
+                                            return <li key={idx} className="list-subhead">{label}</li>;
+                                        }
                                         const match = label.match(/^(.+?)\s+([-–—])\s+(.+)$/);
                                         return (
                                             <li key={idx}>
