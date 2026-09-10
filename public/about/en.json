@@ -32,7 +32,7 @@
             "answer": "<p>When deployed, a white phosphorus shell releases 116 felt wedges impregnated with the substance. Each wedge burns at temperatures exceeding 800 °C for approximately 5 to 15 minutes, depending on wind, humidity, and impact surface (U.S. Army Technical Manual TM 3-215, 1984; Forensic Architecture, 2018). What makes white phosphorus exceptionally dangerous is its persistent reactivity — residues can reignite weeks or even months later when re-exposed to oxygen.</p><p>This persistence was confirmed in Meiss el Jabal, where a first video filmed by Green Southerners on November 26, 2023, documented active burning wedges. A second video, recorded on March 16, 2025, shows the same site nearly a year later, where a residual felt wedge reignited upon being gently disturbed. The two videos, filmed more than one year apart, demonstrate the long-term volatility and environmental danger of white phosphorus residues.</p><p>The toxic white smoke produced during combustion poses severe and ongoing risks to anyone encountering contaminated soil, vegetation, or debris.</p><br/><div class='about-video'><video height='200' width='auto' controls> <source src='/about/ground.mp4' type='video/mp4'></video></div>"
         },
         {
-            "question": "Coverage and Citations",
+            "question": "Media, Academic and Legal Citations of this research",
             "answer": [
                 {
                     "Legal": ""
@@ -45,6 +45,9 @@
                 },
                 {
                     "Metamorfosi 17, Confini / Borders — The Weather of War: The Toxic Clouds in the Atmosphere of South Lebanon": "/about/metamorfosi-17-the-weather-of-war.pdf"
+                },
+                {
+                    "Public Tech Media Lab, University of Wisconsin–Madison — Geolocating White Phosphorus Plumes with Open Source Tools": "https://ptml.sjmc.wisc.edu/geolocating-white-phosphorus-plumes-with-open-source-tools/"
                 },
                 {
                     "American University of Beirut — The Socio-Environmental Impact of White Phosphorous Ammunition in South Lebanon Analysis and Risk Mitigation Strategies": "https://www.aub.edu.lb/natureconservation/Documents/Brief%20WP%20English.pdf"
