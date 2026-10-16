@@ -89,29 +89,43 @@ export const OVERLAYS: {
   id: string;
   label: string;
   note: string;
-  files: { url: string; style: (feature: any) => any }[];
+  /**
+   * Switched on for a reader who has touched nothing. The zone is the ground the strikes
+   * sit on and the clustering along it is only legible when it is there, so it starts
+   * drawn — but it stays a toggle, because it is reference rather than evidence.
+   */
+  defaultOn?: boolean;
+  /**
+   * `style` is for the dark vector basemap. `styleSat` is the same geometry restyled for
+   * satellite imagery, which is bright and busy: the faint greys that read beautifully on
+   * black vanish on it completely. Layers without a `styleSat` keep their one style.
+   */
+  files: { url: string; style: (feature: any) => any; styleSat?: (feature: any) => any }[];
 }[] = [
   {
     id: "security-zone",
     label: "Security zone",
-    note: "Israeli-declared buffer zone inside southern Lebanon",
+    note: "Israeli-established zone inside southern Lebanon",
+    defaultOn: true,
     files: [{
       url: "/data/layers/security-zone.geojson",
       style: () => ({
         // the zone covers most of the frame, so the fill has to stay far lighter than it
         // would need to be on a smaller shape — at 0.13 it swallowed the basemap whole
-        color: "#e8563a", weight: 1, opacity: 0.8,
-        fillColor: "#db2f0f", fillOpacity: 0.07,
+        color: "#d8d8d8", weight: 1, opacity: 0.5,
+        fillColor: "#d8d8d8", fillOpacity: 0.055,
       }),
-    }],
-  },
-  {
-    id: "blue-line",
-    label: "Blue Line",
-    note: "UN withdrawal line, 2000",
-    files: [{
-      url: "/data/layers/blue-line.geojson",
-      style: () => ({ color: "#4aa3ff", weight: 1.8, opacity: 0.9, fill: false }),
+      /**
+       * On imagery the line carries weight instead of brightness: thicker, and no more
+       * opaque for it. A hairline has to glare to be seen against sunlit rock, where a
+       * broader stroke at the same soft grey simply reads. The fill goes dark rather than
+       * light — a pale wash vanishes into bright ground — so the zone shows as shaded
+       * terrain inside a soft edge, with the photograph still the loudest thing on screen.
+       */
+      styleSat: () => ({
+        color: "#d8d8d8", weight: 2.4, opacity: 0.5,
+        fillColor: "#000000", fillOpacity: 0.2,
+      }),
     }],
   },
   {
@@ -121,15 +135,24 @@ export const OVERLAYS: {
     files: [
       {
         url: "/data/layers/qaraoun.geojson",
-        style: () => ({ color: "#3f88ad", weight: 0.8, opacity: 0.8, fillColor: "#2c5f7d", fillOpacity: 0.75 }),
+        style: () => ({ color: "#35647e", weight: 0.7, opacity: 0.5, fillColor: "#24495f", fillOpacity: 0.45 }),
+        styleSat: () => ({ color: "#6b9fba", weight: 1.8, opacity: 0.62, fillColor: "#4d7d96", fillOpacity: 0.3 }),
       },
       {
         url: "/data/layers/rivers.geojson",
         // streams are the finer half of the set, so they stay a step under the rivers
         style: (f: any) => ({
-          color: "#3f88ad",
-          weight: f?.properties?.class === "stream" ? 0.8 : 1.5,
-          opacity: 0.85,
+          color: "#35647e",
+          weight: f?.properties?.class === "stream" ? 0.7 : 1.2,
+          opacity: 0.5,
+          fill: false,
+        }),
+        // a muted steel blue, drawn broader than on the vector map: bright cyan read as
+        // highlighter over natural colour, so the weight carries it instead
+        styleSat: (f: any) => ({
+          color: "#6b9fba",
+          weight: f?.properties?.class === "stream" ? 1.3 : 2,
+          opacity: 0.62,
           fill: false,
         }),
       },
@@ -515,6 +538,12 @@ export function VectorMap({
   const overlayDataRef = useRef<Record<string, any>>({});
   /** the Leaflet layers currently on the map, by overlay id */
   const overlayLayerRef = useRef<Record<string, any[]>>({});
+  /** which map those layers belong to — they do not survive the map being rebuilt */
+  const overlayMapRef = useRef<any>(null);
+  // read inside the effect so adding a layer picks the right style without the whole
+  // overlay effect having to re-run every time the basemap is switched
+  const satRef = useRef(showSatellite);
+  satRef.current = showSatellite;
 
   /**
    * Reference overlays live in their own Leaflet pane between the basemap and the dots, so
@@ -527,6 +556,25 @@ export function VectorMap({
     (async () => {
       const L = (await import("leaflet")).default as any;
       if (cancelled || !mapInstance.getPane) return;
+      /**
+       * The intro hands over by swapping the map out, and an effect can still be holding
+       * the outgoing one — adding a layer to a torn-down map throws from inside Leaflet,
+       * where there is no catching it. So nothing is added without checking first that
+       * this map is still real.
+       */
+      const alive = () =>
+        !!mapInstance._loaded &&
+        !!mapInstance.getPane("wpOverlays") &&
+        document.body.contains(mapInstance.getContainer());
+      /**
+       * The map is rebuilt when the intro hands over to the live view. Its layers go with
+       * it, so the record of what is drawn has to be dropped too — otherwise every overlay
+       * still counts as present and none is ever added to the new map.
+       */
+      if (overlayMapRef.current !== mapInstance) {
+        overlayLayerRef.current = {};
+        overlayMapRef.current = mapInstance;
+      }
       if (!mapInstance.getPane("wpOverlays")) {
         const pane = mapInstance.createPane("wpOverlays");
         // between tilePane (200) and overlayPane (400), where the incident dots are drawn
@@ -553,11 +601,11 @@ export function VectorMap({
               .catch((e) => { console.error("[map] overlay failed to load", file.url, e); return null; });
           }
           const data = overlayDataRef.current[file.url];
-          if (cancelled || !data) continue;
+          if (cancelled || !data || !alive()) continue;
           const lyr = L.geoJSON(data, {
             pane: "wpOverlays",
             interactive: false,
-            style: file.style,
+            style: satRef.current && file.styleSat ? file.styleSat : file.style,
           });
           lyr.addTo(mapInstance);
           added.push(lyr);
@@ -567,12 +615,31 @@ export function VectorMap({
           for (const lyr of added) mapInstance.removeLayer(lyr);
           continue;
         }
-        overlayLayerRef.current[o.id] = added;
+        // nothing drawn means the map died mid-add: leave it unrecorded so the next run,
+        // on the map that replaced it, tries again rather than counting this as done
+        if (added.length) overlayLayerRef.current[o.id] = added;
       }
     })();
 
     return () => { cancelled = true; };
   }, [mapInstance, overlayLayers]);
+
+  /**
+   * Switching basemaps restyles the overlays in place. Rebuilding them would work too,
+   * but it would flash the layers off and on for a change that is only skin deep.
+   */
+  useEffect(() => {
+    for (const o of OVERLAYS) {
+      const layers = overlayLayerRef.current[o.id];
+      if (!layers) continue;
+      // `added` is pushed one layer per file, in order, so the indices line up
+      layers.forEach((lyr, i) => {
+        const file = o.files[i];
+        if (!file || !lyr.setStyle) return;
+        lyr.setStyle(showSatellite && file.styleSat ? file.styleSat : file.style);
+      });
+    }
+  }, [showSatellite, overlayLayers]);
 
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout[]>([]);

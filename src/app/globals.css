@@ -1908,9 +1908,9 @@ small {
 }
 
 /* each swatch carries its layer's own colour, so the panel reads as a legend too */
-.map-layer-swatch-security-zone { background: #e8563a; }
-.map-layer-swatch-blue-line { background: #4aa3ff; }
-.map-layer-swatch-rivers { background: #3f88ad; }
+/* each swatch carries its layer's own colour on the map */
+.map-layer-swatch-security-zone { background: #d8d8d8; }
+.map-layer-swatch-rivers { background: #35647e; }
 
 .map-layer-label {
   font-size: 0.78rem;

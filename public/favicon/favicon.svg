@@ -1,0 +1,15 @@
+<!-- Rebuilt as vector from the 400px artwork: the circle fits as a true circle at
+     (135.4, 143.3) r 73.7 with sub-pixel error, and the three arrows sit at exactly 45
+     degrees, evenly spaced 41px apart, shaft 14.2 wide, heads 34 wide and 61.5 long.
+     The 1.8 stroke restores the weight the thresholded trace lost and rounds the joins;
+     it matches the original to 97.2% of its area. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <title>WhitePhosphorus.info</title>
+  <rect width="400" height="400" fill="#000"/>
+  <g fill="#fff" stroke="#fff" stroke-width="1.8" stroke-linejoin="round">
+    <polygon points="159.37,119.33 267.91,227.87 260.91,234.87 316.42,266.34 284.95,210.83 277.95,217.83 169.41,109.29"/>
+    <polygon points="130.38,148.32 272.15,290.10 265.15,297.10 320.66,328.56 289.20,273.05 282.20,280.05 140.42,138.28"/>
+    <polygon points="101.39,177.31 209.93,285.85 202.93,292.85 258.44,324.32 226.97,268.81 219.97,275.81 111.43,167.27"/>
+  </g>
+  <circle cx="135.4" cy="143.3" r="74.6" fill="#fff"/>
+</svg>

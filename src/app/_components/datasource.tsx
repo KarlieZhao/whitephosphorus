@@ -114,7 +114,7 @@ export default function DataSource({
     TypewriterFinished = false,
     basemap = "openfreemap",
     combineFilters = true,
-    referenceLayers = false,
+    referenceLayers = true,
 }: TypewriterProps & { basemap?: BasemapId; combineFilters?: boolean; referenceLayers?: boolean }) {
     const [geoData, setGeoData] = useState<any[]>([]);
     /**
@@ -159,7 +159,17 @@ export default function DataSource({
      * kept out of the filters entirely: these describe the ground, not the strikes, so
      * they never change which incidents are shown.
      */
-    const [activeLayers, setActiveLayers] = useState<string[]>([]);
+    const [activeLayers, setActiveLayers] = useState<string[]>(
+        () => OVERLAYS.filter((o) => o.defaultOn).map((o) => o.id));
+    /**
+     * What the map actually draws. Held back until the intro is over — the opening
+     * animation is the strikes sweeping onto an empty country, and a labelled zone
+     * sitting there from the first frame gives that away. Kept in a memo so the map
+     * effect is not handed a new array each render.
+     */
+    const drawnLayers = useMemo(
+        () => (TypewriterFinished ? activeLayers : []),
+        [TypewriterFinished, activeLayers]);
 
 
     const landscape_map: landscape_mapping_prop = {
@@ -856,7 +866,7 @@ export default function DataSource({
                 selectedMonth={selectedMonth}
                 selectedYear={selectedYear}
                 TypewriterFinished={TypewriterFinished}
-                overlayLayers={referenceLayers ? activeLayers : undefined}
+                overlayLayers={drawnLayers}
                 getMapDetails={getDetails}
                 leafletCenter={leafletCenter}
                 mapZoom={mapZoom}

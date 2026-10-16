@@ -22,24 +22,17 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
+        {/* The vector comes first: a browser that understands it draws the mark
+            crisply at any size, which is what the 64px raster could never do. The
+            png stays for the ones that do not, and for Google's crawler. */}
+        <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
         <link
           rel="icon"
           type="image/png"
-          sizes="32x32"
-          href="/favicon/favicon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
+          sizes="192x192"
           href="/favicon/favicon.png"
         />
         <link rel="manifest" href="/favicon/site.webmanifest" />
-        <link
-          rel="mask-icon"
-          href="/favicon/safari-pinned-tab.svg"
-          color="#000000"
-        />
         <link rel="shortcut icon" href="/favicon/favicon.png" />
         <meta name="msapplication-TileColor" content="#000000" />
         <meta
