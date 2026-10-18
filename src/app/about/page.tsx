@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Header from "@/app/_components/header";
 import { isMobileDevice } from "../_components/mobile-detector";
+//@ts-ignore
 import '@/app/globals.css';
 import ProjectInfo from "../_components/project-info";
 import Footer from "../_components/footer";
