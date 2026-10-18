@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import DataSource from "./_components/datasource";
 import Header from "@/app/_components/header";
 import Typewriter from '@/app/_components/typewriter';
-import '@/app/globals.css'
+//@ts-ignore
+import '@/app/globals.css';
 import { isMobileDevice } from "@/app/_components/mobile-detector";
 import Footer from "./_components/footer";
 
