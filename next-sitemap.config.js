@@ -6,5 +6,5 @@ module.exports = {
    * up advertised to search engines on the next `npm run build` unless it is named here —
    * which is how four superseded timeline prototypes once found their way in.
    */
-  exclude: ["/map-layers"],
+  exclude: ["/map-layers", "/plumes-mobile"],
 };

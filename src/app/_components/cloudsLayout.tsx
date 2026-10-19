@@ -20,7 +20,7 @@ export interface DataInputRow {
   text_ar: string;
 }
 
-const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
+const VideoPlayer = ({ src, name, mobile }: { src: string; name: string; mobile?: boolean }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVideoReady, setIsVideoReady] = useState(false);
@@ -37,8 +37,9 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
         if (!videoRef.current) return;
 
         if (entry.isIntersecting) {
-          //pre-load videos
-          videoRef.current.load();
+          // No load() first: it resets the element, which aborts the play request that
+          // follows it on the same tick. preload already fetches the file, so play() on
+          // its own is both enough and the reliable order.
           videoRef.current.play().catch(err => console.log('Playback failed:', err));
         } else {
           videoRef.current.pause();
@@ -62,8 +63,8 @@ const VideoPlayer = ({ src, name }: { src: string; name: string }) => {
   };
 
   return (
-    <div ref={containerRef} className="dark-bg p-4">
-      <div className="relative w-full pt-[100%]  max-h-[300px]">
+    <div ref={containerRef} className={mobile ? "dark-bg" : "dark-bg p-4"}>
+      <div className={mobile ? "relative w-full pt-[100%]" : "relative w-full pt-[100%]  max-h-[300px]"}>
         <div className="absolute inset-0 overflow-hidden">
           {/*poster image */}
           <img
@@ -167,6 +168,60 @@ export default function CloudLayout() {
 
   if (isMobile === null) return null;
 
+  /**
+   * The phone layout. Not a reflow of the desktop grid — three columns cannot survive
+   * 375px — but the same reading of the content: the footage is the evidence and takes
+   * the full width, the stills are corroboration and go on a strip you push sideways.
+   * They keep the img-container markup so the existing overlay handler picks them up.
+   */
+  const mobileCards = (
+    <div className="plume-cards">
+      <div className="plume-lang">
+        <span
+          className={lang === "en" ? "text-white underline" : "text-gray-400 no-underline"}
+          onClick={() => setLang("en")}
+        >English</span>
+        &nbsp;/&nbsp;
+        <span
+          className={lang === "ar" ? "text-white underline" : "text-gray-400 no-underline"}
+          onClick={() => setLang("ar")}
+        >العربية</span>
+      </div>
+
+      {cloudData?.map((row, rowIndex) => (
+        <section key={rowIndex} className="plume-card">
+          <VideoPlayer src={row.video} name={row.name} mobile />
+          <div className="plume-card-body">
+            {lang === "en" ? (
+              <div className="en">
+                <h3 className="plume-name">
+                  {row.name === "White Phosphorus" ? `${row.name} (WP)`
+                    : row.name === "Fighter Jets" ? `${row.name} & UAVs`
+                      : row.name}
+                </h3>
+                <p className="plume-card-text">{row.text}</p>
+              </div>
+            ) : (
+              <div className="ar">
+                <h3 className="plume-name">{row.name_ar}</h3>
+                <p className="plume-card-text">{row.text_ar}</p>
+              </div>
+            )}
+
+            <div className="plume-strip">
+              {row.filenames.map((name, index) => (
+                <div key={index} className="img-container plume-still">
+                  <img src={name} loading="lazy" alt="" data-link={row.links[index]} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+
+
   return (
     <div className="w-full h-full min-h-screen bg-transparent text-white p-4">
 
@@ -176,7 +231,7 @@ export default function CloudLayout() {
         <div id="overlay-source"></div>
       </div>
 
-      <div className='fixed top-20 left-8 z-100 text-white cursor-pointer'>
+      <div className={isMobile ? 'hidden' : 'fixed top-20 left-8 z-100 text-white cursor-pointer'}>
         <span
           className={`transition-colors ${lang === "en" ? "text-white underline" : "text-gray-400 no-underline"}`}
           onClick={() => { setLang("en") }}
@@ -187,6 +242,7 @@ export default function CloudLayout() {
           onClick={() => { setLang("ar"); }}
         >   العربية</span></div>
 
+      {isMobile ? mobileCards : (
       <div className="flex flex-col gap-2">
 
         {cloudData?.map((row, rowIndex) => (
@@ -234,6 +290,7 @@ export default function CloudLayout() {
         ))
         }
       </div >
+      )}
     </div>
   );
 }

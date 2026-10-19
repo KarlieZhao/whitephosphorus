@@ -52,7 +52,20 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
           <h3 className="mobile-header-title" onClick={() => router.push("/")}>
             WhitePhosphorus.info
           </h3>
-          {/* mobile has no nav tabs, so the timeline gets a direct shortcut here */}
+          {/* mobile has no nav tabs, so these get direct shortcuts here */}
+          <button
+            className={`plumes-button ${isActive("/plumes") ? "plumes-button-active" : ""}`}
+            onClick={() => router.push("/plumes")}
+            aria-label="Plumes"
+          >
+            {/* The flat base and the two domes are the tangent points between four
+                circles, so the curve joins are continuous rather than eyeballed. Solid
+                fill, and the viewBox is cropped tight to the silhouette — with no stroke
+                there is no longer any need to leave room for one. */}
+            <svg width="12" height="12" viewBox="5.93 8.11 12.92 9.49" fill="currentColor" aria-hidden>
+              <path d="M6.60 17.60A3.60 3.60 0 0 1 5.93 10.46A5.30 5.30 0 0 1 16.19 8.11A2.90 2.90 0 0 1 18.85 10.44A3.60 3.60 0 0 1 18.30 17.60Z" />
+            </svg>
+          </button>
           <button
             className={`timeline-button ${isActive("/timeline") ? "timeline-button-active" : ""}`}
             onClick={() => router.push("/timeline")}
