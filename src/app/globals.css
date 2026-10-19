@@ -2224,3 +2224,13 @@ small {
   background: #fff;
   color: #c42100;
 }
+
+/* A 90vh scroller nested inside a page that also scrolls gives a phone two competing
+   scroll contexts: momentum hands off between them and the list feels like it catches.
+   On small screens the document does the scrolling instead. */
+@media (max-width: 768px) {
+  .plume-scroll {
+    height: auto;
+    overflow-y: visible;
+  }
+}

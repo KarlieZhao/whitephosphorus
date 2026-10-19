@@ -55,12 +55,11 @@ const VideoPlayer = ({ src, name, mobile }: { src: string; name: string; mobile?
     return () => observer.disconnect();
   }, []);
 
-  const handleVideoLoad = () => {
-    //wait a frame to avoid flickering
-    requestAnimationFrame(() => {
-      setIsVideoReady(true);
-    });
-  };
+  // Set straight away rather than waiting a frame. The frame delay was there to avoid a
+  // flicker, but the opacity already has a 0.3s transition doing that job — and routing
+  // it through requestAnimationFrame means that whenever the browser throttles the
+  // rendering pipeline the video can finish playing while still invisible.
+  const handleVideoLoad = () => setIsVideoReady(true);
 
   return (
     <div ref={containerRef} className={mobile ? "dark-bg" : "dark-bg p-4"}>
@@ -84,9 +83,13 @@ const VideoPlayer = ({ src, name, mobile }: { src: string; name: string; mobile?
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             onLoadedData={handleVideoLoad}
             onCanPlay={handleVideoLoad}
+            // canplay/loadeddata only fire while the data is still being readied, so
+            // after the first pass they never fire again and the video stayed invisible
+            // behind its poster on every return. playing fires each time it resumes.
+            onPlaying={handleVideoLoad}
             style={{
               opacity: isVideoReady ? 1 : 0,
               transition: 'opacity 0.3s ease-in-out'

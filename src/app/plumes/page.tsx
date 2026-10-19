@@ -9,7 +9,7 @@ export default function Index() {
             <Header TypewriterFinished={false} />
             <main className="flex relative w-full">
                 <div className='inner-backdrop'></div>
-                <div className="flex justify-center scrollbar-hid pt-16 w-full h-[90vh] overflow-y-scroll">
+                <div className="plume-scroll flex justify-center scrollbar-hid pt-16 w-full h-[90vh] overflow-y-scroll">
                     <CloudLayout />
                 </div>
             </main>
