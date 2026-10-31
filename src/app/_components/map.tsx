@@ -132,11 +132,13 @@ export const OVERLAYS: {
     id: "rivers",
     label: "Rivers",
     note: "watercourses and Lake Qaraoun",
+    // on from the start too, but revealed after the zone has finished fading in
+    defaultOn: true,
     files: [
       {
         url: "/data/layers/qaraoun.geojson",
-        style: () => ({ color: "#35647e", weight: 0.7, opacity: 0.5, fillColor: "#24495f", fillOpacity: 0.45 }),
-        styleSat: () => ({ color: "#6b9fba", weight: 1.8, opacity: 0.62, fillColor: "#4d7d96", fillOpacity: 0.3 }),
+        style: () => ({ color: "#35647e", weight: 0.7, opacity: 0.55, fillColor: "#24495f", fillOpacity: 0.5 }),
+        styleSat: () => ({ color: "#6b9fba", weight: 1.8, opacity: 0.68, fillColor: "#4d7d96", fillOpacity: 0.33 }),
       },
       {
         url: "/data/layers/rivers.geojson",
@@ -144,7 +146,7 @@ export const OVERLAYS: {
         style: (f: any) => ({
           color: "#35647e",
           weight: f?.properties?.class === "stream" ? 0.7 : 1.2,
-          opacity: 0.5,
+          opacity: 0.55,
           fill: false,
         }),
         // a muted steel blue, drawn broader than on the vector map: bright cyan read as
@@ -152,7 +154,7 @@ export const OVERLAYS: {
         styleSat: (f: any) => ({
           color: "#6b9fba",
           weight: f?.properties?.class === "stream" ? 1.3 : 2,
-          opacity: 0.62,
+          opacity: 0.68,
           fill: false,
         }),
       },
@@ -511,6 +513,24 @@ function getWedgeOffsets(id: string, shellIdx: number): [number, number][] {
   return pts;
 }
 
+/**
+ * The reference layers do not arrive with the strikes. Once the intro is dismissed and the
+ * last dot has landed, the strikes get the screen to themselves for a moment, and then the
+ * zone fades in slowly underneath them, so the clustering along it is seen forming first.
+ * If the reader clicks through the intro early, the dots are still sweeping in, so the wait
+ * counts from when they finish rather than from the click.
+ *
+ * The layers come in one at a time, in OVERLAYS order, each starting as the one before it
+ * has finished: the zone, then the rivers.
+ *
+ * Once a session, like the dot animation: on any later visit the layers are simply there.
+ */
+const OVERLAY_REVEAL_DELAY = 2000;
+const OVERLAY_REVEAL_DURATION = 5000;
+const OVERLAYS_REVEALED_KEY = "mapOverlaysRevealed";
+/** each reference layer has a Leaflet pane of its own, so each can be faded in on its own */
+const overlayPaneName = (id: string) => `wpOverlay-${id}`;
+
 export function VectorMap({
   geoData,
   selectedCity,
@@ -562,9 +582,9 @@ export function VectorMap({
        * where there is no catching it. So nothing is added without checking first that
        * this map is still real.
        */
-      const alive = () =>
+      const alive = (pane: string) =>
         !!mapInstance._loaded &&
-        !!mapInstance.getPane("wpOverlays") &&
+        !!mapInstance.getPane(pane) &&
         document.body.contains(mapInstance.getContainer());
       /**
        * The map is rebuilt when the intro hands over to the live view. Its layers go with
@@ -575,12 +595,17 @@ export function VectorMap({
         overlayLayerRef.current = {};
         overlayMapRef.current = mapInstance;
       }
-      if (!mapInstance.getPane("wpOverlays")) {
-        const pane = mapInstance.createPane("wpOverlays");
-        // between tilePane (200) and overlayPane (400), where the incident dots are drawn
-        pane.style.zIndex = "250";
+      OVERLAYS.forEach((o, i) => {
+        const name = overlayPaneName(o.id);
+        if (mapInstance.getPane(name)) return;
+        const pane = mapInstance.createPane(name);
+        // between tilePane (200) and overlayPane (400), where the incident dots are drawn,
+        // stacked in list order so the rivers sit over the zone
+        pane.style.zIndex = String(250 + i);
         pane.style.pointerEvents = "none";
-      }
+        // held transparent until the reveal further down has run once this session
+        if (sessionStorage.getItem(OVERLAYS_REVEALED_KEY) !== "true") pane.style.opacity = "0";
+      });
 
       for (const o of OVERLAYS) {
         const wanted = !!overlayLayers?.includes(o.id);
@@ -601,9 +626,9 @@ export function VectorMap({
               .catch((e) => { console.error("[map] overlay failed to load", file.url, e); return null; });
           }
           const data = overlayDataRef.current[file.url];
-          if (cancelled || !data || !alive()) continue;
+          if (cancelled || !data || !alive(overlayPaneName(o.id))) continue;
           const lyr = L.geoJSON(data, {
-            pane: "wpOverlays",
+            pane: overlayPaneName(o.id),
             interactive: false,
             style: satRef.current && file.styleSat ? file.styleSat : file.style,
           });
@@ -650,6 +675,23 @@ export function VectorMap({
   // panning (or zooming between the two "wedges visible" levels) don't replay the fade-in —
   // it should only animate once on the transition into/out of visibility
   const wedgesShownRef = useRef(false);
+
+  // fades the reference layers in, one after another, once the intro is gone and the dots
+  // have all landed — see OVERLAY_REVEAL_DELAY. Each pane is made transparent when the
+  // overlay effect creates it.
+  useEffect(() => {
+    if (!TypeWriterFinished || !hasAnimated || !mapInstance?.getPane) return;
+    if (sessionStorage.getItem(OVERLAYS_REVEALED_KEY) === "true") return;
+    const timers = OVERLAYS.map((o, i) => setTimeout(() => {
+      const pane = mapInstance.getPane(overlayPaneName(o.id));
+      if (!pane) return;
+      pane.style.transition = `opacity ${OVERLAY_REVEAL_DURATION}ms ease-in-out`;
+      pane.style.opacity = "1";
+      // marked only once the last layer has started, so nothing can be left waiting at 0
+      if (i === OVERLAYS.length - 1) sessionStorage.setItem(OVERLAYS_REVEALED_KEY, "true");
+    }, OVERLAY_REVEAL_DELAY + i * OVERLAY_REVEAL_DURATION));
+    return () => timers.forEach(clearTimeout);
+  }, [TypeWriterFinished, hasAnimated, mapInstance]);
 
   const BORDER_DELAY = 500;
   // state, not a ref: a ref's mutation alone never triggers a re-render, so toggling focus
