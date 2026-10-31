@@ -243,7 +243,7 @@ export default function DataSource({
             if (selectedDay !== -1 && (new Date(p.date).getDay() + 6) % 7 !== selectedDay) return false;
             return true;
         });
-        return { count: pts.reduce((n: number, p: any) => n + Math.max(1, p.shell_count ?? 1), 0), pts };
+        return { count: pts.reduce((n: number, p: any) => n + (p.shell_count ?? 0), 0), pts };
     }, [geoData, selectedCity, effectiveAreaType, selectedYear, selectedMonth, selectedDates, selectedDay]);
 
     /**
@@ -308,7 +308,7 @@ export default function DataSource({
          * landed in agricultural ones when none did. Split here and say so separately.
          */
         const strikesIn = (o: any) =>
-            pointsMatching(o).reduce((n: number, p: any) => n + Math.max(1, p.shell_count ?? 1), 0);
+            pointsMatching(o).reduce((n: number, p: any) => n + (p.shell_count ?? 0), 0);
         const landscapeHit = effectiveAreaType.filter((a: string) => strikesIn({ area: [a] }) > 0);
         const landscapeNone = effectiveAreaType.filter((a: string) => strikesIn({ area: [a] }) === 0);
         // towns are judged against the landscapes that actually matched, not the whole
@@ -609,7 +609,7 @@ export default function DataSource({
         const NEUTRAL: Record<string, any> = { area: [], city: [], year: null, month: null, day: -1, dates: ["", ""] };
         const pts = pointsMatching({ ...overrides, [excludeKey]: NEUTRAL[excludeKey] });
         return {
-            total: pts.reduce((n: number, p: any) => n + Math.max(1, p.shell_count ?? 1), 0),
+            total: pts.reduce((n: number, p: any) => n + (p.shell_count ?? 0), 0),
             label: rest.map((f: { label: string }) => f.label).join(" · "),
         };
     };

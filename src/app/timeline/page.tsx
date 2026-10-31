@@ -153,7 +153,8 @@ export default function Timeline() {
         b = { strikes: 0, incidents: 0, codes: [], dates: new Set() };
         grid.set(key, b);
       }
-      b.strikes += Math.max(1, r.shell_count ?? 1);
+      // entries with no shell count (or 0) still count as incidents, but add no strikes
+      b.strikes += r.shell_count ?? 0;
       b.incidents += 1;
       b.codes.push(r.code);
       b.dates.add(r.date.slice(0, 10));
@@ -170,7 +171,7 @@ export default function Timeline() {
     const perDay = new Map<string, number>();
     raw.forEach((r) => {
       const d = r.date.slice(0, 10);
-      perDay.set(d, (perDay.get(d) ?? 0) + Math.max(1, r.shell_count ?? 1));
+      perDay.set(d, (perDay.get(d) ?? 0) + (r.shell_count ?? 0));
     });
     let run = 0;
     const cum = Array.from(perDay.keys())

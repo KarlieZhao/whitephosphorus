@@ -16,15 +16,15 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
 
   const data: ToxicityData = [{
     type: "Strikes",
-    number: "288",
+    number: "292",
     unit: " "
   }, {
     type: "Land Area",
-    number: "432",
+    number: "438",
     unit: "Hectares"
   }, {
     type: "Felt Wedges",
-    number: "33,408",
+    number: "33,872",
     unit: "",
   }]
 
