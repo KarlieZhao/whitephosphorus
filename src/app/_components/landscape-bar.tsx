@@ -55,11 +55,20 @@ export default function LandscapeBar({
         const total = ORDER.reduce((sum, key) => sum + counts[key], 0);
         if (total === 0) return empty;
 
-        return {
-            resident: Math.round((counts.resident / total) * 100),
-            agri: Math.round((counts.agri / total) * 100),
-            bare: Math.round((counts.bare / total) * 100),
-        };
+        /**
+         * Rounded down, then the points still missing go to the largest remainders, so the
+         * three always total 100: rounding each on its own gave 49 + 15 + 35 = 99. Remainders
+         * are taken on whole numbers so an exact tie stays a tie and falls to ORDER, which
+         * is what keeps this at 49 / 16 / 35, the shares the About page states.
+         */
+        const shares = { ...empty } as { [key: string]: number };
+        ORDER.forEach(key => { shares[key] = Math.floor((counts[key] * 100) / total); });
+        const missing = 100 - ORDER.reduce((sum, key) => sum + shares[key], 0);
+        [...ORDER]
+            .sort((a, b) => (counts[b] * 100) % total - (counts[a] * 100) % total)
+            .slice(0, missing)
+            .forEach(key => { shares[key] += 1; });
+        return shares;
     }, [geoData, selectedCity, selectedDates, selectedDay, selectedMonth, selectedYear]);
 
     const handleClick = (key: string) => {

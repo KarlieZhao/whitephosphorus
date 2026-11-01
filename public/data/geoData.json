@@ -1605,7 +1605,7 @@
     "town": "Kfar Kila",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 0,
+    "shell_count": 1,
     "lat": 33.264018,
     "lon": 35.55272,
     "landscape": "resident",
@@ -2724,7 +2724,7 @@
     "shell_count": 1,
     "lat": null,
     "lon": null,
-    "landscape": null,
+    "landscape": "resident",
     "source": "X"
   },
   {
@@ -3744,7 +3744,7 @@
     "shell_count": 1,
     "lat": null,
     "lon": null,
-    "landscape": null,
+    "landscape": "bare",
     "source": "AP"
   },
   {
@@ -3811,7 +3811,7 @@
     "town": null,
     "country": "Lebanon",
     "located": 0,
-    "shell_count": 0,
+    "shell_count": 1,
     "lat": null,
     "lon": null,
     "landscape": null,
@@ -3827,7 +3827,7 @@
     "town": "Nabatieh",
     "country": "Lebanon",
     "located": 0,
-    "shell_count": 0,
+    "shell_count": 1,
     "lat": null,
     "lon": null,
     "landscape": null,
@@ -3848,7 +3848,7 @@
     "shell_count": 1,
     "lat": null,
     "lon": null,
-    "landscape": null,
+    "landscape": "bare",
     "source": "Reuters"
   },
   {
@@ -3867,7 +3867,7 @@
     "shell_count": 2,
     "lat": null,
     "lon": null,
-    "landscape": null,
+    "landscape": "resident",
     "source": "Reuters, TRT"
   },
   {
@@ -3885,7 +3885,7 @@
     "shell_count": 2,
     "lat": null,
     "lon": null,
-    "landscape": null,
+    "landscape": "resident",
     "source": "Reuters"
   }
 ]

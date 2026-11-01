@@ -30,10 +30,10 @@ const monthParser = (input: string) => {
 }
 
 const TOTAL_STRIKES_BY_YEAR: { [year: string]: number } = {
-    "2023": 119,
-    "2024": 133,
+    "2023": 120,
+    "2024": 137,
     "2025": 1,
-    "2026": 35,
+    "2026": 37,
 }
 // derived rather than written out, so the "out of N total strikes" readouts below can
 // never drift from the year table the way a hard-coded total did
@@ -42,7 +42,7 @@ const PENDING_GEOLOCATION_BY_YEAR: { [year: string]: number } = {
     "2023": 8,
     "2024": 21,
     "2025": 0,
-    "2026": 6,
+    "2026": 8,
 }
 // verified but not-yet-geolocated incidents, used to compute pending counts for arbitrary date ranges
 // (per-year sums here match TOTAL_STRIKES_BY_YEAR / PENDING_GEOLOCATION_BY_YEAR above)
@@ -62,9 +62,11 @@ export const PENDING_INCIDENTS: { date: string; bursts: number }[] = [
     { date: "2024-09-19", bursts: 3 }, // WP500
     { date: "2024-09-30", bursts: 2 }, // WP96
     { date: "2026-03-03", bursts: 1 }, // WP419
+    { date: "2026-04-11", bursts: 1 }, // WP417
     { date: "2026-04-14", bursts: 1 }, // WP416
     { date: "2026-04-30", bursts: 2 }, // WP428
     { date: "2026-05-09", bursts: 2 }, // WP435
+    { date: "2026-05-14", bursts: 1 }, // WP412
 ];
 const DISCORD_INVITE_URL = "https://discord.gg/YxZNEKWfQT";
 // 6 decimal places is ~0.11m at this latitude — well beyond the accuracy any of these
@@ -180,8 +182,8 @@ export default function DataSource({
 
     /**
      * Every landscape ticked excludes nothing a reader would expect it to, so it filters as
-     * if none were ticked. Without this, ticking all three quietly dropped the verified but
-     * not-yet-geolocated incidents — they carry a town and a date but no landscape, so they
+     * if none were ticked. Without this, ticking all three quietly dropped the incidents
+     * with no landscape recorded — they carry a town and a date but no land type, so they
      * match no category — and the counts fell without anything on screen saying why. The
      * chips stay lit: this changes what is matched, not what is selected.
      */
@@ -333,13 +335,17 @@ export default function DataSource({
             const hit = counts.filter((c) => c.n > 0);
             const none = counts.filter((c) => c.n === 0);
             /**
-             * The categories only ever cover the geolocated strikes — the pending ones have
-             * no landscape recorded — so the list stops short of the period total. Naming
-             * the subtotal it does divide is what stops that gap reading as an error: "35
-             * happened in 2026" over 19 + 1 + 9 left the reader to work out the missing 6.
+             * The categories cover every strike with a land type, and only some of the pending
+             * ones have one, so the list stops short of the period total. Naming the subtotal
+             * it does divide is what stops that gap reading as an error: "35 happened in 2026"
+             * over 19 + 1 + 9 left the reader to work out the missing 6. How many cannot be
+             * placed on the map is a separate count: a pending strike can have a land type.
              */
             const placed = counts.reduce((n, c) => n + c.n, 0);
             const unplaced = strikesIn({ area: [] }) - placed;
+            const notGeolocated = pointsMatching({ area: [] })
+                .filter((p: any) => p.lat == null || p.lon == null)
+                .reduce((n: number, p: any) => n + (p.shell_count ?? 0), 0);
             return (
                 <>
                     {/* one category per line: the three run well past the column set wide */}
@@ -370,7 +376,14 @@ export default function DataSource({
                         <>
                             <br />
                             <span className="text-2xl text-white">{unplaced}</span>{" "}
-                            {unplaced > 1 ? "are" : "is"} verified but not yet geolocated.
+                            {unplaced > 1 ? "have" : "has"} no land type recorded.
+                        </>
+                    )}
+                    {notGeolocated > 0 && (
+                        <>
+                            <br />
+                            <span className="text-2xl text-white">{notGeolocated}</span>{" "}
+                            {notGeolocated > 1 ? "are" : "is"} verified but not yet geolocated.
                         </>
                     )}
                 </>
