@@ -13,7 +13,7 @@ type SatelliteMapProps = {
 };
 
 
-const SATELLITE_TILES_URL = "https://d30kdnzbsfnn0n.cloudfront.net/satellite/{z}/{x}/{y}.png";
+const SATELLITE_TILES_URL = "https://d30kdnzbsfnn0n.cloudfront.net/satellite/2026-03-08/{z}/{x}/{y}.png";
 
 export default function SatelliteMap({ onZoomChange, onCenterChange, setMapInstance, showSatellite = false, TypewriterFinished }: SatelliteMapProps) {
     const mapRef = useRef<HTMLDivElement>(null);

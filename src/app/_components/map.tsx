@@ -443,7 +443,7 @@ const HIDDEN_LAYERS = new Set([
   "landcover_glacier",
   "place_state",
 ]);
-const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://carto.com/attribution">CartoDB</a> | Imagery ©️ Planet Labs PBC, 27 September 2025 &copy;'
+const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://carto.com/attribution">CartoDB</a> | Imagery ©️ Planet Labs PBC, 8 March 2026 &copy;'
 /**
  * The full credit, registered by hand.
  *
@@ -454,7 +454,7 @@ const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyrig
  * carries everything: OpenMapTiles and OpenStreetMap are required, the OpenFreeMap credit
  * is requested, and Planet Labs covers the satellite imagery no source knows about.
  */
-const MAP_ATTRIBUTION = '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> | Imagery ©️ Planet Labs PBC, 27 September 2025 &copy;'
+const MAP_ATTRIBUTION = '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> | Imagery ©️ Planet Labs PBC, 8 March 2026 &copy;'
 
 
 const GRADIENT_CONFIGS = [
