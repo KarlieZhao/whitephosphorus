@@ -30,17 +30,17 @@ const monthParser = (input: string) => {
 }
 
 const TOTAL_STRIKES_BY_YEAR: { [year: string]: number } = {
-    "2023": 120,
-    "2024": 137,
+    "2023": 117,
+    "2024": 130,
     "2025": 1,
-    "2026": 37,
+    "2026": 35,
 }
 // derived rather than written out, so the "out of N total strikes" readouts below can
 // never drift from the year table the way a hard-coded total did
 const TOTAL_STRIKES = Object.values(TOTAL_STRIKES_BY_YEAR).reduce((a, b) => a + b, 0);
 const PENDING_GEOLOCATION_BY_YEAR: { [year: string]: number } = {
     "2023": 8,
-    "2024": 21,
+    "2024": 20,
     "2025": 0,
     "2026": 8,
 }
@@ -60,7 +60,7 @@ export const PENDING_INCIDENTS: { date: string; bursts: number }[] = [
     { date: "2024-07-13", bursts: 1 }, // WP87
     { date: "2024-07-29", bursts: 1 }, // WP88
     { date: "2024-09-19", bursts: 3 }, // WP500
-    { date: "2024-09-30", bursts: 2 }, // WP96
+    { date: "2024-09-30", bursts: 1 }, // WP96
     { date: "2026-03-03", bursts: 1 }, // WP419
     { date: "2026-04-11", bursts: 1 }, // WP417
     { date: "2026-04-14", bursts: 1 }, // WP416
@@ -80,7 +80,8 @@ const geoSource: { [key: string]: String } = {
     "GS": "Green Southerners",
     "AS": "Alex Spoerndli",
     "MM": "Maria Molijn",
-    "HRW": "Human Rights Watch"
+    "HRW": "Human Rights Watch",
+    "NYT": "The New York Times"
 }
 export const RED_GRADIENT = d3.quantize(d3.interpolateRgb("#db2f0f", "#2e1f1f"), 8);
 export const width = 350;
@@ -590,16 +591,21 @@ export default function DataSource({
      * an empty black band above the text. Hoisting the margin onto the row keeps the
      * spacing and lets the box hug the words, without needing the backdrop to be moved
      * onto the child (which stacked two boxes on browsers where that selector applied).
+     *
+     * Rows with something to show are marked here rather than found with `:not(:empty)` in
+     * the stylesheet: the same divs are reused from point to point, emptied and refilled.
      */
     const readoutRow = (line: any, key: string) => {
+        const blank = !line || (React.isValidElement(line) && line.type === React.Fragment && !(line.props as any).children);
+        const rowClass = blank ? undefined : "readout-row";
         const margin = React.isValidElement(line)
             ? (line.props as any)?.style?.marginTop
             : undefined;
-        if (!margin) return <div key={key}>{line}</div>;
+        if (!margin) return <div key={key} className={rowClass}>{line}</div>;
         const flat = React.cloneElement(line as any, {
             style: { ...(line.props as any).style, marginTop: 0 },
         });
-        return <div key={key} style={{ marginTop: margin }}>{flat}</div>;
+        return <div key={key} className={rowClass} style={{ marginTop: margin }}>{flat}</div>;
     };
 
     const closeReadout = () => {
@@ -929,7 +935,7 @@ export default function DataSource({
                     several sources are watermarked agency preview images (AFP Forum, ANP,
                     Getty), which aren't cleared for public reproduction */}
                 {details[9] && details[9].length > 0 && (
-                    <div className="flex gap-x-2 items-baseline">
+                    <div className="readout-row flex gap-x-2 items-baseline">
                         <span className="flex-shrink-0">Links:</span>
                         {/* chunked into rows of 3 so overflow wraps onto its own line, aligned
                             under the first link rather than under the "Links:" label */}

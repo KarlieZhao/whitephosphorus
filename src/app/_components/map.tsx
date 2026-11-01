@@ -798,6 +798,41 @@ export function VectorMap({
     return geoData.filter(pt => !shown.has(pt) && pt.lat != null && pt.lon != null);
   }, [geoData, visiblePoints, selectedYear, selectedCity, selectedAreaType, selectedMonth, selectedDay, selectedDates]);
 
+  // kept in a ref so the listeners below always reach the latest one without re-subscribing
+  const getMapDetailsRef = useRef(getMapDetails);
+  getMapDetailsRef.current = getMapDetails;
+
+  /**
+   * Letting go of a selected point, by clicking blank map or pressing Esc. This listens on the
+   * map itself rather than on a rectangle behind the dots: the rectangle was drawn in the map's
+   * layer coordinates, so every pan slid it off the screen, and blank clicks in the part it no
+   * longer covered did nothing, leaving one dot selected and the rest faint. The dots stop their
+   * own clicks reaching the map, and Leaflet swallows the click that ends a drag, so panning
+   * keeps the selection.
+   */
+  useEffect(() => {
+    if (!mapInstance?.on) return;
+    const release = () => {
+      setFocusedPt(null);
+      getMapDetailsRef.current(null);
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") release();
+    };
+    mapInstance.on("click", release);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      mapInstance.off("click", release);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [mapInstance]);
+
+  // the selection is an index into visiblePoints, so after a filter change it would land on
+  // a different dot; the readout drops the open point at the same moment
+  useEffect(() => {
+    setFocusedPt(null);
+  }, [visiblePoints]);
+
   const clearAnimationTimeouts = useCallback(() => {
     animationTimeoutRef.current.forEach(timeout => clearTimeout(timeout));
     animationTimeoutRef.current = [];
@@ -1150,24 +1185,6 @@ export function VectorMap({
       }),
     };
     const geoPath = d3.geoPath().projection(leafletProjection as any);
-    let background = g.select<SVGRectElement>("rect.background");
-
-    if (background.empty()) {
-      // reset dot selection, colors, opacty when clicked on background
-      background = g.insert("rect", ":first-child")
-        .attr("class", "background")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", svg.clientWidth)
-        .attr("height", svg.clientHeight)
-        .style("fill", "transparent")
-        .style("pointer-events", "all")
-        .on("click", () => {
-          //reset
-          setFocusedPt(null);
-          getMapDetails(null)
-        });
-    }
 
     // Render function
     const renderMap = (borderGeoJson: any) => {

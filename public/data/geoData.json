@@ -58,24 +58,6 @@
     "links": [
       "https://www.aljazeera.net/news/2023/10/10/عاجل-مراسل-الجزيرة-إطلاق-صواريخ-من"
     ],
-    "filename": ["wp4_media1"],
-    "by": ["AB"],
-    "code": "WP4",
-    "date": "2023-10-10",
-    "time": "15:30:00",
-    "town": "Dhaira",
-    "country": "Lebanon",
-    "located": 1,
-    "shell_count": 1,
-    "lat": 33.099542,
-    "lon": 35.221236,
-    "landscape": "bare",
-    "source": "Al Jazeera"
-  },
-  {
-    "links": [
-      "https://www.aljazeera.net/news/2023/10/10/عاجل-مراسل-الجزيرة-إطلاق-صواريخ-من"
-    ],
     "filename": ["wp106_media1"],
     "by": ["AB"],
     "code": "WP106",
@@ -167,7 +149,7 @@
       "https://twitter.com/hmalla72/status/1713606650555420987",
       "https://news.sky.com/story/could-israel-escalation-with-hezbollah-lead-to-wider-war-in-the-middle-east-and-would-us-and-iran-be-dragged-in-13046311"
     ],
-    "filename": ["wp8_media1", "wp8_media2", "wp8_media3"],
+    "filename": ["wp8_media1", "wp8_media2"],
     "by": ["AB"],
     "code": "WP8",
     "date": "2023-10-15",
@@ -349,6 +331,42 @@
   },
   {
     "links": [
+      "https://www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727860844"
+    ],
+    "filename": ["wp600_media1"],
+    "by": ["AB"],
+    "code": "WP600",
+    "date": "2023-11-16",
+    "time": "17:59:00",
+    "town": "Alma Ech Chaab",
+    "country": "Lebanon",
+    "located": 1,
+    "shell_count": 1,
+    "lat": 33.102466,
+    "lon": 35.207968,
+    "landscape": "agri",
+    "source": "Anadolu Agency"
+  },
+  {
+    "links": [
+      "https://www.gettyimages.nl/detail/nieuwsfoto%27s/smoke-rises-after-israeli-army-launches-artillery-attacks-nieuwsfotos/1727864239"
+    ],
+    "filename": ["wp601_media1"],
+    "by": ["AB"],
+    "code": "WP601",
+    "date": "2023-11-16",
+    "time": "17:59:00",
+    "town": "Alma Ech Chaab",
+    "country": "Lebanon",
+    "located": 1,
+    "shell_count": 2,
+    "lat": 33.113598,
+    "lon": 35.224618,
+    "landscape": "bare",
+    "source": "Anadolu Agency"
+  },
+  {
+    "links": [
       "https://www.flickr.com/photos/201797790@N02/54840716146/in/album-72177720329560864"
     ],
     "filename": ["wp13_media1"],
@@ -359,7 +377,7 @@
     "town": "Aamra",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 2,
+    "shell_count": 1,
     "lat": 33.2831467750329,
     "lon": 35.5890928518792,
     "landscape": "agri",
@@ -413,7 +431,7 @@
     "town": "Yaroun",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 4,
+    "shell_count": 3,
     "lat": 33.0686416666667,
     "lon": 35.4310916666667,
     "landscape": "bare",
@@ -454,22 +472,6 @@
     "lon": 35.6437305555556,
     "landscape": "agri",
     "source": "Getty Images"
-  },
-  {
-    "links": ["https://al-jareeda.com/archives/292018"],
-    "filename": ["wp19_media1"],
-    "by": ["AN"],
-    "code": "WP19",
-    "date": "2023-11-02",
-    "time": "14:00:00",
-    "town": "Markaba",
-    "country": "Lebanon",
-    "located": 1,
-    "shell_count": 1,
-    "lat": 33.2257222222222,
-    "lon": 35.5211138888889,
-    "landscape": "resident",
-    "source": "News Agency"
   },
   {
     "links": [
@@ -564,25 +566,6 @@
     "shell_count": 2,
     "lat": 33.1634638888889,
     "lon": 35.5323277777778,
-    "landscape": "resident",
-    "source": "X"
-  },
-  {
-    "links": [
-      "https://twitter.com/PalinfoAr/status/1722922193053516265/photo/1",
-      "https://x.com/PalinfoAr/status/1722922193053516265/photo/2"
-    ],
-    "filename": ["wp22_media1", "wp22_media2"],
-    "by": ["AB"],
-    "code": "WP22",
-    "date": "2023-11-10",
-    "time": "12:20:00",
-    "town": "Meiss El Jabal",
-    "country": "Lebanon",
-    "located": 1,
-    "shell_count": 1,
-    "lat": 33.1648083333333,
-    "lon": 35.5334027777778,
     "landscape": "resident",
     "source": "X"
   },
@@ -696,7 +679,7 @@
     "town": "Yaroun",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 2,
+    "shell_count": 1,
     "lat": 33.074175,
     "lon": 35.426006,
     "landscape": "bare",
@@ -714,7 +697,7 @@
     "town": "Yaroun",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 2,
+    "shell_count": 1,
     "lat": 33.073656,
     "lon": 35.429511,
     "landscape": "resident",
@@ -769,7 +752,7 @@
     "town": "Yaroun",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 1,
+    "shell_count": 2,
     "lat": 33.064842,
     "lon": 35.402389,
     "landscape": "bare",
@@ -905,7 +888,7 @@
   },
   {
     "links": [
-      "https://www.anpfoto.nl/search.pp?pictureid=484476580&page=1&pos=2"
+      "https://www.timesofisrael.com/liveblog_entry/idf-says-rockets-fired-from-lebanon-shells-source-of-fire/"
     ],
     "filename": ["wp144_media1"],
     "by": ["AB"],
@@ -923,7 +906,7 @@
   },
   {
     "links": [
-      "https://www.anpfoto.nl/search.pp?pictureid=484476580&page=1&pos=2"
+      "https://www.timesofisrael.com/liveblog_entry/idf-says-rockets-fired-from-lebanon-shells-source-of-fire/"
     ],
     "filename": ["wp154_media1"],
     "by": ["AB"],
@@ -1280,7 +1263,7 @@
     "town": "Al Khiam",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 1,
+    "shell_count": 2,
     "lat": 33.3101083333333,
     "lon": 35.5992583333333,
     "landscape": "bare",
@@ -1569,7 +1552,7 @@
     "town": "Marouahine",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 2,
+    "shell_count": 1,
     "lat": 33.113347,
     "lon": 35.283975,
     "landscape": "resident",
@@ -1703,7 +1686,7 @@
     "town": "Meiss El Jabal",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 4,
+    "shell_count": 1,
     "lat": 33.1771027777778,
     "lon": 35.5324583333333,
     "landscape": "resident",
@@ -1759,7 +1742,7 @@
     "town": "Meiss El Jabal",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 1,
+    "shell_count": 2,
     "lat": 33.1746805555556,
     "lon": 35.5330111111111,
     "landscape": "resident",
@@ -1860,27 +1843,11 @@
     "town": "Kfar Kila",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 3,
+    "shell_count": 1,
     "lat": 33.2825615703858,
     "lon": 35.5574528983807,
     "landscape": "resident",
     "source": "Getty Images"
-  },
-  {
-    "links": ["https://x.com/galpalpheebs/status/1752701948250485173?s=20"],
-    "filename": ["wp61_media1"],
-    "by": ["AB"],
-    "code": "WP61",
-    "date": "2024-01-31",
-    "time": "16:34:00",
-    "town": "Houla",
-    "country": "Lebanon",
-    "located": 1,
-    "shell_count": 2,
-    "lat": 33.2039111111111,
-    "lon": 35.5211,
-    "landscape": "resident",
-    "source": "X"
   },
   {
     "links": [
@@ -2559,7 +2526,8 @@
       "https://x.com/warfareanalysis/status/1804991158025850955/photo/2",
       "https://x.com/warfareanalysis/status/1804991158025850955/photo/3",
       "https://x.com/warfareanalysis/status/1804991158025850955/photo/4",
-      "https://x.com/QudsNen/status/1804955065427653005/photo/1"
+      "https://x.com/QudsNen/status/1804955065427653005/photo/1",
+      "https://www.gettyimages.nl/detail/video/israeli-incendiary-munitions-light-up-the-night-sky-as-nieuwsfootage/2160174255"
     ],
     "filename": [
       "wp84_media1",
@@ -2569,7 +2537,8 @@
       "wp84_media5",
       "wp84_media6",
       "wp84_media7",
-      "wp84_media8"
+      "wp84_media8",
+      "wp84_media9"
     ],
     "by": ["AB"],
     "code": "WP84",
@@ -2799,7 +2768,7 @@
       "wp91_media4",
       "wp91_media5"
     ],
-    "by": [],
+    "by": ["AB"],
     "code": "WP91",
     "date": "2024-08-12",
     "time": "15:40:00",
@@ -2815,9 +2784,10 @@
   {
     "links": [
       "https://www.flickr.com/photos/201797790@N02/54692509536/in/album-72177720328085809/",
-      "https://www.flickr.com/photos/201797790@N02/54692729943/in/album-72177720328085809/"
+      "https://www.flickr.com/photos/201797790@N02/54692729943/in/album-72177720328085809/",
+      "https://nabd.com/s/142600542-9a92ea/%D8%B9%D8%A7%D8%AC%D9%84-%D8%A8%D8%A7%D9%84%D9%81%D9%8A%D8%AF%D9%8A%D9%88-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84-%D8%AA%D8%AA%D9%88%D8%B9%D9%91%D8%AF-%D8%AD%D8%B2%D8%A8-%D8%A7%D9%84%D9%84%D9%87-%D9%85%D8%AC%D8%AF%D9%91%D8%AF%D8%A7%D9%8B-%D9%86%D8%B3%D8%AA%D8%B9%D8%AF%D9%91-%D9%84%D8%A7%D8%AA%D8%AE%D8%A7%D8%B0-%D8%AE%D8%B7%D9%88%D8%A7%D8%AA-%D9%87%D8%AC%D9%88%D9%85%D9%8A%D8%A9-%D8%AF%D8%A7%D8%AE%D9%84-%D8%A7%D9%84%D8%A3%D8%B1%D8%A7%D8%B6%D9%8A-%D8%A7%D9%84%D9%84%D8%A8%D9%86%D8%A7%D9%86%D9%8A%D8%A9"
     ],
-    "filename": ["wp110_media1", "wp110_media2"],
+    "filename": ["wp110_media1", "wp110_media2", "wp110_media3"],
     "by": ["AB"],
     "code": "WP110",
     "date": "2024-09-06",
@@ -2967,7 +2937,7 @@
     "town": "Rmaysh",
     "country": "Lebanon",
     "located": 0,
-    "shell_count": 2,
+    "shell_count": 1,
     "lat": null,
     "lon": null,
     "landscape": null,
@@ -3063,9 +3033,9 @@
       "https://www.gettyimages.nl/detail/nieuwsfoto%27s/picture-taken-from-northern-israel-along-the-border-with-nieuwsfotos/2175207375",
       "https://www.afpforum.com/AFPForum/Search/Results.aspx?pn=1&smd=8&mui=3&q=16562111408466822244_0&SearchUN=True&fst=000_36HQ4YR&fto=3&fsd=20241001&fed=20241002&cck=a1aff2#pn=1&smd=8&q=12076472148139949666_0&SearchUN=True&fst=000_36HQ4YR&fto=3&fsd=20241001&fed=20241002&mui=3&t=2&cck=a1aff2",
       "https://www.afpforum.com/AFPForum/Search/Results.aspx?pn=1&smd=8&mui=3&q=14632260629597783140_0&SearchUN=True&fst=000_36HQ92G&fto=3&fsd=20241001&fed=20241002&cck=a1aff2#pn=1&smd=8&q=16009216741507317346_0&SearchUN=True&fst=000_36HQ92G&fto=3&fsd=20241001&fed=20241002&mui=3&t=2&cck=a1aff2",
-      "https://www.reutersconnect.com/item/ongoing-hostilities-between-hezbollah-and-israeli-forces-in-northern-israel/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMkpCQUFXV0JJOQ",
-      "https://www.reutersconnect.com/item/ongoing-hostilities-between-hezbollah-and-israeli-forces-in-northern-israel/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMklCQUFQWU9ORA",
-      "https://www.reutersconnect.com/item/ongoing-hostilities-between-hezbollah-and-israeli-forces-in-northern-israel/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMklCQUExTkVUOA"
+      "https://www.reutersconnect.com/item/ongoing-hostilities-between-hezbollah-and-israeli-forces-in-northern-israel/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMklCQUExTkVUOA?lastViewed=dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMkpCQUFXV0JJOQ&position=2",
+      "https://www.reutersconnect.com/item/ongoing-hostilities-between-hezbollah-and-israeli-forces-in-northern-israel/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMklCQUFQWU9ORA?lastViewed=dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMkpCQUFXV0JJOQ&position=3",
+      "https://www.anpfoto.nl/search.pp?pictureid=509834084&page=1&pos=26"
     ],
     "filename": [
       "wp100_media1",
@@ -3165,13 +3135,15 @@
       "https://www.reutersconnect.com/item/cross-border-hostilities-between-hezbollah-and-israel/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMjZDQUFGVU9IQw",
       "https://www.reutersconnect.com/item/cross-border-hostilities-between-hezbollah-and-israel/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMjZDQUFDWDIwUg",
       "https://www.reutersconnect.com/item/cross-border-hostilities-between-hezbollah-and-israel/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1JDMjZDQUFaMkZUUg",
-      "https://www.reutersconnect.com/item/explosions-smoke-rises-as-israeli-forces-strike-lebanon/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1ZBODcyMDAyMTAyMDI0UlAx"
+      "https://www.reutersconnect.com/item/explosions-smoke-rises-as-israeli-forces-strike-lebanon/dGFnOnJldXRlcnMuY29tLDIwMjQ6bmV3c21sX1ZBODcyMDAyMTAyMDI0UlAx",
+      "https://www.anpfoto.nl/search.pp?pictureid=509967445&page=3&pos=135"
     ],
     "filename": [
       "wp169_media1",
       "wp169_media2",
       "wp169_media3",
-      "wp169_media4"
+      "wp169_media4",
+      "wp169_media5"
     ],
     "by": ["AB"],
     "code": "WP169",
@@ -3246,7 +3218,7 @@
     "town": "Kfar Chouba",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 2,
+    "shell_count": 1,
     "lat": 33.32338,
     "lon": 35.70495,
     "landscape": "agri",
@@ -3259,12 +3231,12 @@
     "filename": ["wp162_media1"],
     "by": ["AB"],
     "code": "WP162",
-    "date": "2024-10-21",
+    "date": "2024-10-26",
     "time": "17:50:00",
     "town": "Kfar Chouba",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 2,
+    "shell_count": 1,
     "lat": 33.323197,
     "lon": 35.67575,
     "landscape": "bare",
@@ -3282,7 +3254,7 @@
     "town": "Kfar Chouba",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 1,
+    "shell_count": 3,
     "lat": 33.325942,
     "lon": 35.676603,
     "landscape": "bare",
@@ -3354,10 +3326,15 @@
       "https://www.afpforum.com/AFPForum/Search/Results.aspx?pn=1&smd=8&mui=3&q=16495482364770513513_0&SearchUN=True&fst=068_AA_30042026_2760119&fto=3&cck=a72a9d#pn=1&smd=8&q=239870897442272374_0&SearchUN=True&fst=068_AA_30042026_2760119&fto=3&mui=3&t=2&cck=a72a9d",
       "https://www.afpforum.com/AFPForum/Search/Results.aspx?pn=1&smd=8&mui=3&q=10968846283684311657_0&SearchUN=True&fst=068_AA_30042026_2760120&fto=3&cck=a72a9d#pn=1&smd=8&q=8376685829828916342_0&SearchUN=True&fst=068_AA_30042026_2760120&fto=3&mui=3&t=2&cck=a72a9d",
       "https://www.afpforum.com/AFPForum/Search/Results.aspx?pn=1&smd=8&mui=3&q=5028177146265072233_0&SearchUN=True&fst=068_AA_30042026_2760121&fto=3&cck=a72a9d#pn=1&smd=8&q=916255760399217782_0&SearchUN=True&fst=068_AA_30042026_2760121&fto=3&mui=3&t=2&cck=a72a9d",
-      ""
+      "https://www.afpforum.com/AFPForum/Search/Results.aspx?pn=1&smd=8&mui=3&q=11436339311706652501_0&SearchUN=True&fst=000_A9F7764+&fto=3&cck=a72a9d#pn=1&smd=8&q=16081434924372442722_0&SearchUN=True&fst=000_A9F7764+&fto=3&mui=3&t=2&cck=a72a9d"
     ],
-    "filename": ["wp403_media1.jpg", "wp403_media2.jpg", "wp403_media3.jpg", "wp403_media4.png"],
-    "by": ["AB"],
+    "filename": [
+      "wp403_media1.jpg",
+      "wp403_media2.jpg",
+      "wp403_media3.jpg",
+      "wp403_media4.png"
+    ],
+    "by": ["AB", "NYT"],
     "code": "WP403",
     "date": "2026-04-30",
     "time": "14:00:00",
@@ -3477,7 +3454,7 @@
       "https://t.me/LebUpdate/56919"
     ],
     "filename": ["wp410_media1.jpg"],
-    "by": ["HRW"],
+    "by": ["HRW", "AB"],
     "code": "WP410",
     "date": "2026-03-03",
     "time": "10:05:00",
@@ -3495,7 +3472,7 @@
       "https://t.me/LebUpdate/56919"
     ],
     "filename": ["wp411_media1.jpg"],
-    "by": ["HRW"],
+    "by": ["HRW", "AB"],
     "code": "WP411",
     "date": "2026-03-03",
     "time": "10:05:00",
@@ -3534,7 +3511,7 @@
     "by": ["AB"],
     "code": "WP415",
     "date": "2026-03-15",
-    "time": "00:00:00",
+    "time": "18:47:00",
     "town": "El Merri",
     "country": "Lebanon",
     "located": 1,
@@ -3603,9 +3580,16 @@
       "https://newsroom.ap.org/editorial-photos-videos/search?query=26086383952860&mediaType=photo&st=keyword",
       "https://newsroom.ap.org/editorial-photos-videos/search?query=26086388515187&mediaType=photo&st=keyword",
       "https://newsroom.ap.org/editorial-photos-videos/search?query=26086379648761&mediaType=photo&st=keyword",
-      "https://www.nytimes.com/2026/06/06/world/middleeast/white-phosphorous-israel-lebanon.html?unlocked_article_code=1.oFA.YxND.Y-aDiOCP_zgb&smid=nytcore-android-share"
+      "https://www.nytimes.com/2026/06/06/world/middleeast/white-phosphorous-israel-lebanon.html?unlocked_article_code=1.oFA.YxND.Y-aDiOCP_zgb&smid=nytcore-android-share",
+      "https://x.com/France24_ar/status/2037571166441799842"
     ],
-    "filename": ["wp426_media1.png", "wp426_media2.png", "wp426_media3.png", "wp426_media4.png"],
+    "filename": [
+      "wp426_media1.png",
+      "wp426_media2.png",
+      "wp426_media3.png",
+      "wp426_media4.png",
+      "wp426_media5"
+    ],
     "by": ["AB"],
     "code": "WP426",
     "date": "2026-03-27",
@@ -3613,7 +3597,7 @@
     "town": "Iskandarouna",
     "country": "Lebanon",
     "located": 1,
-    "shell_count": 6,
+    "shell_count": 4,
     "lat": 33.153295,
     "lon": 35.191277,
     "landscape": "bare",
@@ -3773,7 +3757,7 @@
     "by": [],
     "code": "WP500",
     "date": "2024-09-19",
-    "time": "00:00:00",
+    "time": "15:40:00",
     "town": "Kfar Kila",
     "country": "Lebanon",
     "located": 0,
@@ -3807,7 +3791,7 @@
     "by": [],
     "code": "WP417",
     "date": "2026-04-11",
-    "time": "00:00:00",
+    "time": "20:48:00",
     "town": null,
     "country": "Lebanon",
     "located": 0,
@@ -3823,7 +3807,7 @@
     "by": [],
     "code": "WP412",
     "date": "2026-05-14",
-    "time": "00:00:00",
+    "time": "21:27:00",
     "town": "Nabatieh",
     "country": "Lebanon",
     "located": 0,

@@ -19,9 +19,10 @@ const Typewriter: React.FC<TypewriterProps> = ({ textLines, period, speed, onFin
     const [hasMounted, setHasMounted] = useState(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    const HIGHLIGHT_PHRASES = ["294 white phosphorus strikes", "October", "May", "images and videos"];
+    const HIGHLIGHT_PHRASES = ["282 white phosphorus strikes", "one", "October", "May", "images and videos"];
+    // whole words only, so "one" can't light up inside a word like "zone"
     const highlightPattern = new RegExp(
-        `(${HIGHLIGHT_PHRASES.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|")}|\\d[\\d,]*)`,
+        `(\\b(?:${HIGHLIGHT_PHRASES.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|")})\\b|\\d[\\d,]*)`,
         "g"
     );
 

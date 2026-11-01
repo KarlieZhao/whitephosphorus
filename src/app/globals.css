@@ -1211,21 +1211,22 @@ footer a {
  * Satellite imagery is bright and busy, so the readout loses its ground — the vector map is
  * near-black and gives it for free. Per-line boxes rather than one panel, because the lines
  * are already `width: fit-content` and a single box would draw a rectangle around the gaps.
- * Empty lines are skipped so unused rows don't render as floating slivers.
+ * Empty lines get no class, so unused rows don't render as floating slivers.
  *
- * Only ever the row itself, never a nested div — two painted boxes stack their blur and
- * their 55% black, which read as a darker box floating behind the text. Rows whose content
- * carries its own top margin are handled in readoutRow(), which lifts that margin onto the
- * row so it falls outside the paint.
+ * Only ever the row itself, never a nested div — two painted boxes stack their black, which
+ * read as a darker box floating behind the text. Rows whose content carries its own top
+ * margin are handled in readoutRow(), which lifts that margin onto the row so it falls
+ * outside the paint.
+ *
+ * No backdrop-filter: it was taken out when rows were reported losing their box from point to
+ * point in Firefox, though that never reproduced in testing. The plain black holds on its own.
  */
-.map-readout.on-satellite .dynamic-readout > div:not(:empty):not(.readout-divider) {
+.map-readout.on-satellite .dynamic-readout > .readout-row {
   /* 0.72, not 0.55: the imagery under the readout runs from dark scrub to near-white
      built-up ground, and the lighter value that looked solid over the former washed out
      to grey over the latter, taking the dimmer lines (coordinates, code, landscape) with
      it. This holds against the brightest terrain in the frame. */
   background-color: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   padding: 0.05rem 0.45rem;
   margin-left: -0.45rem;
   border-radius: 3px;
