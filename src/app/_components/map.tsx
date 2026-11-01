@@ -462,7 +462,6 @@ const GRADIENT_CONFIGS = [
   { id: "hover", color: "#f997", opacity: 0.8 },
   { id: "clicked", color: "#7777", opacity: 0.8 },
   { id: "bg", color: "#333", opacity: 0.8 },
-  { id: "satellite", color: "#ff3333", opacity: 0.4 }, // half strength — the red flare read as too strong over satellite imagery
 ];
 
 const CENTER_FILL = {
@@ -840,7 +839,8 @@ export function VectorMap({
   );
   const getRingFill = useCallback((d: any) => {
     if (focusedPt !== null && visiblePoints.indexOf(d) === focusedPt) return `url(#clicked)`;
-    if (showSatellite) return `url(#satellite)`;
+    // no glow over imagery: the circle stays as the hit area, but only the dot itself shows
+    if (showSatellite) return "transparent";
     return `url(#static)`;
   }, [focusedPt, visiblePoints, showSatellite]);
 
