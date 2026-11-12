@@ -53,20 +53,35 @@ const Header = ({ TypewriterFinished = true }: TypewriterProps) => {
             WhitePhosphorus.info
           </h3>
           {/* mobile has no nav tabs, so these get direct shortcuts here */}
+          {/* the title also leads home, but readers didn't know that, so the map gets its own
+              button: a folded map, its middle panel dimmed so the folds read even where the
+              gaps between panels blur at this size */}
+          <button
+            className={`map-button ${isActive("/") ? "map-button-active" : ""}`}
+            onClick={() => router.push("/")}
+            aria-label="Map"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M3 5.9 8.2 4.1v14L3 19.9z" />
+              <path d="M9.8 4.1l4.4 1.8v14l-4.4-1.8z" opacity="0.55" />
+              <path d="M15.8 5.9 21 4.1v14l-5.2 1.8z" />
+            </svg>
+          </button>
           <button
             className={`plumes-button ${isActive("/plumes") ? "plumes-button-active" : ""}`}
             onClick={() => router.push("/plumes")}
             aria-label="Plumes"
           >
-            {/* A tall dome and a smaller shoulder sitting on a rounded bar, drawn as
-                three overlapping shapes in one fill so they merge into a single
-                silhouette. The previous version was geometrically a cloud but its bumps
-                were sub-pixel at this size, so it collapsed into a rounded square; what
-                makes it read small is how far the dome clears the base, not detail. */}
+            {/* A tall dome between two lower lobes, with a flat bar filling the gap where
+                the lobes meet the bottom, all in one fill so they merge into a single
+                silhouette. The lobes give the bottom wide round corners: the rounded bar
+                this sat on before read as square-cornered at this size. What makes it read
+                small is how far the dome clears the base, not detail. */}
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-              <rect x="4" y="12" width="16.4" height="6" rx="3" />
-              <circle cx="10" cy="9" r="6" />
-              <circle cx="16.8" cy="11.8" r="3.8" />
+              <circle cx="10.4" cy="10.9" r="6" />
+              <circle cx="17" cy="14.8" r="4.4" />
+              <circle cx="6.5" cy="15.3" r="3.9" />
+              <rect x="6.5" y="13.6" width="10.5" height="5.6" />
             </svg>
           </button>
           <button

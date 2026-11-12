@@ -998,7 +998,7 @@ ul li {
 .timeline-button {
   color: #fff;
   position: absolute;
-  right: 58px;
+  right: 50px;
   top: 50%;
   transform: translateY(-50%);
   width: 26px;
@@ -1022,7 +1022,7 @@ ul li {
 .info-button {
   color: #fff;
   position: absolute;
-  right: 20px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
   width: 26px;
@@ -1615,15 +1615,20 @@ small {
     position: relative;
     background-color: #c42100;
     height: 3.4rem;
-    padding: 0 5.6rem 0 1rem;
+    padding: 0 9.6rem 0 1rem;
     display: flex;
     align-items: center;
   }
 
+  /* With four buttons on the right, the full-size title (211px at 1.3rem) runs into the map
+     button on phones under ~390px wide. Below that it shrinks to keep at least a 10px gap:
+     the buttons take the right 144px and the title starts at 16px, so it may be
+     (100vw - 170px) wide, and its width is about 10.14 times its font size. */
   .mobile-header-title {
     margin: 0;
     color: #fff;
-    font-size: 1.3rem;
+    font-size: min(1.3rem, calc(9.8vw - 17px));
+    white-space: nowrap;
     cursor: pointer;
   }
 
@@ -2202,12 +2207,12 @@ small {
   display: block;
 }
 
-/* The plumes shortcut in the mobile banner: added in the next slot along, so the
-   timeline and info buttons stay exactly where they have always been. */
+/* The mobile banner's shortcuts, right to left: info, timeline, plumes, map, 34px apart with
+   a 16px margin matching the title's. They were 38px apart until the map button made four. */
 .plumes-button {
   color: #fff;
   position: absolute;
-  right: 96px;
+  right: 84px;
   top: 50%;
   transform: translateY(-50%);
   width: 26px;
@@ -2222,6 +2227,28 @@ small {
 }
 
 .plumes-button-active {
+  background: #fff;
+  color: #c42100;
+}
+
+.map-button {
+  color: #fff;
+  position: absolute;
+  right: 118px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #fff;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.map-button-active {
   background: #fff;
   color: #c42100;
 }
