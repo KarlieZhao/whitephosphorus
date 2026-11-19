@@ -9,6 +9,7 @@ import SatelliteMap from "./satellite-map";
 import LandscapeHisto from "./histo_landscape";
 import LandscapeBar from "./landscape-bar";
 import { isMobileDevice } from "./mobile-detector";
+import SearchBox from "./search-box";
 
 // export const RED_GRADIENT = ["#db2f0f", "#C03117", "#A5331E", "#8A3525", "#6E362C", "#7C3629", "#6E362C"]
 // export const RED_GRADIENT = ["#cfcfcf", "#aaa", "#909090", "#858585", "#777", "#666", "#606060"]
@@ -155,6 +156,9 @@ export default function DataSource({
     // background to tap for the usual reset — bumping this tells VectorMap to clear its
     // internal focus state alongside clearing the readout here
     const [clearSelectionSignal, setClearSelectionSignal] = useState(0);
+    // an incident picked in the search, for VectorMap to centre on and select; `n` counts
+    // requests, so picking the same incident twice still goes to it the second time
+    const [focusRequest, setFocusRequest] = useState<{ code: string; n: number } | null>(null);
 
     /**
      * Optional reference geometry drawn under the dots — the security zone, the Blue Line,
@@ -535,6 +539,33 @@ export default function DataSource({
     };
 
     /**
+     * An incident the current filters hide would have no dot to go to, so the filters are
+     * cleared first; one that is showing keeps them, and its detail opens under the filter
+     * summary like a clicked dot's.
+     */
+    const searchPickEntry = (pt: any) => {
+        if (!filteredStrikes.pts.includes(pt)) clearAllFilters();
+        setFocusRequest((r) => ({ code: pt.code, n: (r?.n ?? 0) + 1 }));
+    };
+
+    /**
+     * Added, never toggled off: searching for a town that is already selected should not undo
+     * it. The map also frames the town's dots, kept clear of the header and of this panel on
+     * the right, since someone searching for a town may not know where it is.
+     */
+    const searchPickTown = (town: string) => {
+        setSelectedCity((prev) => (prev.includes(town) ? prev : [...prev, town]));
+        setLastFilterKey("city");
+        const placed = geoData.filter((p: any) => p.town === town && p.lat != null && p.lon != null);
+        if (!mapInstance || !placed.length) return;
+        const lats = placed.map((p: any) => p.lat);
+        const lons = placed.map((p: any) => p.lon);
+        mapInstance.flyToBounds(
+            [[Math.min(...lats), Math.min(...lons)], [Math.max(...lats), Math.max(...lons)]],
+            { paddingTopLeft: [80, 160], paddingBottomRight: [480, 80], maxZoom: 14, duration: 0.8 });
+    };
+
+    /**
      * Points matching every active filter, optionally with one dimension overridden — a
      * handler calls this with the value it is about to set, since its own setState has not
      * landed yet. Lets the existing readouts keep their wording while counting the whole
@@ -893,6 +924,7 @@ export default function DataSource({
                 showSatellite={showSatelliteMap}
                 TypeWriterFinished={TypewriterFinished}
                 clearSelectionSignal={clearSelectionSignal}
+                focusRequest={focusRequest}
                 basemap={basemap}
             />
         </div >
@@ -967,6 +999,7 @@ export default function DataSource({
 
         {!isMobile && <div
             className={`fixed right-3 top-28 z-50 side-bar transition-opacity duration-500 ease-in-out ${showPanels ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} >
+            <SearchBox geoData={geoData} onPickEntry={searchPickEntry} onPickTown={searchPickTown} />
             <div className="satellite-toggle-container relative mt-1">
                 <div className={`map-toggle-group ${TypewriterFinished ? "pointer-events-auto" : "pointer-events-none"}`}>
                     <div

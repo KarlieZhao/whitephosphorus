@@ -17,6 +17,8 @@ type VectorMapProps = geoDataProps & TypewriterProps & {
   // bumped by the parent's readout close button (mobile has no reachable background to
   // tap for the usual reset) to clear this component's own focus state from outside
   clearSelectionSignal?: number;
+  /** an incident picked in the panel's search: centred on and selected as if clicked */
+  focusRequest?: { code: string; n: number } | null;
   /**
    * Which basemap to draw under the dots. Defaults to OpenFreeMap's vector dark style,
    * rendered by MapLibre and handed to Leaflet as an ordinary tilePane layer, restyled
@@ -545,6 +547,7 @@ export function VectorMap({
   mapInstance,
   showSatellite,
   clearSelectionSignal,
+  focusRequest,
   basemap = "openfreemap",
   overlayLayers,
 }: VectorMapProps) {
@@ -832,6 +835,25 @@ export function VectorMap({
   useEffect(() => {
     setFocusedPt(null);
   }, [visiblePoints]);
+
+  /**
+   * Going to an incident picked in the search. Declared after the reset above: when the
+   * search had to clear the filters to show the incident, both run after the same render,
+   * and this selection has to be the one that sticks. Each request is handled once, so a
+   * later filter change doesn't send the map back to it.
+   */
+  const handledFocusRef = useRef(0);
+  useEffect(() => {
+    if (!focusRequest || !mapInstance || handledFocusRef.current === focusRequest.n) return;
+    const index = visiblePoints.findIndex((p) => p.code === focusRequest.code);
+    const pt = visiblePoints[index];
+    if (!pt || pt.lat == null || pt.lon == null) return;
+    handledFocusRef.current = focusRequest.n;
+    setFocusedPt(index);
+    getMapDetailsRef.current(pt, null, true);
+    // close enough to tell it apart from its neighbours, never zooming back out
+    mapInstance.flyTo([pt.lat, pt.lon], Math.max(mapInstance.getZoom(), 14), { duration: 0.8 });
+  }, [focusRequest, visiblePoints, mapInstance]);
 
   const clearAnimationTimeouts = useCallback(() => {
     animationTimeoutRef.current.forEach(timeout => clearTimeout(timeout));

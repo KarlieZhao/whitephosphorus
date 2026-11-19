@@ -1872,6 +1872,114 @@ small {
   background: rgba(255, 255, 255, 0.25);
 }
 
+/* ===== search (top of the map control panel) ===== */
+/* drawn like the filter boxes below it, so it reads as part of the same panel */
+.panel-search {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.panel-search-icon {
+  position: absolute;
+  left: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+}
+
+.panel-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.45rem 0.7rem 0.45rem 1.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #eee;
+  font: inherit;
+  font-size: 0.8rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.panel-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.panel-search-input:focus {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* the browser's own clear button, drawn in a colour of its own choosing */
+.panel-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.panel-search-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  margin: 0;
+  padding: 0.25rem 0;
+  list-style: none;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+}
+
+.panel-search-result {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+  color: #ddd;
+  cursor: pointer;
+}
+
+/* the same red as the active Vector / Satellite option */
+.panel-search-result.is-active {
+  background: #831713;
+  color: #fff;
+}
+
+.panel-search-result.is-disabled {
+  cursor: default;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.panel-search-result.is-disabled.is-active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.panel-search-name {
+  flex: 0 0 auto;
+}
+
+.panel-search-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: right;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel-search-result.is-active .panel-search-meta {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.panel-search-empty {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
 /* ===== reference map layers (control panel) ===== */
 .map-layers {
   margin-top: 1.25rem;
