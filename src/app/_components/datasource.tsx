@@ -10,6 +10,7 @@ import LandscapeHisto from "./histo_landscape";
 import LandscapeBar from "./landscape-bar";
 import { isMobileDevice } from "./mobile-detector";
 import SearchBox from "./search-box";
+import MediaViewer, { isHostedMedia, type ViewerItem } from "./media-viewer";
 
 // export const RED_GRADIENT = ["#db2f0f", "#C03117", "#A5331E", "#8A3525", "#6E362C", "#7C3629", "#6E362C"]
 // export const RED_GRADIENT = ["#cfcfcf", "#aaa", "#909090", "#858585", "#777", "#666", "#606060"]
@@ -159,6 +160,8 @@ export default function DataSource({
     // an incident picked in the search, for VectorMap to centre on and select; `n` counts
     // requests, so picking the same incident twice still goes to it the second time
     const [focusRequest, setFocusRequest] = useState<{ code: string; n: number } | null>(null);
+    // the site's own photos and videos of the open incident, shown over the map
+    const [viewer, setViewer] = useState<{ items: ViewerItem[]; start: number } | null>(null);
 
     /**
      * Optional reference geometry drawn under the dots — the security zone, the Blue Line,
@@ -963,9 +966,9 @@ export default function DataSource({
                     <div className="readout-divider" />
                 )}
                 {details.slice(0, 8).map((line, idx) => readoutRow(line, String(idx)))}
-                {/* links out to the source instead of hosting/displaying the media directly —
-                    several sources are watermarked agency preview images (AFP Forum, ANP,
-                    Getty), which aren't cleared for public reproduction */}
+                {/* the site's own photos and videos open in the viewer over the map; every other
+                    link opens its source in a new tab — several are watermarked agency preview
+                    images (AFP Forum, ANP, Getty), which aren't cleared for public reproduction */}
                 {details[9] && details[9].length > 0 && (
                     <div className="readout-row flex gap-x-2 items-baseline">
                         <span className="flex-shrink-0">Links:</span>
@@ -984,6 +987,18 @@ export default function DataSource({
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="media-link text-white/80 hover:text-white"
+                                                onClick={(e) => {
+                                                    // a modified click (new tab, new window) still goes to the file
+                                                    if (!isHostedMedia(link) || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                                                    e.preventDefault();
+                                                    const own = details[9]
+                                                        .map((url: string, k: number) => ({ k, url, label: details[8]?.[k] ?? `Media ${k + 1}` }))
+                                                        .filter((m: { url: string }) => isHostedMedia(m.url));
+                                                    setViewer({
+                                                        items: own.map(({ url, label }: ViewerItem) => ({ url, label })),
+                                                        start: Math.max(0, own.findIndex((m: { k: number }) => m.k === row * 3 + i)),
+                                                    });
+                                                }}
                                             >
                                                 {details[8]?.[row * 3 + i] ?? `Media ${row * 3 + i + 1}`}
                                             </a>
@@ -1248,5 +1263,6 @@ export default function DataSource({
                     }} />
             </div>
         </div>}
+        {viewer && <MediaViewer items={viewer.items} start={viewer.start} onClose={() => setViewer(null)} />}
     </>);
 }
