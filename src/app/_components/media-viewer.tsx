@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import mediaSources from "./media-sources.json";
 
 /**
  * Viewer for the photos and videos the site hosts itself, opened from an incident's links.
@@ -12,9 +13,16 @@ import { useEffect, useRef, useState } from "react";
  *
  * Links to agencies and social media still open their own page in a new tab: those images
  * aren't the site's to republish.
+ *
+ * Each file is credited under the picture with who it came from (media-sources.json, keyed by
+ * file name). The names follow the registry's Source column, and the original file names where
+ * that column is empty or names the entry's other links. A file with no entry there shows no
+ * credit: some people who shared footage are named in the registry only, never on the site.
  */
 export const MEDIA_HOST = "https://d30kdnzbsfnn0n.cloudfront.net/media/";
 export const isHostedMedia = (url: string) => url.startsWith(MEDIA_HOST);
+const sourceOf = (url: string): string | undefined =>
+    (mediaSources as Record<string, string>)[url.slice(url.lastIndexOf("/") + 1)];
 
 export type ViewerItem = { label: string; url: string };
 
@@ -35,6 +43,7 @@ export default function MediaViewer({ items, start, onClose }: {
 
     const item = items[index];
     const isVideo = /\.mp4$/i.test(item.url);
+    const source = sourceOf(item.url);
     const step = (by: number) => setIndex((i) => (i + by + countRef.current) % countRef.current);
 
     useEffect(() => setStatus("loading"), [index]);
@@ -104,7 +113,7 @@ export default function MediaViewer({ items, start, onClose }: {
                     <>
                         {status === "loading" && <div className="media-viewer-note">Loading…</div>}
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img key={item.url} src={item.url} alt={item.label} onClick={stop}
+                        <img key={item.url} src={item.url} alt={source ? `${item.label}, source: ${source}` : item.label} onClick={stop}
                             className={status === "ready" ? "" : "is-loading"}
                             onLoad={() => setStatus("ready")} onError={() => setStatus("failed")} />
                     </>
@@ -117,6 +126,11 @@ export default function MediaViewer({ items, start, onClose }: {
                             onClick={(e) => { stop(e); step(1); }}>›</button>
                     </>
                 )}
+            </div>
+            {/* always there, empty when a file has no credit, so the picture doesn't jump in
+                size when stepping between credited and uncredited files */}
+            <div className="media-viewer-credit" onClick={stop}>
+                {source && <>Source: {source}</>}
             </div>
         </dialog>
     );

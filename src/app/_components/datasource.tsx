@@ -81,7 +81,7 @@ const geoSource: { [key: string]: String } = {
     "AUB": "American University of Beirut",
     "GS": "Green Southerners",
     "AS": "Alex Spoerndli",
-    "MM": "Maria Molijn",
+    "MM": "Cosette Molijn",
     "HRW": "Human Rights Watch",
     "NYT": "The New York Times"
 }

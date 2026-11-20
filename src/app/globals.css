@@ -2061,7 +2061,19 @@ small {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 5rem 1.5rem;
+  padding: 0 5rem;
+}
+
+/* who the photo or video came from, under the picture */
+.media-viewer-credit {
+  min-height: 1.2rem;
+  padding: 0.6rem 1.25rem 0.9rem;
+  box-sizing: content-box;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  line-height: 1.2rem;
+  letter-spacing: 0.02em;
 }
 
 .media-viewer-stage img,
@@ -2115,7 +2127,11 @@ small {
   }
 
   .media-viewer-stage {
-    padding: 0 0 1rem;
+    padding: 0;
+  }
+
+  .media-viewer-credit {
+    padding: 0.5rem 1rem 0.8rem;
   }
 
   .media-viewer-nav {
