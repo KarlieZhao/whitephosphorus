@@ -11,6 +11,7 @@ import LandscapeBar from "./landscape-bar";
 import { isMobileDevice } from "./mobile-detector";
 import SearchBox from "./search-box";
 import MediaViewer, { isHostedMedia, type ViewerItem } from "./media-viewer";
+import Link from "next/link";
 
 // export const RED_GRADIENT = ["#db2f0f", "#C03117", "#A5331E", "#8A3525", "#6E362C", "#7C3629", "#6E362C"]
 // export const RED_GRADIENT = ["#cfcfcf", "#aaa", "#909090", "#858585", "#777", "#666", "#606060"]
@@ -159,7 +160,19 @@ export default function DataSource({
     const [clearSelectionSignal, setClearSelectionSignal] = useState(0);
     // an incident picked in the search, for VectorMap to centre on and select; `n` counts
     // requests, so picking the same incident twice still goes to it the second time
-    const [focusRequest, setFocusRequest] = useState<{ code: string; n: number } | null>(null);
+    const [focusRequest, setFocusRequest] = useState<{ code: string; n: number; duration?: number; delay?: number } | null>(null);
+    // Linked pages: arriving from another page, the map waits a moment on the overview
+    // so the reader sees where they are, then glides in slowly (seconds)
+    const ARRIVE_DELAY = 400, ARRIVE_DURATION = 1.6;
+    // Linked pages: the incident whose full detail is open, for the links to the
+    // other pages and for the shareable address
+    const [openPt, setOpenPt] = useState<any | null>(null);
+    /**
+     * Linked pages: the incidents arrived at from the timeline pulse until the reader
+     * makes a selection of their own. `sig` is the filter state the arrival produced; once
+     * the filters differ from it, or another incident is opened, the pulse stops.
+     */
+    const [pulse, setPulse] = useState<{ codes: string[]; sig: string } | null>(null);
     // the site's own photos and videos of the open incident, shown over the map
     const [viewer, setViewer] = useState<{ items: ViewerItem[]; start: number } | null>(null);
 
@@ -617,6 +630,80 @@ export default function DataSource({
             .catch((err) => console.error("Failed to load geoData:", err));
     }, []);
 
+    /**
+     * Linked pages. The map can be opened at an incident or a town from the other
+     * pages: ?wp=WP37 goes to the incident, ?town=Houla&month=2023-11 selects the town (and
+     * the month) and frames it. Read once, when the data and the map are both ready.
+     */
+    const deepLinkDone = useRef(false);
+    useEffect(() => {
+        if (deepLinkDone.current || !geoData.length || !mapInstance) return;
+        deepLinkDone.current = true;
+        const q = new URLSearchParams(window.location.search);
+        const wp = q.get("wp");
+        if (wp) {
+            const pt = geoData.find((p: any) => p.code.toUpperCase() === wp.toUpperCase());
+            if (pt && pt.lat != null && pt.lon != null) {
+                setFocusRequest((r) => ({ code: pt.code, n: (r?.n ?? 0) + 1, duration: ARRIVE_DURATION, delay: ARRIVE_DELAY }));
+                setPulse({ codes: [pt.code], sig: filterSig([], null, null) });
+            }
+            return;
+        }
+        const townQ = q.get("town"), monthQ = q.get("month"), yearQ = q.get("year");
+        const town = townQ && geoData.some((p: any) => p.town === townQ) ? townQ : null;
+        const month = monthQ && MONTHS.includes(monthQ) ? monthQ : null;
+        const year = !month && yearQ && /^\d{4}$/.test(yearQ) ? yearQ : null;
+        if (!town && !month && !year) return;
+        if (month) { setSelectedMonth(MONTHS.indexOf(month)); setLastFilterKey("month"); }
+        if (year) { setSelectedYear(year); setLastFilterKey("year"); }
+        if (town) { setSelectedCity([town]); setLastFilterKey("city"); }
+        const placed = geoData.filter((p: any) => p.lat != null && p.lon != null &&
+            (!town || p.town === town) &&
+            (!month || p.date.slice(0, 7) === month) &&
+            (!year || p.date.slice(0, 4) === year));
+        setPulse({ codes: placed.map((p: any) => p.code), sig: filterSig(town ? [town] : [], month ? MONTHS.indexOf(month) : null, year) });
+        // framed on exactly the dots that pulse, kept clear of the header and the panel
+        if (placed.length) {
+            const lats = placed.map((p: any) => p.lat), lons = placed.map((p: any) => p.lon);
+            setTimeout(() => mapInstance.flyToBounds(
+                [[Math.min(...lats), Math.min(...lons)], [Math.max(...lats), Math.max(...lons)]],
+                { paddingTopLeft: [80, 160], paddingBottomRight: isMobile ? [40, 80] : [480, 80], maxZoom: 14, duration: ARRIVE_DURATION }),
+                ARRIVE_DELAY);
+        }
+    }, [geoData, mapInstance]);
+
+    // Linked pages: stop the pulse once the reader moves on from what they arrived at
+    function filterSig(city: string[], month: number | null, year: string | null,
+        dates: [string, string] = ["", ""], day = -1, area: string[] = []) {
+        return JSON.stringify([city, month, year, dates, day, area]);
+    }
+    useEffect(() => {
+        if (!pulse) return;
+        const now = filterSig(selectedCity, selectedMonth, selectedYear, selectedDates, selectedDay, selectedAreaType);
+        if (now !== pulse.sig || (openPt && !pulse.codes.includes(openPt.code))) setPulse(null);
+    }, [pulse, openPt, selectedCity, selectedMonth, selectedYear, selectedDates, selectedDay, selectedAreaType]);
+
+    /**
+     * Linked pages. The address follows what is open, so it can be copied and sent:
+     * an open incident gives ?wp=, a single town and/or a month gives ?town=&month=.
+     * Anything else (years, ranges, landscapes, weekdays) leaves the plain address.
+     */
+    useEffect(() => {
+        if (!deepLinkDone.current) return;
+        const q = new URLSearchParams();
+        const otherFilters = selectedDates[0] || selectedDay !== -1 || selectedAreaType.length;
+        if (openPt) q.set("wp", openPt.code);
+        else if (!otherFilters && selectedCity.length <= 1) {
+            if (selectedCity.length === 1) q.set("town", selectedCity[0]);
+            if (selectedMonth != null) q.set("month", MONTHS[selectedMonth]);
+            else if (selectedYear) q.set("year", selectedYear);
+        }
+        const s = q.toString();
+        const next = window.location.pathname + (s ? `?${s}` : "");
+        if (window.location.pathname + window.location.search !== next)
+            window.history.replaceState(null, "", next);
+    }, [openPt, selectedCity, selectedMonth, selectedYear, selectedDates, selectedDay, selectedAreaType]);
+
 
     /**
      * Renders one readout line. Some lines are a div carrying their own top margin (the
@@ -699,12 +786,14 @@ export default function DataSource({
             if (isFilterSummary) {
                 setFilterReadout(rows);
                 updateDetails([]); // a new selection invalidates whichever point was open
+                setOpenPt(null);
             } else {
                 updateDetails(rows);
             }
         };
 
         if (!pt) {
+            setOpenPt(null);
             updateDetails([readout1, readout2, readout3, readout4, readout5, readout6, readout7, readout8, thumbnails, ext_link]);
             if (arg === "all") setFilterReadout([]);
             return;
@@ -842,6 +931,7 @@ export default function DataSource({
             const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/\s(am|pm)/, (match) => match.toUpperCase());;
             readout1 = <>On <span className="text-2xl text-white">{formattedDate}</span>, at <span className="text-2xl text-white">{formattedTime}</span>,</>;
             readout2 = <><span className="text-2xl text-white">{pt.shell_count}</span> white phosphorus strike{pt.shell_count > 1 ? "s" : ""} in <span className="text-2xl text-white">{pt.town}</span>.</>
+            setOpenPt(clicked ? pt : null);
             //only on click
             if (clicked) {
                 readout3 = `Coordinates: ${trimCoord(pt.lat)}, ${trimCoord(pt.lon)}`;
@@ -928,6 +1018,7 @@ export default function DataSource({
                 TypeWriterFinished={TypewriterFinished}
                 clearSelectionSignal={clearSelectionSignal}
                 focusRequest={focusRequest}
+                pulseCodes={pulse?.codes}
                 basemap={basemap}
             />
         </div >
@@ -962,6 +1053,16 @@ export default function DataSource({
             >
                 {/* the filter summary stays put; the incident detail stacks beneath it */}
                 {filterReadout.slice(0, 8).map((line, idx) => readoutRow(line, `f-${idx}`))}
+                {/* Linked pages: one town picked, so the timeline can show its months */}
+                {filterReadout.length > 0 && selectedCity.length === 1 && (
+                    <div className="readout-row linked-tab-row" style={{ marginTop: "0.6rem" }}>
+                        <Link
+                            href={`/timeline?town=${encodeURIComponent(selectedCity[0])}${selectedMonth != null ? `&month=${MONTHS[selectedMonth]}` : ""}`}
+                            className="underline text-white">
+                            See {selectedCity[0]} month by month on the timeline →
+                        </Link>
+                    </div>
+                )}
                 {filterReadout.length > 0 && details.some(Boolean) && (
                     <div className="readout-divider" />
                 )}
@@ -1007,6 +1108,14 @@ export default function DataSource({
                                 </div>
                             ))}
                         </div>
+                    </div>
+                )}
+                {/* Linked pages: from the open incident to the timeline */}
+                {openPt && details[0] && (
+                    <div className="readout-row linked-tab-row" style={{ marginTop: "0.6rem" }}>
+                        <Link href={`/timeline?wp=${openPt.code}`} className="underline text-white">
+                            See {openPt.code} on the timeline →
+                        </Link>
                     </div>
                 )}
             </div>

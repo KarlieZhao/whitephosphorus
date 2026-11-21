@@ -18,6 +18,16 @@ export default function Index() {
   const [showMobileBanner, setShowMobileBanner] = useState(true);
   const [showTypewriter, setShowTypewriter] = useState(false);
 
+  // Linked pages: arriving from another page at an incident or a town skips the
+  // intro text and the dot sweep, so the reader lands straight on what they clicked.
+  // Runs before the map's first render, which is when it reads these flags.
+  useState(() => {
+    if (typeof window === "undefined") return;
+    const q = new URLSearchParams(window.location.search);
+    if (q.get("wp") || q.get("town") || q.get("month") || q.get("year"))
+      ["visited", "mapDotsAnimated", "mapOverlaysRevealed"].forEach((k) => sessionStorage.setItem(k, "true"));
+  });
+
   const onFinish = () => {
     setTypeWriterFinished(true);
   };

@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 /**
  * Search at the top of the map panel, for an incident by its code or for a town.
@@ -8,6 +8,10 @@ import { useMemo, useState } from "react";
  * picking a town adds it to the town filter, the same as clicking its bar in the chart at
  * the bottom of the panel. Codes match on their number, so "91", "wp91" and "WP 91" all find
  * WP91. Incidents not yet geolocated are listed but can't be picked: they have no dot.
+ *
+ * Hidden from readers: it only appears when called up with Cmd+K (Ctrl+K on Windows), and
+ * goes away again on Esc, on clicking elsewhere, or once something has been picked.
+ * (Cmd+R would have been the browser's reload, which a page cannot reliably take over.)
  */
 type Result =
     | { kind: "entry"; key: string; pt: any; placed: boolean }
@@ -31,6 +35,20 @@ export default function SearchBox({ geoData, onPickEntry, onPickTown }: {
     const [query, setQuery] = useState("");
     const [open, setOpen] = useState(false);
     const [active, setActive] = useState(0);
+    const [shown, setShown] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (!(e.metaKey || e.ctrlKey) || e.shiftKey || e.altKey || e.key.toLowerCase() !== "k") return;
+            e.preventDefault(); // Firefox would otherwise jump to its own web search
+            setShown(true);
+            inputRef.current?.focus(); // already open: back into it
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, []);
+    const hide = () => { setQuery(""); setOpen(false); setShown(false); };
 
     const towns = useMemo(() => {
         const byTown = new Map<string, number>();
@@ -70,10 +88,10 @@ export default function SearchBox({ geoData, onPickEntry, onPickTown }: {
         if (!r || (r.kind === "entry" && !r.placed)) return;
         if (r.kind === "entry") onPickEntry(r.pt);
         else onPickTown(r.town);
-        setQuery("");
-        setOpen(false);
-        (document.activeElement as HTMLElement | null)?.blur();
+        hide();
     };
+
+    if (!shown) return null;
 
     return (
         <div className="panel-search">
@@ -82,6 +100,8 @@ export default function SearchBox({ geoData, onPickEntry, onPickTown }: {
                 <path d="M10.3 10.3 15 15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
             <input
+                ref={inputRef}
+                autoFocus // focused as it appears, so typing straight after Cmd+K lands in it
                 className="panel-search-input"
                 type="search"
                 placeholder="Search by WP number or town"
@@ -94,7 +114,7 @@ export default function SearchBox({ geoData, onPickEntry, onPickTown }: {
                 value={query}
                 onChange={(e) => { setQuery(e.target.value); setActive(0); setOpen(true); }}
                 onFocus={() => setOpen(true)}
-                onBlur={() => setOpen(false)}
+                onBlur={hide}
                 onKeyDown={(e) => {
                     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
                         e.preventDefault();
@@ -107,8 +127,7 @@ export default function SearchBox({ geoData, onPickEntry, onPickTown }: {
                     } else if (e.key === "Escape") {
                         // kept from the map's own Esc, which would also let go of the open point
                         e.stopPropagation();
-                        setQuery("");
-                        setOpen(false);
+                        hide();
                     }
                 }}
             />

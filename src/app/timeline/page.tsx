@@ -25,6 +25,8 @@ import Header from "@/app/_components/header";
 import Footer from "@/app/_components/footer";
 import { isMobileDevice } from "@/app/_components/mobile-detector";
 import "@/app/globals.css";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const WEDGES_PER_STRIKE = 116;
 const ROW_H = 12.2; // squeezed ~25% in total so the whole chart clears the fold
@@ -54,7 +56,7 @@ const CEASEFIRES: { start: string; end: string | null; name: string }[] = [
   { start: "2026-04-16", end: null, name: "2026 ceasefire" },
 ];
 
-type Incident = { code: string; date: string; town?: string; country?: string; shell_count?: number };
+type Incident = { code: string; date: string; town?: string; country?: string; shell_count?: number; lat?: number | null; lon?: number | null };
 /**
  * A few verified incidents have neither coordinates nor a confirmed town, so they have no
  * row of their own. They collect in one row pinned to the bottom rather than being dropped
@@ -83,6 +85,14 @@ const stepFill = (n: number) => STEPS.find((b) => n >= b.min && n <= b.max)?.fil
 const fmtMon = d3.utcFormat("%b");
 const fmtMonthYear = d3.utcFormat("%B %Y");
 const fmtDay = d3.utcFormat("%e %b %Y");
+const fmtKey = d3.utcFormat("%Y-%m"); // Linked pages: the month as the map's address takes it
+
+/** Linked pages: did this page open from a link on another page? */
+const arrivedWithTarget = () => {
+  if (typeof window === "undefined") return false;
+  const q = new URLSearchParams(window.location.search);
+  return !!(q.get("wp") || q.get("town"));
+};
 
 export default function Timeline() {
   const [raw, setRaw] = useState<Incident[] | null>(null);
@@ -99,8 +109,29 @@ export default function Timeline() {
    * map's `mapDotsAnimated` behaviour, so navigating back doesn't replay it.
    */
   const [hasAnimated, setHasAnimated] = useState(
-    () => typeof window !== "undefined" && sessionStorage.getItem("timelineAnimated") === "true"
+    () => typeof window !== "undefined" &&
+      (sessionStorage.getItem("timelineAnimated") === "true" || arrivedWithTarget())
   );
+  // Linked pages: the incident and the town the page was opened at, kept lit
+  const [focusCode, setFocusCode] = useState<string | null>(null);
+  const [focusTown, setFocusTown] = useState<string | null>(null);
+  /**
+   * Linked pages: the arrival from the map. The cell (or the row) arrived at stays lit
+   * while the rest of the chart sits back, until the reader moves the mouse, scrolls,
+   * clicks or types; then everything comes back.
+   */
+  const [arrive, setArrive] = useState<{ ti: number; ci: number | null } | null>(null);
+  // the fading back and the coming back are slower than the scan line's, so they read as a settle
+  const [softFade, setSoftFade] = useState(false);
+  /**
+   * Linked pages: a town name or a year under the chart opens the map with that town
+   * or year selected, where the panel gives its total and the dots pulse.
+   */
+  const router = useRouter();
+  const openOnMap = (e: React.MouseEvent, q: string) => {
+    e.stopPropagation(); // not a click on blank chart
+    router.push(`/?${q}`);
+  };
   const [revealCol, setRevealCol] = useState(-1);
   const [showBands, setShowBands] = useState(false);
   const [showMarks, setShowMarks] = useState(false);
@@ -180,6 +211,100 @@ export default function Timeline() {
 
     return { cols, colIndex, towns, grid, maxStrikes, totalStrikes, cum };
   }, [raw]);
+
+  /** Linked pages: incidents with a dot on the map, the only ones the map can open */
+  const placedCodes = useMemo(
+    () => new Set((raw ?? []).filter((r) => r.lat != null && r.lon != null).map((r) => r.code)),
+    [raw]);
+  /** Linked pages: towns with at least one dot on the map; only these link to it */
+  const placedTowns = useMemo(
+    () => new Set((raw ?? []).filter((r) => r.lat != null && r.lon != null).map(townOf)
+      .filter((t) => t !== UNPLACED)),
+    [raw]);
+
+  /**
+   * Linked pages. Opened from the map: ?wp=WP37 selects the month cell holding that
+   * incident, ?town=Houla&month=2023-11 selects that cell, ?town=Houla alone lights the
+   * row. The row is scrolled to the middle of the screen. Read once, when the data is in.
+   */
+  const deepLinkDone = useRef(false);
+  useEffect(() => {
+    if (!model || deepLinkDone.current) return;
+    deepLinkDone.current = true;
+    const q = new URLSearchParams(window.location.search);
+    const wp = q.get("wp")?.toUpperCase(), town = q.get("town"), month = q.get("month");
+    let target: { town: string; ci: number } | null = null;
+    if (wp) {
+      for (const [key, b] of Array.from(model.grid.entries())) {
+        const code = b.codes.find((c) => c.toUpperCase() === wp);
+        if (!code) continue;
+        const i = key.lastIndexOf("|");
+        target = { town: key.slice(0, i), ci: +key.slice(i + 1) };
+        setFocusCode(code);
+        break;
+      }
+    } else if (town && model.towns.includes(town)) {
+      const ci = month && /^\d{4}-\d{2}$/.test(month)
+        ? model.colIndex.get(Date.UTC(+month.slice(0, 4), +month.slice(5, 7) - 1, 1))
+        : undefined;
+      if (ci !== undefined && model.grid.get(`${town}|${ci}`)) target = { town, ci };
+    }
+    const rowTown = target?.town ?? (town && model.towns.includes(town) ? town : null);
+    if (target) {
+      setSel({ town: target.town, label: fmtMonthYear(model.cols[target.ci]), b: model.grid.get(`${target.town}|${target.ci}`)! });
+    }
+    if (!rowTown) return;
+    setFocusTown(rowTown);
+    const ti = model.towns.indexOf(rowTown);
+    // after the chart has been laid out at its measured width; only if the row is hidden
+    setTimeout(() => {
+      const el = wrapRef.current;
+      if (!el) return;
+      const rowTop = el.getBoundingClientRect().top + M_TOP + ti * rowH; // in the viewport
+      if (rowTop > 150 && rowTop < window.innerHeight - 120) return;
+      window.scrollTo({ top: Math.max(0, rowTop + window.scrollY - window.innerHeight / 2), behavior: "smooth" });
+    }, 200);
+    // the chart is first drawn as usual, then everything but the target fades back
+    setSoftFade(true);
+    setTimeout(() => setArrive({ ti, ci: target ? target.ci : null }), 250);
+  }, [model]);
+
+  /**
+   * Linked pages: the reader's first move ends the arrival. A short grace period
+   * keeps a hand already resting on the mouse from ending it before it has been seen.
+   * The page's own smooth scroll to the row fires no wheel event, so it does not count.
+   */
+  useEffect(() => {
+    if (!arrive) return;
+    const events = ["mousemove", "wheel", "keydown", "pointerdown", "touchstart"];
+    const end = () => {
+      setArrive(null);
+      setTimeout(() => setSoftFade(false), 900);
+    };
+    const t = setTimeout(() => events.forEach((ev) => window.addEventListener(ev, end, { once: true, passive: true })), 900);
+    return () => {
+      clearTimeout(t);
+      events.forEach((ev) => window.removeEventListener(ev, end));
+    };
+  }, [arrive]);
+
+  /** Linked pages: the address follows the selection, so it can be copied and sent */
+  useEffect(() => {
+    if (!model || !deepLinkDone.current) return;
+    const q = new URLSearchParams();
+    if (sel) {
+      if (focusCode && sel.b.codes.includes(focusCode)) q.set("wp", focusCode);
+      else {
+        const c = model.cols.find((col) => fmtMonthYear(col) === sel.label);
+        q.set("town", sel.town);
+        if (c) q.set("month", fmtKey(c));
+      }
+    } else if (focusTown) q.set("town", focusTown);
+    const s = q.toString();
+    const next = window.location.pathname + (s ? `?${s}` : "");
+    if (window.location.pathname + window.location.search !== next)
+      window.history.replaceState(null, "", next);
+  }, [model, sel, focusCode, focusTown]);
 
   /**
    * On a phone the full span cannot fit: 32 months across ~390px leaves ~5px per month.
@@ -390,6 +515,8 @@ export default function Timeline() {
       if (e.key !== "Escape") return;
       setPinned(null);
       setSel(null);
+      setFocusCode(null);
+      setFocusTown(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -454,6 +581,15 @@ export default function Timeline() {
           background: rgba(255, 255, 255, 0.28);
           border-radius: 5px;
         }
+        /* Linked pages: town names and years that open the map */
+        .tl-map-link {
+          cursor: pointer;
+          pointer-events: all;
+        }
+        .tl-map-link:hover {
+          fill: #fff;
+          text-decoration: underline;
+        }
       `}</style>
 
       <Header TypewriterFinished={true} />
@@ -467,7 +603,10 @@ export default function Timeline() {
               style={{ display: "block", flexShrink: 0 }}>
               {model.towns.map((town, ti) => (
                 <text key={town} x={labelW - 5} y={M_TOP + ti * rowH + rowH / 2} dy="0.32em"
-                  textAnchor="end" fill="rgba(255,255,255,0.68)" fontSize="8">
+                  textAnchor="end" fill={town === focusTown ? "#fff" : "rgba(255,255,255,0.68)"}
+                  fontWeight={town === focusTown ? "bold" : undefined} fontSize="8"
+                  className={placedTowns.has(town) ? "tl-map-link" : undefined}
+                  onClick={placedTowns.has(town) ? (e) => openOnMap(e, `town=${encodeURIComponent(town)}`) : undefined}>
                   {town}
                 </text>
               ))}
@@ -532,10 +671,19 @@ export default function Timeline() {
                 const y = M_TOP + ti * rowH;
                 return (
                   <g key={town}>
+                    {/* Linked pages: the row the page was opened at */}
+                    {town === focusTown && (
+                      <rect x={0} y={y} width={LEFT + plotW} height={rowH}
+                        fill="rgba(255,255,255,0.09)" pointerEvents="none" />
+                    )}
                     {/* on mobile these live in the pinned svg instead */}
                     {!isMobile && (
                       <text x={LEFT - 6} y={y + rowH / 2} dy="0.32em" textAnchor="end"
-                        fill="rgba(255,255,255,0.68)" fontSize="9.5">
+                        fill={town === focusTown ? "#fff" : "rgba(255,255,255,0.68)"}
+                        fontWeight={town === focusTown ? "bold" : undefined} fontSize="9.5"
+                        className={placedTowns.has(town) ? "tl-map-link" : undefined}
+                        onClick={placedTowns.has(town) ? (e) => openOnMap(e, `town=${encodeURIComponent(town)}`) : undefined}>
+                        {placedTowns.has(town) && <title>{`All strikes in ${town}, on the map`}</title>}
                         {town}
                       </text>
                     )}
@@ -543,6 +691,9 @@ export default function Timeline() {
                       const b = model.grid.get(`${town}|${ci}`);
                       const label = fmtMonthYear(c);
                       const isSel = sel?.town === town && sel?.label === label;
+                      // Linked pages: on arrival from the map, all but the target sit back
+                      const arriveDim = !!arrive &&
+                        !(ti === arrive.ti && (arrive.ci === null || ci === arrive.ci));
                       return (
                         <rect key={ci}
                           x={xOf(ci) + 0.5} y={y + 0.5}
@@ -558,8 +709,8 @@ export default function Timeline() {
                             // copy clipped to the left of the line is drawn over them — but
                             // the selected cell stays lit, or picking one then moving the
                             // pointer would fade the thing just chosen.
-                            opacity: b ? (!colIn(ci) ? 0 : view && !isSel ? 0.32 : 1) : 1,
-                            transition: "opacity 300ms ease",
+                            opacity: b ? (!colIn(ci) ? 0 : (view && !isSel) || arriveDim ? 0.32 : 1) : 1,
+                            transition: softFade ? "opacity 700ms ease" : "opacity 300ms ease",
                           }}
                           onMouseEnter={(e) => b && setHover({ x: e.clientX, y: e.clientY, town, label, b })}
                           onMouseMove={(e) => b && setHover({ x: e.clientX, y: e.clientY, town, label, b })}
@@ -572,6 +723,9 @@ export default function Timeline() {
                             // sitting on those dates selectable
                             setSel((s) =>
                               s && s.town === town && s.label === label ? null : { town, label, b });
+                            // Linked pages: a cell picked here replaces the one arrived at
+                            setFocusCode(null);
+                            setFocusTown(null);
                           }}
                         />
                       );
@@ -633,10 +787,30 @@ export default function Timeline() {
                 const y = M_TOP + ti * rowH + 0.5;
                 const w = Math.max(1, cellW - 1);
                 const h = rowH - 1;
+                /**
+                 * Linked pages: the white box itself stays exactly where it always was.
+                 * What pulses is a soft white glow that swells in from the inner edge of the
+                 * white line and fades toward the middle: a blurred stroke laid on that edge,
+                 * with everything outside the edge clipped away, so only its inward half shows.
+                 * Depth follows the box, so a small (phone) box never fills up white.
+                 */
+                const gx = x - 0.8, gy = y - 0.8, gw = w + 1.6, gh = h + 1.6;
+                const depth = Math.min(4, Math.min(gw, gh) * 0.3); // how far in the glow reaches
                 return (
                   <g pointerEvents="none">
+                    <defs>
+                      <clipPath id="tlSelInside"><rect x={gx} y={gy} width={gw} height={gh} /></clipPath>
+                      <filter id="tlSelSoft" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation={depth * 0.3} />
+                      </filter>
+                    </defs>
                     <rect x={x - 1.5} y={y - 1.5} width={w + 3} height={h + 3}
                       fill="none" stroke="rgba(0,0,0,0.85)" strokeWidth={2.6} />
+                    <g clipPath="url(#tlSelInside)">
+                      <rect className="wp-pulse-glow" x={gx} y={gy} width={gw} height={gh}
+                        fill="none" stroke="#fff" filter="url(#tlSelSoft)"
+                        style={{ "--glow-w0": `${depth * 0.3}px`, "--glow-w1": `${depth}px` } as React.CSSProperties} />
+                    </g>
                     <rect x={x - 1.5} y={y - 1.5} width={w + 3} height={h + 3}
                       fill="none" stroke="#fff" strokeWidth={1.4} />
                   </g>
@@ -675,7 +849,9 @@ export default function Timeline() {
                     {/* the year row is the first line of text under the chart; the
                         ceasefire and invasion labels follow beneath it */}
                     <text x={xOf(i)} y={plotBottom + 33} textAnchor="middle"
-                      fill="#fff" fontSize={isMobile ? 11 : 15} fontWeight="bold">
+                      fill="#fff" fontSize={isMobile ? 11 : 15} fontWeight="bold"
+                      className="tl-map-link" onClick={(e) => openOnMap(e, `year=${year}`)}>
+                      <title>{`All strikes in ${year}, on the map`}</title>
                       {year}
                     </text>
                   </g>
@@ -809,8 +985,36 @@ export default function Timeline() {
                 <span className="text-white/55">
                   {(sel.b.strikes * WEDGES_PER_STRIKE).toLocaleString()} wedges
                 </span>
+                {/* Linked pages: the same cell on the map, then each incident on it */}
+                {/* only when at least one of the cell's incidents has a dot to go to */}
+                {sel.town !== UNPLACED && sel.b.codes.some((c) => placedCodes.has(c)) && (() => {
+                  const c = model.cols.find((col) => fmtMonthYear(col) === sel.label);
+                  return (
+                    <>
+                      <span className="text-white/25"> · </span>
+                      <Link href={`/?town=${encodeURIComponent(sel.town)}${c ? `&month=${fmtKey(c)}` : ""}`}
+                        className="underline text-white">
+                        Show on map →
+                      </Link>
+                    </>
+                  );
+                })()}
                 <span className="text-white/25"> · </span>
-                <span style={{ color: "#ff8a5c" }}>{sel.b.codes.join(" · ")}</span>
+                {sel.b.codes.map((code, i) => (
+                  <span key={code}>
+                    {i > 0 && <span className="text-white/25"> · </span>}
+                    {placedCodes.has(code) ? (
+                      <Link href={`/?wp=${code}`} title={`Open ${code} on the map`}
+                        className="hover:underline"
+                        style={{ color: "#ff8a5c", fontWeight: code === focusCode ? 700 : undefined,
+                          textDecoration: code === focusCode ? "underline" : undefined }}>
+                        {code}
+                      </Link>
+                    ) : (
+                      <span title="Not yet geolocated, so not on the map" style={{ color: "#ff8a5c", opacity: 0.6 }}>{code}</span>
+                    )}
+                  </span>
+                ))}
               </>
             )}
           </div>

@@ -2540,3 +2540,30 @@ small {
     overflow-y: visible;
   }
 }
+
+/* Linked pages: what the reader arrived at from another page breathes gently —
+   the timeline's white selection box, and the white centre dot of each matching incident
+   on the map. The dots animate only transform, so they keep the opacity the map sets
+   on them. */
+/* the selected timeline box stays put; a soft white glow swells in from its edge and
+   fades again. Depth comes from the box (--glow-w0 resting, --glow-w1 at full). */
+@keyframes wp-glow-in {
+  0%, 100% { opacity: 0; stroke-width: var(--glow-w0, 1px); }
+  50% { opacity: 1; stroke-width: var(--glow-w1, 4px); }
+}
+@keyframes wp-breathe-dot {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.9); }
+}
+.wp-pulse-glow {
+  opacity: 0;
+  animation: wp-glow-in 2.6s ease-in-out infinite;
+}
+.wp-pulse-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wp-breathe-dot 2.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wp-pulse-glow, .wp-pulse-dot { animation: none; }
+}

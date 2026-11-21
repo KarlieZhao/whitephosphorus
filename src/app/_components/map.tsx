@@ -18,7 +18,9 @@ type VectorMapProps = geoDataProps & TypewriterProps & {
   // tap for the usual reset) to clear this component's own focus state from outside
   clearSelectionSignal?: number;
   /** an incident picked in the panel's search: centred on and selected as if clicked */
-  focusRequest?: { code: string; n: number } | null;
+  focusRequest?: { code: string; n: number; duration?: number; delay?: number } | null;
+  /** Linked pages: incidents arrived at from another page, drawn with a gentle pulse */
+  pulseCodes?: string[];
   /**
    * Which basemap to draw under the dots. Defaults to OpenFreeMap's vector dark style,
    * rendered by MapLibre and handed to Leaflet as an ordinary tilePane layer, restyled
@@ -548,6 +550,7 @@ export function VectorMap({
   showSatellite,
   clearSelectionSignal,
   focusRequest,
+  pulseCodes,
   basemap = "openfreemap",
   overlayLayers,
 }: VectorMapProps) {
@@ -837,6 +840,68 @@ export function VectorMap({
   }, [visiblePoints]);
 
   /**
+   * Linked pages. Keeps the dots their true size while the map flies somewhere.
+   *
+   * A fly (flyTo / flyToBounds: arriving from the timeline, or picking a result in the
+   * search) zooms frame by frame, and on each frame Leaflet only stretches the vector layers
+   * it already has, by how far the map has zoomed since they were drawn. The dots are only
+   * redrawn once the map lands, so on the way in a dot is blown up several times over and
+   * then snaps back to size. Here, on every frame, each dot's radius and each line's width
+   * is divided by that same stretch, which cancels it: dots and lines stay their size while
+   * their positions still travel with the map. What is measured in metres on the ground,
+   * the coverage-area circles, is left to grow, as it should.
+   *
+   * Ordinary wheel and button zooms are left alone: those are one quick CSS animation
+   * (Leaflet announces them with "zoomanim") rather than a series of frames.
+   */
+  useEffect(() => {
+    if (!mapInstance?.on) return;
+    // the zoom Leaflet last drew its layers at (it redraws them when a move ends); the
+    // stretch on each frame is measured from here, exactly as Leaflet measures it
+    let drawnZoom: number = mapInstance.getZoom();
+    let cssZoom = false;
+    let held: { el: Element; attr: "r" | "stroke-width"; base: number }[] | null = null;
+
+    const onStart = () => { cssZoom = false; };
+    const onAnim = () => { cssZoom = true; };
+    const onZoom = () => {
+      if (cssZoom) return;
+      if (!held) {
+        held = [];
+        document.querySelectorAll("#map .leaflet-pane svg").forEach((svg) => {
+          svg.querySelectorAll("circle[r]").forEach((el) => {
+            const base = parseFloat(el.getAttribute("r") || "");
+            if (base > 0) held!.push({ el, attr: "r", base });
+          });
+          svg.querySelectorAll("[stroke-width]").forEach((el) => {
+            const base = parseFloat(el.getAttribute("stroke-width") || "");
+            if (base > 0) held!.push({ el, attr: "stroke-width", base });
+          });
+        });
+      }
+      const stretch = mapInstance.getZoomScale(mapInstance.getZoom(), drawnZoom);
+      for (const h of held) h.el.setAttribute(h.attr, String(h.base / stretch));
+    };
+    // once landed Leaflet draws everything afresh at the new zoom, so the true sizes go back
+    // (the dots are rebuilt anyway; Leaflet's own lines keep these attributes)
+    const onEnd = () => {
+      if (held) for (const h of held) h.el.setAttribute(h.attr, String(h.base));
+      drawnZoom = mapInstance.getZoom(); cssZoom = false; held = null;
+    };
+
+    mapInstance.on("zoomstart", onStart);
+    mapInstance.on("zoomanim", onAnim);
+    mapInstance.on("zoom", onZoom);
+    mapInstance.on("moveend", onEnd);
+    return () => {
+      mapInstance.off("zoomstart", onStart);
+      mapInstance.off("zoomanim", onAnim);
+      mapInstance.off("zoom", onZoom);
+      mapInstance.off("moveend", onEnd);
+    };
+  }, [mapInstance]);
+
+  /**
    * Going to an incident picked in the search. Declared after the reset above: when the
    * search had to clear the filters to show the incident, both run after the same render,
    * and this selection has to be the one that sticks. Each request is handled once, so a
@@ -852,7 +917,10 @@ export function VectorMap({
     setFocusedPt(index);
     getMapDetailsRef.current(pt, null, true);
     // close enough to tell it apart from its neighbours, never zooming back out
-    mapInstance.flyTo([pt.lat, pt.lon], Math.max(mapInstance.getZoom(), 14), { duration: 0.8 });
+    // Linked pages: arriving from another page asks for a pause and a slower glide
+    const fly = () => mapInstance.flyTo([pt.lat, pt.lon], Math.max(mapInstance.getZoom(), 14),
+      { duration: focusRequest.duration ?? 0.8 });
+    if (focusRequest.delay) setTimeout(fly, focusRequest.delay); else fly();
   }, [focusRequest, visiblePoints, mapInstance]);
 
   const clearAnimationTimeouts = useCallback(() => {
@@ -1421,6 +1489,21 @@ export function VectorMap({
         .attr("stroke-width", showSatellite ? 0.75 : 0)
         .style("opacity", (d) => hasAnimated ? getDotOpacity(d) : 0);
 
+      /**
+       * Linked pages. The white centre dot of each incident the reader arrived at
+       * from the timeline breathes gently. The dots are rebuilt on every pan and zoom, so
+       * each rebuilt dot picks up the cycle where the old one was (the negative delay)
+       * instead of restarting, which would make it jump at every move.
+       */
+      if (hasAnimated && pulseCodes?.length) {
+        const pulsing = new Set(pulseCodes);
+        const phase = -(performance.now() % 2600);
+        centerCircles
+          .filter((d: any) => pulsing.has(d.code))
+          .classed("wp-pulse-dot", true)
+          .style("animation-delay", `${phase}ms`);
+      }
+
       // animate if we haven't animated before
       if (!hasAnimated) {
         visiblePoints.forEach((_, index) => {
@@ -1479,7 +1562,8 @@ export function VectorMap({
     selectedYear,
     TypeWriterFinished,
     focusedPt,
-    isMobile
+    isMobile,
+    pulseCodes
   ]);
 
   // Cleanup timeouts on unmount
