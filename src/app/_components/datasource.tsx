@@ -1053,11 +1053,13 @@ export default function DataSource({
             >
                 {/* the filter summary stays put; the incident detail stacks beneath it */}
                 {filterReadout.slice(0, 8).map((line, idx) => readoutRow(line, `f-${idx}`))}
-                {/* Linked pages: one town picked, so the timeline can show its months */}
+                {/* Linked pages: one town picked, so the timeline can show its months. The town alone,
+                    never a month picked here too: the timeline should open on the whole row,
+                    not on a single box */}
                 {filterReadout.length > 0 && selectedCity.length === 1 && (
                     <div className="readout-row linked-tab-row" style={{ marginTop: "0.6rem" }}>
                         <Link
-                            href={`/timeline?town=${encodeURIComponent(selectedCity[0])}${selectedMonth != null ? `&month=${MONTHS[selectedMonth]}` : ""}`}
+                            href={`/timeline?town=${encodeURIComponent(selectedCity[0])}`}
                             className="underline text-white">
                             See {selectedCity[0]} month by month on the timeline →
                         </Link>
