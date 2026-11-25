@@ -1004,6 +1004,8 @@ export function VectorMap({
     }
 
     let cancelled = false;
+    // Lost basemap: pending rebuild after the browser took the WebGL context away
+    let lostTimer: ReturnType<typeof setTimeout> | null = null;
 
     if (basemap === "openfreemap") {
       /**
@@ -1087,17 +1089,62 @@ export function VectorMap({
             (maplibre as any).setWorkerUrl("/maplibre-gl-worker.mjs");
           }
           const maplibreGL = (mod as any).default ?? (mod as any).maplibreGL;
-          const layer = maplibreGL({
-            style: styleSpec,
-            // the dots are drawn by d3 into Leaflet's overlay pane, so the basemap has to
-            // stay in the tile pane beneath them
-            pane: "tilePane",
-            interactive: false,
-            // silences the plugin's own, race-dependent attribution; see MAP_ATTRIBUTION
-            attributionControl: false,
-          });
-          cartodbLayerRef.current = layer;
-          layer.addTo(mapInstance);
+          /**
+           * Lost basemap. MapLibre draws with WebGL, and the browser can take that drawing
+           * context away at any time: after the laptop sleeps, when a screen is plugged in or
+           * out, when the graphics chip resets, or when too many maps are open across tabs.
+           * The canvas then goes blank, leaving the dots and outlines on bare black, and no
+           * error is shown anywhere. MapLibre recovers by itself when the browser hands the
+           * context back, but browsers often never do. So if it hasn't come back after a
+           * moment, the basemap is thrown away and built again on a fresh canvas. Capped,
+           * in case the browser has turned WebGL off for the page altogether.
+           */
+          let rebuilds = 0;
+          const build = () => {
+            const layer = maplibreGL({
+              style: styleSpec,
+              // the dots are drawn by d3 into Leaflet's overlay pane, so the basemap has to
+              // stay in the tile pane beneath them
+              pane: "tilePane",
+              interactive: false,
+              // silences the plugin's own, race-dependent attribution; see MAP_ATTRIBUTION
+              attributionControl: false,
+            });
+            cartodbLayerRef.current = layer;
+            layer.addTo(mapInstance);
+            // a rebuild while the satellite imagery is up stays hidden, like the one it replaces
+            const box = typeof layer.getContainer === "function" ? layer.getContainer() : null;
+            if (box && satRef.current) box.style.display = "none";
+            const canvas = typeof layer.getCanvas === "function" ? layer.getCanvas() : null;
+            if (!canvas) return;
+            canvas.addEventListener("webglcontextlost", () => {
+              // a canvas being retired on purpose loses its context too; only the live one counts
+              if (cancelled || cartodbLayerRef.current !== layer) return;
+              if (lostTimer) clearTimeout(lostTimer);
+              lostTimer = setTimeout(rebuild, 1500);
+            });
+            canvas.addEventListener("webglcontextrestored", () => {
+              if (lostTimer) clearTimeout(lostTimer);
+              lostTimer = null;
+            });
+          };
+          const rebuild = () => {
+            lostTimer = null;
+            if (cancelled || rebuilds >= 5 || !mapInstance.getPane || !mapInstance.getPane("tilePane")) return;
+            rebuilds++;
+            const old = cartodbLayerRef.current;
+            cartodbLayerRef.current = null;
+            try {
+              if (old && mapInstance.hasLayer(old)) mapInstance.removeLayer(old);
+            } catch { /* tearing down a dead context can throw; it's going anyway */ }
+            try {
+              build();
+              syncLayerSize();
+            } catch (e) {
+              console.error("[map] vector basemap could not be rebuilt", e);
+            }
+          };
+          build();
           /**
            * Registered straight with Leaflet's control, which does not depend on the
            * plugin honouring anything or on the style having loaded yet.
@@ -1142,6 +1189,7 @@ export function VectorMap({
         .catch((e) => console.error("[map] vector basemap failed to load", e));
       return () => {
         cancelled = true;
+        if (lostTimer) clearTimeout(lostTimer);
         if (mapInstance.attributionControl) {
           mapInstance.attributionControl.removeAttribution(MAP_ATTRIBUTION);
         }
