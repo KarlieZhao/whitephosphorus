@@ -69,7 +69,7 @@ export default function Index() {
 
                 <div className={`team-info`}>
                     <div>
-                        <a href="https://baydoun.nl" target="_blank">Ahmad Baydoun</a> is an architect and PhD researcher at TU Delft working on the spatial and environmental impacts of warfare. His research focuses on the use of white phosphorus in South Lebanon, combining open source intelligence, satellite imagery, and architectural analysis. He has contributed forensic and geospatial analysis to investigations with BBC World Service, France 24, Amnesty International, NRC, PBS NewsHour, and Al Jazeera.
+                        <a href="https://baydoun.nl" target="_blank">Ahmad Baydoun</a> is an architect and PhD researcher in the <a href="https://www.borders-territories.space/participants/baydoun" target="_blank">Borders &amp; Territories</a> group of the Faculty of Architecture and the Built Environment at TU Delft, working on the spatial and environmental impacts of warfare. This website is part of his PhD, <i>Weaponised Environments</i>, which focuses on the use of white phosphorus in South Lebanon and combines open source intelligence, satellite imagery, and architectural analysis. He has contributed forensic and geospatial analysis to investigations with BBC World Service, France 24, Amnesty International, NRC, PBS NewsHour, and Al Jazeera.
                         <br /><br />Email: <span className="text-white">a.b.baydoun@tudelft.nl</span>
                         <br />Website: <a href="https://baydoun.nl" target="_blank">baydoun.nl</a>
                     </div><br />
